@@ -5,17 +5,15 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function logger() {
-  if (process.env.NODE_ENV === "production") {
-    return;
-  } else {
-    return {
-      error: function (message: string) {
-        console.error(`[Error] ${message}`);
-      },
-      log: function (message: string) {
-        console.log(`[Log] ${message}`);
-      },
-    };
-  }
-}
+export const logger = {
+  error: function (message: any) {
+    if (process.env.NODE_ENV === "development") {
+      console.error("[Error]", message);
+    }
+  },
+  log: function (message: any) {
+    if (process.env.NODE_ENV === "development") {
+      console.log("[Log]", message);
+    }
+  },
+};
