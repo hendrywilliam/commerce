@@ -5,10 +5,10 @@ import { registerValidation } from "@/lib/validations/user";
 import { Form, FormField, FormInput, FormLabel } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { useSignUp } from "@clerk/nextjs";
-import { isClerkAPIResponseError } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { IconLoading } from "@/components/ui/icons";
 import { useState } from "react";
+import { catchError } from "@/lib/utils";
 
 export default function SignUpForm() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -29,27 +29,23 @@ export default function SignUpForm() {
       .create({
         emailAddress: data.email,
         password: data.password,
+        firstName: data.firstName,
+        lastName: data.lastName,
       })
       .then((res) => {
         if (res.status === "complete") {
           setActive({ session: res.createdSessionId });
         }
-        toast(res.status);
+        toast("Registration success. You may login now.");
       })
-      .catch((err) =>
-        toast.error(
-          isClerkAPIResponseError(err)
-            ? err.errors[0].longMessage
-            : "Something went wrong. Please try again later."
-        )
-      )
+      .catch((err) => catchError(err))
       .finally(() => setLoading(false));
   });
 
   return (
-    <div className="w-full backdrop:h-max">
+    <div className="w-full h-max">
       {Object.values(errors)[0] && (
-        <div className="border-l-2 border-destructive py-4 px-2 mb-4 bg-destructive/20">
+        <div className="w-full border-l-2 border-destructive py-4 px-2 mb-4 bg-destructive/20">
           <p className="text-xs">{Object.values(errors)[0].message}</p>
         </div>
       )}
@@ -58,6 +54,24 @@ export default function SignUpForm() {
         onSubmit={submitRegistration}
         aria-description="Registration Form"
       >
+        <FormField>
+          <FormLabel>First Name</FormLabel>
+          <FormInput
+            aria-description="First name input"
+            {...register("firstName")}
+            type="text"
+            name="firstName"
+          />
+        </FormField>
+        <FormField>
+          <FormLabel>Last Name</FormLabel>
+          <FormInput
+            aria-description="Last name input"
+            {...register("lastName")}
+            type="text"
+            name="lastName"
+          />
+        </FormField>
         <FormField>
           <FormLabel>Email</FormLabel>
           <FormInput
