@@ -45,11 +45,11 @@ export const stores = mysqlTable("stores", {
 // relations section
 
 // 1-to-many user -> stores
-export const userRelationStores = relations(users, ({ many }) => ({
+export const useRelations = relations(users, ({ many }) => ({
   stores: many(stores),
 }));
 
-export const storesRelationUser = relations(stores, ({ one }) => ({
+export const storeRelations = relations(stores, ({ one }) => ({
   user: one(users, {
     fields: [stores.userId],
     references: [users.id],
