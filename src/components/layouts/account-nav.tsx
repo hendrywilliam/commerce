@@ -2,20 +2,22 @@
 
 import { Button } from "@/components/ui/button";
 import { IconCart, IconNotification } from "@/components/ui/icons";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useUser } from "@clerk/nextjs";
+import { useClerk } from "@clerk/nextjs";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function AccountNavigation() {
   const { user, isSignedIn } = useUser();
+  const { signOut } = useClerk();
+  const router = useRouter();
 
   return (
     <div className="flex w-1/3 justify-end gap-2">
@@ -25,12 +27,22 @@ export default function AccountNavigation() {
       <Button className="rounded-full" variant={"outline"} size={"icon"}>
         <IconCart />
       </Button>
-      {!isSignedIn && <Button variant={"outline"}>Sign in</Button>}
+      {!isSignedIn && (
+        <Button
+          variant={"outline"}
+          onClick={() => void router.push("/sign-in")}
+        >
+          Sign in
+        </Button>
+      )}
       <DropdownMenu>
-        <DropdownMenuTrigger>
+        <DropdownMenuTrigger className="focus:outline-none">
           <Avatar>
-            <AvatarImage src={user?.imageUrl} />
-            <AvatarFallback></AvatarFallback>
+            {user ? (
+              <AvatarImage src={user?.imageUrl} />
+            ) : (
+              <AvatarImage src="https://avatars.githubusercontent.com/u/76040435?v=4" />
+            )}
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
@@ -38,7 +50,9 @@ export default function AccountNavigation() {
             <Link href="/dashboard">Dashboard</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>Setting</DropdownMenuItem>
-          <DropdownMenuItem>Logout</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => void signOut()}>
+            Logout
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

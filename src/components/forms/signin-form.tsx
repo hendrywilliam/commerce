@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { IconLoading } from "@/components/ui/icons";
 import { useState } from "react";
 import { useSignIn } from "@clerk/nextjs";
-import { logger } from "@/lib/utils";
 import { catchError } from "@/lib/utils";
+import { useRouter } from "next/router";
 
 export default function SignInForm() {
   const {
@@ -21,6 +21,7 @@ export default function SignInForm() {
   });
   const [loading, setLoading] = useState(false);
   const { isLoaded, signIn, setActive } = useSignIn();
+  const router = useRouter();
 
   const submitLogin = handleSubmit(async (data) => {
     if (!isLoaded) return;
@@ -32,11 +33,9 @@ export default function SignInForm() {
       })
       .then((res) => {
         if (res.status === "complete") {
-          logger.log(res);
           setActive({ session: res.createdSessionId });
-        } else {
-          logger.log(res);
         }
+        router.push("/");
       })
       .catch((err) => catchError(err))
       .finally(() => {

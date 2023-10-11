@@ -2,8 +2,6 @@ import {
   int,
   mysqlEnum,
   mysqlTable,
-  bigint,
-  uniqueIndex,
   varchar,
   serial,
   text,
@@ -22,6 +20,7 @@ export const products = mysqlTable("products", {
   price: decimal("price", { precision: 10, scale: 2 }).notNull().default("0"),
   stock: int("stock").default(0),
   rating: int("rating").notNull().default(0),
+  category: mysqlEnum("category", ["clothing", "backpack", "shoes"]),
   createdAt: timestamp("createdAt").defaultNow(),
 });
 
@@ -31,6 +30,9 @@ export const productsRelations = relations(products, ({ one }) => ({
     references: [stores.id],
   }),
 }));
+
+export type NewProduct = typeof products.$inferInsert;
+export type Product = typeof products.$inferSelect;
 
 export const stores = mysqlTable("stores", {
   id: serial("id").primaryKey(),

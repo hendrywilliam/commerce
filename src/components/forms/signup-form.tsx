@@ -5,10 +5,10 @@ import { registerValidation } from "@/lib/validations/user";
 import { Form, FormField, FormInput, FormLabel } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { useSignUp } from "@clerk/nextjs";
-import { toast } from "sonner";
 import { IconLoading } from "@/components/ui/icons";
 import { useState } from "react";
 import { catchError } from "@/lib/utils";
+import { useRouter } from "next/router";
 
 export default function SignUpForm() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -21,6 +21,7 @@ export default function SignUpForm() {
     schema: registerValidation,
     mode: "onSubmit",
   });
+  const router = useRouter();
 
   const submitRegistration = handleSubmit(async (data) => {
     if (!isLoaded) return;
@@ -34,7 +35,7 @@ export default function SignUpForm() {
         if (res.status === "complete") {
           setActive({ session: res.createdSessionId });
         }
-        toast("Registration success. You may login now.");
+        router.push("/");
       })
       .catch((err) => catchError(err))
       .finally(() => setLoading(false));
@@ -81,7 +82,7 @@ export default function SignUpForm() {
         </FormField>
         <p className="text-xs text-gray-600">
           By registering, you agree to processing your personal data by
-          twopointone
+          pointaside
         </p>
         <Button className="flex gap-1" type="submit" size="sm">
           {loading && <IconLoading />}

@@ -5,7 +5,7 @@ export default function LobbyLayout({ children }: React.PropsWithChildren) {
   return (
     <div>
       <SiteHeader />
-      <div className="pt-16 h-screen min-h-screen w-full">{children}</div>
+      <div className="pt-16 min-h-screen h-full w-full">{children}</div>
       <SiteFooter />
     </div>
   );

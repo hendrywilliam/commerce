@@ -1,6 +1,6 @@
 "use client";
 import { Form, FormField, FormInput, FormLabel } from "@/components/ui/form";
-import { createNewStore } from "@/actions/stores/create-a-new-store-action";
+import { createNewStore } from "@/actions/stores/create-new-store";
 import { useZodForm } from "@/hooks/use-zod-form";
 import { addNewStoreValidation } from "@/lib/validations/stores";
 import { Button } from "@/components/ui/button";

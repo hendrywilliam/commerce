@@ -6,6 +6,7 @@ CREATE TABLE `products` (
 	`price` decimal(10,2) NOT NULL DEFAULT '0',
 	`stock` int DEFAULT 0,
 	`rating` int NOT NULL DEFAULT 0,
+	`category` enum('clothing','backpack','shoes'),
 	`createdAt` timestamp DEFAULT (now()),
 	CONSTRAINT `products_id` PRIMARY KEY(`id`)
 );

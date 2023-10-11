@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "1c39f8b4-94bd-4fad-8985-ccfa30398867",
+  "id": "e6021bb6-c6ca-44cb-a328-9a28031b0a57",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "products": {
@@ -58,6 +58,13 @@
           "notNull": true,
           "autoincrement": false,
           "default": 0
+        },
+        "category": {
+          "name": "category",
+          "type": "enum('clothing','backpack','shoes')",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         },
         "createdAt": {
           "name": "createdAt",
