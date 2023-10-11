@@ -1,11 +1,11 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "c0c21637-1969-4117-bf3e-004a6b431625",
+  "id": "1c39f8b4-94bd-4fad-8985-ccfa30398867",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "product": {
-      "name": "product",
+    "products": {
+      "name": "products",
       "columns": {
         "id": {
           "name": "id",
@@ -21,8 +21,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "product_name": {
-          "name": "product_name",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -39,7 +39,7 @@
           "name": "price",
           "type": "decimal(10,2)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
           "default": "'0'"
         },
@@ -50,13 +50,29 @@
           "notNull": false,
           "autoincrement": false,
           "default": 0
+        },
+        "rating": {
+          "name": "rating",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(now())"
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "product_id": {
-          "name": "product_id",
+        "products_id": {
+          "name": "products_id",
           "columns": [
             "id"
           ]
@@ -74,15 +90,8 @@
           "notNull": true,
           "autoincrement": true
         },
-        "user_id": {
-          "name": "user_id",
-          "type": "serial",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": true
-        },
-        "storename": {
-          "name": "storename",
+        "name": {
+          "name": "name",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false,
@@ -94,6 +103,22 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(now())"
         }
       },
       "indexes": {},

@@ -91,7 +91,7 @@ const formInputVariant = cva("p-2 rounded-md", {
         "border focus:ring-2 ring-1 ring-destructive ring-offset-1 outline-none",
     },
     size: {
-      default: "h-9 px-4 py-2",
+      default: "h-9 px-2 py-2",
     },
   },
   defaultVariants: {

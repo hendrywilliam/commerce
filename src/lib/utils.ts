@@ -7,19 +7,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const logger = {
-  error: function (message: any) {
-    if (process.env.NODE_ENV === "development") {
-      console.error("[Error]", message);
-    }
-  },
-  log: function (message: any) {
-    if (process.env.NODE_ENV === "development") {
-      console.log("[Log]", message);
-    }
-  },
-};
-
 export function catchError(err: unknown) {
   const unknownErorr = "Something went wrong please try again later.";
   if (isClerkAPIResponseError(err)) {

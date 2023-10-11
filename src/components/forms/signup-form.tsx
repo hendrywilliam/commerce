@@ -29,8 +29,6 @@ export default function SignUpForm() {
       .create({
         emailAddress: data.email,
         password: data.password,
-        firstName: data.firstName,
-        lastName: data.lastName,
       })
       .then((res) => {
         if (res.status === "complete") {
@@ -54,24 +52,6 @@ export default function SignUpForm() {
         onSubmit={submitRegistration}
         aria-description="Registration Form"
       >
-        <FormField>
-          <FormLabel>First Name</FormLabel>
-          <FormInput
-            aria-description="First name input"
-            {...register("firstName")}
-            type="text"
-            name="firstName"
-          />
-        </FormField>
-        <FormField>
-          <FormLabel>Last Name</FormLabel>
-          <FormInput
-            aria-description="Last name input"
-            {...register("lastName")}
-            type="text"
-            name="lastName"
-          />
-        </FormField>
         <FormField>
           <FormLabel>Email</FormLabel>
           <FormInput
