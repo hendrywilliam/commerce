@@ -8,7 +8,8 @@ import { IconLoading } from "@/components/ui/icons";
 import { useState } from "react";
 import { useSignIn } from "@clerk/nextjs";
 import { catchError } from "@/lib/utils";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function SignInForm() {
   const {
@@ -35,6 +36,7 @@ export default function SignInForm() {
         if (res.status === "complete") {
           setActive({ session: res.createdSessionId });
         }
+        toast("Success log in. Redirecting to lobby.");
         router.push("/");
       })
       .catch((err) => catchError(err))

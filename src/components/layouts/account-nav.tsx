@@ -27,34 +27,35 @@ export default function AccountNavigation() {
       <Button className="rounded-full" variant={"outline"} size={"icon"}>
         <IconCart />
       </Button>
-      {!isSignedIn && (
+      {!isSignedIn ? (
         <Button
           variant={"outline"}
           onClick={() => void router.push("/sign-in")}
         >
           Sign in
         </Button>
+      ) : (
+        <DropdownMenu>
+          <DropdownMenuTrigger className="focus:outline-none">
+            <Avatar>
+              {user ? (
+                <AvatarImage src={user?.imageUrl} />
+              ) : (
+                <AvatarImage src="https://avatars.githubusercontent.com/u/76040435?v=4" />
+              )}
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem>
+              <Link href="/dashboard">Dashboard</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>Setting</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => void signOut()}>
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       )}
-      <DropdownMenu>
-        <DropdownMenuTrigger className="focus:outline-none">
-          <Avatar>
-            {user ? (
-              <AvatarImage src={user?.imageUrl} />
-            ) : (
-              <AvatarImage src="https://avatars.githubusercontent.com/u/76040435?v=4" />
-            )}
-          </Avatar>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem>
-            <Link href="/dashboard">Dashboard</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>Setting</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => void signOut()}>
-            Logout
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
     </div>
   );
 }

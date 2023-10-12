@@ -1,5 +1,9 @@
 {
-  "name": "twopointone",
+  "name": "pointaside",
+  "author": {
+    "email": "hendriwilliam29@gmail.com",
+    "name": "hendryw"
+  },
   "version": "0.1.0",
   "private": true,
   "scripts": {

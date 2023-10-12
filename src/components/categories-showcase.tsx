@@ -22,7 +22,7 @@ export default async function CategoriesShowcase() {
           <Image
             src="/images/image-backpack.webp"
             fill
-            alt="Clothing Category"
+            alt="Backpack Category"
             className="object-cover rounded"
           />
           <div className="absolute flex flex-col bg-black/50 top-0 left-0 w-full h-full rounded text-white p-4 justify-between font-semibold">
@@ -56,7 +56,7 @@ export default async function CategoriesShowcase() {
           <Image
             src="/images/image-shoe.webp"
             fill
-            alt="Clothing Category"
+            alt="Shoes Category"
             className="object-cover rounded"
           />
           <div className="absolute flex flex-col bg-black/50 top-0 left-0 w-full h-full rounded text-white p-4 justify-between font-semibold">
