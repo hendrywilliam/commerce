@@ -20,7 +20,7 @@ export const products = mysqlTable("products", {
   price: decimal("price", { precision: 10, scale: 2 }).notNull().default("0"),
   stock: int("stock").default(0),
   rating: int("rating").notNull().default(0),
-  category: mysqlEnum("category", ["clothing", "backpack", "shoes"]),
+  category: mysqlEnum("category", ["clothing", "backpack", "shoes"]).notNull(),
   createdAt: timestamp("createdAt").defaultNow(),
 });
 

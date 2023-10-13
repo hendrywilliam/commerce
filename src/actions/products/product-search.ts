@@ -11,5 +11,5 @@ export async function getProductsBySearchTerm(searchTerm: string) {
       category: products.category,
     })
     .from(products)
-    .where(like(products.name, `${searchTerm}`));
+    .where(like(products.name, `%${searchTerm}%`));
 }

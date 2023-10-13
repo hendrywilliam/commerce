@@ -8,7 +8,7 @@ import { useSignUp } from "@clerk/nextjs";
 import { IconLoading } from "@/components/ui/icons";
 import { useState } from "react";
 import { catchError } from "@/lib/utils";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function SignUpForm() {
   const { isLoaded, signUp, setActive } = useSignUp();

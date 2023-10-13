@@ -17,7 +17,7 @@ export default function SiteFooter() {
               return (
                 <div key={i}>
                   <p className="font-semibold">{item.title}</p>
-                  <ul className="flex flex-col gap-1 mt-2 text-gray-400">
+                  <ul className="flex flex-col gap-1 mt-2">
                     {item.items.map((item, i) => {
                       return (
                         <li key={i}>
