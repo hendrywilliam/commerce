@@ -38,7 +38,7 @@ export default async function IndexPage() {
       <div className="flex flex-col w-full mt-36 items-center gap-2">
         <h1 className="text-4xl font-bold">Featured stores</h1>
         <p className="font-medium text-center text-gray-500">
-          Shop hunders of products from these featured store for this week.
+          Shop hundreds of products from these featured store for this week.
         </p>
         <div className="grid grid-cols-4 w-full gap-2">
           {featuredStore.map((store) => {

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import ProductSearch from "@/components/product-search";
 
 export default function AccountNavigation() {
   const { user, isSignedIn } = useUser();
@@ -21,6 +22,7 @@ export default function AccountNavigation() {
 
   return (
     <div className="flex w-1/3 justify-end gap-2">
+      <ProductSearch />
       <Button className="rounded-full" variant={"outline"} size={"icon"}>
         <IconNotification />
       </Button>
