@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${inter.className} text-sm`}>
+        <body className={`${inter.className} text-sm antialiased`}>
           <Toast />
           {children}
         </body>
