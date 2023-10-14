@@ -1,7 +1,6 @@
 import SiteHeader from "@/components/layouts/site-header";
 import Link from "next/link";
 import { siteConfig } from "@/config/site-config";
-import { buttonVariants } from "@/components/ui/button";
 
 export default function DashboardLayout({ children }: React.PropsWithChildren) {
   return (
@@ -24,7 +23,7 @@ export default function DashboardLayout({ children }: React.PropsWithChildren) {
             })}
           </div>
         </div>
-        <div className="pl-8 pt-4">{children}</div>
+        <div className="pl-12 pt-8">{children}</div>
       </div>
     </div>
   );

@@ -1,3 +1,9 @@
+import CreateNewStoreForm from "@/components/forms/create-new-store-form";
+
 export default function DashboardStoresPage() {
-  return <div>Dashboard Stores Page</div>;
+  return (
+    <div>
+      <CreateNewStoreForm />
+    </div>
+  );
 }

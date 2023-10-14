@@ -1,20 +1,15 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { buttonVariants } from "@/components/ui/button";
-import { IconCart } from "./ui/icons";
-import { db } from "@/db/core";
-import { carts } from "@/db/schema";
-import { cookies } from "next/headers";
-import { eq } from "drizzle-orm";
+import { IconCart } from "@/components/ui/icons";
+import { getCart } from "@/actions/carts/get-cart";
 
 export default async function ShoppingCart() {
-  const cartIdFromCookie = cookies().get("cart_id")?.value;
-  const getCart = await db
-    .select({
-      id: carts.id,
-      items: carts.items,
-    })
-    .from(carts)
-    .where(eq(carts.id, Number(cartIdFromCookie)));
+  const cartDetails = (await getCart()) as {
+    id: string;
+    qty: string;
+  }[];
+
+  const sumQty = cartDetails.reduce((acc, val) => acc + Number(val.qty), 0);
 
   return (
     <>
@@ -27,14 +22,16 @@ export default async function ShoppingCart() {
           })}
         >
           <div className="absolute px-1.5 -top-1 -right-1 rounded-full border bg-background text-xs">
-            <p>{JSON.parse(getCart[0].items).length}</p>
+            <p>{sumQty}</p>
           </div>
           <IconCart />
         </SheetTrigger>
         <SheetContent>
           <div>
             <h1 className="font-semibold">Cart (1)</h1>
-            <p>{getCart.length}</p>
+            {cartDetails.map((item) => {
+              return <p key={item.id}>{item.qty}</p>;
+            })}
           </div>
         </SheetContent>
       </Sheet>
