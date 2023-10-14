@@ -1,3 +1,3 @@
 export default function ProductPage() {
-  return <div>page</div>;
+  return <div>Under construction</div>;
 }

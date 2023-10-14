@@ -4,6 +4,7 @@ import { db } from "@/db/core";
 import { carts } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
+import type { CartItem } from "@/types";
 
 export async function getCart() {
   const cartCookie = cookies().get("cart_id")?.value;
@@ -20,9 +21,7 @@ export async function getCart() {
       .limit(1)
   )[0].items;
 
-  const parseCartDetailItems = JSON.parse(cartDetail as string);
+  const parseCartDetailItems = JSON.parse(cartDetail as string) as CartItem[];
 
   return parseCartDetailItems;
 }
-
-export async function getCartDetails() {}

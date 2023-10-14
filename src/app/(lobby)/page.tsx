@@ -44,7 +44,7 @@ export default async function IndexPage() {
       </section>
       <CategoriesShowcase />
       <div className="flex flex-col w-full mt-36 items-center gap-2">
-        <h1 className="text-4xl font-bold">Featured products</h1>
+        <h1 className="text-4xl font-bold">Featured Products</h1>
         <p className="font-medium text-center text-gray-500">
           Top 8 products for this week.
         </p>
@@ -58,7 +58,7 @@ export default async function IndexPage() {
         </Link>
       </div>
       <div className="flex flex-col w-full mt-36 items-center gap-2">
-        <h1 className="text-4xl font-bold">Featured stores</h1>
+        <h1 className="text-4xl font-bold">Featured Stores</h1>
         <p className="font-medium text-center text-gray-500">
           Shop hundreds of products from these featured store for this week.
         </p>
