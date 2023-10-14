@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { IconCart, IconNotification } from "@/components/ui/icons";
+import { IconNotification } from "@/components/ui/icons";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useUser } from "@clerk/nextjs";
 import { useClerk } from "@clerk/nextjs";
@@ -10,10 +10,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import ProductSearch from "@/components/product-search";
 
 export default function AccountNavigation() {
   const { user, isSignedIn } = useUser();
@@ -21,21 +21,9 @@ export default function AccountNavigation() {
   const router = useRouter();
 
   return (
-    <div className="flex w-1/3 justify-end gap-2">
-      <ProductSearch />
-      <Button className="rounded-full" variant={"outline"} size={"icon"}>
-        <IconNotification />
-      </Button>
-      <Button className="rounded-full" variant={"outline"} size={"icon"}>
-        <IconCart />
-      </Button>
+    <div className="flex self-center">
       {!isSignedIn ? (
-        <Button
-          variant={"outline"}
-          onClick={() => void router.push("/sign-in")}
-        >
-          Sign in
-        </Button>
+        <Button onClick={() => void router.push("/sign-in")}>Sign in</Button>
       ) : (
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none">
@@ -52,6 +40,7 @@ export default function AccountNavigation() {
               <Link href="/dashboard">Dashboard</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>Setting</DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => void signOut()}>
               Logout
             </DropdownMenuItem>

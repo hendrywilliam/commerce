@@ -9,6 +9,7 @@ import {
   index,
   timestamp,
   boolean,
+  json,
 } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
 
@@ -50,3 +51,13 @@ export const storesRelations = relations(stores, ({ many }) => ({
 
 export type Store = typeof stores.$inferSelect;
 export type NewStore = typeof stores.$inferInsert;
+
+export const carts = mysqlTable("carts", {
+  id: serial("id").primaryKey(),
+  items: json("items"),
+  isClosed: boolean("isClosed").default(false),
+  createdAt: timestamp("createdAt").defaultNow(),
+});
+
+export type Cart = typeof carts.$inferSelect;
+export type NewCart = typeof carts.$inferInsert;

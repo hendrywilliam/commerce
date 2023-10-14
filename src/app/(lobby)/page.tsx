@@ -2,15 +2,23 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import CategoriesShowcase from "@/components/categories-showcase";
 import FeaturedStoreCard from "@/components/cards/featured-store-card";
+import FeaturedProductCard from "@/components/cards/featured-product-card";
+import { stores, products } from "@/db/schema";
+import type { Store, Product } from "@/db/schema";
 import { db } from "@/db/core";
-import { stores } from "@/db/schema";
-import { Store } from "@/db/schema";
+import { gte } from "drizzle-orm";
 
 export default async function IndexPage() {
-  const featuredStore = (await db.select().from(stores).limit(4)) as Omit<
+  const featuredStores = (await db.select().from(stores).limit(4)) as Omit<
     Store,
     "createdAt"
   >[];
+
+  const featuredProducts = (await db
+    .select()
+    .from(products)
+    .limit(8)
+    .where(gte(products.rating, 3))) as Omit<Product, "createdAt">[];
 
   return (
     <div className="flex flex-col container h-full w-full items-center py-8">
@@ -36,19 +44,30 @@ export default async function IndexPage() {
       </section>
       <CategoriesShowcase />
       <div className="flex flex-col w-full mt-36 items-center gap-2">
+        <h1 className="text-4xl font-bold">Featured products</h1>
+        <p className="font-medium text-center text-gray-500">
+          Top 8 products for this week.
+        </p>
+        <div className="grid grid-cols-4 w-full gap-2">
+          {featuredProducts.map((product) => {
+            return <FeaturedProductCard products={product} key={product.id} />;
+          })}
+        </div>
+        <Link href="/stores" className={buttonVariants({ class: "mt-4" })}>
+          View all products
+        </Link>
+      </div>
+      <div className="flex flex-col w-full mt-36 items-center gap-2">
         <h1 className="text-4xl font-bold">Featured stores</h1>
         <p className="font-medium text-center text-gray-500">
           Shop hundreds of products from these featured store for this week.
         </p>
         <div className="grid grid-cols-4 w-full gap-2">
-          {featuredStore.map((store) => {
+          {featuredStores.map((store) => {
             return <FeaturedStoreCard store={store} key={store.id} />;
           })}
         </div>
-        <Link
-          href="/stores"
-          className={buttonVariants({ variant: "outline", class: "mt-4" })}
-        >
+        <Link href="/stores" className={buttonVariants({ class: "mt-4" })}>
           View all stores
         </Link>
       </div>

@@ -1,3 +1,10 @@
+import {
+  IconStores,
+  IconCalendar,
+  IconPayment,
+  IconAnalytics,
+} from "@/components/ui/icons";
+
 export const siteConfig = {
   footerNavigation: [
     {
@@ -33,11 +40,19 @@ export const siteConfig = {
   ],
   dashboardNavigation: [
     {
-      title: "Overview",
-      href: "/dashboard",
+      title: "Stores",
+      href: "/dashboard/stores",
+      icon: IconStores,
     },
     {
-      title: "Setting",
+      title: "Billing",
+      href: "/dashboard/billing",
+      icon: IconPayment,
+    },
+    {
+      title: "Purchase",
+      href: "/dashboard/purchases",
+      icon: IconAnalytics,
     },
   ],
 };

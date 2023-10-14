@@ -42,6 +42,7 @@ export default function ProductSearch() {
 
     return () => {
       document.removeEventListener("keydown", keyDown);
+      setResults({});
     };
   }, [isOpen]);
 
@@ -91,7 +92,7 @@ export default function ProductSearch() {
         </Button>
       </div>
       <Dialog open={isOpen} onOpenChange={(isOpen) => setIsOpen(isOpen)}>
-        <DialogContent className="max-h- p-1 gap-1">
+        <DialogContent className="p-1 gap-1">
           <div className="inline-flex py-1 px-2">
             <IconMagnifyingGlass className="flex self-center" />
             <Input
@@ -100,8 +101,7 @@ export default function ProductSearch() {
               placeholder="Type a command or search... "
             />
           </div>
-
-          {results &&
+          {!hasNoResult ? (
             Object.entries(results).map(([category, products], i) => {
               return (
                 <div key={i}>
@@ -129,7 +129,12 @@ export default function ProductSearch() {
                   </div>
                 </div>
               );
-            })}
+            })
+          ) : (
+            <div className="flex p-2 w-full justify-center">
+              <p>No results found.</p>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </>

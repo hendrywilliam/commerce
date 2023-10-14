@@ -26,7 +26,7 @@ export default async function CategoriesShowcase() {
             className="object-cover rounded"
           />
           <div className="absolute flex flex-col bg-black/50 top-0 left-0 w-full h-full rounded text-white p-4 justify-between font-semibold">
-            <div className="flex h-8 w-8 rounded-full bg-white stroke-black fill-black justify-center items-center align-middle">
+            <div className="flex h-8 w-8 rounded-full bg-white justify-center items-center align-middle">
               <IconBackpack />
             </div>
             <div>
@@ -43,7 +43,7 @@ export default async function CategoriesShowcase() {
             className="object-cover rounded"
           />
           <div className="absolute flex flex-col bg-black/50 top-0 left-0 w-full h-full rounded text-white p-4 justify-between font-semibold">
-            <div className="flex h-8 w-8 rounded-full bg-white stroke-black fill-black justify-center items-center align-middle">
+            <div className="flex h-8 w-8 rounded-full bg-white justify-center items-center align-middle">
               <IconTshirt />
             </div>
             <div>
@@ -60,7 +60,7 @@ export default async function CategoriesShowcase() {
             className="object-cover rounded"
           />
           <div className="absolute flex flex-col bg-black/50 top-0 left-0 w-full h-full rounded text-white p-4 justify-between font-semibold">
-            <div className="flex h-8 w-8 rounded-full bg-white stroke-black fill-black justify-center items-center align-middle">
+            <div className="flex h-8 w-8 rounded-full bg-white justify-center items-center align-middle">
               <IconShoes />
             </div>
             <div>
