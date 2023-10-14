@@ -167,7 +167,7 @@ export interface FormTextarea
 type FormTextareaRef = HTMLTextAreaElement;
 
 const formTextVariants = cva(
-  "border rounded-md resize-none p-2 text-sm focus:ring-2 ring-muted outline-none"
+  "border rounded-md resize-none p-2 text-sm focus:ring-2 ring-muted outline-none bg-muted"
 );
 
 type FormTextareaVariants = VariantProps<typeof formTextVariants>;
@@ -175,7 +175,11 @@ type FormTextareaVariants = VariantProps<typeof formTextVariants>;
 export const FormTextarea = forwardRef<FormTextareaRef, FormTextarea>(
   ({ className, ...props }, ref) => {
     return (
-      <textarea className={cn(formTextVariants())} {...props} ref={ref}>
+      <textarea
+        className={cn(formTextVariants({ class: className }))}
+        {...props}
+        ref={ref}
+      >
         {props.children}
       </textarea>
     );

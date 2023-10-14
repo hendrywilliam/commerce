@@ -43,16 +43,19 @@ export const siteConfig = {
       title: "Stores",
       href: "/dashboard/stores",
       icon: IconStores,
+      description: "Manage your own stores, or create a brand new store.",
     },
     {
       title: "Billing",
       href: "/dashboard/billing",
       icon: IconPayment,
+      description: "Manage your billing plan.",
     },
     {
       title: "Purchase",
       href: "/dashboard/purchases",
       icon: IconAnalytics,
+      description: "Gather information based on your purchase data.",
     },
   ],
 };

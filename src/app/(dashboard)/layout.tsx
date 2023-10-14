@@ -12,7 +12,7 @@ export default function DashboardLayout({ children }: React.PropsWithChildren) {
             {siteConfig.dashboardNavigation.map((item, i) => {
               return (
                 <Link
-                  className="inline-flex gap-4 h-9 px-4 py-2 rounded-md text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground font-semibold"
+                  className="inline-flex gap-4 h-9 px-4 py-2 rounded-md text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground font-bold"
                   href={item.href}
                   key={i}
                 >
@@ -23,7 +23,7 @@ export default function DashboardLayout({ children }: React.PropsWithChildren) {
             })}
           </div>
         </div>
-        <div className="pl-12 pt-8">{children}</div>
+        <div className="w-full h-full pl-12 pt-8">{children}</div>
       </div>
     </div>
   );
