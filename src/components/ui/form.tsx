@@ -54,7 +54,7 @@ export interface FormLabel
   extends LabelHTMLAttributes<HTMLLabelElement>,
     VariantProps<typeof formLabelVariant> {}
 
-const formLabelVariant = cva("font-semibold");
+const formLabelVariant = cva("font-normal");
 
 type FormLabelRef = HTMLLabelElement;
 

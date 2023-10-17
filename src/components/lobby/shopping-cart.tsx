@@ -3,7 +3,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { IconCart } from "@/components/ui/icons";
 import { getCart } from "@/actions/carts/get-cart";
 import { getCartDetails } from "@/actions/carts/get-cart-details";
-import ShoppingCartItem from "@/components/shopping-cart-item";
+import ShoppingCartItem from "@/components/lobby/shopping-cart-item";
 import { Button } from "@/components/ui/button";
 
 export default async function ShoppingCart() {

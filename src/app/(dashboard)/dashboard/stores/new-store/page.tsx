@@ -1,4 +1,4 @@
-import CreateNewStoreForm from "@/components/forms/create-new-store-form";
+import CreateNewStoreForm from "@/components/dashboard/create-new-store-form";
 
 export default function DashboardNewStorePage() {
   return (

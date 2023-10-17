@@ -2,7 +2,7 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { getAllOwnedStores } from "@/actions/stores/get-all-owned-stores";
 import { currentUser } from "@clerk/nextjs";
-import FeaturedStoreCard from "@/components/cards/featured-store-card";
+import DashboardStoreCard from "@/components/dashboard/dashboard-store-card";
 
 export default async function DashboardStoresPage() {
   const userStoresId = (await currentUser())?.publicMetadata
@@ -27,7 +27,7 @@ export default async function DashboardStoresPage() {
       </div>
       <div className="h-full w-full grid grid-cols-3 mt-6 gap-2">
         {ownedStoresByUser.map((store) => {
-          return <FeaturedStoreCard store={store} key={store.id} />;
+          return <DashboardStoreCard store={store} key={store.id} />;
         })}
       </div>
     </div>

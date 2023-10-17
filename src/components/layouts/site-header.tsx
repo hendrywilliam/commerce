@@ -1,7 +1,7 @@
 import AccountNavigation from "@/components/layouts/account-nav";
 import Link from "next/link";
-import ProductSearch from "@/components/product-search";
-import ShoppingCart from "@/components/shopping-cart";
+import ProductSearch from "@/components/lobby/product-search";
+import ShoppingCart from "@/components/lobby/shopping-cart";
 export default async function SiteHeader() {
   return (
     <div className="sticky top-0 z-10 h-16 w-full border-b bg-background">
