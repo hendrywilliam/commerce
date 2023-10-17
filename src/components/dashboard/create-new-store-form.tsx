@@ -58,7 +58,7 @@ export default function CreateNewStoreForm() {
             className="h-52"
             {...register("description")}
           />
-          <Button type="submit">
+          <Button className="gap-1" type="submit">
             {isLoading && <IconLoading />}
             Submit
           </Button>

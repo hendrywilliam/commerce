@@ -6,6 +6,7 @@ import { db } from "@/db/core";
 import { auth, clerkClient } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
 import { currentUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 export async function createNewStore(storeData: NewStore) {
   const { userId } = auth();
@@ -30,6 +31,7 @@ export async function createNewStore(storeData: NewStore) {
   });
 
   revalidatePath("/dashboard");
+  redirect("/dashboard/stores");
   return {
     error: false,
     message: "Store created",
