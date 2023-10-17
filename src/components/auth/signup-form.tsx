@@ -4,7 +4,7 @@ import { useZodForm } from "@/hooks/use-zod-form";
 import { registerValidation } from "@/lib/validations/user";
 import { Form, FormField, FormInput, FormLabel } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { useSignUp } from "@clerk/nextjs";
+import { useSignUp, useUser } from "@clerk/nextjs";
 import { IconLoading } from "@/components/ui/icons";
 import { useState } from "react";
 import { catchError } from "@/lib/utils";
@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 export default function SignUpForm() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [loading, setLoading] = useState(false);
+  const { user } = useUser();
   const {
     register,
     handleSubmit,

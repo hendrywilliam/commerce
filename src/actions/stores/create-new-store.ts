@@ -21,20 +21,15 @@ export async function createNewStore(storeData: NewStore) {
     description: storeData.description,
   });
 
-  const userDataPublicMetadata =
-    (user?.publicMetadata.storeId as string[]) ?? [];
+  const userDataPrivateMetadata =
+    (user?.privateMetadata.storeId as string[]) ?? [];
 
   await clerkClient.users.updateUser(userId, {
-    publicMetadata: {
-      storeId: [...userDataPublicMetadata, insertId],
+    privateMetadata: {
+      storeId: [...userDataPrivateMetadata, insertId],
     },
   });
 
   revalidatePath("/dashboard");
   redirect("/dashboard/stores");
-  return {
-    error: false,
-    message: "Store created",
-    action: "Success, your store has been created.",
-  };
 }
