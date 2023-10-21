@@ -78,10 +78,7 @@ export default function DashboardStoreFrontGeneralZone({
         </div>
         <div>
           <p className="font-bold">Store description</p>
-          <p>
-            Rename your own store into more recognizeable name, so you can
-            standoff against your competitor.
-          </p>
+          <p>Explain your cool ass store to the world.</p>
           <textarea
             value={storePublicInformation.description}
             onChange={(e) =>
@@ -95,7 +92,7 @@ export default function DashboardStoreFrontGeneralZone({
         </div>
         <div className="inline-flex w-full justify-between">
           <div>
-            <p className="font-bold">Deactive this store</p>
+            <p className="font-bold">Activate/deactivate store</p>
             <p>You can choose to deactivate or activate your own store.</p>
           </div>
           <Switch

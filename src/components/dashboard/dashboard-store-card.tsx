@@ -1,5 +1,6 @@
 import type { Store } from "@/db/schema";
 import Link from "next/link";
+import { getRandomPatternStyle } from "@/lib/generate-pattern";
 
 export type FeaturedStore = {
   store: Omit<Store, "createdAt">;
@@ -21,7 +22,10 @@ export default function DashboardStoreCard({ store }: FeaturedStore) {
         </div>
       )}
 
-      <div className="h-48"></div>
+      <div
+        className="h-48"
+        style={getRandomPatternStyle(String(store.id))}
+      ></div>
       <div className="h-max border-t p-2">
         <p className="font-semibold">{store.name}</p>
         <p className="text-sm text-gray-400">{store.description}</p>

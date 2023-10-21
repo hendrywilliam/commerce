@@ -37,7 +37,9 @@ export default function AccountNavigation() {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem>
-              <Link href="/dashboard">Dashboard</Link>
+              <Link className="w-full h-full" href="/dashboard">
+                Dashboard
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>Setting</DropdownMenuItem>
             <DropdownMenuSeparator />

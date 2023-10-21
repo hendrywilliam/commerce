@@ -58,4 +58,26 @@ export const siteConfig = {
       description: "Gather information based on your purchase data.",
     },
   ],
+  billingPlan: [
+    {
+      id: 1,
+      title: "Hobby",
+      description:
+        "Hobby tier can only create 5 stores. Great for small business owner",
+      price: 0,
+    },
+    {
+      id: 2,
+      title: "Pro",
+      description:
+        "Everything in hobby, plus 10 stores. Great choice for medium-to-big business owner.",
+      price: 20,
+    },
+    {
+      id: 3,
+      title: "Enterprise",
+      description: "Everything in pro, plus 10 stores.",
+      price: 100,
+    },
+  ],
 };
