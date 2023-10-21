@@ -1,15 +1,15 @@
 import Image from "next/image";
 import { IconBackpack, IconShoes, IconTshirt } from "@/components/ui/icons";
 import {
-  getShoesCount,
-  getClothingCount,
-  getBackpackCount,
+  getShoesCountAction,
+  getClothingCountAction,
+  getBackpackCountAction,
 } from "@/actions/products/get-products-count";
 
 export default async function CategoriesShowcase() {
-  const shoesCount = await getShoesCount();
-  const clothingCount = await getClothingCount();
-  const backpackCount = await getBackpackCount();
+  const shoesCount = await getShoesCountAction();
+  const clothingCount = await getClothingCountAction();
+  const backpackCount = await getBackpackCountAction();
 
   return (
     <section className="flex flex-col mt-64 w-3/4 items-center gap-2">

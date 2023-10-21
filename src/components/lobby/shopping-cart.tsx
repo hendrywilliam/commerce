@@ -1,14 +1,14 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { buttonVariants } from "@/components/ui/button";
 import { IconCart } from "@/components/ui/icons";
-import { getCart } from "@/actions/carts/get-cart";
-import { getCartDetails } from "@/actions/carts/get-cart-details";
+import { getCartAction } from "@/actions/carts/get-cart";
+import { getCartDetailsAction } from "@/actions/carts/get-cart-details";
 import ShoppingCartItem from "@/components/lobby/shopping-cart-item";
 import { Button } from "@/components/ui/button";
 
 export default async function ShoppingCart() {
-  const cartItems = await getCart();
-  const cartItemsDetails = await getCartDetails(cartItems);
+  const cartItems = await getCartAction();
+  const cartItemsDetails = await getCartDetailsAction(cartItems);
 
   const sumQty = cartItems.reduce((acc, val) => acc + Number(val.qty), 0);
 

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { deleteOwnedStore } from "@/actions/stores/delete-owned-store";
@@ -50,8 +52,8 @@ export default function DashboardStoreFrontDangerZone({
               variant={"destructive"}
               disabled={isDisabled}
             >
-              {isLoading && <IconLoading />}
               Confirm?
+              {isLoading && <IconLoading />}
             </Button>
           ) : (
             <Button

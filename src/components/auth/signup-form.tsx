@@ -9,6 +9,7 @@ import { IconLoading } from "@/components/ui/icons";
 import { useState } from "react";
 import { catchError } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function SignUpForm() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -36,6 +37,7 @@ export default function SignUpForm() {
         if (res.status === "complete") {
           setActive({ session: res.createdSessionId });
         }
+        toast("Register success. Redirecting to lobby.");
         router.push("/");
       })
       .catch((err) => catchError(err))

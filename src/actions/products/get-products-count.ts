@@ -4,7 +4,7 @@ import { db } from "@/db/core";
 import { products } from "@/db/schema";
 import { eq, sql } from "drizzle-orm";
 
-export async function getShoesCount() {
+export async function getShoesCountAction() {
   return (
     await db
       .select({ count: sql<number>`count(*)` })
@@ -13,7 +13,7 @@ export async function getShoesCount() {
   )[0].count;
 }
 
-export async function getClothingCount() {
+export async function getClothingCountAction() {
   return (
     await db
       .select({ count: sql<number>`count(*)` })
@@ -22,7 +22,7 @@ export async function getClothingCount() {
   )[0].count;
 }
 
-export async function getBackpackCount() {
+export async function getBackpackCountAction() {
   return (
     await db
       .select({ count: sql<number>`count(*)` })

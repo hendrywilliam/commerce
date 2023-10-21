@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { CartItem } from "@/types";
 
-export async function AddItemInCart(newCartItem: CartItem) {
+export async function AddItemInCartAction(newCartItem: CartItem) {
   const cartId = cookies().get("cart_id")?.value;
   const cartDetails =
     cartId &&

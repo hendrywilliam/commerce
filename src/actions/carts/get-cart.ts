@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import type { CartItem } from "@/types";
 
-export async function getCart() {
+export async function getCartAction() {
   const cartCookie = cookies().get("cart_id")?.value;
 
   if (isNaN(Number(cartCookie))) {

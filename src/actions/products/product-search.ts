@@ -3,7 +3,7 @@ import { db } from "@/db/core";
 import { products } from "@/db/schema";
 import { like } from "drizzle-orm";
 
-export async function getProductsBySearchTerm(searchTerm: string) {
+export async function getProductsBySearchTermAction(searchTerm: string) {
   return await db
     .select({
       id: products.id,

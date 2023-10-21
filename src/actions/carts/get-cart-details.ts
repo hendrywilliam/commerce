@@ -4,7 +4,7 @@ import { db } from "@/db/core";
 import { products } from "@/db/schema";
 import { inArray } from "drizzle-orm";
 
-export async function getCartDetails(cartItems: CartItem[]) {
+export async function getCartDetailsAction(cartItems: CartItem[]) {
   if (cartItems.length === 0) {
     return [];
   }

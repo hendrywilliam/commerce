@@ -1,5 +1,3 @@
-"use client";
-
 import { Store } from "@/db/schema";
 import DashboardStoreFrontDangerZone from "./dashboard-store-front-danger-zone";
 import DashboardStoreFrontGeneralZone from "./dashboard-store-front-general-zone";
@@ -13,7 +11,7 @@ export default function DashboardStoreFront({
 }: DashboardStoreSettingTabProps) {
   return (
     <div className="w-full h-full">
-      <DashboardStoreFrontGeneralZone />
+      <DashboardStoreFrontGeneralZone store={store} />
       <DashboardStoreFrontDangerZone id={store.id} />
     </div>
   );

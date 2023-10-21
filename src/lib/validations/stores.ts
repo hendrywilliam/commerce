@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const addNewStoreValidation = z.object({
+export const storeValidation = z.object({
   name: z.string().min(1, {
     message: "Store name is required.",
   }),

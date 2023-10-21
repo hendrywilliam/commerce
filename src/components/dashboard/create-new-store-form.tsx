@@ -6,13 +6,14 @@ import {
   FormLabel,
   FormTextarea,
 } from "@/components/ui/form";
-import { createNewStore } from "@/actions/stores/create-new-store";
+import { createNewStoreAction } from "@/actions/stores/create-new-store";
 import { useZodForm } from "@/hooks/use-zod-form";
-import { addNewStoreValidation } from "@/lib/validations/stores";
+import { storeValidation } from "@/lib/validations/stores";
 import { Button } from "@/components/ui/button";
 import { ElementRef, useRef, useState } from "react";
 import { toast } from "sonner";
 import { IconLoading } from "@/components/ui/icons";
+import { catchError } from "@/lib/utils";
 
 export default function CreateNewStoreForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,13 +23,13 @@ export default function CreateNewStoreForm() {
     handleSubmit,
     formState: { errors },
   } = useZodForm({
-    schema: addNewStoreValidation,
+    schema: storeValidation,
     mode: "onSubmit",
   });
 
   const onSubmit = handleSubmit(async function (data) {
     setIsLoading(true);
-    await createNewStore({
+    await createNewStoreAction({
       description: data.description,
       name: data.name,
       active: true,
@@ -37,7 +38,8 @@ export default function CreateNewStoreForm() {
         toast("Success add a new store.");
       })
       .catch((err) => {
-        toast.error("Something went wrong, please try again later.");
+        console.log(err);
+        catchError(err);
       })
       .finally(() => {
         void setIsLoading(false);

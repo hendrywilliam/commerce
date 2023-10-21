@@ -3,7 +3,7 @@
 import { Product } from "@/db/schema";
 import { Button } from "@/components/ui/button";
 import { IconCart, IconLoading } from "@/components/ui/icons";
-import { AddItemInCart } from "@/actions/carts/add-item-in-cart";
+import { AddItemInCartAction } from "@/actions/carts/add-item-in-cart";
 import { toast } from "sonner";
 import { useState } from "react";
 
@@ -18,7 +18,7 @@ export default function FeaturedProductCard({
 
   async function addToCart() {
     setIsLoading((val) => !val);
-    await AddItemInCart({ id: products.id, qty: 1 })
+    await AddItemInCartAction({ id: products.id, qty: 1 })
       .then((res) => {
         toast("Success add item to cart.");
       })

@@ -15,6 +15,13 @@
       "when": 1697263016605,
       "tag": "0001_strong_machine_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1697874585327,
+      "tag": "0002_shocking_tomas",
+      "breakpoints": true
     }
   ]
 }

@@ -39,8 +39,8 @@ export const stores = mysqlTable("stores", {
   id: serial("id").primaryKey(),
   name: varchar("name", {
     length: 255,
-  }),
-  description: text("description"),
+  }).notNull(),
+  description: text("description").notNull(),
   active: boolean("active").notNull().default(false),
   createdAt: timestamp("createdAt").defaultNow(),
 });
