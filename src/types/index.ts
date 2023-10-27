@@ -6,7 +6,15 @@ export interface CartItem {
   qty: number;
 }
 
-// remove default prop provided by third party -> own property
+export interface CartLineDetailedItems {
+  id: number;
+  name: string;
+  price: string;
+  category: string;
+  storeName: string;
+  qty: number;
+}
+
 export interface UserObjectCustomized extends Omit<User, "privateMetadata"> {
   privateMetadata: {
     storeId: string[];

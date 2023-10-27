@@ -28,7 +28,7 @@ export async function deleteCartItemAction(itemId: number) {
 
   const filteredItemsInCart =
     isDesiredItemExistInCart &&
-    parsedCartItems.filter((item) => item.id === itemId);
+    parsedCartItems.filter((item) => item.id !== itemId);
 
   // Update cart
   await db

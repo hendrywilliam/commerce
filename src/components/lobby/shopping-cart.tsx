@@ -4,11 +4,27 @@ import { IconCart } from "@/components/ui/icons";
 import { getCartAction } from "@/actions/carts/get-cart";
 import ShoppingCartItem from "@/components/lobby/shopping-cart-item";
 import { Button } from "@/components/ui/button";
+import { CartLineDetailedItems } from "@/types";
+import ShoppingCartSummary from "@/components/lobby/shopping-cart-summary";
 
 export default async function ShoppingCart() {
-  const { parsedCartItems } = await getCartAction();
+  const { parsedCartItems, cartItemDetails } = await getCartAction();
 
   const sumQty = parsedCartItems.reduce((acc, val) => acc + Number(val.qty), 0);
+
+  // Grouping products by its store.
+  const groupProductByItsStore = cartItemDetails.reduce(
+    (storeGroup, product) => {
+      const { storeName } = product;
+      storeGroup[storeName] = storeGroup[storeName] ?? [];
+      storeGroup[storeName].push(product);
+      return storeGroup;
+    },
+    {} as Record<
+      Pick<CartLineDetailedItems, "storeName">["storeName"],
+      CartLineDetailedItems[]
+    >
+  );
 
   return (
     <>
@@ -26,19 +42,45 @@ export default async function ShoppingCart() {
           <IconCart />
         </SheetTrigger>
         <SheetContent>
-          <div className="flex flex-col justify-between h-full">
-            <div className="flex flex-col">
-              <h1 className="font-semibold">Cart ({sumQty})</h1>
-              <div className="mt-4">
-                {/* {parsedCartItems.map((item) => {
-                  return <ShoppingCartItem product={item} key={item.id} />;
-                })} */}
+          {parsedCartItems.length > 0 ? (
+            <div className="h-full flex flex-col justify-between">
+              <div className=" h-full">
+                <div className="flex flex-col">
+                  <h1 className="font-semibold">Cart ({sumQty})</h1>
+                  <div className="mt-4"></div>
+                </div>
+                <div className="flex flex-col w-full gap-2">
+                  {Object.entries(groupProductByItsStore).map(
+                    ([storeName, products], i) => {
+                      return (
+                        <div key={i}>
+                          <h1 className="font-semibold">{storeName}</h1>
+                          {products.map((product) => {
+                            const qty = parsedCartItems.filter(
+                              (item) => item.id === product.id
+                            )[0].qty;
+                            return (
+                              <ShoppingCartItem
+                                key={product.id}
+                                cartLineDetailedItem={product}
+                                quantity={qty}
+                              />
+                            );
+                          })}
+                        </div>
+                      );
+                    }
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="w-ful">
+              <ShoppingCartSummary cartItemDetails={cartItemDetails} />
               <Button className="w-full">Checkout</Button>
             </div>
-          </div>
+          ) : (
+            <div>
+              <p>You dont have any item in your cart</p>
+            </div>
+          )}
         </SheetContent>
       </Sheet>
     </>

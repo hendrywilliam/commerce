@@ -5,6 +5,7 @@ import { carts } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import type { CartItem } from "@/types";
+import { getCartDetailsAction } from "@/actions/carts/get-cart-details";
 
 export async function getCartAction() {
   const cartId = cookies().get("cart_id")?.value;
@@ -25,8 +26,13 @@ export async function getCartAction() {
     : [];
 
   // Get all item details based on the parsedCartItems above.
+  const cartItemDetails = await getCartDetailsAction(
+    Number(cartId),
+    parsedCartItems
+  );
 
   return {
     parsedCartItems,
+    cartItemDetails,
   };
 }

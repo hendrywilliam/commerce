@@ -67,7 +67,6 @@ export default function ProductSearch() {
             const { category } = product;
             group[category] = group[category] ?? [];
             group[category].push(product);
-            console.log(group);
             return group;
           },
           {} as Record<string, Pick<Product, "name" | "id" | "category">[]>
