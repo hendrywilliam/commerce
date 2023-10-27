@@ -60,7 +60,11 @@ export default function CreateNewStoreForm() {
             className="h-52"
             {...register("description")}
           />
-          <Button className="gap-1" type="submit">
+          <Button
+            className="gap-1 disabled:opacity-75"
+            type="submit"
+            disabled={isLoading}
+          >
             {isLoading && <IconLoading />}
             Submit
           </Button>

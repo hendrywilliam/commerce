@@ -2,15 +2,13 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { buttonVariants } from "@/components/ui/button";
 import { IconCart } from "@/components/ui/icons";
 import { getCartAction } from "@/actions/carts/get-cart";
-import { getCartDetailsAction } from "@/actions/carts/get-cart-details";
 import ShoppingCartItem from "@/components/lobby/shopping-cart-item";
 import { Button } from "@/components/ui/button";
 
 export default async function ShoppingCart() {
-  const cartItems = await getCartAction();
-  const cartItemsDetails = await getCartDetailsAction(cartItems);
+  const { parsedCartItems } = await getCartAction();
 
-  const sumQty = cartItems.reduce((acc, val) => acc + Number(val.qty), 0);
+  const sumQty = parsedCartItems.reduce((acc, val) => acc + Number(val.qty), 0);
 
   return (
     <>
@@ -32,9 +30,9 @@ export default async function ShoppingCart() {
             <div className="flex flex-col">
               <h1 className="font-semibold">Cart ({sumQty})</h1>
               <div className="mt-4">
-                {cartItemsDetails.map((item) => {
+                {/* {parsedCartItems.map((item) => {
                   return <ShoppingCartItem product={item} key={item.id} />;
-                })}
+                })} */}
               </div>
             </div>
             <div className="w-ful">

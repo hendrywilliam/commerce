@@ -63,7 +63,7 @@ export default function DashboardStoreFrontGeneralZone({
           <p className="font-bold">Store name</p>
           <p>
             Rename your own store into more recognizeable name, so you can
-            standoff against your competitor.
+            compete against your competitor.
           </p>
           <Input
             onChange={(e) =>

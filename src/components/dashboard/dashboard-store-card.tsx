@@ -28,7 +28,7 @@ export default function DashboardStoreCard({ store }: FeaturedStore) {
       ></div>
       <div className="h-max border-t p-2">
         <p className="font-semibold">{store.name}</p>
-        <p className="text-sm text-gray-400">{store.description}</p>
+        <p className="text-sm text-gray-400 truncate">{store.description}</p>
       </div>
     </Link>
   );

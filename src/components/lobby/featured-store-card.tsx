@@ -1,4 +1,5 @@
 import type { Store } from "@/db/schema";
+import { getRandomPatternStyle } from "@/lib/generate-pattern";
 
 export type FeaturedStore = {
   store: Omit<Store, "createdAt">;
@@ -16,11 +17,13 @@ export default function FeaturedStoreCard({ store }: FeaturedStore) {
           Not active
         </div>
       )}
-
-      <div className="h-4/6"></div>
+      <div
+        className="h-4/6"
+        style={getRandomPatternStyle(String(store.id))}
+      ></div>
       <div className="h-2/6 border-t p-2">
         <p className="font-semibold">{store.name}</p>
-        <p className="text-sm text-gray-400">{store.description}</p>
+        <p className="text-sm text-gray-400 truncate">{store.description}</p>
       </div>
     </div>
   );
