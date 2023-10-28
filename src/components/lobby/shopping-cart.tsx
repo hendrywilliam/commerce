@@ -4,7 +4,7 @@ import { IconCart } from "@/components/ui/icons";
 import { getCartAction } from "@/actions/carts/get-cart";
 import ShoppingCartItem from "@/components/lobby/shopping-cart-item";
 import { Button } from "@/components/ui/button";
-import { CartLineDetailedItems } from "@/types";
+import type { CartLineDetailedItems } from "@/types";
 import ShoppingCartSummary from "@/components/lobby/shopping-cart-summary";
 
 export default async function ShoppingCart() {
@@ -73,8 +73,11 @@ export default async function ShoppingCart() {
               <Button className="w-full">Checkout</Button>
             </div>
           ) : (
-            <div>
-              <p>You dont have any item in your cart</p>
+            <div className="flex flex-col h-full w-full justify-center items-center">
+              <IconCart width={60} height={60} />
+              <p className="text-gray-400">
+                You dont have any item in your cart
+              </p>
             </div>
           )}
         </SheetContent>

@@ -11,9 +11,9 @@ export async function getCartDetailsAction(
   cartId: number,
   cartItems: CartItem[]
 ) {
-  if (isNaN(cartId)) {
-    return [];
-  }
+  if (isNaN(cartId)) return [];
+
+  if (cartItems && cartItems.length === 0) return [];
 
   const productIds = cartItems.map((item) => item.id);
 

@@ -43,6 +43,7 @@ export default function ProductSearch() {
     return () => {
       document.removeEventListener("keydown", keyDown);
       setResults({});
+      setHasNoResult(false);
     };
   }, [isOpen]);
 

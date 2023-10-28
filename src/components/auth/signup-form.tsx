@@ -37,7 +37,7 @@ export default function SignUpForm() {
         if (res.status === "complete") {
           setActive({ session: res.createdSessionId });
         }
-        toast("Register success. Redirecting to lobby.");
+        toast.success("Register success. Redirecting to lobby.");
         router.push("/");
       })
       .catch((err) => catchError(err))

@@ -1,6 +1,6 @@
 import { formatCurrency } from "@/lib/utils";
 import type { CartLineDetailedItems } from "@/types";
-import ShoppingCartItemAction from "@/components/lobby/shoping-cart-item-action";
+import ShoppingCartItemAction from "@/components/lobby/shopping-cart-item-action";
 import { truncate } from "@/lib/utils";
 
 interface ShoppingCartItemProps {
@@ -28,7 +28,7 @@ export default function ShoppingCartItem({
         <p className="text-gray-400 text-xs">{cartLineDetailedItem.category}</p>
       </div>
       <ShoppingCartItemAction
-        productId={cartLineDetailedItem.id}
+        id={cartLineDetailedItem.id}
         qty={cartLineDetailedItem.qty}
       />
     </div>
