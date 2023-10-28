@@ -4,6 +4,8 @@ import { eq } from "drizzle-orm";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardStoreFront from "@/components/dashboard/dashboard-store-front";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 
 export default async function DashboardDynamicStorePage({
   params,
@@ -26,7 +28,12 @@ export default async function DashboardDynamicStorePage({
             <p className="w-[75%]">Your current store information lies here.</p>
           </div>
           <div className="flex-1">
-            <Button className="w-max">Add product</Button>
+            <Link
+              href={`${params.storeId}/add-new-product`}
+              className={buttonVariants({ class: "w-max" })}
+            >
+              Add product
+            </Link>
           </div>
         </div>
       </div>

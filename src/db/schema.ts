@@ -22,6 +22,7 @@ export const products = mysqlTable("products", {
   stock: int("stock").default(0),
   rating: int("rating").notNull().default(0),
   category: mysqlEnum("category", ["clothing", "backpack", "shoes"]).notNull(),
+  image: json("image"),
   createdAt: timestamp("createdAt").defaultNow(),
 });
 

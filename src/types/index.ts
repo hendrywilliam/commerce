@@ -1,5 +1,6 @@
 import { User } from "@clerk/nextjs/server";
 import { siteConfig } from "@/config/site-config";
+import type { FileWithPath } from "@uploadthing/react";
 
 export interface CartItem {
   id: number;
@@ -23,4 +24,8 @@ export interface UserObjectCustomized extends Omit<User, "privateMetadata"> {
 
 export interface BillingPlan {
   plan: (typeof siteConfig.billingPlan)[0];
+}
+
+export interface FileWithPreview extends FileWithPath {
+  preview: string;
 }
