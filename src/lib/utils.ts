@@ -28,3 +28,7 @@ export function formatCurrency(amount: number) {
   const dollar = formatAmount.split(".")[0];
   return dollar;
 }
+
+export function truncate(word: string, maxLength: number = 10) {
+  return word.length >= maxLength ? word.slice(0, maxLength) + "..." : word;
+}

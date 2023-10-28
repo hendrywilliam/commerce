@@ -49,21 +49,17 @@ export default async function ShoppingCart() {
                   <h1 className="font-semibold">Cart ({sumQty})</h1>
                   <div className="mt-4"></div>
                 </div>
-                <div className="flex flex-col w-full gap-2">
+                <div className="flex flex-col w-full h-full overflow-y-auto gap-2">
                   {Object.entries(groupProductByItsStore).map(
                     ([storeName, products], i) => {
                       return (
                         <div key={i}>
                           <h1 className="font-semibold">{storeName}</h1>
                           {products.map((product) => {
-                            const qty = parsedCartItems.filter(
-                              (item) => item.id === product.id
-                            )[0].qty;
                             return (
                               <ShoppingCartItem
                                 key={product.id}
                                 cartLineDetailedItem={product}
-                                quantity={qty}
                               />
                             );
                           })}

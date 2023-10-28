@@ -1,4 +1,5 @@
 import { CartLineDetailedItems, CartItem } from "@/types";
+import { formatCurrency } from "@/lib/utils";
 
 interface ShoppingCartSummaryProps {
   cartItemDetails: CartLineDetailedItems[];
@@ -23,7 +24,7 @@ export default function ShoppingCartSummary({
       </div>
       <div className="flex justify-between">
         <p>Total</p>
-        <p>{calculateTotalPrice}</p>
+        <p>{formatCurrency(calculateTotalPrice)}</p>
       </div>
     </div>
   );
