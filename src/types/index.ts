@@ -18,6 +18,7 @@ export interface CartLineDetailedItems {
 
 export interface UserObjectCustomized extends Omit<User, "privateMetadata"> {
   privateMetadata: {
+    plan: "Hobby" | "Pro" | "Enterprise";
     storeId: string[];
   };
 }

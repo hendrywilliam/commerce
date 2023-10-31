@@ -31,7 +31,7 @@ export async function updateCartItemAction(itemId: number, quantity: number) {
     isSelectedItemExistInCart &&
     allItemsInCart.filter((item) => item.id !== isSelectedItemExistInCart.id);
 
-  // Check quantity is gt than 0 -> update qty
+  // Check quantity is greater than 0 -> update qty
   // Else -> remove selected item.
   if (quantity > 0) {
     await db

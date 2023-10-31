@@ -38,7 +38,6 @@ export default function CreateNewStoreForm() {
         toast("Success add a new store.");
       })
       .catch((err) => {
-        console.log(err);
         catchError(err);
       })
       .finally(() => {
