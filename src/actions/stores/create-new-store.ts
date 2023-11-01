@@ -7,10 +7,12 @@ import { auth, clerkClient } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import { BillingPlan, UserObjectCustomized } from "@/types";
+import { siteConfig } from "@/config/site-config";
 
 export async function createNewStoreAction(storeData: NewStore) {
   const { userId } = auth();
-  const user = await currentUser();
+  const user = (await currentUser()) as UserObjectCustomized | null;
 
   if (!userId) {
     throw new Error("You must be signed in to create a new store");
@@ -24,21 +26,34 @@ export async function createNewStoreAction(storeData: NewStore) {
     throw new Error("Store is already exist with that name.");
   }
 
-  const { insertId } = await db.insert(stores).values({
-    name: storeData.name,
-    active: storeData.active,
-    description: storeData.description,
+  const findCurrentUserPlan = siteConfig.billingPlan.find((plan) => {
+    return plan.title === user?.privateMetadata.plan ?? "Hobby";
   });
 
-  const userDataPrivateMetadata =
-    (user?.privateMetadata.storeId as string[]) ?? [];
+  const isAbleToCreateNewStore =
+    findCurrentUserPlan &&
+    (user?.privateMetadata.storeId as string[]).length <
+      findCurrentUserPlan.limit;
 
-  await clerkClient.users.updateUser(userId, {
-    privateMetadata: {
-      storeId: [...userDataPrivateMetadata, insertId],
-    },
-  });
+  if (isAbleToCreateNewStore) {
+    const { insertId } = await db.insert(stores).values({
+      name: storeData.name,
+      active: storeData.active,
+      description: storeData.description,
+    });
 
-  revalidatePath("/dashboard");
-  redirect("/dashboard/stores");
+    const userDataPrivateMetadata = user?.privateMetadata;
+
+    await clerkClient.users.updateUser(userId, {
+      privateMetadata: {
+        ...userDataPrivateMetadata,
+        storeId: [...(userDataPrivateMetadata?.storeId as string[]), insertId],
+      },
+    });
+
+    revalidatePath("/dashboard");
+    redirect("/dashboard/stores");
+  } else {
+    throw new Error("New store creation limit reached");
+  }
 }

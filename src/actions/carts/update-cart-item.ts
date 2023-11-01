@@ -1,6 +1,6 @@
 "use server";
 import { db } from "@/db/core";
-import { carts } from "@/db/schema";
+import { carts, products } from "@/db/schema";
 import { CartItem } from "@/types";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -24,6 +24,13 @@ export async function updateCartItemAction(itemId: number, quantity: number) {
     (cartItem) => cartItem.id === itemId
   );
 
+  const selectedItemDetails =
+    isSelectedItemExistInCart &&
+    (await db.query.products.findFirst({
+      where: (products, { eq }) =>
+        eq(products.id, isSelectedItemExistInCart.id),
+    }));
+
   if (!isSelectedItemExistInCart)
     throw new Error("Item doesnt exist in cart. Please try again later.");
 
@@ -31,8 +38,6 @@ export async function updateCartItemAction(itemId: number, quantity: number) {
     isSelectedItemExistInCart &&
     allItemsInCart.filter((item) => item.id !== isSelectedItemExistInCart.id);
 
-  // Check quantity is greater than 0 -> update qty
-  // Else -> remove selected item.
   if (quantity > 0) {
     await db
       .update(carts)
@@ -43,7 +48,11 @@ export async function updateCartItemAction(itemId: number, quantity: number) {
             ...anyItemExcludingSelectedItem,
             {
               ...isSelectedItemExistInCart,
-              qty: quantity,
+              qty:
+                selectedItemDetails &&
+                quantity > (selectedItemDetails.stock as number)
+                  ? selectedItemDetails.stock
+                  : quantity,
             },
           ]),
       })

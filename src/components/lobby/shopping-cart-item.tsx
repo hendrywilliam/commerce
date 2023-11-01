@@ -22,7 +22,7 @@ export default function ShoppingCartItem({
         <Image
           src={parsedImageUrl}
           fill
-          alt="Backpack Category"
+          alt={cartLineDetailedItem.name}
           className="object-cover rounded"
         />
       </div>

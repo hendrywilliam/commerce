@@ -64,6 +64,7 @@ export const siteConfig = {
       title: "Hobby",
       description:
         "Hobby tier can only create 5 stores. Great for small business owner",
+      limit: 5,
       price: 0,
     },
     {
@@ -71,12 +72,14 @@ export const siteConfig = {
       title: "Pro",
       description:
         "Everything in hobby, plus 10 stores. Great choice for medium-to-big business owner.",
+      limit: 15,
       price: 20,
     },
     {
       id: 3,
       title: "Enterprise",
       description: "Everything in pro, plus 10 stores.",
+      limit: 25,
       price: 100,
     },
   ],

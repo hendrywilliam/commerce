@@ -14,11 +14,8 @@ export default async function IndexPage() {
     "createdAt"
   >[];
 
-  const featuredProducts = (await db
-    .select()
-    .from(products)
-    .limit(8)
-    .where(gte(products.rating, 3))) as Omit<Product, "createdAt">[];
+  const featuredProducts = await db.select().from(products).limit(8);
+  // .where(gte(products.rating, 3))) as Omit<Product, "createdAt">[];
 
   return (
     <div className="flex flex-col container h-full w-full items-center py-8">

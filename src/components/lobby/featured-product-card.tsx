@@ -7,6 +7,7 @@ import { AddItemInCartAction } from "@/actions/carts/add-item-in-cart";
 import { toast } from "sonner";
 import { useState } from "react";
 import { formatCurrency } from "@/lib/utils";
+import Image from "next/image";
 
 type FeaturedProductCardProps = {
   products: Omit<Product, "createdAt">;
@@ -28,12 +29,21 @@ export default function FeaturedProductCard({
       });
   }
 
+  const parsedImageUrl = JSON.parse(products.image as string)[0].fileUrl;
+
   return (
     <div className="relative h-80 w-full border rounded">
       <div className="absolute top-2 right-2 border rounded px-2 py-1 bg-foreground text-white font-semibold">
         <p className="text-xs">{formatCurrency(Number(products.price))}</p>
       </div>
-      <div className="h-4/6"></div>
+      <div className="relative h-4/6">
+        <Image
+          src={parsedImageUrl}
+          fill
+          alt={products.name as string}
+          className="object-cover rounded-t"
+        />
+      </div>
       <div className="h-2/6 border-t p-2">
         <p className="font-semibold">{products.name}</p>
         <p className="text-sm text-gray-400">{products.description}</p>

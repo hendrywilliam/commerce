@@ -6,10 +6,9 @@ import { products } from "@/db/schema";
 import { auth } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
 
-export async function insertNewProduct(input: NewProduct) {
+export async function insertNewProductAction(input: NewProduct) {
   const { userId } = auth();
 
-  // Middleware will handle this.
   if (!userId) {
     throw new Error("You must be signed in to add a new product.");
   }

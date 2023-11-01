@@ -27,7 +27,7 @@ export default function DashboardStoreCard({ store }: FeaturedStore) {
         style={getRandomPatternStyle(String(store.id))}
       ></div>
       <div className="h-max border-t p-2">
-        <p className="font-semibold">{store.name}</p>
+        <p className="font-semibold truncate">{store.name}</p>
         <p className="text-sm text-gray-400 truncate">{store.description}</p>
       </div>
     </Link>

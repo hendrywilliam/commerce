@@ -20,7 +20,7 @@ export default function ShoppingCartSummary({
       </div>
       <div className="flex justify-between">
         <p>Tax</p>
-        <p>Calculated when checkout</p>
+        <p>Calculated at checkout</p>
       </div>
       <div className="flex justify-between">
         <p>Total</p>

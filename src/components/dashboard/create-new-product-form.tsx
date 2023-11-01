@@ -28,7 +28,7 @@ import type { FileWithPreview } from "@/types";
 import { toast } from "sonner";
 import { catchError } from "@/lib/utils";
 import { useParams } from "next/navigation";
-import { insertNewProduct } from "@/actions/products/insert-new-product";
+import { insertNewProductAction } from "@/actions/products/insert-new-product";
 
 type NewProductInput = z.infer<typeof newProductValidation>;
 
@@ -60,7 +60,7 @@ export default function CreateNewProductForm() {
         storeId: Number(routeParams.storeId),
       } satisfies NewProduct;
 
-      await insertNewProduct(productData);
+      await insertNewProductAction(productData);
       toast.success("Success add new product.");
     } catch (err) {
       catchError(err);
