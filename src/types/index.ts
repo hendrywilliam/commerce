@@ -13,6 +13,7 @@ export interface CartLineDetailedItems {
   price: string;
   category: string;
   storeName: string;
+  image: string;
   qty: number;
 }
 

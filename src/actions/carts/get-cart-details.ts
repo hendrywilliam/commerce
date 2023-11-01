@@ -23,6 +23,7 @@ export async function getCartDetailsAction(
       name: products.name,
       price: products.price,
       category: products.category,
+      image: products.image,
       storeName: stores.name,
     })
     .from(products)
