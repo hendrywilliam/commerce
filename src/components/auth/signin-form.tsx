@@ -20,13 +20,13 @@ export default function SignInForm() {
     schema: loginValidation,
     mode: "onSubmit",
   });
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { isLoaded, signIn, setActive } = useSignIn();
   const router = useRouter();
 
   const submitLogin = handleSubmit(async (data) => {
     if (!isLoaded) return;
-    setLoading(true);
+    setIsLoading(true);
     await signIn
       .create({
         identifier: data.email,
@@ -41,7 +41,7 @@ export default function SignInForm() {
       })
       .catch((err) => catchError(err))
       .finally(() => {
-        setLoading(false);
+        setIsLoading(false);
       });
   });
 
@@ -75,8 +75,14 @@ export default function SignInForm() {
             name="password"
           />
         </FormField>
-        <Button className="flex gap-1" type="submit" size="sm">
-          {loading && <IconLoading />}
+        <Button
+          aria-disabled={isLoading}
+          disabled={isLoading}
+          className="flex gap-1"
+          type="submit"
+          size="sm"
+        >
+          {isLoading && <IconLoading />}
           Sign in
         </Button>
       </Form>

@@ -1,5 +1,5 @@
-interface UploadProductImagePreview {
-  url: string;
+interface UploadProductImagePreviewProps {
+  preview: string;
 }
 
 export default function UploadProductImagePreview() {

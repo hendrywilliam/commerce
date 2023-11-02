@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Toast from "@/components/toast";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
         <body className={`${inter.className} text-sm antialiased`}>
           <Toast />
           {children}
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>

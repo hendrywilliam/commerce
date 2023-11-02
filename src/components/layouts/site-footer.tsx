@@ -8,8 +8,7 @@ export default function SiteFooter() {
           <div className="flex flex-col h-full w-1/2 justify-between">
             <p className="font-bold">POINTASIDE</p>
             <p className="text-xs">
-              Made by <span className="font-bold">fueledbynasi</span> aka{" "}
-              <span className="font-bold">yrdenh</span>
+              Made by <span className="font-bold">hendry</span>
             </p>
           </div>
           <div className="grid grid-cols-2 w-1/2">
