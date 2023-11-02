@@ -47,7 +47,7 @@ export default async function IndexPage() {
         </p>
         <div className="grid grid-cols-4 w-full gap-2">
           {featuredProducts.map((product) => {
-            return <FeaturedProductCard products={product} key={product.id} />;
+            return <FeaturedProductCard product={product} key={product.id} />;
           })}
         </div>
         <Link href="/stores" className={buttonVariants({ class: "mt-4" })}>

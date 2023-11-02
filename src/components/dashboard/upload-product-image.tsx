@@ -12,6 +12,7 @@ import { IconTrashCan } from "@/components/ui/icons";
 import { UseFormSetValue } from "react-hook-form";
 import { newProductValidation } from "@/lib/validations/product";
 import { z } from "zod";
+import Image from "next/image";
 
 interface UploadProductImageProps {
   isFieldHavingError: boolean;
@@ -62,7 +63,7 @@ export default function UploadProductImage({
 
   return (
     <div
-      className="border border-dashed rounded h-36 shadow-sm"
+      className="border border-dashed rounded h-44 shadow-sm"
       {...getRootProps()}
     >
       <input
@@ -73,11 +74,10 @@ export default function UploadProductImage({
         <IconUpload className="w-6 h-6" />
         {selectedFiles.length > 0 ? (
           <>
-            <p>{selectedFiles[0].name}</p>
             <Button
-              variant={"outline"}
+              variant={"secondary"}
               size={"icon"}
-              className="absolute top-2 right-2 h-6 w-6"
+              className="absolute top-2 right-2 h-6 w-6 z-10"
               onClick={(event) => {
                 event.stopPropagation();
                 // Reset all value
@@ -87,6 +87,12 @@ export default function UploadProductImage({
             >
               <IconTrashCan />
             </Button>
+            <Image
+              src={selectedFiles[0].preview}
+              fill
+              alt={selectedFiles[0].name}
+              className="object-contain rounded"
+            />
           </>
         ) : (
           <p>Click or drag your file here.</p>

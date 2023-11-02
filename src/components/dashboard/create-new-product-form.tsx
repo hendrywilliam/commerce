@@ -42,6 +42,7 @@ export default function CreateNewProductForm() {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useZodForm({
     schema: newProductValidation,
@@ -62,6 +63,8 @@ export default function CreateNewProductForm() {
 
       await insertNewProductAction(productData);
       toast.success("Success add new product.");
+      setSelectedFiles([]);
+      reset();
     } catch (err) {
       catchError(err);
     } finally {

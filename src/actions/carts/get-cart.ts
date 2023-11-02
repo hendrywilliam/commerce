@@ -18,10 +18,10 @@ export async function getCartAction() {
           .from(carts)
           .where(eq(carts.id, Number(cartId)))
           .limit(1)
-      )[0].items as string);
+      )[0]?.items as string);
 
   // Get all items from the cart.
-  const parsedCartItems = cartItems.length
+  const parsedCartItems = cartItems?.length
     ? (JSON.parse(cartItems as string) as CartItem[])
     : [];
 
