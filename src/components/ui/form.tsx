@@ -86,7 +86,7 @@ const formInputVariant = cva("p-2 rounded-md", {
   variants: {
     variant: {
       default:
-        "border focus:ring-2 ring-muted outline-none disabled:opacity-75 bg-muted",
+        "border focus:ring-2 ring-muted outline-none disabled:opacity-75 bg-transparent",
       error:
         "border focus:ring-2 ring-1 ring-destructive ring-offset-1 outline-none",
     },
@@ -167,7 +167,7 @@ export interface FormTextarea
 type FormTextareaRef = HTMLTextAreaElement;
 
 const formTextVariants = cva(
-  "border rounded-md resize-none p-2 text-sm focus:ring-2 ring-muted outline-none bg-muted"
+  "border rounded-md resize-none p-2 text-sm focus:ring-2 ring-muted outline-none bg-transparent"
 );
 
 type FormTextareaVariants = VariantProps<typeof formTextVariants>;

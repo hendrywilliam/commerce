@@ -4,7 +4,7 @@ import { currentUser } from "@clerk/nextjs";
 const f = createUploadthing();
 
 export const uploadFileRouter = {
-  imageUploader: f({ image: { maxFileSize: "4MB" } })
+  imageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
     .middleware(async ({ req }) => {
       const isAuthenticated = await currentUser();
 

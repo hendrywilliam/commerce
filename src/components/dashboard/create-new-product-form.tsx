@@ -107,55 +107,23 @@ export default function CreateNewProductForm() {
         <div className="grid grid-cols-2 w-full gap-2">
           <FormField>
             <FormLabel htmlFor="product-price-input">Product Price</FormLabel>
-            <div className="inline-flex gap-2">
-              <Button
-                className="flex self-center h-6"
-                size={"icon"}
-                variant={"outline"}
-              >
-                &#43;
-              </Button>
-              <FormInput
-                aria-invalid={errors["price"] ? "true" : "false"}
-                {...register("price")}
-                className="w-full"
-                id="product-price-input"
-              />
-              <Button
-                className="flex self-center h-6"
-                size={"icon"}
-                variant={"outline"}
-              >
-                &#8722;
-              </Button>
-            </div>
+            <FormInput
+              aria-invalid={errors["price"] ? "true" : "false"}
+              {...register("price")}
+              className="w-full"
+              id="product-price-input"
+            />
           </FormField>
           <FormField>
             <FormLabel htmlFor="product-stock-input">Product Stock</FormLabel>
-            <div className="inline-flex gap-2">
-              <Button
-                className="flex self-center h-6"
-                size={"icon"}
-                variant={"outline"}
-              >
-                &#43;
-              </Button>
-              <FormInput
-                aria-invalid={errors["stock"] ? "true" : "false"}
-                {...register("stock", {
-                  valueAsNumber: true,
-                })}
-                className="w-full"
-                id="product-stock-input"
-              />
-              <Button
-                className="flex self-center h-6"
-                size={"icon"}
-                variant={"outline"}
-              >
-                &#8722;
-              </Button>
-            </div>
+            <FormInput
+              aria-invalid={errors["stock"] ? "true" : "false"}
+              {...register("stock", {
+                valueAsNumber: true,
+              })}
+              className="w-full"
+              id="product-stock-input"
+            />
           </FormField>
         </div>
         <FormField>

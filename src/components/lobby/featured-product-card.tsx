@@ -2,7 +2,7 @@
 
 import { Product } from "@/db/schema";
 import { Button } from "@/components/ui/button";
-import { IconCart, IconLoading } from "@/components/ui/icons";
+import { IconCart, IconLoading, IconView } from "@/components/ui/icons";
 import { AddItemInCartAction } from "@/actions/carts/add-item-in-cart";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -37,7 +37,7 @@ export default function FeaturedProductCard({
 
   return (
     <div className="relative h-80 w-full border rounded">
-      <div className="absolute top-2 right-2 border rounded px-2 py-1 bg-foreground text-white font-semibold">
+      <div className="absolute z-10 top-2 right-2 rounded px-2 py-1 bg-foreground text-white font-semibold">
         <p className="text-xs">{formatCurrency(Number(product.price))}</p>
       </div>
       <div className="relative h-4/6">
@@ -56,10 +56,11 @@ export default function FeaturedProductCard({
             className={buttonVariants({
               size: "sm",
               variant: "outline",
-              class: "w-full",
+              class: "w-full inline-flex gap-1",
             })}
             href={`/product/${product.id}`}
           >
+            <IconView />
             Quick View
           </Link>
           <Button

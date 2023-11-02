@@ -6,7 +6,7 @@ export default function SiteFooter() {
       <div className="container h-full w-full py-8">
         <div className="flex justify-between h-full">
           <div className="flex flex-col h-full w-1/2 justify-between">
-            <p className="font-bold">POINTASIDE</p>
+            <p className="font-bold">ecremmoce</p>
             <p className="text-xs">
               Made by <span className="font-bold">hendry</span>
             </p>
