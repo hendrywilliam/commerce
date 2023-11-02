@@ -18,23 +18,14 @@ export default async function ProductModal({
   return (
     <Modal>
       <div className="bg-background h-full lg:w-3/4 w-5/6 rounded mx-auto">
-        <div className="flex flex-col h-full w-full gap-2">
-          <div className="h-full w-full p-4">
-            <div className="relative h-3/4 w-full">
-              <Image
-                src={parsedImageUrl}
-                fill
-                alt={productDetails?.name as string}
-                className="object-contain rounded"
-              />
-            </div>
-            <div className="py-4">
-              <h1 className="font-semibold">
-                {productDetails?.name} &#8212;{" "}
-                <span>{formatCurrency(Number(productDetails?.price))}</span>
-              </h1>
-              <p>{productDetails?.description}</p>
-            </div>
+        <div className="h-full w-full">
+          <div className="relative h-full w-full">
+            <Image
+              src={parsedImageUrl}
+              fill
+              alt={productDetails?.name as string}
+              className="object-fill rounded"
+            />
           </div>
         </div>
       </div>
