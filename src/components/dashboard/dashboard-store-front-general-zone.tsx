@@ -9,6 +9,7 @@ import { updateOwnedStoreAction } from "@/actions/stores/update-store";
 import { toast } from "sonner";
 import { catchError } from "@/lib/utils";
 import { IconLoading } from "@/components/ui/icons";
+import { Textarea } from "@/components/ui/textarea";
 
 interface DashboardStoreFrontGeneralZoneProps {
   store: Store;
@@ -73,13 +74,13 @@ export default function DashboardStoreFrontGeneralZone({
               })
             }
             value={storePublicInformation.name}
-            className="border focus:ring-2 focus-visible:ring-muted outline-none disabled:opacity-75 bg-muted w-1/4 mt-2"
+            className="border focus:ring-2 focus-visible:ring-muted outline-none disabled:opacity-75 w-1/4 mt-2"
           />
         </div>
         <div>
           <p className="font-bold">Store description</p>
           <p>Explain your cool ass store to the world.</p>
-          <textarea
+          <Textarea
             value={storePublicInformation.description}
             onChange={(e) =>
               setStorePublicInformation({
@@ -87,7 +88,7 @@ export default function DashboardStoreFrontGeneralZone({
                 description: e.target.value,
               })
             }
-            className="border focus:ring-2 ring-muted outline-none p-2 disabled:opacity-75 bg-muted w-1/2 rounded resize-none mt-2"
+            className="border focus:ring-2 ring-muted focus-visible:ring-muted outline-none focus:outline-none p-2 disabled:opacity-75 h-56 w-1/2 rounded resize-none mt-2"
           />
         </div>
         <div className="inline-flex w-full justify-between">

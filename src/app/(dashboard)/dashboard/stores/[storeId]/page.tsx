@@ -1,11 +1,11 @@
 import { db } from "@/db/core";
-import { stores } from "@/db/schema";
+import { products, stores } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import DashboardStoreFront from "@/components/dashboard/dashboard-store-front";
+import DashboardStoreFrontTab from "@/components/dashboard/dashboard-store-front-tab";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import DashboardStoreProductTab from "@/components/dashboard/dashboard-store-product-tab";
 
 export default async function DashboardDynamicStorePage({
   params,
@@ -18,6 +18,12 @@ export default async function DashboardDynamicStorePage({
       .from(stores)
       .where(eq(stores.id, Number(params.storeId)))
   )[0];
+
+  const storeProductData = await db
+    .select()
+    .from(products)
+    .where(eq(products.storeId, Number(params.storeId)))
+    .limit(10);
 
   return (
     <div>
@@ -44,9 +50,11 @@ export default async function DashboardDynamicStorePage({
             <TabsTrigger value="products">Products</TabsTrigger>
           </TabsList>
           <TabsContent value="storefront">
-            <DashboardStoreFront store={store} />
+            <DashboardStoreFrontTab store={store} />
           </TabsContent>
-          <TabsContent value="products">Change your password here.</TabsContent>
+          <TabsContent value="products">
+            <DashboardStoreProductTab storeProductData={storeProductData} />
+          </TabsContent>
         </Tabs>
       </div>
     </div>

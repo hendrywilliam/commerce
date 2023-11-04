@@ -37,7 +37,7 @@ export default function FeaturedProductCard({
 
   return (
     <div className="relative h-80 w-full border rounded">
-      <div className="absolute z-10 top-2 right-2 rounded px-2 py-1 bg-foreground text-white font-semibold">
+      <div className="absolute z-[2] top-2 right-2 rounded px-2 py-1 bg-foreground text-white font-semibold">
         <p className="text-xs">{formatCurrency(Number(product.price))}</p>
       </div>
       <div className="relative h-4/6">
