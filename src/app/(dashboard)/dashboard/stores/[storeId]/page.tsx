@@ -1,11 +1,12 @@
 import { db } from "@/db/core";
-import { products, stores } from "@/db/schema";
+import { stores } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardStoreFrontTab from "@/components/dashboard/dashboard-store-front-tab";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import DashboardStoreProductTab from "@/components/dashboard/dashboard-store-product-tab";
+import { getStoreProductsAction } from "@/actions/products/get-store-products";
 
 export default async function DashboardDynamicStorePage({
   params,
@@ -19,11 +20,7 @@ export default async function DashboardDynamicStorePage({
       .where(eq(stores.id, Number(params.storeId)))
   )[0];
 
-  const storeProductData = await db
-    .select()
-    .from(products)
-    .where(eq(products.storeId, Number(params.storeId)))
-    .limit(10);
+  const storeProductData = await getStoreProductsAction(params.storeId);
 
   return (
     <div>
