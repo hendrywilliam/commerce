@@ -336,7 +336,7 @@ export function IconView(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-export function IconFilter(props: SVGProps<SVGSVGElement>) {
+export function IconSort(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -353,35 +353,18 @@ export function IconFilter(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-export function IconAlphabeticalAscending(props: SVGProps<SVGSVGElement>) {
+export function IconFilter(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="1em"
       height="1em"
-      viewBox="0 0 24 24"
+      viewBox="0 0 32 32"
       {...props}
     >
       <path
         fill="currentColor"
-        d="M19 17h3l-4 4l-4-4h3V3h2m-8 10v2l-3.33 4H11v2H5v-2l3.33-4H5v-2M9 3H7c-1.1 0-2 .9-2 2v6h2V9h2v2h2V5a2 2 0 0 0-2-2m0 4H7V5h2Z"
-      ></path>
-    </svg>
-  );
-}
-
-export function IconAlphabeticalDescending(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
-      <path
-        fill="currentColor"
-        d="M19 7h3l-4-4l-4 4h3v14h2m-8-8v2l-3.33 4H11v2H5v-2l3.33-4H5v-2M9 3H7c-1.1 0-2 .9-2 2v6h2V9h2v2h2V5a2 2 0 0 0-2-2m0 4H7V5h2Z"
+        d="M18 28h-4a2 2 0 0 1-2-2v-7.59L4.59 11A2 2 0 0 1 4 9.59V6a2 2 0 0 1 2-2h20a2 2 0 0 1 2 2v3.59a2 2 0 0 1-.59 1.41L20 18.41V26a2 2 0 0 1-2 2ZM6 6v3.59l8 8V26h4v-8.41l8-8V6Z"
       ></path>
     </svg>
   );

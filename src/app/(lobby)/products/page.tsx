@@ -1,6 +1,7 @@
 import { getAllProductsAction } from "@/actions/products/get-all-products";
-import FeaturedProductCard from "@/components/lobby/featured-product-card";
-import ProductsFilter from "@/components/lobby/products/products-filter";
+import FeaturedProductCard from "@/components/lobby/product-card";
+import Products from "@/components/lobby/products/products";
+// import ProductsFilterController from "@/components/lobby/products/products-filter-controller";
 
 interface ProductsPageProps {
   searchParams: {
@@ -11,30 +12,29 @@ interface ProductsPageProps {
 export default async function ProductsPage({
   searchParams,
 }: ProductsPageProps) {
-  const allProducts = await getAllProductsAction({
-    sort: searchParams.sort,
+  const sort = searchParams.sort ?? "name.asc";
+  const minPrice = searchParams.pmin ?? "0";
+  const maxPrice = searchParams.pmax ?? "9999999";
+  const offset = Number(searchParams.offset) ?? 0;
+
+  const products = await getAllProductsAction({
+    sort,
+    offset,
+    minPrice,
+    maxPrice,
   });
 
   return (
     <div className="flex flex-col container h-full w-full py-8">
-      <p>{searchParams.sort}</p>
-      <div className="my-2 inline-flex justify-between">
-        <div>
-          <h1 className="font-bold text-2xl">Products Explorer</h1>
-          <p>
-            Browse any products with ease. You can also apply filter to narrow
-            the results.
-          </p>
-        </div>
-        <div>
-          <ProductsFilter />
-        </div>
-      </div>
-      <section className="grid grid-cols-4 gap-2">
+      <section>
+        <Products products={products} />
+      </section>
+
+      {/* <section className="grid grid-cols-4 gap-2">
         {allProducts.map((product) => (
           <FeaturedProductCard product={product} key={product.id} />
         ))}
-      </section>
+      </section> */}
     </div>
   );
 }

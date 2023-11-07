@@ -23,12 +23,13 @@ import { useZodForm } from "@/hooks/use-zod-form";
 import { IconLoading } from "@/components/ui/icons";
 import { FieldErrors } from "react-hook-form";
 import { z } from "zod";
-import type { NewProduct } from "@/db/schema";
-import type { FileWithPreview } from "@/types";
 import { toast } from "sonner";
 import { catchError } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { insertNewProductAction } from "@/actions/products/insert-new-product";
+import type { NewProduct } from "@/db/schema";
+import type { FileWithPreview } from "@/types";
+import type{ UploadFileResponse } from "uploadthing/client";
 
 type NewProductInput = z.infer<typeof newProductValidation>;
 
@@ -52,7 +53,7 @@ export default function CreateNewProductForm() {
   async function onSubmit(data: NewProductInput) {
     setIsLoading((isLoading) => !isLoading);
     try {
-      const returnFromUploadedFile = await startUpload(data.image);
+      const returnFromUploadedFile = await startUpload(data.image)
       const productData = {
         ...data,
         image: returnFromUploadedFile

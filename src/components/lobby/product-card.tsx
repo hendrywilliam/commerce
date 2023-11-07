@@ -8,17 +8,14 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { formatCurrency } from "@/lib/utils";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 
-type FeaturedProductCardProps = {
+type ProductCardProps = {
   product: Omit<Product, "createdAt">;
 };
 
-export default function FeaturedProductCard({
-  product,
-}: FeaturedProductCardProps) {
+export default function ProductCard({ product }: ProductCardProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   async function addToCart() {

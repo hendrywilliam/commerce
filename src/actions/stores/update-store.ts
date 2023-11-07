@@ -30,5 +30,5 @@ export async function updateOwnedStoreAction(
     .where(eq(stores.id, storeRawInput.id));
 
   // Purge cache
-  revalidatePath("/dashboard/stores");
+  revalidatePath(`/dashboard/stores/${stores.id}`);
 }

@@ -2,35 +2,45 @@
 
 import { db } from "@/db/core";
 import { Product, products } from "@/db/schema";
-import { asc, desc } from "drizzle-orm";
+import { and, asc, desc, gte, lte } from "drizzle-orm";
 
-// Add Options param later for ordering, limit, and etc.
 export async function getAllProductsAction({
   sort,
+  offset,
   limit = 10,
+  minPrice,
+  maxPrice,
 }: {
   sort: string;
+  offset: number;
   limit?: number;
+  minPrice: string;
+  maxPrice: string;
 }) {
-  const splitSort = sort
-    ? (sort.split(".") as [keyof Product["name" | "createdAt"], "asc" | "desc"])
+  const [column, order] = sort
+    ? (sort.split(".") as [keyof Product | undefined, "asc" | "desc"])
     : ["createdAt", "asc"];
 
   return await db
     .select()
     .from(products)
-    .limit(10)
-    .offset(0)
+    .limit(limit)
+    .offset(offset)
+    .where(
+      and(
+        minPrice ? gte(products.price, minPrice) : undefined,
+        maxPrice ? lte(products.price, maxPrice) : undefined
+      )
+    )
     .orderBy(
-      splitSort && splitSort[0] === "name"
-        ? splitSort[1] === "asc"
-          ? asc(products.name)
-          : desc(products.name)
-        : asc(products.name),
-      splitSort && splitSort[0] === "createdAt"
-        ? splitSort[1] === "asc"
-          ? asc(products.createdAt)
-          : desc(products.createdAt)
-        : asc(products.createdAt)
-    );
+      column && column in products
+        ? order === "asc"
+          ? // @ts-expect-error
+            asc(products[column])
+          : // @ts-expect-error
+            // Product inferred as any -> compiler returns error
+            desc(products[column])
+        : desc(products.createdAt)
+    )
+    .groupBy(products.id);
 }

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import CategoriesShowcase from "@/components/lobby/categories-showcase";
 import FeaturedStoreCard from "@/components/lobby/featured-store-card";
-import FeaturedProductCard from "@/components/lobby/featured-product-card";
+import FeaturedProductCard from "@/components/lobby/product-card";
 import { stores, products } from "@/db/schema";
 import type { Store, Product } from "@/db/schema";
 import { db } from "@/db/core";
