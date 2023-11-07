@@ -9,7 +9,7 @@ export default function LobbyLayout(props: {
     <div>
       <div>
         <SiteHeader />
-        <div className="pt-16 min-h-screen h-full w-full">{props.children}</div>
+        <div className="pt-12 min-h-screen h-full w-full">{props.children}</div>
         <SiteFooter />
       </div>
       {props.modal}

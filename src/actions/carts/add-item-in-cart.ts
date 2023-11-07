@@ -5,7 +5,7 @@ import { carts } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { CartItem } from "@/types";
+import type { CartItem } from "@/types";
 
 export async function AddItemInCartAction(newCartItem: CartItem) {
   const cartId = cookies().get("cart_id")?.value;

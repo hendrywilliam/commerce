@@ -2,7 +2,7 @@ import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
 
 export default authMiddleware({
   // add public routes
-  publicRoutes: ["/", "/sign-up", "/sign-in", "/api/(.*)"],
+  publicRoutes: ["/", "/sign-up", "/sign-in", "/api/(.*)", "/products/(.*)"],
 
   afterAuth(auth, req, evt) {
     //handle users who arent authenticated

@@ -50,7 +50,7 @@ export default async function IndexPage() {
             return <FeaturedProductCard product={product} key={product.id} />;
           })}
         </div>
-        <Link href="/stores" className={buttonVariants({ class: "mt-4" })}>
+        <Link href="/products" className={buttonVariants({ class: "mt-4" })}>
           View all products
         </Link>
       </div>

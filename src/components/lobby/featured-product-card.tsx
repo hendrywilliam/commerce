@@ -20,7 +20,6 @@ export default function FeaturedProductCard({
   product,
 }: FeaturedProductCardProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   async function addToCart() {
     setIsLoading((val) => !val);
