@@ -38,7 +38,6 @@ export async function getAllProductsAction({
           ? // @ts-expect-error
             asc(products[column])
           : // @ts-expect-error
-            // Product inferred as any -> compiler returns error
             desc(products[column])
         : desc(products.createdAt)
     )

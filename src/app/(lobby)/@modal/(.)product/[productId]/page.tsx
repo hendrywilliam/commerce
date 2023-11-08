@@ -1,7 +1,6 @@
 import { db } from "@/db/core";
 import Modal from "@/components/ui/modal";
 import Image from "next/image";
-import { formatCurrency } from "@/lib/utils";
 
 export default async function ProductModal({
   params: { productId },
@@ -17,7 +16,7 @@ export default async function ProductModal({
   const parsedImageUrl = JSON.parse(productDetails?.image as string)[0].fileUrl;
   return (
     <Modal>
-      <div className="bg-background h-full lg:w-3/4 w-5/6 rounded mx-auto">
+      <div className="bg-background h-full w-full rounded mx-auto">
         <div className="h-full w-full">
           <div className="relative h-full w-full">
             <Image

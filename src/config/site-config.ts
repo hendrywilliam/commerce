@@ -83,4 +83,5 @@ export const siteConfig = {
       price: 100,
     },
   ],
+  productsSort: [{}],
 };

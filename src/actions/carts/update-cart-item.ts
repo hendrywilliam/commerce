@@ -23,16 +23,17 @@ export async function updateCartItemAction(itemId: number, quantity: number) {
   const isSelectedItemExistInCart = allItemsInCart.find(
     (cartItem) => cartItem.id === itemId
   );
-
-  const selectedItemDetails =
+  
+  if (!isSelectedItemExistInCart)
+    throw new Error("Item doesnt exist in cart. Please try again later.");
+  
+    const selectedItemDetails =
     isSelectedItemExistInCart &&
     (await db.query.products.findFirst({
       where: (products, { eq }) =>
         eq(products.id, isSelectedItemExistInCart.id),
     }));
 
-  if (!isSelectedItemExistInCart)
-    throw new Error("Item doesnt exist in cart. Please try again later.");
 
   const anyItemExcludingSelectedItem =
     isSelectedItemExistInCart &&

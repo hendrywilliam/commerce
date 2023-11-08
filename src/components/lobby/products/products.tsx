@@ -10,13 +10,13 @@ import {
 import { buttonVariants } from "@/components/ui/button";
 import { IconSort } from "@/components/ui/icons";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useTransition } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { IconFilter } from "@/components/ui/icons";
+import { IconFilter, IconTrashCan } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import ReactSlider from "react-slider";
 import ProductCard from "@/components/lobby/product-card";
 
 interface ProductsProps {
@@ -24,6 +24,10 @@ interface ProductsProps {
 }
 
 export default function Products({ products }: ProductsProps) {
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(9999);
+  const [isPending, startTransition] = useTransition();
+
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -37,6 +41,27 @@ export default function Products({ products }: ProductsProps) {
     },
     [searchParams]
   );
+
+  function createFilterQueryString(filterValue: [string, string][]) {
+    const params = new URLSearchParams(searchParams);
+    for (const [key, value] of filterValue) {
+      if (!params.has(key)) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+        params.set(key, value);
+      }
+    }
+    startTransition(() => {
+      void router.push(`${pathname}?${params.toString()}`);
+    });
+  }
+
+  function clearFilter() {
+    startTransition(() => {
+      void router.push(`/products`);
+    });
+  }
 
   return (
     <div className="flex flex-col gap-2">
@@ -55,21 +80,68 @@ export default function Products({ products }: ProductsProps) {
               <div>
                 <h1 className="font-semibold text-2xl">Filter</h1>
                 <div className="rounded w-full my-2">
-                  <h1 className="font-bold">Price</h1>
-                  <div className="flex gap-2 my-2">
-                    <div>
-                      <Label htmlFor="minimum-price">Min. Price</Label>
-                      <Input id="minimum-price" />
+                  <h1>Price Range ($)</h1>
+                  <div className="my-2">
+                    <ReactSlider
+                      className="relative w-full"
+                      thumbClassName="absolute -top-1.5 rounded-full w-3 h-3 border border-black bg-white"
+                      trackClassName="h-2 border-t-2"
+                      defaultValue={[minPrice, maxPrice]}
+                      ariaLabel={["Lower Thumb", "Upper Thumb"]}
+                      ariaValuetext={(state) => `Thumb value ${state.valueNow}`}
+                      pearling
+                      onChange={(value, index) => {
+                        if (index === 1) {
+                          setMaxPrice(value[1]);
+                        } else {
+                          setMinPrice(value[0]);
+                        }
+                      }}
+                      max={9999}
+                      minDistance={1000}
+                    />
+                    <div className="w-full inline-flex mt-2 justify-between ">
+                      <p>${minPrice}</p>
+                      <p>${maxPrice}</p>
                     </div>
-                    <div>
-                      <Label htmlFor="maximum-price">Max. Price</Label>
-                      <Input id="maximum-price" />
+                    <div className="inline-flex gap-2 mt-2">
+                      <Input
+                        value={minPrice}
+                        min={0}
+                        onChange={(e) =>
+                          void setMinPrice(Number(e.target.value))
+                        }
+                      />
+                      <Input
+                        value={maxPrice}
+                        onChange={(e) =>
+                          void setMaxPrice(Number(e.target.value))
+                        }
+                      />
                     </div>
                   </div>
                 </div>
               </div>
-              <div>
-                <Button className="w-full">Apply Filter</Button>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  onClick={() =>
+                    createFilterQueryString([
+                      ["pmin", String(minPrice)],
+                      ["pmax", String(maxPrice)],
+                    ])
+                  }
+                  className="w-full"
+                >
+                  Apply Filter
+                </Button>
+                <Button
+                  className="flex gap-1"
+                  variant={"outline"}
+                  onClick={clearFilter}
+                >
+                  Clear filter
+                  <IconTrashCan />
+                </Button>
               </div>
             </div>
           </SheetContent>
@@ -87,7 +159,7 @@ export default function Products({ products }: ProductsProps) {
             <DropdownMenuItem
               onClick={() =>
                 void router.push(
-                  `${pathname}?${createQueryString("sort", "createdAt.asc")}`
+                  `${pathname}?${createQueryString("sort", "createdAt.desc")}`
                 )
               }
               className="text-xs justify-between"
@@ -97,13 +169,14 @@ export default function Products({ products }: ProductsProps) {
             <DropdownMenuItem
               onClick={() =>
                 void router.push(
-                  `${pathname}?${createQueryString("sort", "createdAt.desc")}`
+                  `${pathname}?${createQueryString("sort", "createdAt.asc")}`
                 )
               }
               className="text-xs justify-between"
             >
               Date: Oldest to Newest
             </DropdownMenuItem>
+
             <DropdownMenuItem
               onClick={() =>
                 void router.push(

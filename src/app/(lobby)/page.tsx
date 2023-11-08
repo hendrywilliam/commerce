@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import CategoriesShowcase from "@/components/lobby/categories-showcase";
-import FeaturedStoreCard from "@/components/lobby/featured-store-card";
-import FeaturedProductCard from "@/components/lobby/product-card";
-import { stores, products } from "@/db/schema";
-import type { Store, Product } from "@/db/schema";
 import { db } from "@/db/core";
-import { gte } from "drizzle-orm";
+import type { Store } from "@/db/schema";
+import { stores, products } from "@/db/schema";
+import StoreCard from "@/components/lobby/store-card";
+import { buttonVariants } from "@/components/ui/button";
+import ProductCard from "@/components/lobby/product-card";
+import CategoriesShowcase from "@/components/lobby/categories-showcase";
 
 export default async function IndexPage() {
   const featuredStores = (await db.select().from(stores).limit(4)) as Omit<
@@ -47,7 +46,7 @@ export default async function IndexPage() {
         </p>
         <div className="grid grid-cols-4 w-full gap-2">
           {featuredProducts.map((product) => {
-            return <FeaturedProductCard product={product} key={product.id} />;
+            return <ProductCard product={product} key={product.id} />;
           })}
         </div>
         <Link href="/products" className={buttonVariants({ class: "mt-4" })}>
@@ -61,7 +60,7 @@ export default async function IndexPage() {
         </p>
         <div className="grid grid-cols-4 w-full gap-2">
           {featuredStores.map((store) => {
-            return <FeaturedStoreCard store={store} key={store.id} />;
+            return <StoreCard store={store} key={store.id} />;
           })}
         </div>
         <Link href="/stores" className={buttonVariants({ class: "mt-4" })}>

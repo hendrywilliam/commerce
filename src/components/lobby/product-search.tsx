@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IconMagnifyingGlass } from "@/components/ui/icons";
-import { getProductsBySearchTermAction } from "@/actions/products/product-search";
+import { getProductsBySearchTermAction } from "@/actions/products/get-products-search";
 import { Product } from "@/db/schema";
 import { useRouter } from "next/navigation";
 import { IconBackpack, IconShoes, IconClothing } from "@/components/ui/icons";
@@ -54,24 +54,14 @@ export default function ProductSearch() {
       setIsLoading(true);
       setHasNoResult(false);
       setResults(
-        (
-          await getProductsBySearchTermAction(searchTerm)
-            .then((res) => {
-              if (!res.length) setHasNoResult(true);
-              return res as Pick<Product, "id" | "name" | "category">[];
-            })
-            .finally(() => {
-              setIsLoading(false);
-            })
-        ).reduce(
-          (group, product) => {
-            const { category } = product;
-            group[category] = group[category] ?? [];
-            group[category].push(product);
-            return group;
-          },
-          {} as Record<string, Pick<Product, "name" | "id" | "category">[]>
-        )
+        await getProductsBySearchTermAction(searchTerm)
+          .then((res) => {
+            if (!Object.entries(res).length) setHasNoResult(true);
+            return res;
+          })
+          .finally(() => {
+            setIsLoading(false);
+          })
       );
     }, 500);
     return () => clearTimeout(getProductsData);

@@ -1,11 +1,11 @@
 import type { Store } from "@/db/schema";
 import { getRandomPatternStyle } from "@/lib/generate-pattern";
 
-export type FeaturedStore = {
+export type StoreCardProps = {
   store: Omit<Store, "createdAt">;
 };
 
-export default function FeaturedStoreCard({ store }: FeaturedStore) {
+export default function StoreCard({ store }: StoreCardProps) {
   return (
     <div className="relative h-48 w-full border rounded">
       {store.active ? (
