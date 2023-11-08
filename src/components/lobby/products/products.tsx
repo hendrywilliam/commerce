@@ -1,23 +1,24 @@
 "use client";
 
-import { Product } from "@/db/schema";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { buttonVariants } from "@/components/ui/button";
-import { IconSort } from "@/components/ui/icons";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useCallback, useTransition } from "react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { IconFilter, IconTrashCan } from "@/components/ui/icons";
+import { Product } from "@/db/schema";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { IconSort } from "@/components/ui/icons";
+import { useCallback, useTransition } from "react";
+import { buttonVariants } from "@/components/ui/button";
+import { IconFilter, IconTrashCan } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import ReactSlider from "react-slider";
 import ProductCard from "@/components/lobby/product-card";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { siteConfig } from "@/config/site-config";
 
 interface ProductsProps {
   products: Product[];
@@ -56,13 +57,6 @@ export default function Products({ products }: ProductsProps) {
       void router.push(`${pathname}?${params.toString()}`);
     });
   }
-
-  function clearFilter() {
-    startTransition(() => {
-      void router.push(`/products`);
-    });
-  }
-
   return (
     <div className="flex flex-col gap-2">
       <div className="flex w-full justify-end gap-2">
@@ -137,7 +131,11 @@ export default function Products({ products }: ProductsProps) {
                 <Button
                   className="flex gap-1"
                   variant={"outline"}
-                  onClick={clearFilter}
+                  onClick={() =>
+                    startTransition(() => {
+                      void router.push("/products");
+                    })
+                  }
                 >
                   Clear filter
                   <IconTrashCan />
@@ -156,65 +154,24 @@ export default function Products({ products }: ProductsProps) {
             Sort <IconSort />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-40">
-            <DropdownMenuItem
-              onClick={() =>
-                void router.push(
-                  `${pathname}?${createQueryString("sort", "createdAt.desc")}`
-                )
-              }
-              className="text-xs justify-between"
-            >
-              Date: Newest to Oldest
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() =>
-                void router.push(
-                  `${pathname}?${createQueryString("sort", "createdAt.asc")}`
-                )
-              }
-              className="text-xs justify-between"
-            >
-              Date: Oldest to Newest
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              onClick={() =>
-                void router.push(
-                  `${pathname}?${createQueryString("sort", "price.asc")}`
-                )
-              }
-              className="text-xs justify-between"
-            >
-              Price: Low to High
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() =>
-                void router.push(`?${createQueryString("sort", "price.desc")}`)
-              }
-              className="text-xs justify-between"
-            >
-              Price: High to Low
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() =>
-                void router.push(
-                  `${pathname}?${createQueryString("sort", "name.asc")}`
-                )
-              }
-              className="text-xs justify-between"
-            >
-              Alphabetical: A - Z
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() =>
-                void router.push(
-                  `${pathname}?${createQueryString("sort", "name.desc")}`
-                )
-              }
-              className="text-xs justify-between"
-            >
-              Alphabetical: Z - A.
-            </DropdownMenuItem>
+            {siteConfig.sortingProductsItem.map((sortingItem, i) => (
+              <DropdownMenuItem
+                key={i}
+                onClick={() =>
+                  void router.push(
+                    `${pathname}?${createQueryString(
+                      "sort",
+                      `${sortingItem.sortKey}.${
+                        sortingItem.reverse ? "desc" : "asc"
+                      }`
+                    )}`
+                  )
+                }
+                className="text-xs justify-between"
+              >
+                {sortingItem.title}
+              </DropdownMenuItem>
+            ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

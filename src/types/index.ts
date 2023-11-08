@@ -31,3 +31,9 @@ export interface BillingPlan {
 export interface FileWithPreview extends FileWithPath {
   preview: string;
 }
+
+export interface SortFilterItem {
+  title: string,
+  sortKey: string,
+  reverse: boolean
+}

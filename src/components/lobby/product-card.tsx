@@ -1,15 +1,15 @@
 "use client";
 
-import { Product } from "@/db/schema";
-import { Button } from "@/components/ui/button";
-import { IconCart, IconLoading, IconView } from "@/components/ui/icons";
-import { AddItemInCartAction } from "@/actions/carts/add-item-in-cart";
+import Link from "next/link";
+import Image from "next/image";
 import { toast } from "sonner";
 import { useState } from "react";
+import { Product } from "@/db/schema";
 import { formatCurrency } from "@/lib/utils";
-import Image from "next/image";
-import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
+import { AddItemInCartAction } from "@/actions/carts/add-item-in-cart";
+import { IconCart, IconLoading, IconView } from "@/components/ui/icons";
 
 type ProductCardProps = {
   product: Omit<Product, "createdAt">;
@@ -32,7 +32,10 @@ export default function ProductCard({ product }: ProductCardProps) {
   const parsedImageUrl = JSON.parse(product.image as string)[0].fileUrl;
 
   return (
-    <div className="relative h-80 w-full border rounded">
+    <Link
+      href={`/product/${product.id}`}
+      className="relative h-80 w-full border rounded"
+    >
       <div className="absolute z-[2] top-2 right-2 rounded px-2 py-1 bg-foreground text-white font-semibold">
         <p className="text-xs">{formatCurrency(Number(product.price))}</p>
       </div>
@@ -70,6 +73,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           </Button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

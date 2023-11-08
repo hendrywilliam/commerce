@@ -4,6 +4,7 @@ import {
   IconPayment,
   IconAnalytics,
 } from "@/components/ui/icons";
+import { SortFilterItem } from "@/types";
 
 export const siteConfig = {
   footerNavigation: [
@@ -83,5 +84,36 @@ export const siteConfig = {
       price: 100,
     },
   ],
-  productsSort: [{}],
+  sortingProductsItem: [
+    {
+      title: "Date: Oldest to Newest",
+      sortKey: "createdAt",
+      reverse: false,
+    },
+    {
+      title: "Date: Newest to Oldest",
+      sortKey: "createdAt",
+      reverse: true,
+    },
+    {
+      title: "Price: Low to High",
+      sortKey: "price",
+      reverse: false, // ASC
+    },
+    {
+      title: "Price: Low to High",
+      sortKey: "price",
+      reverse: true,
+    },
+    {
+      title: "Alphabetical: A - Z",
+      sortKey: "name",
+      reverse: false, // ASC
+    },
+    {
+      title: "Alphabetical: Z - A",
+      sortKey: "name",
+      reverse: true,
+    },
+  ] satisfies SortFilterItem[],
 };

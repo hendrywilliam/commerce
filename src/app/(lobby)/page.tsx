@@ -32,7 +32,7 @@ export default async function IndexPage() {
           </Link>
           <Link
             className={buttonVariants({ variant: "outline" })}
-            href="/products"
+            href="/dashboard/stores"
           >
             Sell now
           </Link>
