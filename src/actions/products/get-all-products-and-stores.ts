@@ -1,33 +1,45 @@
 "use server";
 
 import { db } from "@/db/core";
-import { Product, products } from "@/db/schema";
-import { and, asc, desc, gte, lte } from "drizzle-orm";
+import { Product, products, stores } from "@/db/schema";
+import { and, asc, desc, eq, gte, inArray, lte } from "drizzle-orm";
 
-export async function getAllProductsAction({
+export async function getAllProductsAndStoresAction({
   sort,
   offset,
   limit = 10,
   minPrice,
   maxPrice,
+  sellers,
 }: {
   sort: string;
   offset: number;
-  limit?: number;
   minPrice: string;
   maxPrice: string;
+  sellers?: string;
+  limit?: number;
 }) {
   const [column, order] = sort
     ? (sort.split(".") as [keyof Product | undefined, "asc" | "desc"])
     : ["createdAt", "asc"];
 
+  const sellersId =
+    sellers !== "all"
+      ? sellers?.split(".").map((item) => Number(item))
+      : undefined;
+
   return await db
-    .select()
+    .select({
+      products: products,
+      stores: stores,
+    })
     .from(products)
+    .leftJoin(stores, eq(products.storeId, stores.id))
     .limit(limit)
     .offset(offset)
     .where(
       and(
+        sellersId ? inArray(products.storeId, sellersId) : undefined,
         minPrice ? gte(products.price, minPrice) : undefined,
         maxPrice ? lte(products.price, maxPrice) : undefined
       )

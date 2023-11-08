@@ -10,6 +10,7 @@ export default authMiddleware({
     "/product/(.*)",
     "/products",
     "/products/(.*)",
+    "/quickview-product/(.*)",
   ],
 
   afterAuth(auth, req, evt) {

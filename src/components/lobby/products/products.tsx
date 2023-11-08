@@ -7,26 +7,35 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Product } from "@/db/schema";
+import ReactSlider from "react-slider";
+import { Product, Store } from "@/db/schema";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IconSort } from "@/components/ui/icons";
+import { siteConfig } from "@/config/site-config";
 import { useCallback, useTransition } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { buttonVariants } from "@/components/ui/button";
-import { IconFilter, IconTrashCan } from "@/components/ui/icons";
-import { Input } from "@/components/ui/input";
-import ReactSlider from "react-slider";
 import ProductCard from "@/components/lobby/product-card";
+import { IconFilter, IconTrashCan } from "@/components/ui/icons";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { siteConfig } from "@/config/site-config";
 
 interface ProductsProps {
-  products: Product[];
+  allStoresAndProducts: {
+    products: Product;
+    stores: Store | null;
+  }[];
+  filterStoreItems: Store[];
 }
 
-export default function Products({ products }: ProductsProps) {
+export default function Products({
+  allStoresAndProducts,
+  filterStoreItems,
+}: ProductsProps) {
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(9999);
+  const [sellersId, setSellersId] = useState<number[]>([]);
   const [isPending, startTransition] = useTransition();
 
   const router = useRouter();
@@ -57,6 +66,15 @@ export default function Products({ products }: ProductsProps) {
       void router.push(`${pathname}?${params.toString()}`);
     });
   }
+
+  const allProducts = allStoresAndProducts.map((storeAndProduct) => {
+    return storeAndProduct.products;
+  });
+
+  const uniqueStores = [
+    ...new Map(filterStoreItems.map((store) => [store?.name, store])).values(),
+  ];
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex w-full justify-end gap-2">
@@ -71,11 +89,11 @@ export default function Products({ products }: ProductsProps) {
           </SheetTrigger>
           <SheetContent>
             <div className="flex h-full flex-col justify-between">
-              <div>
+              <div className="w-full h-full">
                 <h1 className="font-semibold text-2xl">Filter</h1>
-                <div className="rounded w-full my-2">
-                  <h1>Price Range ($)</h1>
-                  <div className="my-2">
+                <div className="w-full h-full rounded my-2">
+                  <h1 className="font-semibold text-base">Price Range ($)</h1>
+                  <div className="my-4">
                     <ReactSlider
                       className="relative w-full"
                       thumbClassName="absolute -top-1.5 rounded-full w-3 h-3 border border-black bg-white"
@@ -114,6 +132,31 @@ export default function Products({ products }: ProductsProps) {
                       />
                     </div>
                   </div>
+                  <div className="h-3/4 flex flex-col gap-2 overflow-y-auto">
+                    <h1 className="font-semibold text-base">Sellers</h1>
+                    <ul className="flex flex-col gap-2">
+                      {uniqueStores.map((store, i) => (
+                        <div className="inline-flex gap-2" key={i}>
+                          <Checkbox
+                            checked={sellersId.includes(store?.id as number)}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? setSellersId((sellersId) => [
+                                    ...sellersId,
+                                    store?.id as number,
+                                  ])
+                                : setSellersId((sellersId) =>
+                                    sellersId.filter((id) => {
+                                      return id !== store?.id;
+                                    })
+                                  );
+                            }}
+                          />
+                          <li>{store?.name}</li>
+                        </div>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
@@ -122,6 +165,10 @@ export default function Products({ products }: ProductsProps) {
                     createFilterQueryString([
                       ["pmin", String(minPrice)],
                       ["pmax", String(maxPrice)],
+                      [
+                        "sellers",
+                        sellersId.length ? sellersId.join(".") : "all",
+                      ],
                     ])
                   }
                   className="w-full"
@@ -176,7 +223,7 @@ export default function Products({ products }: ProductsProps) {
         </DropdownMenu>
       </div>
       <div className="grid grid-cols-4 gap-2">
-        {products.map((product) => (
+        {allProducts.map((product) => (
           <ProductCard product={product} key={product.id} />
         ))}
       </div>

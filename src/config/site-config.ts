@@ -101,7 +101,7 @@ export const siteConfig = {
       reverse: false, // ASC
     },
     {
-      title: "Price: Low to High",
+      title: "Price: High to Low",
       sortKey: "price",
       reverse: true,
     },
