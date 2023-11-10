@@ -30,7 +30,9 @@ export async function getAllProductsAndStoresAction({
       ? sellers?.split(".").map((item) => Number(item))
       : undefined;
 
-  const categories = category ? category.split(".") : undefined;
+  const categories = category
+    ? (category.split(".") as Pick<Product, "category">["category"][])
+    : undefined;
 
   return await db
     .select({
