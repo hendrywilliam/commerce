@@ -9,14 +9,19 @@ import type { CartItem } from "@/types";
 
 export async function AddItemInCartAction(newCartItem: CartItem) {
   const cartId = cookies().get("cart_id")?.value;
-  const cartDetails =
-    cartId &&
+
+  // Check if the cart is exist
+  // Made up cart will be deleted and replaced by the brand new one generated from db.
+  const isCartExist =
+    !isNaN(Number(cartId)) &&
     (await db
       .select()
       .from(carts)
-      .where(eq(carts.id, Number(cartId))));
+      .where(eq(carts.id, Number(cartId)))
+      .limit(1));
 
-  const cartAvailableAndOpen = cartDetails && !cartDetails[0].isClosed;
+  const cartAvailableAndOpen =
+    isCartExist && isCartExist.length && !isCartExist[0]?.isClosed;
 
   if (cartAvailableAndOpen) {
     const cartItems = await db

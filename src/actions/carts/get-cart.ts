@@ -10,7 +10,15 @@ import { getCartDetailsAction } from "@/actions/carts/get-cart-details";
 export async function getCartAction() {
   const cartId = cookies().get("cart_id")?.value;
 
-  const cartItems = isNaN(Number(cartId))
+  // Check if the cart is exist, and not the imaginary / made up one.
+  const isCartExist =
+    !isNaN(Number(cartId)) &&
+    (await db
+      .select()
+      .from(carts)
+      .where(eq(carts.id, Number(cartId))));
+
+  const cartItems = !isCartExist
     ? []
     : ((
         await db
