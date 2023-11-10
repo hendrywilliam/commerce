@@ -1,15 +1,10 @@
 import Image from "next/image";
 import { IconBackpack, IconShoes, IconTshirt } from "@/components/ui/icons";
-import {
-  getShoesCountAction,
-  getClothingCountAction,
-  getBackpackCountAction,
-} from "@/actions/products/get-products-count";
+import { getAllProductsCount } from "@/actions/products/get-products-count";
 
 export default async function CategoriesShowcase() {
-  const shoesCount = await getShoesCountAction();
-  const clothingCount = await getClothingCountAction();
-  const backpackCount = await getBackpackCountAction();
+  const [shoesCount, clothingCount, backpackCount] =
+    await getAllProductsCount();
 
   return (
     <section className="flex flex-col mt-64 w-3/4 items-center gap-2">
@@ -18,12 +13,12 @@ export default async function CategoriesShowcase() {
         Find any item that suits you the best.
       </p>
       <div className="grid grid-cols-3 w-full mt-4 gap-2">
-        <div className="relative h-36 border rounded">
+        <div className="group relative h-36 border rounded overflow-hidden">
           <Image
             src="/images/image-backpack.webp"
             fill
             alt="Backpack Category"
-            className="object-cover rounded"
+            className="object-cover rounded transition duration-300 ease-in-out group-hover:scale-105"
           />
           <div className="absolute flex flex-col bg-black/50 top-0 left-0 w-full h-full rounded text-white p-4 justify-between font-semibold">
             <div className="flex h-8 w-8 rounded-full bg-white justify-center items-center align-middle">
@@ -35,12 +30,12 @@ export default async function CategoriesShowcase() {
             </div>
           </div>
         </div>
-        <div className="relative h-36 border rounded">
+        <div className="group relative h-36 border rounded overflow-hidden">
           <Image
             src="/images/image-clothing.webp"
             fill
             alt="Clothing Category"
-            className="object-cover rounded"
+            className="object-cover rounded transition duration-300 ease-in-out group-hover:scale-105"
           />
           <div className="absolute flex flex-col bg-black/50 top-0 left-0 w-full h-full rounded text-white p-4 justify-between font-semibold">
             <div className="flex h-8 w-8 rounded-full bg-white justify-center items-center align-middle">
@@ -52,12 +47,12 @@ export default async function CategoriesShowcase() {
             </div>
           </div>
         </div>
-        <div className="relative h-36 border rounded">
+        <div className="group relative h-36 border rounded overflow-hidden">
           <Image
             src="/images/image-shoe.webp"
             fill
             alt="Shoes Category"
-            className="object-cover rounded"
+            className="object-cover rounded transition duration-300 ease-in-out group-hover:scale-105"
           />
           <div className="absolute flex flex-col bg-black/50 top-0 left-0 w-full h-full rounded text-white p-4 justify-between font-semibold">
             <div className="flex h-8 w-8 rounded-full bg-white justify-center items-center align-middle">

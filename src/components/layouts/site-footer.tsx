@@ -2,7 +2,7 @@ import { siteConfig } from "@/config/site-config";
 
 export default function SiteFooter() {
   return (
-    <div className="border-t h-64">
+    <footer className="border-t h-64">
       <div className="container h-full w-full py-8">
         <div className="flex justify-between h-full">
           <div className="flex flex-col h-full w-1/2 justify-between">
@@ -33,6 +33,6 @@ export default function SiteFooter() {
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 }

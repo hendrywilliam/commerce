@@ -7,7 +7,7 @@ import { and, asc, desc, eq, gte, inArray, lte } from "drizzle-orm";
 export async function getAllProductsAndStoresAction({
   sort,
   offset,
-  limit = 10,
+  limit = 8,
   minPrice,
   maxPrice,
   sellers,

@@ -5,13 +5,13 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Product } from "@/db/schema";
+import { slugify } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 import { formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
 import { AddItemInCartAction } from "@/actions/carts/add-item-in-cart";
 import { IconCart, IconLoading, IconView } from "@/components/ui/icons";
-import { useRouter } from "next/navigation";
-import { MouseEvent } from "react";
 
 type ProductCardProps = {
   product: Omit<Product, "createdAt">;
@@ -39,7 +39,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="absolute z-[2] top-2 right-2 rounded px-2 py-1 bg-foreground text-white font-semibold">
         <p className="text-xs">{formatCurrency(Number(product.price))}</p>
       </div>
-      <Link href={`/product/${product.id}`}>
+      <Link href={`/product/${product.id}/${slugify(product.name as string)}`}>
         <div className="relative h-4/6 overflow-hidden">
           <Image
             src={parsedImageUrl}

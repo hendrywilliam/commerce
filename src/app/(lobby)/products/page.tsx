@@ -30,6 +30,7 @@ export default async function ProductsPage({
   return (
     <div className="flex flex-col container h-full w-full py-8">
       <section>
+        <h1 className="font-bold text-xl">Browse All Products</h1>
         <Products
           allStoresAndProducts={allProductsAndStore}
           filterStoreItems={stores}

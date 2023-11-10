@@ -27,61 +27,57 @@ export default async function ShoppingCart() {
   );
 
   return (
-    <>
-      <Sheet>
-        <SheetTrigger
-          className={buttonVariants({
-            variant: "outline",
-            size: "icon",
-            class: "relative rounded",
-          })}
-        >
-          <div className="absolute px-1.5 -top-1 -right-1 rounded-full border bg-background text-xs">
-            <p>{sumQty > 99 ? 99 : sumQty}</p>
-          </div>
-          <IconCart />
-        </SheetTrigger>
-        <SheetContent>
-          {parsedCartItems.length > 0 ? (
-            <div className="h-full flex flex-col justify-between">
-              <div className=" h-full">
-                <div className="flex flex-col">
-                  <h1 className="font-semibold">Cart ({sumQty})</h1>
-                  <div className="mt-4"></div>
-                </div>
-                <div className="flex flex-col w-full h-full overflow-y-auto gap-2">
-                  {Object.entries(groupProductByItsStore).map(
-                    ([storeName, products], i) => {
-                      return (
-                        <div key={i}>
-                          <h1 className="font-semibold">{storeName}</h1>
-                          {products.map((product) => {
-                            return (
-                              <ShoppingCartItem
-                                key={product.id}
-                                cartLineDetailedItem={product}
-                              />
-                            );
-                          })}
-                        </div>
-                      );
-                    }
-                  )}
-                </div>
+    <Sheet>
+      <SheetTrigger
+        className={buttonVariants({
+          variant: "outline",
+          size: "icon",
+          class: "relative rounded",
+        })}
+      >
+        <div className="absolute px-1.5 -top-1 -right-1 rounded-full border bg-background text-xs">
+          <p>{sumQty > 99 ? 99 : sumQty}</p>
+        </div>
+        <IconCart />
+      </SheetTrigger>
+      <SheetContent>
+        {parsedCartItems.length > 0 ? (
+          <div className="h-full flex flex-col justify-between">
+            <div className=" h-full">
+              <div className="flex flex-col">
+                <h1 className="font-semibold">Cart ({sumQty})</h1>
+                <div className="mt-4"></div>
               </div>
-              <ShoppingCartSummary cartItemDetails={cartItemDetails} />
-              <Button className="w-full">Checkout</Button>
+              <div className="flex flex-col w-full h-full overflow-y-auto gap-2">
+                {Object.entries(groupProductByItsStore).map(
+                  ([storeName, products], i) => {
+                    return (
+                      <div key={i}>
+                        <h1 className="font-semibold">{storeName}</h1>
+                        {products.map((product) => {
+                          return (
+                            <ShoppingCartItem
+                              key={product.id}
+                              cartLineDetailedItem={product}
+                            />
+                          );
+                        })}
+                      </div>
+                    );
+                  }
+                )}
+              </div>
             </div>
-          ) : (
-            <div className="flex flex-col h-full w-full justify-center items-center">
-              <IconCart width={60} height={60} />
-              <p className="text-gray-400">
-                You dont have any item in your cart
-              </p>
-            </div>
-          )}
-        </SheetContent>
-      </Sheet>
-    </>
+            <ShoppingCartSummary cartItemDetails={cartItemDetails} />
+            <Button className="w-full">Checkout</Button>
+          </div>
+        ) : (
+          <div className="flex flex-col h-full w-full justify-center items-center">
+            <IconCart width={60} height={60} />
+            <p className="text-gray-400">You dont have any item in your cart</p>
+          </div>
+        )}
+      </SheetContent>
+    </Sheet>
   );
 }

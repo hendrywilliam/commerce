@@ -7,9 +7,9 @@ export default function LobbyLayout(props: {
 }) {
   return (
     <div>
-      <div>
+      <div className="flex flex-col min-h-screen w-full">
         <SiteHeader />
-        <div className="pt-12 min-h-screen h-full w-full">{props.children}</div>
+        <main className="flex-1">{props.children}</main>
         <SiteFooter />
       </div>
       {props.modal}
