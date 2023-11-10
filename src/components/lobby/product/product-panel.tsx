@@ -7,7 +7,7 @@ import { products, type Product, type Store } from "@/db/schema";
 import { formatCurrency } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { AddItemInCartAction } from "@/actions/carts/add-item-in-cart";
+import { addItemInCartAction } from "@/actions/carts/add-item-in-cart";
 import {
   IconArrowDown,
   IconArrowUp,
@@ -30,7 +30,7 @@ export default function ProductPanel({ product, store }: ProductPanelProps) {
   async function handleAddItemToCart() {
     setIsLoading((isLoading) => !isLoading);
     try {
-      await AddItemInCartAction({
+      await addItemInCartAction({
         id: product.id,
         qty: productQuantity > product.stock ? product.stock : productQuantity,
       });
@@ -46,7 +46,7 @@ export default function ProductPanel({ product, store }: ProductPanelProps) {
     <div className="flex flex-col w-full gap-4">
       <ul className="flex flex-col gap-2">
         <li className="inline-flex justify-between w-full ">
-          <p className="text-gray-400">Seller</p>
+          <p className="text-gray-400">Store</p>
           <p className="font-semibold">{store.name}</p>
         </li>
         <li className="inline-flex justify-between w-full ">

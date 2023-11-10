@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ReactSlider from "react-slider";
+import { useState, useEffect } from "react";
 import { Product, Store } from "@/db/schema";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -35,12 +35,15 @@ export default function Products({
 }: ProductsProps) {
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(9999);
-  const [sellersId, setSellersId] = useState<number[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState([] as string[]);
   const [isPending, startTransition] = useTransition();
+  const [sellersId, setSellersId] = useState<number[]>([]);
 
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  // TODO -> make it clean my g.
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -75,6 +78,28 @@ export default function Products({
     ...new Map(filterStoreItems.map((store) => [store?.name, store])).values(),
   ];
 
+  useEffect(() => {
+    const bounceUpdate = setTimeout(() => {
+      if (selectedCategories.length > 0) {
+        const joinedCategories = selectedCategories.join(".");
+        startTransition(() => {
+          void router.push(
+            `${pathname}?${createQueryString("category", joinedCategories)}`
+          );
+        });
+      } else {
+        const params = new URLSearchParams(searchParams);
+        params.delete("category");
+        startTransition(() => {
+          void router.push(`${pathname}?${params}`);
+        });
+      }
+    }, 500);
+
+    return () => clearTimeout(bounceUpdate);
+    // eslint-disable-next-line
+  }, [selectedCategories]);
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex w-full justify-end gap-2">
@@ -91,9 +116,11 @@ export default function Products({
             <div className="flex h-full flex-col justify-between">
               <div className="w-full h-full">
                 <h1 className="font-semibold text-2xl">Filter</h1>
-                <div className="w-full h-full rounded my-2">
-                  <h1 className="font-semibold text-base">Price Range ($)</h1>
+                <div className="flex flex-col gap-4 w-full h-full rounded my-2 overflow-y-auto">
                   <div className="my-4">
+                    <h1 className="font-semibold text-base mb-2">
+                      Price Range ($)
+                    </h1>
                     <ReactSlider
                       className="relative w-full"
                       thumbClassName="absolute -top-1.5 rounded-full w-3 h-3 border border-black bg-white"
@@ -132,8 +159,8 @@ export default function Products({
                       />
                     </div>
                   </div>
-                  <div className="h-3/4 flex flex-col gap-2 overflow-y-auto">
-                    <h1 className="font-semibold text-base">Sellers</h1>
+                  <div className="flex flex-col gap-2 overflow-y-auto">
+                    <h1 className="font-semibold text-base">Stores</h1>
                     <ul className="flex flex-col gap-2">
                       {uniqueStores.map((store, i) => (
                         <div className="inline-flex gap-2" key={i}>
@@ -153,6 +180,37 @@ export default function Products({
                             }}
                           />
                           <li>{store?.name}</li>
+                        </div>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="flex flex-col gap-2 overflow-y-auto">
+                    <h1 className="font-semibold text-base">Categories</h1>
+                    <ul className="flex flex-col gap-2">
+                      {siteConfig.productCategories.map((category) => (
+                        <div className="inline-flex gap-2" key={category.id}>
+                          <Checkbox
+                            disabled={isPending}
+                            aria-disabled={isPending ? "true" : "false"}
+                            checked={selectedCategories.includes(
+                              category.value
+                            )}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? setSelectedCategories(
+                                    (selectedCategories) => [
+                                      ...selectedCategories,
+                                      category.value,
+                                    ]
+                                  )
+                                : setSelectedCategories((selectedCategories) =>
+                                    selectedCategories.filter((cat) => {
+                                      return cat !== category?.value;
+                                    })
+                                  );
+                            }}
+                          />
+                          <li>{category.title}</li>
                         </div>
                       ))}
                     </ul>

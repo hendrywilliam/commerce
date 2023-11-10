@@ -11,11 +11,13 @@ export async function getAllProductsAndStoresAction({
   minPrice,
   maxPrice,
   sellers,
+  category,
 }: {
   sort: string;
   offset: number;
   minPrice: string;
   maxPrice: string;
+  category?: string;
   sellers?: string;
   limit?: number;
 }) {
@@ -28,6 +30,8 @@ export async function getAllProductsAndStoresAction({
       ? sellers?.split(".").map((item) => Number(item))
       : undefined;
 
+  const categories = category ? category.split(".") : undefined;
+
   return await db
     .select({
       products: products,
@@ -39,6 +43,7 @@ export async function getAllProductsAndStoresAction({
     .offset(offset)
     .where(
       and(
+        categories ? inArray(products.category, categories) : undefined,
         sellersId ? inArray(products.storeId, sellersId) : undefined,
         minPrice ? gte(products.price, minPrice) : undefined,
         maxPrice ? lte(products.price, maxPrice) : undefined

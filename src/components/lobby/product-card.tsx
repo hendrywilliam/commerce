@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
-import { AddItemInCartAction } from "@/actions/carts/add-item-in-cart";
+import { addItemInCartAction } from "@/actions/carts/add-item-in-cart";
 import { IconCart, IconLoading, IconView } from "@/components/ui/icons";
 
 type ProductCardProps = {
@@ -23,7 +23,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   async function addToCart() {
     setIsLoading((val) => !val);
-    await AddItemInCartAction({ id: product.id, qty: 1 })
+    await addItemInCartAction({ id: product.id, qty: 1 })
       .then(() => {
         toast.success("Success add item to cart.");
       })

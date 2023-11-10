@@ -15,6 +15,7 @@ export default async function ProductsPage({
   const minPrice = searchParams.pmin ?? "0";
   const maxPrice = searchParams.pmax ?? "9999999";
   const sellers = searchParams.sellers ?? "all";
+  const category = searchParams.category;
   const offset = Number(searchParams.offset) ?? 0;
 
   const allProductsAndStore = await getAllProductsAndStoresAction({
@@ -23,6 +24,7 @@ export default async function ProductsPage({
     minPrice,
     maxPrice,
     sellers,
+    category,
   });
 
   const stores = await getAllStoresAction();

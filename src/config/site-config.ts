@@ -116,4 +116,21 @@ export const siteConfig = {
       reverse: true,
     },
   ] satisfies SortFilterItem[],
+  productCategories: [
+    {
+      id: 1,
+      title: "Clothing",
+      value: "clothing",
+    },
+    {
+      id: 2,
+      title: "Backpack",
+      value: "backpack",
+    },
+    {
+      id: 3,
+      title: "Shoes",
+      value: "shoes",
+    },
+  ],
 };
