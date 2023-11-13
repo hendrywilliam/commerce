@@ -1,10 +1,10 @@
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { buttonVariants } from "@/components/ui/button";
+import Link from "next/link";
 import { IconCart } from "@/components/ui/icons";
+import type { CartLineDetailedItems } from "@/types";
+import { buttonVariants } from "@/components/ui/button";
 import { getCartAction } from "@/actions/carts/get-cart";
 import ShoppingCartItem from "@/components/lobby/shopping-cart-item";
-import { Button } from "@/components/ui/button";
-import type { CartLineDetailedItems } from "@/types";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import ShoppingCartSummary from "@/components/lobby/shopping-cart-summary";
 
 export default async function ShoppingCart() {
@@ -69,7 +69,12 @@ export default async function ShoppingCart() {
               </div>
             </div>
             <ShoppingCartSummary cartItemDetails={cartItemDetails} />
-            <Button className="w-full">Checkout</Button>
+            <Link
+              href={"/cart"}
+              className={buttonVariants({ class: "w-full" })}
+            >
+              View Full Cart
+            </Link>
           </div>
         ) : (
           <div className="flex flex-col h-full w-full justify-center items-center">

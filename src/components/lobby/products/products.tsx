@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IconSort } from "@/components/ui/icons";
 import { siteConfig } from "@/config/site-config";
+import { useDebounce } from "@/hooks/use-debounce";
 import { useCallback, useTransition } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { buttonVariants } from "@/components/ui/button";
@@ -42,8 +43,6 @@ export default function Products({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
-  // TODO -> make it clean my g.
 
   const createQueryString = useCallback(
     (name: string, value: string) => {

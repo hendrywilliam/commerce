@@ -54,6 +54,8 @@ export default function ShoppingCartItemAction({
           variant={"outline"}
           size={"icon"}
           className="h-6 w-6"
+          disabled={isPending}
+          aria-disabled={isPending ? "true" : "false"}
         >
           {isPending ? <IconLoading /> : <IconTrashCan />}
         </Button>
@@ -64,6 +66,8 @@ export default function ShoppingCartItemAction({
           variant={"outline"}
           size={"icon"}
           className="h-6 w-6"
+          disabled={isPending}
+          aria-disabled={isPending ? "true" : "false"}
         >
           &#43;
         </Button>
@@ -72,12 +76,16 @@ export default function ShoppingCartItemAction({
           onChange={(e) => void setItemQuantity(e.target.valueAsNumber)}
           className="w-16 h-6 p-2"
           type="number"
+          disabled={isPending}
+          aria-disabled={isPending ? "true" : "false"}
         />
         <Button
           onClick={() => setItemQuantity((val) => val - 1)}
           variant={"outline"}
           size={"icon"}
           className="h-6 w-6"
+          disabled={isPending}
+          aria-disabled={isPending ? "true" : "false"}
         >
           &#45;
         </Button>

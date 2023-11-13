@@ -62,3 +62,28 @@ export const carts = mysqlTable("carts", {
 
 export type Cart = typeof carts.$inferSelect;
 export type NewCart = typeof carts.$inferInsert;
+
+export const addresses = mysqlTable("addresses", {
+  id: serial("id").primaryKey(),
+  line1: text("line1"),
+  line2: text("line2"),
+  city: text("city"),
+  state: text("state"),
+  postal_code: text("postal_code"),
+  country: text("country"),
+  createdAt: timestamp("createdAt").defaultNow(),
+});
+
+export type Address = typeof addresses.$inferSelect;
+export type NewAddress = typeof addresses.$inferInsert;
+
+export const orders = mysqlTable("orders", {
+  id: serial("id").primaryKey(),
+  storeId: int("store_id"),
+  items: json("items"),
+  total: decimal("total", { precision: 10, scale: 2 }).default("0"),
+  name: text("name"),
+  email: text("email"),
+  addressId: int("address"),
+  createdAt: timestamp("createdAt").defaultNow(),
+});

@@ -19,7 +19,10 @@ export default function SiteFooter() {
                   <ul className="flex flex-col gap-1 mt-2">
                     {item.items.map((item, i) => {
                       return (
-                        <li key={i}>
+                        <li
+                          className="text-gray-400 hover:text-gray-600"
+                          key={i}
+                        >
                           <a href={item.href} target="_blank">
                             {item.title}
                           </a>
