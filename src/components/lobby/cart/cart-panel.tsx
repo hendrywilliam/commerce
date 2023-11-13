@@ -1,3 +1,3 @@
 export default function CartPanel() {
-  return <div>cart-panel</div>;
+  return <div className="w-full border"></div>;
 }

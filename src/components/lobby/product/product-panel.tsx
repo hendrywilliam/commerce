@@ -1,13 +1,5 @@
 "use client";
 
-import { toast } from "sonner";
-import { useState } from "react";
-import { catchError } from "@/lib/utils";
-import { products, type Product, type Store } from "@/db/schema";
-import { formatCurrency } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { addItemInCartAction } from "@/actions/carts/add-item-in-cart";
 import {
   IconArrowDown,
   IconArrowUp,
@@ -15,6 +7,14 @@ import {
   IconLoading,
   IconStores,
 } from "@/components/ui/icons";
+import { toast } from "sonner";
+import { useState } from "react";
+import { catchError } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import type { Product, Store } from "@/db/schema";
+import { addItemInCartAction } from "@/actions/carts/add-item-in-cart";
 
 interface ProductPanelProps {
   product: Product;

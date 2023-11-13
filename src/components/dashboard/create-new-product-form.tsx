@@ -14,22 +14,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import UploadProductImage from "@/components/dashboard/upload-product-image";
-import { useState } from "react";
-import { useUploadThing } from "@/lib/uploadthing";
-import { Button } from "@/components/ui/button";
-import { newProductValidation } from "@/lib/validations/product";
-import { useZodForm } from "@/hooks/use-zod-form";
-import { IconLoading } from "@/components/ui/icons";
-import { FieldErrors } from "react-hook-form";
 import { z } from "zod";
+import { useState } from "react";
 import { toast } from "sonner";
 import { catchError } from "@/lib/utils";
 import { useParams } from "next/navigation";
-import { insertNewProductAction } from "@/actions/products/insert-new-product";
+import { FieldErrors } from "react-hook-form";
 import type { NewProduct } from "@/db/schema";
 import type { FileWithPreview } from "@/types";
-import type{ UploadFileResponse } from "uploadthing/client";
+import { Button } from "@/components/ui/button";
+import { useZodForm } from "@/hooks/use-zod-form";
+import { useUploadThing } from "@/lib/uploadthing";
+import { IconLoading } from "@/components/ui/icons";
+import { newProductValidation } from "@/lib/validations/product";
+import UploadProductImage from "@/components/dashboard/upload-product-image";
+import { insertNewProductAction } from "@/actions/products/insert-new-product";
 
 type NewProductInput = z.infer<typeof newProductValidation>;
 
@@ -53,7 +52,7 @@ export default function CreateNewProductForm() {
   async function onSubmit(data: NewProductInput) {
     setIsLoading((isLoading) => !isLoading);
     try {
-      const returnFromUploadedFile = await startUpload(data.image)
+      const returnFromUploadedFile = await startUpload(data.image);
       const productData = {
         ...data,
         image: returnFromUploadedFile
@@ -88,6 +87,8 @@ export default function CreateNewProductForm() {
           <FormLabel htmlFor="product-name-input">Product Name</FormLabel>
           <FormInput
             aria-invalid={errors["name"] ? "true" : "false"}
+            disabled={isLoading}
+            aria-disabled={isLoading ? "true" : "false"}
             {...register("name")}
             id="product-name-input"
           />
@@ -100,6 +101,8 @@ export default function CreateNewProductForm() {
             {...register("description")}
             id="product-description-input"
             aria-invalid={errors["description"] ? "true" : "false"}
+            disabled={isLoading}
+            aria-disabled={isLoading ? "true" : "false"}
             cols={1}
             rows={1}
             className="resize-none h-36"
@@ -110,6 +113,8 @@ export default function CreateNewProductForm() {
             <FormLabel htmlFor="product-price-input">Product Price</FormLabel>
             <FormInput
               aria-invalid={errors["price"] ? "true" : "false"}
+              disabled={isLoading}
+              aria-disabled={isLoading ? "true" : "false"}
               {...register("price")}
               className="w-full"
               id="product-price-input"
@@ -119,6 +124,8 @@ export default function CreateNewProductForm() {
             <FormLabel htmlFor="product-stock-input">Product Stock</FormLabel>
             <FormInput
               aria-invalid={errors["stock"] ? "true" : "false"}
+              disabled={isLoading}
+              aria-disabled={isLoading ? "true" : "false"}
               {...register("stock", {
                 valueAsNumber: true,
               })}
@@ -130,6 +137,8 @@ export default function CreateNewProductForm() {
         <FormField>
           <FormLabel>Product Category</FormLabel>
           <Select
+            disabled={isLoading}
+            aria-disabled={isLoading ? "true" : "false"}
             onValueChange={(value) =>
               setValue(
                 "category",
@@ -154,6 +163,7 @@ export default function CreateNewProductForm() {
             setValue={setValue}
             setSelectedFiles={setSelectedFiles}
             selectedFiles={selectedFiles}
+            isLoading={isLoading}
           />
         </FormField>
         <Button

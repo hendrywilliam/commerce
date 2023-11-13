@@ -1,18 +1,18 @@
 "use server";
 
-import { NewStore } from "@/db/schema";
-import { stores } from "@/db/schema";
 import { db } from "@/db/core";
-import { auth, clerkClient } from "@clerk/nextjs";
+import { stores } from "@/db/schema";
+import { NewStore } from "@/db/schema";
+import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { currentUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
-import { BillingPlan, UserObjectCustomized } from "@/types";
+import { auth, clerkClient } from "@clerk/nextjs";
 import { siteConfig } from "@/config/site-config";
+import type { UserObjectCustomized } from "@/types";
 
 export async function createNewStoreAction(storeData: NewStore) {
   const { userId } = auth();
-  const user = (await currentUser()) as UserObjectCustomized | null;
+  const user = (await currentUser()) as unknown as UserObjectCustomized;
 
   if (!userId) {
     throw new Error("You must be signed in to create a new store");

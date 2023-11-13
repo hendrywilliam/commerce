@@ -92,6 +92,8 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
             value={productQuantity}
             min={1}
             type="number"
+            disabled={isPending}
+            aria-disabled={isPending ? "true" : "false"}
             className="w-16 h-6 p-2"
             onChange={(e) =>
               setProductQuantity((productQuantity) =>

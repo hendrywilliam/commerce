@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
+import ImagePlaceholder from "@/components/image-placeholder";
 import { addItemInCartAction } from "@/actions/carts/add-item-in-cart";
 import { IconCart, IconLoading, IconView } from "@/components/ui/icons";
 
@@ -40,13 +41,17 @@ export default function ProductCard({ product }: ProductCardProps) {
         <p className="text-xs">{formatCurrency(Number(product.price))}</p>
       </div>
       <Link href={`/product/${product.id}/${slugify(product.name as string)}`}>
-        <div className="relative h-4/6 overflow-hidden">
-          <Image
-            src={parsedImageUrl}
-            fill
-            alt={product.name as string}
-            className="w-full h-full object-cover rounded-t transition duration-300 ease-in-out group-hover:scale-105"
-          />
+        <div className="relative rounded h-4/6 overflow-hidden">
+          {parsedImageUrl ? (
+            <Image
+              src={parsedImageUrl}
+              fill
+              alt={product.name as string}
+              className="w-full h-full object-cover rounded-t transition duration-300 ease-in-out group-hover:scale-105"
+            />
+          ) : (
+            <ImagePlaceholder />
+          )}
         </div>
       </Link>
       <div className="h-2/6 border-t p-2">

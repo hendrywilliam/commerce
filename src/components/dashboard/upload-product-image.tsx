@@ -15,13 +15,14 @@ import { z } from "zod";
 import Image from "next/image";
 
 interface UploadProductImageProps {
+  maxFiles?: number;
+  maxSize?: number;
+  isLoading: boolean;
   isFieldHavingError: boolean;
-  setValue: UseFormSetValue<z.infer<typeof newProductValidation>>;
+  accept?: Record<string, string[]>;
   selectedFiles: FileWithPreview[];
   setSelectedFiles: Dispatch<SetStateAction<FileWithPreview[]>>;
-  maxFiles?: number;
-  accept?: Record<string, string[]>;
-  maxSize?: number;
+  setValue: UseFormSetValue<z.infer<typeof newProductValidation>>;
 }
 
 export default function UploadProductImage({

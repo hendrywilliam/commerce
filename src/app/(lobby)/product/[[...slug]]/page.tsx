@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { notFound } from "next/navigation";
+import ImagePlaceholder from "@/components/image-placeholder";
 import { Product, Store, products, stores } from "@/db/schema";
 import ProductPanel from "@/components/lobby/product/product-panel";
 
@@ -47,13 +48,17 @@ export default async function ProductPage({
   return (
     <div className="flex flex-col container h-full w-full py-8">
       <div className="flex h-full w-full my-2 gap-8">
-        <div className="group relative h-[600px] w-full overflow-hidden">
-          <Image
-            src={parsedImageUrl as string}
-            fill
-            alt={product.name ?? "Product Image"}
-            className="w-full h-full object-fill rounded transition duration-300 ease-in-out group-hover:scale-105"
-          />
+        <div className="group relative rounded h-[600px] w-full overflow-hidden">
+          {parsedImageUrl ? (
+            <Image
+              src={parsedImageUrl as string}
+              fill
+              alt={product.name ?? "Product Image"}
+              className="w-full h-full object-fill rounded transition duration-300 ease-in-out group-hover:scale-105"
+            />
+          ) : (
+            <ImagePlaceholder />
+          )}
         </div>
         <div className="flex flex-col w-full gap-2">
           <h1 className="font-bold text-xl">{product.name}</h1>
