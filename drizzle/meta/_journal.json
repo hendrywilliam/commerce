@@ -15,6 +15,13 @@
       "when": 1699610520922,
       "tag": "0001_vengeful_annihilus",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1699865917488,
+      "tag": "0002_clear_virginia_dare",
+      "breakpoints": true
     }
   ]
 }

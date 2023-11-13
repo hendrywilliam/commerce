@@ -87,3 +87,6 @@ export const orders = mysqlTable("orders", {
   addressId: int("address"),
   createdAt: timestamp("createdAt").defaultNow(),
 });
+
+export type Orders = typeof orders.$inferSelect;
+export type NewOrders = typeof orders.$inferInsert;
