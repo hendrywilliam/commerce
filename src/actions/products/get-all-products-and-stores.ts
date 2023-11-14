@@ -6,7 +6,7 @@ import { and, asc, desc, eq, gte, inArray, lte } from "drizzle-orm";
 
 export async function getAllProductsAndStoresAction({
   sort,
-  limit = 10,
+  pageSize = 10,
   minPrice,
   maxPrice,
   sellers,
@@ -19,7 +19,7 @@ export async function getAllProductsAndStoresAction({
   page: number;
   category?: string;
   sellers?: string;
-  limit?: number;
+  pageSize?: number;
 }) {
   const [column, order] = sort
     ? (sort.split(".") as [keyof Product | undefined, "asc" | "desc"])
@@ -41,8 +41,8 @@ export async function getAllProductsAndStoresAction({
     })
     .from(products)
     .leftJoin(stores, eq(products.storeId, stores.id))
-    .limit(limit)
-    .offset((page - 1) * limit)
+    .limit(pageSize)
+    .offset((page - 1) * pageSize)
     .where(
       and(
         categories ? inArray(products.category, categories) : undefined,

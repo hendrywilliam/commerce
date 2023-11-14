@@ -1,6 +1,13 @@
 "use client";
 
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -106,6 +113,29 @@ export default function Products({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex w-full justify-end gap-2">
+        <div className="inline-flex items-center gap-2">
+          <p>Row per page:</p>
+          <Select
+            onValueChange={(value) =>
+              startTransition(() => {
+                void router.push(
+                  `${pathname}?${createQueryString("page_size", value)}`
+                );
+              })
+            }
+          >
+            <SelectTrigger disabled={isPending} className="w-14">
+              <SelectValue placeholder="10" />
+            </SelectTrigger>
+            <SelectContent>
+              {siteConfig.rowsPerPage.map((row, i) => (
+                <SelectItem key={i} value={row.value}>
+                  {row.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <Sheet>
           <SheetTrigger
             className={buttonVariants({
@@ -283,7 +313,7 @@ export default function Products({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 h-[720px]">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 min-h-[720px] h-full">
         {allProducts.map((product) => (
           <ProductCard product={product} key={product.id} />
         ))}

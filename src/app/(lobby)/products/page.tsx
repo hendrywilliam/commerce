@@ -17,6 +17,7 @@ export default async function ProductsPage({
   const sort = searchParams.sort ?? "name.asc";
   const sellers = searchParams.sellers ?? "all";
   const maxPrice = searchParams.pmax ?? "9999999";
+  const pageSize = Number(searchParams.page_size) ?? 10;
   const currentPage = isNaN(Number(searchParams.page))
     ? 1
     : Number(searchParams.page);
@@ -29,12 +30,13 @@ export default async function ProductsPage({
     maxPrice,
     sellers,
     category,
+    pageSize,
     page: currentPage,
   });
 
   const stores = await getAllStoresAction();
   const productsPageCount = await getProductsPageAction({
-    pageSize: 10,
+    pageSize,
     category,
     sellers,
     minPrice,
