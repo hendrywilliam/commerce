@@ -12,7 +12,7 @@ export default async function CategoriesShowcase() {
       <p className="font-medium text-center text-gray-500">
         Find any item that suits you the best.
       </p>
-      <div className="grid grid-cols-3 w-full mt-4 gap-2">
+      <div className="grid grid-cols-3 w-full mt-4 gap-4">
         <div className="group relative h-36 border rounded overflow-hidden">
           <Image
             src="/images/image-backpack.webp"

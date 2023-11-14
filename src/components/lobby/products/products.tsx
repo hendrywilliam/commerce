@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import { Product, Store } from "@/db/schema";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Pagination from "@/components/pagination";
 import { IconSort } from "@/components/ui/icons";
 import { siteConfig } from "@/config/site-config";
 import { useCallback, useTransition } from "react";
@@ -27,11 +28,15 @@ interface ProductsProps {
     stores: Store | null;
   }[];
   filterStoreItems: Store[];
+  productsPageCount: number;
+  currentPage: number;
 }
 
 export default function Products({
   allStoresAndProducts,
   filterStoreItems,
+  productsPageCount,
+  currentPage,
 }: ProductsProps) {
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(9999);
@@ -278,11 +283,12 @@ export default function Products({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 h-[720px]">
         {allProducts.map((product) => (
           <ProductCard product={product} key={product.id} />
         ))}
       </div>
+      <Pagination totalPage={productsPageCount} currentPage={currentPage} />
     </div>
   );
 }

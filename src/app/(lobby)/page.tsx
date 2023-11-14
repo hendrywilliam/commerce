@@ -44,7 +44,7 @@ export default async function IndexPage() {
         <p className="font-medium text-center text-gray-500">
           Top 8 products for this week.
         </p>
-        <div className="grid grid-cols-4 w-full gap-2">
+        <div className="grid grid-cols-4 w-full gap-4">
           {featuredProducts.map((product) => {
             return <ProductCard product={product} key={product.id} />;
           })}

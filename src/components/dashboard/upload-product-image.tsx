@@ -26,14 +26,15 @@ interface UploadProductImageProps {
 }
 
 export default function UploadProductImage({
-  isFieldHavingError,
   setValue,
-  setSelectedFiles,
-  selectedFiles,
+  isLoading,
   maxFiles = 1,
+  selectedFiles,
   accept = {
     "image/*": [],
   },
+  setSelectedFiles,
+  isFieldHavingError,
   maxSize = 1024 * 1024 * 5,
 }: UploadProductImageProps) {
   const onDrop = useCallback(
@@ -71,13 +72,15 @@ export default function UploadProductImage({
         aria-invalid={isFieldHavingError ? "true" : "false"}
         {...getInputProps()}
       />
-      <div className="relative w-full h-full flex flex-col justify-center items-center">
+      <div className="relative w-full h-full flex flex-col justify-center items-center shadow-sm">
         <IconUpload className="w-6 h-6" />
         {selectedFiles.length > 0 ? (
           <>
             <Button
               variant={"secondary"}
               size={"icon"}
+              disabled={isLoading}
+              aria-disabled={isLoading ? "true" : "false"}
               className="absolute top-2 right-2 h-6 w-6 z-10"
               onClick={(event) => {
                 event.stopPropagation();

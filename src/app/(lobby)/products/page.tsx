@@ -1,6 +1,7 @@
-import { getAllProductsAndStoresAction } from "@/actions/products/get-all-products-and-stores";
 import Products from "@/components/lobby/products/products";
 import { getAllStoresAction } from "@/actions/stores/get-all-stores";
+import { getAllProductsAndStoresAction } from "@/actions/products/get-all-products-and-stores";
+import { getProductsPageAction } from "@/actions/products/get-products-page";
 
 interface ProductsPageProps {
   searchParams: {
@@ -11,23 +12,34 @@ interface ProductsPageProps {
 export default async function ProductsPage({
   searchParams,
 }: ProductsPageProps) {
-  const sort = searchParams.sort ?? "name.asc";
-  const minPrice = searchParams.pmin ?? "0";
-  const maxPrice = searchParams.pmax ?? "9999999";
-  const sellers = searchParams.sellers ?? "all";
   const category = searchParams.category;
-  const offset = Number(searchParams.offset) ?? 0;
+  const minPrice = searchParams.pmin ?? "0";
+  const sort = searchParams.sort ?? "name.asc";
+  const sellers = searchParams.sellers ?? "all";
+  const maxPrice = searchParams.pmax ?? "9999999";
+  const currentPage = isNaN(Number(searchParams.page))
+    ? 1
+    : Number(searchParams.page);
+
+  // Do these simultaneously later.
 
   const allProductsAndStore = await getAllProductsAndStoresAction({
     sort,
-    offset,
     minPrice,
     maxPrice,
     sellers,
     category,
+    page: currentPage,
   });
 
   const stores = await getAllStoresAction();
+  const productsPageCount = await getProductsPageAction({
+    pageSize: 10,
+    category,
+    sellers,
+    minPrice,
+    maxPrice,
+  });
 
   return (
     <div className="flex flex-col container h-full w-full py-8">
@@ -36,6 +48,8 @@ export default async function ProductsPage({
         <Products
           allStoresAndProducts={allProductsAndStore}
           filterStoreItems={stores}
+          productsPageCount={productsPageCount}
+          currentPage={currentPage}
         />
       </section>
     </div>
