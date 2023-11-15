@@ -6,7 +6,7 @@ import { and, asc, desc, eq, gte, inArray, lte } from "drizzle-orm";
 
 export async function getAllProductsAndStoresAction({
   sort,
-  pageSize = 10,
+  pageSize,
   minPrice,
   maxPrice,
   sellers,
@@ -14,12 +14,12 @@ export async function getAllProductsAndStoresAction({
   page,
 }: {
   sort: string;
+  page: number;
   minPrice: string;
   maxPrice: string;
-  page: number;
-  category?: string;
+  pageSize: number;
   sellers?: string;
-  pageSize?: number;
+  category?: string;
 }) {
   const [column, order] = sort
     ? (sort.split(".") as [keyof Product | undefined, "asc" | "desc"])

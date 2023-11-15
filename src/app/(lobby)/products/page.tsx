@@ -17,12 +17,16 @@ export default async function ProductsPage({
   const sort = searchParams.sort ?? "name.asc";
   const sellers = searchParams.sellers ?? "all";
   const maxPrice = searchParams.pmax ?? "9999999";
-  const pageSize = Number(searchParams.page_size) ?? 10;
+
+  // Empty / non existence searchParams property will be consider as undefined.
   const currentPage = isNaN(Number(searchParams.page))
     ? 1
     : Number(searchParams.page);
+  const pageSize = isNaN(Number(searchParams.page_size))
+    ? 10
+    : Number(searchParams.page_size);
 
-  // Do these simultaneously later.
+  const okelah = searchParams.okelah;
 
   const allProductsAndStore = await getAllProductsAndStoresAction({
     sort,
@@ -47,6 +51,7 @@ export default async function ProductsPage({
     <div className="flex flex-col container h-full w-full py-8">
       <section>
         <h1 className="font-bold text-xl">Browse All Products</h1>
+        <p>{typeof okelah}</p>
         <Products
           allStoresAndProducts={allProductsAndStore}
           filterStoreItems={stores}
