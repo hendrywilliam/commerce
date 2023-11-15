@@ -1,10 +1,12 @@
 "use server";
 
 import { db } from "@/db/core";
-import { products } from "@/db/schema";
 import { eq, sql } from "drizzle-orm";
+import { products } from "@/db/schema";
+import { unstable_noStore as noStore } from "next/cache";
 
 export async function getAllProductsCount() {
+  noStore();
   return await db.transaction(async (tx) => {
     const shoesCount = (
       await db

@@ -1,8 +1,9 @@
+import Image from "next/image";
+import { truncate } from "@/lib/utils";
 import { formatCurrency } from "@/lib/utils";
 import type { CartLineDetailedItems } from "@/types";
+import ImagePlaceholder from "@/components/image-placeholder";
 import ShoppingCartItemAction from "@/components/lobby/shopping-cart-item-action";
-import { truncate } from "@/lib/utils";
-import Image from "next/image";
 
 interface ShoppingCartItemProps {
   cartLineDetailedItem: CartLineDetailedItems;
@@ -14,17 +15,21 @@ export default function ShoppingCartItem({
   const sumPriceForItem =
     Number(cartLineDetailedItem.price) * cartLineDetailedItem.qty;
 
-  const parsedImageUrl = JSON.parse(cartLineDetailedItem.image)[0].fileUrl;
+  const parsedImageUrl = JSON.parse(cartLineDetailedItem.image)[0]?.fileUrl;
 
   return (
     <div className="inline-flex w-full h-20 gap-2 py-2 border-b">
       <div className="relative w-16 h-full border rounded">
-        <Image
-          src={parsedImageUrl}
-          fill
-          alt={cartLineDetailedItem.name}
-          className="object-cover rounded"
-        />
+        {parsedImageUrl ? (
+          <Image
+            src={parsedImageUrl}
+            fill
+            alt={cartLineDetailedItem.name}
+            className="object-cover rounded"
+          />
+        ) : (
+          <ImagePlaceholder />
+        )}
       </div>
       <div className="flex flex-col flex-1 justify-center">
         <p>{truncate(cartLineDetailedItem.name)}</p>

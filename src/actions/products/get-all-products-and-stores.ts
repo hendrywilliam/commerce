@@ -2,6 +2,7 @@
 
 import { db } from "@/db/core";
 import { Product, products, stores } from "@/db/schema";
+import { unstable_noStore as noStore } from "next/cache";
 import { and, asc, desc, eq, gte, inArray, lte } from "drizzle-orm";
 
 export async function getAllProductsAndStoresAction({
@@ -21,6 +22,7 @@ export async function getAllProductsAndStoresAction({
   sellers?: string;
   category?: string;
 }) {
+  noStore();
   const [column, order] = sort
     ? (sort.split(".") as [keyof Product | undefined, "asc" | "desc"])
     : ["createdAt", "asc"];
@@ -48,8 +50,8 @@ export async function getAllProductsAndStoresAction({
         categories ? inArray(products.category, categories) : undefined,
         sellersId ? inArray(products.storeId, sellersId) : undefined,
         minPrice ? gte(products.price, minPrice) : undefined,
-        maxPrice ? lte(products.price, maxPrice) : undefined
-      )
+        maxPrice ? lte(products.price, maxPrice) : undefined,
+      ),
     )
     .orderBy(
       column && column in products
@@ -58,7 +60,7 @@ export async function getAllProductsAndStoresAction({
             asc(products[column])
           : // @ts-expect-error
             desc(products[column])
-        : desc(products.createdAt)
+        : desc(products.createdAt),
     )
     .groupBy(products.id);
 }
