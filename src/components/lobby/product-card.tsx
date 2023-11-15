@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Product } from "@/db/schema";
 import { slugify } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 import { formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
@@ -20,7 +19,6 @@ type ProductCardProps = {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   async function addToCart() {
     setIsLoading((val) => !val);
@@ -33,7 +31,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       });
   }
 
-  const parsedImageUrl = JSON.parse(product.image as string)[0].fileUrl;
+  const parsedImageUrl = JSON.parse(product.image as string)[0]?.fileUrl;
 
   return (
     <div className="group relative h-80 w-full cursor">

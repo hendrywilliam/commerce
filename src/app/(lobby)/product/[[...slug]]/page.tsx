@@ -43,7 +43,7 @@ export default async function ProductPage({
   }
 
   const parsedImageUrl =
-    product.image && JSON.parse(product.image as string)[0].fileUrl;
+    product.image && JSON.parse(product.image as string)[0]?.fileUrl;
 
   return (
     <div className="flex flex-col container h-full w-full py-8">
