@@ -27,10 +27,9 @@ export async function getAllProductsAndStoresAction({
     ? (sort.split(".") as [keyof Product | undefined, "asc" | "desc"])
     : ["createdAt", "asc"];
 
-  const sellersId =
-    sellers !== "all"
-      ? sellers?.split(".").map((item) => Number(item))
-      : undefined;
+  const sellersId = sellers
+    ? sellers?.split(".").map((item) => Number(item))
+    : undefined;
 
   const categories = category
     ? (category.split(".") as Pick<Product, "category">["category"][])

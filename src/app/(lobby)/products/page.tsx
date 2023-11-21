@@ -12,10 +12,10 @@ interface ProductsPageProps {
 export default async function ProductsPage({
   searchParams,
 }: ProductsPageProps) {
+  const sellers = searchParams.sellers;
   const category = searchParams.category;
   const minPrice = searchParams.pmin ?? "0";
   const sort = searchParams.sort ?? "name.asc";
-  const sellers = searchParams.sellers ?? "all";
   const maxPrice = searchParams.pmax ?? "9999999";
 
   // Empty / non existence searchParams property will be consider as undefined.

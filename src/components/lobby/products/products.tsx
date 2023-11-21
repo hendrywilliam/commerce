@@ -46,39 +46,25 @@ export default function Products({
   currentPage,
 }: ProductsProps) {
   const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(9999);
-  const [selectedCategories, setSelectedCategories] = useState([] as string[]);
+  const [maxPrice, setMaxPrice] = useState(99999);
   const [isPending, startTransition] = useTransition();
   const [sellersId, setSellersId] = useState<number[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState([] as string[]);
 
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const urlSearchParams = new URLSearchParams(searchParams);
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams);
-      params.set(name, value);
+      urlSearchParams.set(name, value);
 
-      return params.toString();
+      return urlSearchParams.toString();
     },
-    [searchParams]
+    // eslint-disable-next-line
+    [searchParams],
   );
-
-  function createFilterQueryString(filterValue: [string, string][]) {
-    const params = new URLSearchParams(searchParams);
-    for (const [key, value] of filterValue) {
-      if (!params.has(key)) {
-        params.set(key, value);
-      } else {
-        params.delete(key);
-        params.set(key, value);
-      }
-    }
-    startTransition(() => {
-      void router.push(`${pathname}?${params.toString()}`);
-    });
-  }
 
   const allProducts = allStoresAndProducts.map((storeAndProduct) => {
     return storeAndProduct.products;
@@ -90,18 +76,17 @@ export default function Products({
 
   useEffect(() => {
     const bounceUpdate = setTimeout(() => {
-      if (selectedCategories.length > 0) {
+      if (selectedCategories.length) {
         const joinedCategories = selectedCategories.join(".");
         startTransition(() => {
           void router.push(
-            `${pathname}?${createQueryString("category", joinedCategories)}`
+            `${pathname}?${createQueryString("category", joinedCategories)}`,
           );
         });
       } else {
-        const params = new URLSearchParams(searchParams);
-        params.delete("category");
+        urlSearchParams.delete("category");
         startTransition(() => {
-          void router.push(`${pathname}?${params}`);
+          void router.push(`${pathname}?${urlSearchParams}`);
         });
       }
     }, 500);
@@ -109,6 +94,42 @@ export default function Products({
     return () => clearTimeout(bounceUpdate);
     // eslint-disable-next-line
   }, [selectedCategories]);
+
+  useEffect(() => {
+    const bounceUpdate = setTimeout(() => {
+      if (sellersId.length) {
+        const joinedCategories = sellersId.join(".");
+        startTransition(() => {
+          void router.push(
+            `${pathname}?${createQueryString("sellers", joinedCategories)}`,
+          );
+        });
+      } else {
+        urlSearchParams.delete("sellers");
+        startTransition(() => {
+          void router.push(`${pathname}?${urlSearchParams}`);
+        });
+      }
+    }, 500);
+
+    return () => clearTimeout(bounceUpdate);
+    // eslint-disable-next-line
+  }, [sellersId]);
+
+  useEffect(() => {
+    const bounce = setTimeout(() => {
+      createQueryString("pmin", String(minPrice));
+      startTransition(() => {
+        void router.push(
+          `${pathname}?${createQueryString("pmax", String(maxPrice))}`,
+        );
+      });
+    }, 500);
+
+    return () => clearTimeout(bounce);
+
+    // eslint-disable-next-line
+  }, [minPrice, maxPrice]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -119,12 +140,12 @@ export default function Products({
             onValueChange={(value) =>
               startTransition(() => {
                 void router.push(
-                  `${pathname}?${createQueryString("page_size", value)}`
+                  `${pathname}?${createQueryString("page_size", value)}`,
                 );
               })
             }
           >
-            <SelectTrigger disabled={isPending} className="w-14">
+            <SelectTrigger disabled={isPending} className="w-16">
               <SelectValue placeholder="10" />
             </SelectTrigger>
             <SelectContent>
@@ -169,7 +190,7 @@ export default function Products({
                           setMinPrice(value[0]);
                         }
                       }}
-                      max={9999}
+                      max={99999}
                       minDistance={1000}
                     />
                     <div className="w-full inline-flex mt-2 justify-between ">
@@ -179,6 +200,8 @@ export default function Products({
                     <div className="inline-flex gap-2 mt-2">
                       <Input
                         value={minPrice}
+                        disabled={isPending}
+                        aria-disabled={isPending ? "true" : "false"}
                         min={0}
                         onChange={(e) =>
                           void setMinPrice(Number(e.target.value))
@@ -186,8 +209,10 @@ export default function Products({
                       />
                       <Input
                         value={maxPrice}
+                        disabled={isPending}
+                        aria-disabled={isPending ? "true" : "false"}
                         onChange={(e) =>
-                          void setMaxPrice(Number(e.target.value))
+                          void setMinPrice(Number(e.target.value))
                         }
                       />
                     </div>
@@ -199,6 +224,8 @@ export default function Products({
                         <div className="inline-flex gap-2" key={i}>
                           <Checkbox
                             checked={sellersId.includes(store?.id as number)}
+                            disabled={isPending}
+                            aria-disabled={isPending ? "true" : "false"}
                             onCheckedChange={(checked) => {
                               return checked
                                 ? setSellersId((sellersId) => [
@@ -208,7 +235,7 @@ export default function Products({
                                 : setSellersId((sellersId) =>
                                     sellersId.filter((id) => {
                                       return id !== store?.id;
-                                    })
+                                    }),
                                   );
                             }}
                           />
@@ -226,7 +253,7 @@ export default function Products({
                             disabled={isPending}
                             aria-disabled={isPending ? "true" : "false"}
                             checked={selectedCategories.includes(
-                              category.value
+                              category.value,
                             )}
                             onCheckedChange={(checked) => {
                               return checked
@@ -234,12 +261,12 @@ export default function Products({
                                     (selectedCategories) => [
                                       ...selectedCategories,
                                       category.value,
-                                    ]
+                                    ],
                                   )
                                 : setSelectedCategories((selectedCategories) =>
                                     selectedCategories.filter((cat) => {
                                       return cat !== category?.value;
-                                    })
+                                    }),
                                   );
                             }}
                           />
@@ -250,27 +277,16 @@ export default function Products({
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="w-full">
                 <Button
-                  onClick={() =>
-                    createFilterQueryString([
-                      ["pmin", String(minPrice)],
-                      ["pmax", String(maxPrice)],
-                      [
-                        "sellers",
-                        sellersId.length ? sellersId.join(".") : "all",
-                      ],
-                    ])
-                  }
-                  className="w-full"
-                >
-                  Apply Filter
-                </Button>
-                <Button
-                  className="flex gap-1"
+                  className="flex gap-1 w-full"
                   variant={"outline"}
+                  disabled={isPending}
+                  aria-disabled={isPending ? "true" : "false"}
                   onClick={() =>
                     startTransition(() => {
+                      setMinPrice(0);
+                      setMaxPrice(99999);
                       void router.push("/products");
                     })
                   }
@@ -301,8 +317,8 @@ export default function Products({
                       "sort",
                       `${sortingItem.sortKey}.${
                         sortingItem.reverse ? "desc" : "asc"
-                      }`
-                    )}`
+                      }`,
+                    )}`,
                   )
                 }
                 className="text-xs justify-between"
@@ -313,12 +329,20 @@ export default function Products({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 min-h-[720px] h-full">
-        {allProducts.map((product) => (
-          <ProductCard product={product} key={product.id} />
-        ))}
-      </div>
-      <Pagination totalPage={productsPageCount} currentPage={currentPage} />
+      {allProducts.length ? (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 min-h-[720px] h-full">
+            {allProducts.map((product) => (
+              <ProductCard product={product} key={product.id} />
+            ))}
+          </div>
+          <Pagination totalPage={productsPageCount} currentPage={currentPage} />
+        </>
+      ) : (
+        <div className="w-full">
+          <p>No product found.</p>
+        </div>
+      )}
     </div>
   );
 }
