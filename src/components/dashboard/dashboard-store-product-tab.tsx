@@ -1,5 +1,5 @@
-import DashboardStoreProductShellTable from "./dashboard-store-product-shell-table";
 import { Product } from "@/db/schema";
+import DashboardStoreProductShellTable from "./dashboard-store-product-shell-table";
 
 interface DashboardStoreProductTab {
   storeProductData: Product[];
