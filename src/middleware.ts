@@ -9,6 +9,7 @@ export default authMiddleware({
     "/products",
     "/api/(.*)",
     "/cart/(.*)",
+    "/store/(.*)",
     "/stores/(.*)",
     "/product/(.*)",
     "/products/(.*)",

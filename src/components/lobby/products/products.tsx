@@ -285,8 +285,11 @@ export default function Products({
                   aria-disabled={isPending ? "true" : "false"}
                   onClick={() =>
                     startTransition(() => {
+                      // Set to default.
                       setMinPrice(0);
                       setMaxPrice(99999);
+                      setSelectedCategories([]);
+                      setSellersId([]);
                       void router.push("/products");
                     })
                   }

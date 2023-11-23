@@ -9,7 +9,9 @@ import {
 } from "@/components/ui/icons";
 import { toast } from "sonner";
 import { useState } from "react";
+import { slugify } from "@/lib/utils";
 import { catchError } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 import { formatCurrency } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -24,6 +26,7 @@ interface ProductPanelProps {
 export default function ProductPanel({ product, store }: ProductPanelProps) {
   const [productQuantity, setProductQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const { push } = useRouter();
 
   const subTotalProduct = productQuantity * Number(product.price);
 
@@ -62,7 +65,7 @@ export default function ProductPanel({ product, store }: ProductPanelProps) {
         <Button
           onClick={() =>
             setProductQuantity((productQuantity) =>
-              productQuantity > 0 ? productQuantity + 1 : 1
+              productQuantity > 0 ? productQuantity + 1 : 1,
             )
           }
           variant={"outline"}
@@ -82,7 +85,7 @@ export default function ProductPanel({ product, store }: ProductPanelProps) {
         <Button
           onClick={() =>
             setProductQuantity((productQuantity) =>
-              productQuantity > 1 ? productQuantity - 1 : 1
+              productQuantity > 1 ? productQuantity - 1 : 1,
             )
           }
           variant={"outline"}
@@ -102,7 +105,11 @@ export default function ProductPanel({ product, store }: ProductPanelProps) {
           {isLoading ? <IconLoading /> : <IconCart />}
           Add To Cart
         </Button>
-        <Button className="inline-flex gap-2" variant={"outline"}>
+        <Button
+          onClick={() => void push(`/store/${store.id}/${slugify(store.name)}`)}
+          className="inline-flex gap-2"
+          variant={"outline"}
+        >
           <IconStores />
           Visit Store
         </Button>

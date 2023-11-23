@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { IconStores } from "@/components/ui/icons";
 import ProductCard from "@/components/lobby/product-card";
 
-export default async function StoresPage({
+export default async function StorePage({
   params: { storeId },
 }: {
   params: {
@@ -21,7 +21,7 @@ export default async function StoresPage({
     .from(products)
     .leftJoin(stores, eq(products.storeId, stores.id))
     .orderBy(products.id)
-    .where(eq(products.storeId, Number(storeId)))
+    .where(eq(products.storeId, Number(storeId[0])))
     .limit(10);
 
   return (

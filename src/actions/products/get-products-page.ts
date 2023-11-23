@@ -28,7 +28,7 @@ export async function getProductsPageAction({
     : undefined;
 
   const sellersId =
-    sellers !== "all"
+    sellers 
       ? sellers?.split(".").map((item) => Number(item))
       : undefined;
 

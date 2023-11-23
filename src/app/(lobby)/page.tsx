@@ -19,7 +19,7 @@ export default async function IndexPage() {
   return (
     <div className="flex flex-col container h-full w-full items-center py-8">
       <section className="flex flex-col h-max w-full gap-4 mt-24">
-        <h1 className="font-semibold text-6xl text-center w-full">
+        <h1 className="font-semibold text-4xl lg:text-6xl flex-wrap text-center w-full">
           A fictional marketplace to sell and buy, built with everything new in
           Next.js.
         </h1>
@@ -44,7 +44,7 @@ export default async function IndexPage() {
         <p className="font-medium text-center text-gray-500">
           Top 8 products for this week.
         </p>
-        <div className="grid grid-cols-4 w-full gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-4 w-full gap-4">
           {featuredProducts.map((product) => {
             return <ProductCard product={product} key={product.id} />;
           })}
@@ -58,7 +58,7 @@ export default async function IndexPage() {
         <p className="font-medium text-center text-gray-500">
           Shop hundreds of products from these featured stores for this week.
         </p>
-        <div className="grid grid-cols-4 w-full gap-2">
+        <div className="grid grid-cols-1 lg:grid-cols-4 w-full gap-2">
           {featuredStores.map((store) => {
             return <StoreCard store={store} key={store.id} />;
           })}

@@ -106,7 +106,7 @@ export default function ProductSearch() {
                           className="w-full h-8 justify-start px-1 gap-2"
                           onClick={() =>
                             void router.push(
-                              `/products/${item.category}/${item.id}`
+                              `/product/${item.id}`
                             )
                           }
                           key={item.id}
