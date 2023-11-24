@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { slugify } from "@/lib/utils";
+import { slugify, truncate } from "@/lib/utils";
 import { formatCurrency } from "@/lib/utils";
+import { IconCart } from "@/components/ui/icons";
 import type { CartLineDetailedItems } from "@/types";
 import { buttonVariants } from "@/components/ui/button";
 
@@ -30,9 +31,13 @@ export default function CartPanel({ products }: CartPanelProps) {
               href={`/checkout/${items[0].storeId}/${slugify(
                 items[0].storeName,
               )}`}
-              className={buttonVariants({ class: "truncate" })}
+              className={buttonVariants({
+                variant: "outline",
+                class: "inline-flex gap-2",
+              })}
             >
-              Checkout from {storeName}
+              <IconCart />
+              Checkout from {truncate(storeName, 10)}
             </Link>
           </div>
         ))}

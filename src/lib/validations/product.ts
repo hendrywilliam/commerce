@@ -1,7 +1,7 @@
 import { FileWithPath } from "@uploadthing/react";
 import { z } from "zod";
 
-const MAXIMUM_FILE_UPLOAD_IN_BYTES = 1024 * 1024 * 5;
+const MAXIMUM_FILE_UPLOAD_IN_BYTES = 1024 * 1024 * 4;
 const ALLOWED_FILE_EXTENSION = ["jpg", "jpeg", "png"];
 
 export const newProductValidation = z.object({
@@ -55,7 +55,7 @@ export const newProductValidation = z.object({
       const getImageExtension = val[0].name.split(".");
       if (
         !ALLOWED_FILE_EXTENSION.includes(
-          getImageExtension[getImageExtension.length - 1]
+          getImageExtension[getImageExtension.length - 1],
         )
       ) {
         ctx.addIssue({

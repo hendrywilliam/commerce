@@ -5,9 +5,9 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Product } from "@/db/schema";
-import { slugify } from "@/lib/utils";
-import { formatCurrency } from "@/lib/utils";
+import type { ProductImage } from "@/types";
 import { Button } from "@/components/ui/button";
+import { formatCurrency, slugify } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import ImagePlaceholder from "@/components/image-placeholder";
 import { addItemInCartAction } from "@/actions/carts/add-item-in-cart";
@@ -31,7 +31,9 @@ export default function ProductCard({ product }: ProductCardProps) {
       });
   }
 
-  const parsedImageUrl = JSON.parse(product.image as string)[0]?.fileUrl;
+  const parsedImageUrl = (
+    JSON.parse(product.image as string) as ProductImage[]
+  )[0]?.url;
 
   return (
     <div className="group relative h-80 w-full cursor">

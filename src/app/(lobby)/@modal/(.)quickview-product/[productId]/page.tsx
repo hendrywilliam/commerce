@@ -1,6 +1,7 @@
 import { db } from "@/db/core";
 import Image from "next/image";
 import Modal from "@/components/ui/modal";
+import type { ProductImage } from "@/types";
 import ImagePlaceholder from "@/components/image-placeholder";
 
 export default async function ProductModal({
@@ -14,8 +15,9 @@ export default async function ProductModal({
     where: (products, { eq }) => eq(products.id, Number(productId)),
   });
 
-  const parsedImageUrl = JSON.parse(productDetails?.image as string)[0]
-    ?.fileUrl;
+  const parsedImageUrl = (
+    JSON.parse(productDetails?.image as string) as ProductImage[]
+  )[0]?.url;
   return (
     <Modal>
       <div className="bg-background h-full w-full rounded mx-auto">

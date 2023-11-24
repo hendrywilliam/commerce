@@ -458,3 +458,25 @@ export function IconArrowForward(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function ShipmentIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 14 14"
+      {...props}
+    >
+      <g
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect width="13" height="13" x=".5" y=".5" rx="1"></rect>
+        <path d="M9 .5v5a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-5M8.5 11H11"></path>
+      </g>
+    </svg>
+  );
+}

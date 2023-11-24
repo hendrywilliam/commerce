@@ -28,7 +28,7 @@ import { useUploadThing } from "@/lib/uploadthing";
 import { IconLoading } from "@/components/ui/icons";
 import { newProductValidation } from "@/lib/validations/product";
 import UploadProductImage from "@/components/dashboard/upload-product-image";
-import { insertNewProductAction } from "@/actions/products/insert-new-product";
+import { addNewProductAction } from "@/actions/products/add-new-product";
 
 type NewProductInput = z.infer<typeof newProductValidation>;
 
@@ -61,7 +61,7 @@ export default function CreateNewProductForm() {
         storeId: Number(routeParams.storeId),
       } satisfies NewProduct;
 
-      await insertNewProductAction(productData);
+      await addNewProductAction(productData);
       toast.success("Success add new product.");
       setSelectedFiles([]);
       reset();
@@ -142,7 +142,7 @@ export default function CreateNewProductForm() {
             onValueChange={(value) =>
               setValue(
                 "category",
-                value as Pick<NewProduct, "category">["category"]
+                value as Pick<NewProduct, "category">["category"],
               )
             }
           >

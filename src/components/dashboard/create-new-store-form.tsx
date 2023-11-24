@@ -6,14 +6,14 @@ import {
   FormLabel,
   FormTextarea,
 } from "@/components/ui/form";
-import { createNewStoreAction } from "@/actions/stores/create-new-store";
-import { useZodForm } from "@/hooks/use-zod-form";
-import { storeValidation } from "@/lib/validations/stores";
-import { Button } from "@/components/ui/button";
-import { ElementRef, useRef, useState } from "react";
 import { toast } from "sonner";
-import { IconLoading } from "@/components/ui/icons";
 import { catchError } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useZodForm } from "@/hooks/use-zod-form";
+import { IconLoading } from "@/components/ui/icons";
+import { ElementRef, useRef, useState } from "react";
+import { storeValidation } from "@/lib/validations/stores";
+import { createNewStoreAction } from "@/actions/stores/create-new-store";
 
 export default function CreateNewStoreForm() {
   const [isLoading, setIsLoading] = useState(false);

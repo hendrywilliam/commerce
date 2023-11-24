@@ -61,7 +61,7 @@ export default function ProductSearch() {
           })
           .finally(() => {
             setIsLoading(false);
-          })
+          }),
       );
     }, 500);
     return () => clearTimeout(getProductsData);
@@ -88,7 +88,7 @@ export default function ProductSearch() {
             <Input
               onChange={(e) => setSearchTerm(e.target.value)}
               className="border-0 outline-none focus-visible:ring-0 shadow-none"
-              placeholder="Type a command or search... "
+              placeholder="Type product name... "
             />
           </div>
           {!hasNoResult ? (
@@ -105,9 +105,7 @@ export default function ProductSearch() {
                           variant={"ghost"}
                           className="w-full h-8 justify-start px-1 gap-2"
                           onClick={() =>
-                            void router.push(
-                              `/product/${item.id}`
-                            )
+                            void router.push(`/product/${item.id}`)
                           }
                           key={item.id}
                         >

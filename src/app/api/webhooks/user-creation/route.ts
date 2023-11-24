@@ -14,11 +14,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false }, { status: 400 });
 
   if (isUserCreationEvent && returnIdFromUserCreationEvent) {
-    // Set default plan for new user.
+    // Set default metadata for the new user.
     await clerkClient.users.updateUserMetadata(returnIdFromUserCreationEvent, {
+      publicMetadata: {
+        address: null,
+      },
       privateMetadata: {
         plan: "Hobby",
         storeId: [],
+        addresses: [],
       },
     });
   }

@@ -1,6 +1,7 @@
 import { User } from "@clerk/nextjs/server";
 import { siteConfig } from "@/config/site-config";
 import type { FileWithPath } from "@uploadthing/react";
+import { UploadFileResponse } from "uploadthing/client";
 
 export interface CartItem {
   id: number;
@@ -18,10 +19,15 @@ export interface CartLineDetailedItems {
   qty: number;
 }
 
-export interface UserObjectCustomized extends Omit<User, "privateMetadata"> {
+export interface UserObjectCustomized
+  extends Omit<User, "privateMetadata" | "publicMetadata"> {
+  publicMetadata: {
+    address: number;
+  };
   privateMetadata: {
     plan: "Hobby" | "Pro" | "Enterprise";
     storeId: string[];
+    addresses: number[];
   };
 }
 
@@ -38,3 +44,9 @@ export interface SortFilterItem {
   sortKey: string;
   reverse: boolean;
 }
+
+// fileUrl, fileName, ...rest is deprecated.
+export type ProductImage = Pick<
+  UploadFileResponse,
+  "key" | "name" | "size" | "url"
+>;

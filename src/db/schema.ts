@@ -6,12 +6,13 @@ import {
   serial,
   text,
   decimal,
-  index,
   timestamp,
   boolean,
   json,
 } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
+import type { CartItem } from "@/types";
+import { UploadFileResponse } from "uploadthing/client";
 
 export const products = mysqlTable("products", {
   id: serial("id").primaryKey(),
@@ -65,12 +66,12 @@ export type NewCart = typeof carts.$inferInsert;
 
 export const addresses = mysqlTable("addresses", {
   id: serial("id").primaryKey(),
-  line1: text("line1"),
+  line1: text("line1").notNull(),
   line2: text("line2"),
-  city: text("city"),
-  state: text("state"),
-  postal_code: text("postal_code"),
-  country: text("country"),
+  city: text("city").notNull(),
+  state: text("state").notNull(),
+  postal_code: text("postal_code").notNull(),
+  country: text("country").notNull(),
   createdAt: timestamp("createdAt").defaultNow(),
 });
 
@@ -82,8 +83,8 @@ export const orders = mysqlTable("orders", {
   storeId: int("store_id"),
   items: json("items"),
   total: decimal("total", { precision: 10, scale: 2 }).default("0"),
-  name: text("name"),
-  email: text("email"),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
   addressId: int("address"),
   createdAt: timestamp("createdAt").defaultNow(),
 });

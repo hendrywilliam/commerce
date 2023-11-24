@@ -19,11 +19,14 @@ export async function deleteOwnedStore(id: number) {
   await db.delete(stores).where(eq(stores.id, id));
 
   const storesIdWithoutDeletedOne = userData.privateMetadata.storeId.filter(
-    (item) => item !== String(id)
+    (item) => item !== String(id),
   );
+
+  const userDataPrivateMetadata = userData.privateMetadata;
 
   await clerkClient.users.updateUser(userId, {
     privateMetadata: {
+      ...userDataPrivateMetadata,
       storeId: [...storesIdWithoutDeletedOne],
     },
   });

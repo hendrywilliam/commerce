@@ -30,7 +30,7 @@ export async function addItemInCartAction(newCartItem: CartItem) {
       .where(eq(carts.id, Number(cartId)));
 
     const allItemsInCart = JSON.parse(
-      cartItems[0].items as string
+      cartItems[0].items as string,
     ) as CartItem[];
 
     const anyItemsExcludingNewCartItem = allItemsInCart.filter((item) => {
@@ -39,7 +39,7 @@ export async function addItemInCartAction(newCartItem: CartItem) {
 
     // is the new item exist in the cart? -> add new qty later
     const newCartItemInCart = allItemsInCart.find(
-      (item) => item.id === newCartItem.id
+      (item) => item.id === newCartItem.id,
     );
 
     await db

@@ -6,7 +6,7 @@ import { products } from "@/db/schema";
 import { auth } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
 
-export async function insertNewProductAction(input: NewProduct) {
+export async function addNewProductAction(input: NewProduct) {
   const { userId } = auth();
 
   if (!userId) {
