@@ -24,12 +24,13 @@ export default function UserAddressAction({
   return (
     <div className="flex w-full justify-end gap-2">
       <Dialog>
-        <DialogTrigger className={buttonVariants({ variant: "outline" })}>
+        <DialogTrigger className={buttonVariants()}>
           Select Address
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <h1 className="font-semibold text-2xl">Select Address</h1>
+            <p>Select where do you want to ship your order.</p>
           </DialogHeader>
           {addresses.length &&
             addresses.map((address) => (
