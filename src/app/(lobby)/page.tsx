@@ -58,7 +58,7 @@ export default async function IndexPage() {
         <p className="font-medium text-center text-gray-500">
           Shop hundreds of products from these featured stores for this week.
         </p>
-        <div className="grid grid-cols-1 lg:grid-cols-4 w-full gap-2">
+        <div className="grid grid-cols-1 lg:grid-cols-4 w-full gap-4">
           {featuredStores.map((store) => {
             return <StoreCard store={store} key={store.id} />;
           })}

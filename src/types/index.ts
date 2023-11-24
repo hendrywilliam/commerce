@@ -12,6 +12,7 @@ export interface CartLineDetailedItems {
   name: string;
   price: string;
   category: string;
+  storeId: number;
   storeName: string;
   image: string;
   qty: number;
@@ -33,7 +34,7 @@ export interface FileWithPreview extends FileWithPath {
 }
 
 export interface SortFilterItem {
-  title: string,
-  sortKey: string,
-  reverse: boolean
+  title: string;
+  sortKey: string;
+  reverse: boolean;
 }

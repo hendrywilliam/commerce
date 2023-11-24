@@ -22,16 +22,17 @@ interface CartItemActionProps {
 }
 
 export default function CartItemAction({ cartItem }: CartItemActionProps) {
-  const [productQuantity, setProductQuantity] = useState(cartItem.qty);
+  const [isNewValue, setIsNewValue] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [productQuantity, setProductQuantity] = useState(cartItem.qty);
   const [isDeletingCurrentItem, setIsDeletingCurrentItem] = useState(false);
 
-  const router = useRouter();
+  const { push } = useRouter();
 
   function deleteCurrentItemInCart() {
     startTransition(async () => {
       setIsDeletingCurrentItem(
-        (isDeletingCurrentItem) => !isDeletingCurrentItem
+        (isDeletingCurrentItem) => !isDeletingCurrentItem,
       );
       try {
         await deleteCartItemAction(cartItem.id);
@@ -40,7 +41,7 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
         catchError(err);
       } finally {
         setIsDeletingCurrentItem(
-          (isDeletingCurrentItem) => !isDeletingCurrentItem
+          (isDeletingCurrentItem) => !isDeletingCurrentItem,
         );
       }
     });
@@ -49,8 +50,11 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
   useEffect(() => {
     const bounceUpdate = setTimeout(() => {
       startTransition(async () => {
-        await updateCartItemAction(cartItem.id, productQuantity);
-        toast.success("Your cart has been updated.");
+        // It wont run the update at initial render.
+        if (isNewValue) {
+          await updateCartItemAction(cartItem.id, productQuantity);
+          toast.success("Your cart has been updated.");
+        }
       });
     }, 500);
 
@@ -63,9 +67,7 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
       <div>
         <Button
           onClick={() =>
-            void router.push(
-              `/product/${cartItem.id}/${slugify(cartItem.name)}`
-            )
+            void push(`/product/${cartItem.id}/${slugify(cartItem.name)}`)
           }
           className="w-6 h-6"
           size={"icon"}
@@ -82,9 +84,10 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
             className="w-6 h-6"
             size={"icon"}
             variant={"outline"}
-            onClick={() =>
-              void setProductQuantity((productQuantity) => productQuantity + 1)
-            }
+            onClick={() => {
+              void setProductQuantity((productQuantity) => productQuantity + 1);
+              setIsNewValue(true);
+            }}
           >
             <IconArrowUp />
           </Button>
@@ -95,11 +98,12 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
             disabled={isPending}
             aria-disabled={isPending ? "true" : "false"}
             className="w-16 h-6 p-2"
-            onChange={(e) =>
+            onChange={(e) => {
               setProductQuantity((productQuantity) =>
-                productQuantity > 1 ? e.target.valueAsNumber : 1
-              )
-            }
+                productQuantity > 1 ? e.target.valueAsNumber : 1,
+              );
+              setIsNewValue(true);
+            }}
           />
           <Button
             disabled={isPending}
@@ -107,11 +111,12 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
             className="w-6 h-6"
             size={"icon"}
             variant={"outline"}
-            onClick={() =>
+            onClick={() => {
               void setProductQuantity((productQuantity) =>
-                productQuantity > 1 ? productQuantity - 1 : 1
-              )
-            }
+                productQuantity > 1 ? productQuantity - 1 : 1,
+              );
+              setIsNewValue(true);
+            }}
           >
             <IconArrowDown />
           </Button>

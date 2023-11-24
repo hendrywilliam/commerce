@@ -16,14 +16,14 @@ export default async function CartPage() {
     {} as Record<
       Pick<CartLineDetailedItems, "storeName">["storeName"],
       CartLineDetailedItems[]
-    >
+    >,
   );
 
   return (
     <div className="container mx-auto h-full py-8">
       <h1 className="font-semibold text-2xl">Cart</h1>
-      <div className="flex mt-2">
-        <div className="w-full">
+      <div className="flex mt-2 gap-4">
+        <div className="w-3/4">
           {cartItemDetails.length ? (
             <div className="flex flex-col gap-4">
               {Object.entries(groupProductByTheStore).map(
@@ -34,16 +34,18 @@ export default async function CartPage() {
                       <CartItem key={item.id} cartItem={item} />
                     ))}
                   </div>
-                )
+                ),
               )}
             </div>
           ) : (
             <p>You dont have any item in your current cart.</p>
           )}
         </div>
-        <div className="w-full">
-          <CartPanel />
-        </div>
+        {cartItemDetails.length > 0 && (
+          <div className="w-1/4">
+            <CartPanel products={groupProductByTheStore} />
+          </div>
+        )}
       </div>
     </div>
   );

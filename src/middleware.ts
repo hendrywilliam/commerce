@@ -4,14 +4,15 @@ export default authMiddleware({
   // add public routes
   publicRoutes: [
     "/",
+    "/cart",
     "/sign-up",
     "/sign-in",
     "/products",
     "/api/(.*)",
-    "/cart/(.*)",
     "/store/(.*)",
     "/stores/(.*)",
     "/product/(.*)",
+    "/checkout/(.*)",
     "/products/(.*)",
     "/quickview-product/(.*)",
   ],

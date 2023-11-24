@@ -9,7 +9,7 @@ import { CartLineDetailedItems } from "@/types";
 
 export async function getCartDetailsAction(
   cartId: number,
-  cartItems: CartItem[]
+  cartItems: CartItem[],
 ) {
   if (isNaN(cartId)) return [];
 
@@ -24,6 +24,7 @@ export async function getCartDetailsAction(
       price: products.price,
       category: products.category,
       image: products.image,
+      storeId: products.storeId,
       storeName: stores.name,
     })
     .from(products)

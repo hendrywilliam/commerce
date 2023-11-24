@@ -44,6 +44,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <Image
               src={parsedImageUrl}
               fill
+              sizes="100vw"
               alt={product.name as string}
               className="w-full h-full object-cover rounded-t transition duration-300 ease-in-out group-hover:scale-105"
             />
