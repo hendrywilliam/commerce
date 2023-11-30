@@ -9,13 +9,12 @@ import { useZodForm } from "@/hooks/use-zod-form";
 import { useSignUp, useUser } from "@clerk/nextjs";
 import { IconLoading } from "@/components/ui/icons";
 import { registerValidation } from "@/lib/validations/user";
-import { createCustomerStripeAction } from "@/actions/users/create-customer";
+import { createCustomerStripeAction } from "@/actions/subscription/create-customer";
 import { Form, FormField, FormInput, FormLabel } from "@/components/ui/form";
 
 export default function SignUpForm() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [loading, setLoading] = useState(false);
-  const { user } = useUser();
   const {
     register,
     handleSubmit,
