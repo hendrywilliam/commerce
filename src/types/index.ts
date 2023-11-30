@@ -28,6 +28,9 @@ export interface UserObjectCustomized
     plan: "Hobby" | "Pro" | "Enterprise";
     storeId: string[];
     addresses: number[];
+    stripeCustomerId: string;
+    stripeSubscriptionid: string;
+    stripeSubscriptionClientSecret: string;
   };
 }
 

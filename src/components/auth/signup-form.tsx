@@ -6,15 +6,15 @@ import { catchError } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useZodForm } from "@/hooks/use-zod-form";
-import { useSignUp, useUser } from "@clerk/nextjs";
+import { useSignUp } from "@clerk/nextjs";
 import { IconLoading } from "@/components/ui/icons";
 import { registerValidation } from "@/lib/validations/user";
-import { createCustomerStripeAction } from "@/actions/subscription/create-customer";
+import { createUserAction } from "@/actions/users/create-user";
 import { Form, FormField, FormInput, FormLabel } from "@/components/ui/form";
 
 export default function SignUpForm() {
-  const { isLoaded, signUp, setActive } = useSignUp();
-  const [loading, setLoading] = useState(false);
+  const { isLoaded } = useSignUp();
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -27,27 +27,19 @@ export default function SignUpForm() {
 
   const submitRegistration = handleSubmit(async (data) => {
     if (!isLoaded) return;
-    setLoading(true);
+    setIsLoading((isLoading) => !isLoading);
     try {
-      const registerResponse = await signUp.create({
-        emailAddress: data.email,
+      await createUserAction({
+        email: data.email,
         password: data.password,
+        confirmPassword: data.confirmPassword,
       });
-
-      if (registerResponse.status === "complete") {
-        setActive({ session: registerResponse.createdSessionId });
-        // Register customer to Stripe
-        await createCustomerStripeAction(
-          registerResponse.emailAddress as string,
-        );
-      }
-
       toast.success("Register success. Redirecting to lobby.");
       router.push("/");
     } catch (error) {
       catchError(errors);
     } finally {
-      setLoading(false);
+      setIsLoading((isLoading) => !isLoading);
     }
   });
 
@@ -94,8 +86,14 @@ export default function SignUpForm() {
           By registering, you agree to processing your personal data by
           pointaside
         </p>
-        <Button className="flex gap-1" type="submit" size="sm">
-          {loading && <IconLoading />}
+        <Button
+          disabled={isLoading}
+          aria-disabled={isLoading ? "true" : "false"}
+          className="flex gap-1"
+          type="submit"
+          size="sm"
+        >
+          {isLoading && <IconLoading />}
           Sign up
         </Button>
       </Form>

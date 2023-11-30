@@ -1,13 +1,26 @@
 "use client";
 
+import { useTransition } from "react";
 import type { BillingPlan } from "@/types";
+import { catchError, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/lib/utils";
-import { useState } from "react";
 import { IconLoading } from "@/components/ui/icons";
+import { createCustomerSubscriptionAction } from "@/actions/users/create-subscription";
 
 export default function DashboardBillingPlanCard({ plan }: BillingPlan) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  // Plan id is equal to Price Id (Product identifier in Stripe)
+  function handleSubscribeToPlan(planId: string) {
+    startTransition(async () => {
+      try {
+        await createCustomerSubscriptionAction(planId);
+      } catch (error) {
+        catchError(error);
+      }
+    });
+  }
+
   return (
     <div
       className="flex flex-col border rounded p-2 h-64 justify-between"
@@ -19,9 +32,12 @@ export default function DashboardBillingPlanCard({ plan }: BillingPlan) {
         <p className="text-gray-500">{plan.description}</p>
       </div>
       <div>
-        <Button className="w-full">
+        <Button
+          onClick={() => void handleSubscribeToPlan(plan.id)}
+          className="w-full"
+        >
           Change plan
-          {isLoading && <IconLoading />}
+          {isPending && <IconLoading />}
         </Button>
       </div>
     </div>

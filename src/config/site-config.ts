@@ -61,7 +61,7 @@ export const siteConfig = {
   ],
   billingPlan: [
     {
-      id: 1,
+      id: "price_1OICDUAaT0py2Y5OeeHaAGG0",
       title: "Hobby",
       description:
         "Hobby tier can only create 5 stores. Great for small business owner",
@@ -69,7 +69,7 @@ export const siteConfig = {
       price: 0,
     },
     {
-      id: "price_1OI3ZFAaT0py2Y5OWW5ByFzT",
+      id: "price_1OIC7EAaT0py2Y5O7oG6MdDg",
       title: "Pro",
       description:
         "Everything in hobby, plus 10 stores. Great choice for medium-to-big business owner.",
@@ -77,7 +77,7 @@ export const siteConfig = {
       price: 20,
     },
     {
-      id: 3,
+      id: "price_1OICBxAaT0py2Y5OIO5ve8JO",
       title: "Enterprise",
       description:
         "Everything in pro, plus 10 stores. What colour is your bugatti?",
