@@ -11,8 +11,6 @@ import {
   json,
 } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
-import type { CartItem } from "@/types";
-import { UploadFileResponse } from "uploadthing/client";
 
 export const products = mysqlTable("products", {
   id: serial("id").primaryKey(),

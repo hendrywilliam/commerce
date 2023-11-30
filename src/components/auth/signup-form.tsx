@@ -1,15 +1,16 @@
 "use client";
 
-import { useZodForm } from "@/hooks/use-zod-form";
-import { registerValidation } from "@/lib/validations/user";
-import { Form, FormField, FormInput, FormLabel } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { useSignUp, useUser } from "@clerk/nextjs";
-import { IconLoading } from "@/components/ui/icons";
+import { toast } from "sonner";
 import { useState } from "react";
 import { catchError } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { useZodForm } from "@/hooks/use-zod-form";
+import { useSignUp, useUser } from "@clerk/nextjs";
+import { IconLoading } from "@/components/ui/icons";
+import { registerValidation } from "@/lib/validations/user";
+import { createCustomerStripeAction } from "@/actions/users/create-customer";
+import { Form, FormField, FormInput, FormLabel } from "@/components/ui/form";
 
 export default function SignUpForm() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -28,20 +29,27 @@ export default function SignUpForm() {
   const submitRegistration = handleSubmit(async (data) => {
     if (!isLoaded) return;
     setLoading(true);
-    await signUp
-      .create({
+    try {
+      const registerResponse = await signUp.create({
         emailAddress: data.email,
         password: data.password,
-      })
-      .then((res) => {
-        if (res.status === "complete") {
-          setActive({ session: res.createdSessionId });
-        }
-        toast.success("Register success. Redirecting to lobby.");
-        router.push("/");
-      })
-      .catch((err) => catchError(err))
-      .finally(() => setLoading(false));
+      });
+
+      if (registerResponse.status === "complete") {
+        setActive({ session: registerResponse.createdSessionId });
+        // Register customer to Stripe
+        await createCustomerStripeAction(
+          registerResponse.emailAddress as string,
+        );
+      }
+
+      toast.success("Register success. Redirecting to lobby.");
+      router.push("/");
+    } catch (error) {
+      catchError(errors);
+    } finally {
+      setLoading(false);
+    }
   });
 
   return (

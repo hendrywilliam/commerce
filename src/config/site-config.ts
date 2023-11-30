@@ -69,7 +69,7 @@ export const siteConfig = {
       price: 0,
     },
     {
-      id: 2,
+      id: "price_1OI3ZFAaT0py2Y5OWW5ByFzT",
       title: "Pro",
       description:
         "Everything in hobby, plus 10 stores. Great choice for medium-to-big business owner.",
@@ -79,7 +79,8 @@ export const siteConfig = {
     {
       id: 3,
       title: "Enterprise",
-      description: "Everything in pro, plus 10 stores.",
+      description:
+        "Everything in pro, plus 10 stores. What colour is your bugatti?",
       limit: 25,
       price: 100,
     },

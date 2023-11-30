@@ -1,1 +1,13 @@
-{"version":"5","dialect":"mysql","entries":[{"idx":2,"version":"5","when":1699865917488,"tag":"0002_clear_virginia_dare","breakpoints":true},{"idx":3,"version":"5","when":1700822552690,"tag":"0003_living_black_crow","breakpoints":true}]}
+{
+  "version": "5",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1701242294263,
+      "tag": "0000_tranquil_mikhail_rasputin",
+      "breakpoints": true
+    }
+  ]
+}

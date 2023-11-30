@@ -10,6 +10,6 @@ Key features:
 - [x] MySQL Database and Drizzle ORM.
 - [x] Uploadthing for easy and type safety image uploader.
 - [x] User authentication using Clerk.
-- [ ] Payment integration — TBA
+- [ ] Payment integration using Stripe (on going)
 
 More feature will be added soon.
