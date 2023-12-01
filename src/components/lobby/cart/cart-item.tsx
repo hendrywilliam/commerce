@@ -28,7 +28,7 @@ export default function CartItem({ cartItem }: CartItemProps) {
       <div className="flex flex-col w-full">
         <p>{cartItem.name}</p>
         <p className="text-gray-400">
-          {formatCurrency(Number(cartItem.price))}
+          {formatCurrency(Number(cartItem.price) * cartItem.qty)}
         </p>
         <CartItemAction cartItem={cartItem} />
       </div>

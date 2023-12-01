@@ -45,9 +45,10 @@ export default function Products({
   productsPageCount,
   currentPage,
 }: ProductsProps) {
+  const [isNewValue, setIsNewValue] = useState(false);
   const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(99999);
   const [isPending, startTransition] = useTransition();
+  const [maxPrice, setMaxPrice] = useState(99999);
   const [sellersId, setSellersId] = useState<number[]>([]);
   const [selectedCategories, setSelectedCategories] = useState([] as string[]);
 
@@ -118,12 +119,14 @@ export default function Products({
 
   useEffect(() => {
     const bounce = setTimeout(() => {
-      createQueryString("pmin", String(minPrice));
-      startTransition(() => {
-        void router.push(
-          `${pathname}?${createQueryString("pmax", String(maxPrice))}`,
-        );
-      });
+      if (isNewValue) {
+        createQueryString("pmin", String(minPrice));
+        startTransition(() => {
+          void router.push(
+            `${pathname}?${createQueryString("pmax", String(maxPrice))}`,
+          );
+        });
+      }
     }, 500);
 
     return () => clearTimeout(bounce);
@@ -186,8 +189,10 @@ export default function Products({
                       onChange={(value, index) => {
                         if (index === 1) {
                           setMaxPrice(value[1]);
+                          setIsNewValue(true);
                         } else {
                           setMinPrice(value[0]);
+                          setIsNewValue(true);
                         }
                       }}
                       max={99999}
@@ -203,17 +208,19 @@ export default function Products({
                         disabled={isPending}
                         aria-disabled={isPending ? "true" : "false"}
                         min={0}
-                        onChange={(e) =>
-                          void setMinPrice(Number(e.target.value))
-                        }
+                        onChange={(e) => {
+                          void setMinPrice(Number(e.target.value));
+                          setIsNewValue(true);
+                        }}
                       />
                       <Input
                         value={maxPrice}
                         disabled={isPending}
                         aria-disabled={isPending ? "true" : "false"}
-                        onChange={(e) =>
-                          void setMinPrice(Number(e.target.value))
-                        }
+                        onChange={(e) => {
+                          void setMinPrice(Number(e.target.value));
+                          setIsNewValue(true);
+                        }}
                       />
                     </div>
                   </div>

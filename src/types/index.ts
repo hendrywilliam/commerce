@@ -23,14 +23,14 @@ export interface UserObjectCustomized
   extends Omit<User, "privateMetadata" | "publicMetadata"> {
   publicMetadata: {
     address: number;
+    stripeCustomerId: string;
+    stripeSubscriptionid: string;
+    stripeSubscriptionClientSecret: string;
   };
   privateMetadata: {
     plan: "Hobby" | "Pro" | "Enterprise";
     storeId: string[];
     addresses: number[];
-    stripeCustomerId: string;
-    stripeSubscriptionid: string;
-    stripeSubscriptionClientSecret: string;
   };
 }
 

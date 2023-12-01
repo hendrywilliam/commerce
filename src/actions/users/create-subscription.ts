@@ -16,7 +16,7 @@ export async function createCustomerSubscriptionAction(priceId: string) {
     const currentUser = (await clerkClient.users.getUser(
       userId,
     )) as unknown as UserObjectCustomized;
-    const stripeCustomerId = currentUser.privateMetadata.stripeCustomerId;
+    const stripeCustomerId = currentUser.publicMetadata.stripeCustomerId;
 
     // Generate subscription
     const subscription = await stripe.subscriptions.create({
@@ -31,12 +31,14 @@ export async function createCustomerSubscriptionAction(priceId: string) {
     const intent = invoice.payment_intent as Stripe.PaymentIntent;
 
     await clerkClient.users.updateUser(userId, {
-      privateMetadata: {
-        ...(currentUser && currentUser.privateMetadata),
+      publicMetadata: {
+        ...(currentUser && currentUser.publicMetadata),
         stripeSubscriptionid: subscription.id,
         stripeSubscriptionClientSecret: intent.client_secret!,
-      } satisfies UserObjectCustomized["privateMetadata"],
+      } satisfies UserObjectCustomized["publicMetadata"],
     });
+
+    return intent.client_secret;
   } catch (error) {
     throw error;
   }

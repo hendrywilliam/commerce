@@ -26,7 +26,7 @@ export default function ShoppingCartItemAction({
     startTransition(async () => {
       try {
         await deleteCartItemAction(id);
-        toast.success("Success delete the selected item.");
+        toast.success("Your cart has been updated.");
       } catch (err) {
         catchError(err);
       }

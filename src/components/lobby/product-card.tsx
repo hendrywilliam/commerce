@@ -24,7 +24,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     setIsLoading((val) => !val);
     await addItemInCartAction({ id: product.id, qty: 1 })
       .then(() => {
-        toast.success("Success add item to cart.");
+        toast.success("Item added to your cart.");
       })
       .finally(() => {
         setIsLoading((val) => !val);

@@ -42,11 +42,11 @@ export async function createUserAction(rawUserData: CreateUser) {
         email: userCreated.emailAddresses[0].emailAddress,
       }));
 
-    const userCreatedPrivateMetadata = userCreated.privateMetadata;
+    const userCreatedPublicMetadata = userCreated.publicMetadata;
 
     await clerkClient.users.updateUser(userCreated.id, {
-      privateMetadata: {
-        ...(userCreated && userCreatedPrivateMetadata),
+      publicMetadata: {
+        ...(userCreated && userCreatedPublicMetadata),
         stripeCustomerId: stripeCustomer.id,
       },
     });
