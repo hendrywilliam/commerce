@@ -21,25 +21,27 @@ export default function ShoppingCartItemAction({
 }: ShoppingCartItemActionProps) {
   const [itemQuantity, setItemQuantity] = useState(qty);
   const [isPending, startTransition] = useTransition();
+  const [isDeletingItem, setIsDeletingItem] = useState(false);
 
   async function handleDeleteItemFromCart() {
+    setIsDeletingItem((isDeletingItem) => !isDeletingItem);
     startTransition(async () => {
       try {
         await deleteCartItemAction(id);
         toast.success("Your cart has been updated.");
       } catch (err) {
         catchError(err);
+      } finally {
+        setIsDeletingItem((isDeletingItem) => !isDeletingItem);
       }
     });
   }
 
-  async function handleUpdateItemQuantity() {
-    await updateCartItemAction(id, itemQuantity);
-  }
-
   useEffect(() => {
     const bounceUpdate = setTimeout(async () => {
-      await handleUpdateItemQuantity();
+      startTransition(async () => {
+        await updateCartItemAction(id, itemQuantity);
+      });
     }, 500);
 
     return () => clearTimeout(bounceUpdate);
@@ -57,7 +59,7 @@ export default function ShoppingCartItemAction({
           disabled={isPending}
           aria-disabled={isPending ? "true" : "false"}
         >
-          {isPending ? <IconLoading /> : <IconTrashCan />}
+          {isDeletingItem ? <IconLoading /> : <IconTrashCan />}
         </Button>
       </div>
       <div className="inline-flex gap-1">

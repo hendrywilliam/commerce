@@ -2,7 +2,7 @@
 
 import { toast } from "sonner";
 import { useUser } from "@clerk/nextjs";
-import { Stripe } from "@stripe/stripe-js";
+import { Stripe, StripeElement } from "@stripe/stripe-js";
 import { UserObjectCustomized } from "@/types";
 import { Button } from "@/components/ui/button";
 import { ChangeEvent, FormEvent, useState } from "react";
@@ -17,7 +17,7 @@ import {
 export default function SubscriptionCheckoutForm() {
   const { user, isLoaded } = useUser();
   const [paymentIntent, setPaymentIntent] = useState();
-  const [name, setName] = useState("Jenny Rosen");
+  const [name, setName] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
 
   // Initialize an instance of stripe
@@ -25,7 +25,7 @@ export default function SubscriptionCheckoutForm() {
   const elements = useElements();
 
   if (!isLoaded) {
-    return null;
+    return "";
   }
 
   if (!stripe || !elements) {
@@ -37,33 +37,29 @@ export default function SubscriptionCheckoutForm() {
     event: FormEvent<HTMLFormElement>,
   ) {
     event.preventDefault();
-    const cardElement = elements?.getElement(CardElement);
     const clientSecret = (user as unknown as UserObjectCustomized)
       .publicMetadata.stripeSubscriptionClientSecret;
 
-    const { error, paymentIntent } = await stripe.confirmCardPayment(
+    const { error: submitError } = await elements!.submit();
+    if (submitError) {
+      toast.error(submitError.message);
+      return;
+    }
+
+    const { error, paymentIntent } = await stripe.confirmPayment({
+      // @ts-expect-error
+      elements,
       clientSecret,
-      {
-        payment_method: {
-          // @ts-expect-error
-          card: cardElement,
-          billing_details: {
-            name: name,
-          },
-        },
+      confirmParams: {
+        return_url: `${window.location.origin}/`,
       },
-    );
+    });
 
     if (error) {
       toast.error(error.message);
     }
-    // @ts-expect-error
     setPaymentIntent(paymentIntent);
   }
-
-  const paymentElementOptions = {
-    layout: "tabs",
-  };
 
   return (
     <Form onSubmit={handleSubmitSubscriptionCheckout}>
@@ -76,8 +72,8 @@ export default function SubscriptionCheckoutForm() {
           }
         />
       </FormLabel>
-      <CardElement />
-      <Button>Subscribe</Button>
+      <PaymentElement />
+      <Button disabled={!stripe || !elements}>Subscribe</Button>
     </Form>
   );
 }

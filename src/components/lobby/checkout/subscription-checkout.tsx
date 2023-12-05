@@ -25,7 +25,7 @@ export function SubscriptionCheckout() {
   const options: StripeElementsOptions = {
     clientSecret,
     appearance: {
-      theme: "night",
+      theme: "flat",
     },
   };
 

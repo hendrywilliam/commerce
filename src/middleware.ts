@@ -12,7 +12,6 @@ export default authMiddleware({
     "/store/(.*)",
     "/stores/(.*)",
     "/product/(.*)",
-    "/checkout/(.*)",
     "/products/(.*)",
     "/quickview-product/(.*)",
   ],
