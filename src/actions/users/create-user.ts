@@ -22,12 +22,12 @@ export async function createUserAction(rawUserData: CreateUser) {
       password: parsedRawData.data.password,
       publicMetadata: {
         address: "",
+        stripeCustomerId: "",
       },
       privateMetadata: {
         plan: "Hobby",
         storeId: [],
         addresses: [],
-        stripeCustomerId: "",
       },
     });
 

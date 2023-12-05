@@ -89,3 +89,13 @@ export const orders = mysqlTable("orders", {
 
 export type Orders = typeof orders.$inferSelect;
 export type NewOrders = typeof orders.$inferInsert;
+
+export const payments = mysqlTable("payments", {
+  id: serial("id").primaryKey(),
+  storeId: int("store_id").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  stripeAccountId: text("stripe_account_id").notNull(),
+});
+
+export type Payments = typeof payments.$inferSelect;
+export type NewPayments = typeof payments.$inferInsert;

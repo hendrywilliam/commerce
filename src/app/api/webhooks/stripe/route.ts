@@ -6,6 +6,8 @@ import { stripe } from "@/lib/stripe";
 import type { Readable } from "stream";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { clerkClient, auth } from "@clerk/nextjs";
+import { siteConfig } from "@/config/site-config";
 
 dotenv.config();
 
@@ -38,16 +40,14 @@ export async function POST(req: Request) {
   }
 
   // Extract data object from event
-  const data = event.data;
+  const data: Stripe.Event.Data = event.data;
 
   // Handle various event sent from Stripe
-
   // @see https://stripe.com/docs/webhooks#events-overview
   switch (event.type) {
     case "customer.created":
-      const { id: customerId } = data.object as Stripe.Customer;
+      const { id: customerId } = data as Stripe.Customer;
       console.log(`🔔  Webhook received: ${event.type} ${customerId}`);
-
     default:
     //Unexpected event type
   }

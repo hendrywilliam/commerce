@@ -3,9 +3,10 @@
 import * as dotenv from "dotenv";
 import { useUser } from "@clerk/nextjs";
 import { UserObjectCustomized } from "@/types";
-import { StripeElementsOptions, loadStripe } from "@stripe/stripe-js";
+import { siteConfig } from "@/config/site-config";
 import { Elements } from "@stripe/react-stripe-js";
 import SubscriptionCheckoutForm from "./subscription-checkout-form";
+import { StripeElementsOptions, loadStripe } from "@stripe/stripe-js";
 
 dotenv.config();
 
@@ -15,17 +16,17 @@ const stripePromise = loadStripe(stripePublishableKey);
 export function SubscriptionCheckout() {
   const { user, isLoaded } = useUser();
 
+  // Make sure the Clerk client is loaded.
   if (!isLoaded) {
-    return null;
+    return;
   }
 
-  const clientSecret = (user as unknown as UserObjectCustomized).publicMetadata
-    .stripeSubscriptionClientSecret;
-
+  const userObject = user as unknown as UserObjectCustomized;
+  const clientSecret = userObject.publicMetadata.stripeSubscriptionClientSecret;
   const options: StripeElementsOptions = {
     clientSecret,
     appearance: {
-      theme: "flat",
+      theme: "stripe",
     },
   };
 

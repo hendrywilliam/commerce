@@ -1,79 +1,89 @@
 "use client";
 
-import { toast } from "sonner";
-import { useUser } from "@clerk/nextjs";
-import { Stripe, StripeElement } from "@stripe/stripe-js";
-import { UserObjectCustomized } from "@/types";
-import { Button } from "@/components/ui/button";
-import { ChangeEvent, FormEvent, useState } from "react";
-import { Form, FormInput, FormLabel } from "@/components/ui/form";
 import {
-  CardElement,
   useStripe,
   useElements,
   PaymentElement,
 } from "@stripe/react-stripe-js";
+import { useUser } from "@clerk/nextjs";
+import { UserObjectCustomized } from "@/types";
+import { Button } from "@/components/ui/button";
+import { FormEvent, useState, useEffect } from "react";
+import { Form, FormField } from "@/components/ui/form";
+import { LockIcon, IconLoading } from "@/components/ui/icons";
+import {
+  Stripe,
+  StripeError,
+  StripePaymentElementOptions,
+} from "@stripe/stripe-js";
+import { toast } from "sonner";
 
 export default function SubscriptionCheckoutForm() {
   const { user, isLoaded } = useUser();
-  const [paymentIntent, setPaymentIntent] = useState();
-  const [name, setName] = useState("");
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Initialize an instance of stripe
   const stripe = useStripe() as Stripe;
   const elements = useElements();
 
   if (!isLoaded) {
-    return "";
-  }
-
-  if (!stripe || !elements) {
-    // Disabled anything when Stripe.js has not loaded yet.
-    return "";
+    return;
   }
 
   async function handleSubmitSubscriptionCheckout(
     event: FormEvent<HTMLFormElement>,
   ) {
     event.preventDefault();
-    const clientSecret = (user as unknown as UserObjectCustomized)
-      .publicMetadata.stripeSubscriptionClientSecret;
 
-    const { error: submitError } = await elements!.submit();
-    if (submitError) {
-      toast.error(submitError.message);
+    // Disabled anything when Stripe.js/ Clerk has not loaded yet.
+    if (!stripe || !elements) {
       return;
     }
 
-    const { error, paymentIntent } = await stripe.confirmPayment({
-      // @ts-expect-error
-      elements,
-      clientSecret,
-      confirmParams: {
-        return_url: `${window.location.origin}/`,
-      },
-    });
+    setIsLoading((isLoading) => !isLoading);
+    const clientSecret = (user as unknown as UserObjectCustomized)
+      .publicMetadata.stripeSubscriptionClientSecret;
+    try {
+      const { error: submitError } = await elements!.submit();
 
-    if (error) {
-      toast.error(error.message);
+      if (submitError) {
+        throw submitError;
+      }
+
+      const { error: confirmPaymentError } = await stripe.confirmPayment({
+        elements,
+        clientSecret,
+        confirmParams: {
+          // Replace with completion page.
+          return_url: `${window.location.origin}/`,
+        },
+      });
+
+      if (confirmPaymentError) {
+        throw confirmPaymentError;
+      }
+    } catch (error) {
+      toast.error((error as StripeError).message);
+    } finally {
+      setIsLoading((isLoading) => !isLoading);
     }
-    setPaymentIntent(paymentIntent);
   }
+
+  const paymentElementsOption: StripePaymentElementOptions = {
+    layout: "tabs",
+  };
 
   return (
     <Form onSubmit={handleSubmitSubscriptionCheckout}>
-      <FormLabel>
-        <FormInput
-          type="text"
-          value={name}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setName(e.target.value)
-          }
-        />
-      </FormLabel>
-      <PaymentElement />
-      <Button disabled={!stripe || !elements}>Subscribe</Button>
+      <PaymentElement options={paymentElementsOption} />
+      <FormField className="mt-4">
+        <Button
+          className="inline-flex gap-2"
+          disabled={!stripe || !elements || isLoading || !isLoaded}
+        >
+          Subscribe {isLoading ? <IconLoading /> : <LockIcon />}
+        </Button>
+      </FormField>
     </Form>
   );
 }

@@ -38,7 +38,6 @@ export async function createNewStoreAction(storeData: NewStore) {
   if (isAbleToCreateNewStore) {
     const { insertId } = await db.insert(stores).values({
       name: storeData.name,
-      active: storeData.active,
       description: storeData.description,
     });
 

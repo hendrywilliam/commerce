@@ -32,7 +32,6 @@ export default function CreateNewStoreForm() {
     await createNewStoreAction({
       description: data.description,
       name: data.name,
-      active: true,
     })
       .then((res) => {
         toast("Success add a new store.");
