@@ -66,14 +66,16 @@ export default function DashboardStoreProductShellTable({
           footer: (info) => info.column.id,
         }),
       ] as ColumnDef<Product>[],
-    []
+    [],
   );
 
   return (
     <>
-      <DashboardStoreProductDataTableAction
-        rawRowDataSelection={rawRowDataSelection}
-      />
+      {rawRowDataSelection.length > 0 && (
+        <DashboardStoreProductDataTableAction
+          rawRowDataSelection={rawRowDataSelection}
+        />
+      )}
       <DashboardStoreProductDataTable
         columns={columns}
         data={storeProductData}

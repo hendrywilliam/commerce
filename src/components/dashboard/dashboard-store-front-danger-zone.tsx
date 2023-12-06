@@ -36,10 +36,10 @@ export default function DashboardStoreFrontDangerZone({
   return (
     <div className="flex flex-col mt-4 gap-1">
       <h1 className="font-bold text-xl text-destructive">Danger Zone</h1>
-      <div className="flex border border-destructive rounded p-2 bg-destructive/10 justify-between">
+      <div className="flex border border-destructive rounded p-2 justify-between">
         <div>
           <p className="font-bold text-destructive">Delete this store</p>
-          <p>
+          <p className="text-destructive">
             Once you delete a store, there is no way to revert this action. Do
             it with cautious.
           </p>

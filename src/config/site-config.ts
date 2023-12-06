@@ -5,8 +5,12 @@ import {
   IconAnalytics,
 } from "@/components/ui/icons";
 import { SortFilterItem } from "@/types";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 export const siteConfig = {
+  baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
   footerNavigation: [
     {
       title: "My fav lofis",

@@ -13,6 +13,10 @@ export default async function StorePage({
     storeId: string[];
   };
 }) {
+  const storeData = await db.query.stores.findFirst({
+    where: eq(stores.id, Number(storeId[0])),
+  });
+
   const productsData = await db
     .select({
       product: products,
@@ -29,7 +33,7 @@ export default async function StorePage({
       <div className="flex flex-col h-full w-full my-2 gap-2">
         <div className="mt-4">
           <div className="flex flex-col my-4 gap-2">
-            <h1 className="font-bold text-xl">{productsData[0].store?.name}</h1>
+            <h1 className="font-bold text-xl">{storeData?.name}</h1>
             <div>
               <Button variant={"outline"} className="inline-flex gap-2">
                 <IconStores />

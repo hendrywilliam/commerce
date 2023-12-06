@@ -68,7 +68,7 @@ export const addresses = mysqlTable("addresses", {
   line2: text("line2"),
   city: text("city").notNull(),
   state: text("state").notNull(),
-  postal_code: text("postal_code").notNull(),
+  postal_code: text("postalCode").notNull(),
   country: text("country").notNull(),
   createdAt: timestamp("createdAt").defaultNow(),
 });
@@ -78,7 +78,7 @@ export type NewAddress = typeof addresses.$inferInsert;
 
 export const orders = mysqlTable("orders", {
   id: serial("id").primaryKey(),
-  storeId: int("store_id"),
+  storeId: int("storeId"),
   items: json("items"),
   total: decimal("total", { precision: 10, scale: 2 }).default("0"),
   name: text("name").notNull(),
@@ -92,9 +92,10 @@ export type NewOrders = typeof orders.$inferInsert;
 
 export const payments = mysqlTable("payments", {
   id: serial("id").primaryKey(),
-  storeId: int("store_id").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-  stripeAccountId: text("stripe_account_id").notNull(),
+  storeId: int("storeId").notNull(),
+  stripeAccountId: text("stripeAccountId").notNull(),
+  detailsSubmitted: boolean("detailsSubmitted").default(false),
+  createdAt: timestamp("createdAt").defaultNow(),
 });
 
 export type Payments = typeof payments.$inferSelect;

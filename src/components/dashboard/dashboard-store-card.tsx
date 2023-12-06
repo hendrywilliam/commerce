@@ -9,7 +9,7 @@ export type FeaturedStore = {
 export default function DashboardStoreCard({ store }: FeaturedStore) {
   return (
     <Link
-      href={`store/${String(store.id)}`}
+      href={`stores/${String(store.id)}`}
       className="relative h-max w-full border rounded"
     >
       {store.active ? (

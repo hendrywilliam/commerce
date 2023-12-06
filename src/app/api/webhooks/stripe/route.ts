@@ -1,13 +1,14 @@
 // Webhook stripe
 
 import Stripe from "stripe";
+import { db } from "@/db/core";
 import * as dotenv from "dotenv";
+import { eq } from "drizzle-orm";
 import { stripe } from "@/lib/stripe";
 import type { Readable } from "stream";
 import { headers } from "next/headers";
+import { payments, stores } from "@/db/schema";
 import { NextResponse } from "next/server";
-import { clerkClient, auth } from "@clerk/nextjs";
-import { siteConfig } from "@/config/site-config";
 
 dotenv.config();
 
@@ -48,6 +49,30 @@ export async function POST(req: Request) {
     case "customer.created":
       const { id: customerId } = data as Stripe.Customer;
       console.log(`🔔  Webhook received: ${event.type} ${customerId}`);
+
+    case "account.updated":
+      const { id: accountId, details_submitted } = data as Stripe.Account;
+
+      const paymentRecord = await db.query.payments.findFirst({
+        where: eq(payments.stripeAccountId, accountId),
+      });
+
+      // Update store record
+      await db
+        .update(stores)
+        .set({
+          active: true,
+        })
+        .where(eq(stores.id, paymentRecord!.storeId as number));
+
+      // Update payment record
+      await db
+        .update(payments)
+        .set({
+          detailsSubmitted: details_submitted,
+        })
+        .where(eq(payments.id, paymentRecord!.id as number));
+
     default:
     //Unexpected event type
   }

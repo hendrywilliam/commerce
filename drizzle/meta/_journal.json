@@ -3,10 +3,17 @@
   "dialect": "mysql",
   "entries": [
     {
-      "idx": 0,
+      "idx": 1,
       "version": "5",
-      "when": 1701242294263,
-      "tag": "0000_tranquil_mikhail_rasputin",
+      "when": 1701800308843,
+      "tag": "0001_uneven_xavin",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1701833806425,
+      "tag": "0002_empty_black_widow",
       "breakpoints": true
     }
   ]

@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 import { storeValidation } from "@/lib/validations/stores";
 
 export async function updateOwnedStoreAction(
-  storeRawInput: Omit<Store, "createdAt">
+  storeRawInput: Omit<Store, "createdAt" | "active">,
 ) {
   // Runtime validation
   const parseStoreRawInput = storeValidation.parse(storeRawInput);
@@ -23,7 +23,6 @@ export async function updateOwnedStoreAction(
   await db
     .update(stores)
     .set({
-      active: parseStoreRawInput.active,
       description: parseStoreRawInput.description,
       name: parseStoreRawInput.name,
     })

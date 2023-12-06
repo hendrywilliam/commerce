@@ -23,7 +23,9 @@ export default function DashboardLayout({ children }: React.PropsWithChildren) {
             })}
           </div>
         </div>
-        <div className="w-full h-full pl-12 pt-8">{children}</div>
+        <div className="w-full h-full pl-12 py-8 overflow-y-auto">
+          {children}
+        </div>
       </div>
     </div>
   );

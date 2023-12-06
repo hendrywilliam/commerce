@@ -5,7 +5,7 @@ import ShoppingCart from "@/components/lobby/shopping-cart";
 
 export default async function SiteHeader() {
   return (
-    <nav className="sticky top-0 z-10 h-16 w-full border-b bg-background">
+    <nav className="sticky top-0 z-10 py-2 w-full border-b bg-background">
       <div className="container flex justify-between h-full items-center">
         <div className="flex font-bold w-1/2 items-center">
           <Link href="/">ecremmoce</Link>
