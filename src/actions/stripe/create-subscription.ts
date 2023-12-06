@@ -1,12 +1,14 @@
 "use server";
 
 import { stripe } from "@/lib/stripe";
-import { UserObjectCustomized } from "@/types";
+import { BillingPlan, UserObjectCustomized } from "@/types";
 import { auth, clerkClient } from "@clerk/nextjs";
 import Stripe from "stripe";
 
 // Price id coming from generated product on Stripe
-export async function createCustomerSubscriptionAction(priceId: string) {
+export async function createCustomerSubscriptionAction(
+  priceId: BillingPlan["plan"]["id"],
+) {
   try {
     const { userId } = auth();
 
@@ -16,7 +18,7 @@ export async function createCustomerSubscriptionAction(priceId: string) {
     const currentUser = (await clerkClient.users.getUser(
       userId,
     )) as unknown as UserObjectCustomized;
-    const stripeCustomerId = currentUser.publicMetadata.stripeCustomerId;
+    const stripeCustomerId = currentUser.privateMetadata.stripeCustomerId;
 
     // Generate subscription
     const subscription = await stripe.subscriptions.create({
@@ -31,14 +33,16 @@ export async function createCustomerSubscriptionAction(priceId: string) {
     const intent = invoice.payment_intent as Stripe.PaymentIntent;
 
     await clerkClient.users.updateUser(userId, {
-      publicMetadata: {
-        ...(currentUser && currentUser.publicMetadata),
-        stripeSubscriptionid: subscription.id,
-        stripeSubscriptionClientSecret: intent.client_secret!,
-      } satisfies UserObjectCustomized["publicMetadata"],
+      privateMetadata: {
+        ...currentUser.privateMetadata,
+        stripeSubscriptionId: subscription.id,
+      } satisfies Partial<UserObjectCustomized["privateMetadata"]>,
     });
 
-    return intent.client_secret;
+    return {
+      clientSecret: intent.client_secret,
+      subscriptionId: subscription.id,
+    };
   } catch (error) {
     throw error;
   }

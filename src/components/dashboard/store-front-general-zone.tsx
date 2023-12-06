@@ -9,7 +9,7 @@ import { IconLoading } from "@/components/ui/icons";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState, useTransition } from "react";
 import { updateOwnedStoreAction } from "@/actions/stores/update-store";
-import { createPayoutAccountAction } from "@/actions/users/create-payout-account";
+import { createPayoutAccountAction } from "@/actions/stripe/create-payout-account";
 
 interface DashboardStoreFrontGeneralZoneProps {
   store: Store;

@@ -1,24 +1,28 @@
 "use client";
 
 import {
-  useStripe,
-  useElements,
-  PaymentElement,
-} from "@stripe/react-stripe-js";
-import { useUser } from "@clerk/nextjs";
-import { UserObjectCustomized } from "@/types";
-import { Button } from "@/components/ui/button";
-import { FormEvent, useState, useEffect } from "react";
-import { Form, FormField } from "@/components/ui/form";
-import { LockIcon, IconLoading } from "@/components/ui/icons";
-import {
   Stripe,
   StripeError,
   StripePaymentElementOptions,
 } from "@stripe/stripe-js";
 import { toast } from "sonner";
+import {
+  useStripe,
+  useElements,
+  PaymentElement,
+} from "@stripe/react-stripe-js";
+import { baseUrl } from "@/config/site";
+import { useUser } from "@clerk/nextjs";
+import { FormEvent, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Form, FormField } from "@/components/ui/form";
+import { LockIcon, IconLoading } from "@/components/ui/icons";
 
-export default function SubscriptionCheckoutForm() {
+interface CheckoutForm {
+  clientSecret: string;
+}
+
+export default function CheckoutForm({ clientSecret }: CheckoutForm) {
   const { user, isLoaded } = useUser();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,8 +45,6 @@ export default function SubscriptionCheckoutForm() {
     }
 
     setIsLoading((isLoading) => !isLoading);
-    const clientSecret = (user as unknown as UserObjectCustomized)
-      .publicMetadata.stripeSubscriptionClientSecret;
     try {
       const { error: submitError } = await elements!.submit();
 
@@ -55,7 +57,7 @@ export default function SubscriptionCheckoutForm() {
         clientSecret,
         confirmParams: {
           // Replace with completion page.
-          return_url: `${window.location.origin}/`,
+          return_url: baseUrl ?? "/",
         },
       });
 

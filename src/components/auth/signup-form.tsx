@@ -9,7 +9,7 @@ import { useZodForm } from "@/hooks/use-zod-form";
 import { useSignUp } from "@clerk/nextjs";
 import { IconLoading } from "@/components/ui/icons";
 import { registerValidation } from "@/lib/validations/user";
-import { createUserAction } from "@/actions/users/create-user";
+import { createStripeCustomerAction } from "@/actions/stripe/create-stripe-customer";
 import { Form, FormField, FormInput, FormLabel } from "@/components/ui/form";
 
 export default function SignUpForm() {
@@ -29,7 +29,7 @@ export default function SignUpForm() {
     if (!isLoaded) return;
     setIsLoading((isLoading) => !isLoading);
     try {
-      await createUserAction({
+      await createStripeCustomerAction({
         email: data.email,
         password: data.password,
         confirmPassword: data.confirmPassword,

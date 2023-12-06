@@ -1,5 +1,5 @@
 import { User } from "@clerk/nextjs/server";
-import { siteConfig } from "@/config/site-config";
+import { billingPlan } from "@/config/billing";
 import type { FileWithPath } from "@uploadthing/react";
 import { UploadFileResponse } from "uploadthing/client";
 
@@ -23,19 +23,22 @@ export interface UserObjectCustomized
   extends Omit<User, "privateMetadata" | "publicMetadata"> {
   publicMetadata: {
     address: number;
-    stripeCustomerId: string;
-    stripeSubscriptionid: string;
-    stripeSubscriptionClientSecret: string;
   };
   privateMetadata: {
     plan: "Hobby" | "Pro" | "Enterprise";
     storeId: string[];
+    stripeCustomerId: string;
+    stripeSubscriptionId: string;
+    stripeSubscriptionEnd: number;
+    stripeSubscriptionStart: number;
     addresses: number[];
   };
 }
 
 export interface BillingPlan {
-  plan: (typeof siteConfig.billingPlan)[0];
+  plan: {
+    [Key in keyof (typeof billingPlan)[0]]: (typeof billingPlan)[0][Key];
+  };
 }
 
 export interface FileWithPreview extends FileWithPath {
