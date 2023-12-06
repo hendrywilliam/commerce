@@ -4,6 +4,7 @@ import { z } from "zod";
 import Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { clerkClient } from "@clerk/nextjs";
+import { getPrimaryEmail } from "@/lib/utils";
 import { registerValidation } from "@/lib/validations/user";
 
 type CreateUser = z.infer<typeof registerValidation>;
@@ -35,11 +36,13 @@ export async function createUserAction(rawUserData: CreateUser) {
       throw new Error("Unable to create an user for now. Try again later.");
     }
 
+    const email = getPrimaryEmail(userCreated);
+
     // Register user to Stripe.
     const stripeCustomer: Stripe.Customer =
       userCreated &&
       (await stripe.customers.create({
-        email: userCreated.emailAddresses[0].emailAddress,
+        email,
       }));
 
     const userCreatedPublicMetadata = userCreated.publicMetadata;

@@ -1,10 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { IconNotification } from "@/components/ui/icons";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { useUser } from "@clerk/nextjs";
-import { useClerk } from "@clerk/nextjs";
+import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,8 +8,11 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
+import { useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 export default function AccountNavigation() {
   const { user, isSignedIn } = useUser();

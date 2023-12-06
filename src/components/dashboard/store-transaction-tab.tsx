@@ -1,4 +1,4 @@
-import DashboardStoreTransactionData from "./dashboard-store-transaction-data";
+import DashboardStoreTransactionData from "./store-transaction-data";
 
 interface DashboardStoreTransactionTab {
   active: boolean;

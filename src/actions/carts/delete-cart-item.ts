@@ -2,12 +2,12 @@
 
 import { cookies } from "next/headers";
 import { db } from "@/db/core";
-import { carts } from "@/db/schema";
+import { Product, carts } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { CartItem } from "@/types";
 import { revalidatePath } from "next/cache";
 
-export async function deleteCartItemAction(itemId: number) {
+export async function deleteCartItemAction(productId: Product["id"]) {
   const cartId = cookies().get("cart_id")?.value;
 
   if (isNaN(Number(cartId))) {
@@ -20,16 +20,16 @@ export async function deleteCartItemAction(itemId: number) {
     .where(eq(carts.id, Number(cartId)));
 
   const parsedCartItems = JSON.parse(
-    cartItems[0].items as string
+    cartItems[0].items as string,
   ) as CartItem[];
 
   const isDesiredItemExistInCart = parsedCartItems.find(
-    (item) => item.id === itemId
+    (item) => item.id === productId,
   );
 
   const filteredItemsInCart =
     isDesiredItemExistInCart &&
-    parsedCartItems.filter((item) => item.id !== itemId);
+    parsedCartItems.filter((item) => item.id !== productId);
 
   // Update cart
   await db

@@ -1,13 +1,13 @@
 "use server";
 import { db } from "@/db/core";
-import { stores } from "@/db/schema";
+import { Store, stores } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { currentUser, clerkClient, auth } from "@clerk/nextjs";
 import { UserObjectCustomized } from "@/types";
 
-export async function deleteOwnedStore(id: number) {
+export async function deleteOwnedStore(id: Store["id"]) {
   const { userId } = auth();
 
   if (!userId) {

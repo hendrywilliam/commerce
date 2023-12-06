@@ -1,6 +1,6 @@
-import { currentUser } from "@clerk/nextjs";
 import Link from "next/link";
-import { siteConfig } from "@/config/site-config";
+import { currentUser } from "@clerk/nextjs";
+import { dashboardNavigation } from "@/config/site";
 import { getRandomPatternStyle } from "@/lib/generate-pattern";
 
 export default async function DashboardPage() {
@@ -17,7 +17,7 @@ export default async function DashboardPage() {
         !
       </p>
       <div className="grid grid-cols-3 w-full mt-2 gap-2">
-        {siteConfig.dashboardNavigation.map((item, i) => {
+        {dashboardNavigation.map((item, i) => {
           return (
             <Link
               className="flex flex-col border rounded h-52 "

@@ -3,10 +3,9 @@
 import { db } from "@/db/core";
 import { eq } from "drizzle-orm";
 import { stripe } from "@/lib/stripe";
+import { baseUrl } from "@/config/site";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { siteConfig } from "@/config/site-config";
-import { environmentVariables } from "@/environments";
 import { Payments, payments, stores } from "@/db/schema";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 
@@ -45,7 +44,7 @@ export async function createPayoutAccountAction(storeId: Payments["storeId"]) {
     business_profile: {
       // MCC stands for merchant category code -> classify each merchant by the type of goods and services they provide.
       mcc: "5311", // Department store.
-      url: environmentVariables.baseURL,
+      url: baseUrl,
     },
     // These are test data.
     company: {
@@ -105,8 +104,8 @@ export async function createPayoutAccountAction(storeId: Payments["storeId"]) {
   const accountLink = await stripe.accountLinks.create({
     account: stripeAccountId,
     type: "account_onboarding",
-    return_url: `${siteConfig.baseUrl}/dashboard/stores/${storeId}`,
-    refresh_url: `${siteConfig.baseUrl}/dashboard/stores/${storeId}`,
+    return_url: `${baseUrl}/dashboard/stores/${storeId}`,
+    refresh_url: `${baseUrl}/dashboard/stores/${storeId}`,
   });
 
   revalidatePath(`/dashboard/stores/${storeId}`);

@@ -1,5 +1,5 @@
-import { siteConfig } from "@/config/site-config";
-import DashboardBillingPlanCard from "@/components/dashboard/dashboard-billing-plan-card";
+import { billingPlan } from "@/config/billing";
+import DashboardBillingPlanCard from "@/components/dashboard/billing-plan-card";
 
 export default function DashboardBillingPage() {
   return (
@@ -13,7 +13,7 @@ export default function DashboardBillingPage() {
         </div>
       </div>
       <div className="h-full w-full grid grid-cols-3 mt-6 gap-2">
-        {siteConfig.billingPlan.map((plan) => {
+        {billingPlan.map((plan) => {
           return <DashboardBillingPlanCard plan={plan} key={plan.id} />;
         })}
       </div>

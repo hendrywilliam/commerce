@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/site-config";
+import { footerNavigation } from "@/config/site";
 
 export default function SiteFooter() {
   return (
@@ -12,7 +12,7 @@ export default function SiteFooter() {
             </p>
           </div>
           <div className="grid grid-cols-2 w-1/2">
-            {siteConfig.footerNavigation.map((item, i) => {
+            {footerNavigation.map((item, i) => {
               return (
                 <div key={i}>
                   <p className="font-semibold">{item.title}</p>

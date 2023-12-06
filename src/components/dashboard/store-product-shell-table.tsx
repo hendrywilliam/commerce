@@ -4,8 +4,8 @@ import type { Product } from "@/db/schema";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState, useMemo } from "react";
-import DashboardStoreProductDataTable from "./dashboard-store-product-data-table";
-import DashboardStoreProductDataTableAction from "./dashboard-store-product-data-table-action";
+import DashboardStoreProductDataTable from "./store-product-data-table";
+import DashboardStoreProductDataTableAction from "./store-product-data-table-action";
 
 const storeProductColumnHelper = createColumnHelper<Product>();
 

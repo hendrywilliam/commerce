@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { getAllOwnedStores } from "@/actions/stores/get-all-owned-stores";
-import DashboardStoreCard from "@/components/dashboard/dashboard-store-card";
+import DashboardStoreCard from "@/components/dashboard/store-card";
 
 export default async function DashboardStoresPage() {
   const ownedStoresByUser = await getAllOwnedStores();

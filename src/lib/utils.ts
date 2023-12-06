@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { toast } from "sonner";
 import { isClerkAPIResponseError } from "@clerk/nextjs";
+import { User } from "@clerk/nextjs/server";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -39,4 +40,8 @@ export function slugify(value: string) {
     .trim()
     .replace(/\s+/g, "-")
     .toLowerCase();
+}
+
+export function getPrimaryEmail(user: User) {
+  return user.emailAddresses[0].emailAddress;
 }

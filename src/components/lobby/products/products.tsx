@@ -1,6 +1,11 @@
 "use client";
 
 import {
+  sortingProductsItem,
+  productCategories,
+  rowsPerPage,
+} from "@/config/products";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -20,7 +25,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Pagination from "@/components/pagination";
 import { IconSort } from "@/components/ui/icons";
-import { siteConfig } from "@/config/site-config";
 import { useCallback, useTransition } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { buttonVariants } from "@/components/ui/button";
@@ -152,7 +156,7 @@ export default function Products({
               <SelectValue placeholder="10" />
             </SelectTrigger>
             <SelectContent>
-              {siteConfig.rowsPerPage.map((row, i) => (
+              {rowsPerPage.map((row, i) => (
                 <SelectItem key={i} value={row.value}>
                   {row.title}
                 </SelectItem>
@@ -254,8 +258,8 @@ export default function Products({
                   <div className="flex flex-col gap-2 overflow-y-auto">
                     <h1 className="font-semibold text-base">Categories</h1>
                     <ul className="flex flex-col gap-2">
-                      {siteConfig.productCategories.map((category) => (
-                        <div className="inline-flex gap-2" key={category.id}>
+                      {productCategories.map((category, i) => (
+                        <div className="inline-flex gap-2" key={i}>
                           <Checkbox
                             disabled={isPending}
                             aria-disabled={isPending ? "true" : "false"}
@@ -318,7 +322,7 @@ export default function Products({
             Sort <IconSort />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-40">
-            {siteConfig.sortingProductsItem.map((sortingItem, i) => (
+            {sortingProductsItem.map((sortingItem, i) => (
               <DropdownMenuItem
                 key={i}
                 onClick={() =>

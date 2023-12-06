@@ -1,6 +1,6 @@
 import { Store } from "@/db/schema";
-import DashboardStoreFrontDangerZone from "./dashboard-store-front-danger-zone";
-import DashboardStoreFrontGeneralZone from "./dashboard-store-front-general-zone";
+import DashboardStoreFrontDangerZone from "./store-front-danger-zone";
+import DashboardStoreFrontGeneralZone from "./store-front-general-zone";
 
 interface DashboardStoreSettingTabProps {
   store: Store;

@@ -6,8 +6,8 @@ import { NewStore } from "@/db/schema";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { currentUser } from "@clerk/nextjs";
+import { billingPlan } from "@/config/billing";
 import { auth, clerkClient } from "@clerk/nextjs";
-import { siteConfig } from "@/config/site-config";
 import type { UserObjectCustomized } from "@/types";
 
 export async function createNewStoreAction(storeData: NewStore) {
@@ -26,7 +26,7 @@ export async function createNewStoreAction(storeData: NewStore) {
     throw new Error("Store is already exist with that name.");
   }
 
-  const findCurrentUserPlan = siteConfig.billingPlan.find((plan) => {
+  const findCurrentUserPlan = billingPlan.find((plan) => {
     return plan.title === user?.privateMetadata.plan ?? "Hobby";
   });
 

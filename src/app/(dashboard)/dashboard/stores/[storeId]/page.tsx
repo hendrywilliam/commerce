@@ -9,9 +9,9 @@ import { buttonVariants } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getStoreProductsAction } from "@/actions/products/get-store-products";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import DashboardStoreFrontTab from "@/components/dashboard/dashboard-store-front-tab";
-import DashboardStoreProductTab from "@/components/dashboard/dashboard-store-product-tab";
-import DashboardStoreTransactionTab from "@/components/dashboard/dashboard-store-transaction-tab";
+import DashboardStoreFrontTab from "@/components/dashboard/store-front-tab";
+import DashboardStoreProductTab from "@/components/dashboard/store-product-tab";
+import DashboardStoreTransactionTab from "@/components/dashboard/store-transaction-tab";
 
 export default async function DashboardDynamicStorePage({
   params,
