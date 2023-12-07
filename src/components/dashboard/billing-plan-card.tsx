@@ -5,23 +5,29 @@ import type { BillingPlan } from "@/types";
 import { Button } from "@/components/ui/button";
 import { IconLoading } from "@/components/ui/icons";
 import { catchError, formatCurrency } from "@/lib/utils";
-import { useRouter, usePathname } from "next/navigation";
-import { createCustomerSubscriptionAction } from "@/actions/stripe/create-subscription";
+import { manageSubscriptionAction } from "@/actions/stripe/manage-subscription";
 
-export default function DashboardBillingPlanCard({ plan }: BillingPlan) {
-  const { push } = useRouter();
-  const pathname = usePathname();
+interface DashboardBillingPlanCard extends BillingPlan {
+  stripeCustomerId: string;
+}
+
+export default function DashboardBillingPlanCard({
+  plan,
+  stripeCustomerId,
+}: DashboardBillingPlanCard) {
   const [isPending, startTransition] = useTransition();
 
   // Plan id is equal to Price Id (Product identifier in Stripe)
   function handleSubscribeToPlan(planId: string) {
     startTransition(async () => {
       try {
-        const { clientSecret, subscriptionId } =
-          await createCustomerSubscriptionAction(planId);
+        const session = await manageSubscriptionAction({
+          stripeCustomerId,
+          subscriptionPriceId: plan.id,
+        });
 
-        if (clientSecret && subscriptionId) {
-          push(`/checkout?id=${subscriptionId}&client_secret=${clientSecret}`);
+        if (session) {
+          window.location.href = session.url ?? "/dashobard/billing";
         }
       } catch (error) {
         catchError(error);

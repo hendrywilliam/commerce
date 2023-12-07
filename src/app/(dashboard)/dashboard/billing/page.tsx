@@ -1,7 +1,20 @@
+import { redirect } from "next/navigation";
 import { billingPlan } from "@/config/billing";
+import { currentUser } from "@clerk/nextjs";
 import DashboardBillingPlanCard from "@/components/dashboard/billing-plan-card";
+import { getSubscriptionPlanAction } from "@/actions/stripe/get-current-subscription";
+import { UserObjectCustomized } from "@/types";
 
-export default function DashboardBillingPage() {
+export default async function DashboardBillingPage() {
+  const user = await currentUser();
+
+  // Middleware will handle this.
+  if (!user) {
+    redirect("/sign-in");
+  }
+
+  const userPrivateMetadata = (user as UserObjectCustomized).privateMetadata;
+
   return (
     <div className="h-1/2 w-full">
       <div className="w-full inline-flex border-b pb-4">
@@ -14,7 +27,13 @@ export default function DashboardBillingPage() {
       </div>
       <div className="h-full w-full grid grid-cols-3 mt-6 gap-2">
         {billingPlan.map((plan) => {
-          return <DashboardBillingPlanCard plan={plan} key={plan.id} />;
+          return (
+            <DashboardBillingPlanCard
+              plan={plan}
+              key={plan.id}
+              stripeCustomerId={userPrivateMetadata.stripeCustomerId}
+            />
+          );
         })}
       </div>
     </div>

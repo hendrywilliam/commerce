@@ -10,6 +10,7 @@ import { UserObjectCustomized } from "@/types";
 
 type CreateUser = z.infer<typeof registerValidation>;
 
+// This will create clerk user and stripe customer
 export async function createStripeCustomerAction(rawUserData: CreateUser) {
   const parsedRawData = await registerValidation.safeParseAsync(rawUserData);
 

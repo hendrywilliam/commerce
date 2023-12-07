@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import { toast } from "sonner";
 import { isClerkAPIResponseError } from "@clerk/nextjs";
 import { User } from "@clerk/nextjs/server";
+import { baseUrl } from "@/config/site";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -44,4 +45,8 @@ export function slugify(value: string) {
 
 export function getPrimaryEmail(user: User) {
   return user.emailAddresses[0].emailAddress;
+}
+
+export function getAbsoluteUrl(href: string) {
+  return `${baseUrl}${href}`;
 }
