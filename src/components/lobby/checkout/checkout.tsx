@@ -28,7 +28,7 @@ export function Checkout({ id, clientSecret }: CheckoutProps) {
   return (
     <>
       <Elements options={options} stripe={stripePromise}>
-        <SubscriptionCheckoutForm />
+        <SubscriptionCheckoutForm clientSecret={clientSecret} />
       </Elements>
     </>
   );

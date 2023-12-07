@@ -9,41 +9,37 @@ import Stripe from "stripe";
 export async function createCustomerSubscriptionAction(
   priceId: BillingPlan["plan"]["id"],
 ) {
-  try {
-    const { userId } = auth();
+  const { userId } = auth();
 
-    if (!userId) {
-      throw new Error("You must be signed in to generate a subscription.");
-    }
-    const currentUser = (await clerkClient.users.getUser(
-      userId,
-    )) as unknown as UserObjectCustomized;
-    const stripeCustomerId = currentUser.privateMetadata.stripeCustomerId;
-
-    // Generate subscription
-    const subscription = await stripe.subscriptions.create({
-      customer: stripeCustomerId,
-      items: [{ price: priceId }],
-      payment_behavior: "default_incomplete",
-      expand: ["latest_invoice.payment_intent"],
-    });
-
-    // Workaround for "client_secret" is not recognized
-    const invoice = subscription.latest_invoice as Stripe.Invoice;
-    const intent = invoice.payment_intent as Stripe.PaymentIntent;
-
-    await clerkClient.users.updateUser(userId, {
-      privateMetadata: {
-        ...currentUser.privateMetadata,
-        stripeSubscriptionId: subscription.id,
-      } satisfies Partial<UserObjectCustomized["privateMetadata"]>,
-    });
-
-    return {
-      clientSecret: intent.client_secret,
-      subscriptionId: subscription.id,
-    };
-  } catch (error) {
-    throw error;
+  if (!userId) {
+    throw new Error("You must be signed in to generate a subscription.");
   }
+  const currentUser = (await clerkClient.users.getUser(
+    userId,
+  )) as unknown as UserObjectCustomized;
+  const stripeCustomerId = currentUser.privateMetadata.stripeCustomerId;
+
+  // Generate subscription
+  const subscription = await stripe.subscriptions.create({
+    customer: stripeCustomerId,
+    items: [{ price: priceId }],
+    payment_behavior: "default_incomplete",
+    expand: ["latest_invoice.payment_intent"],
+  });
+
+  // Workaround for "client_secret" is not recognized
+  const invoice = subscription.latest_invoice as Stripe.Invoice;
+  const intent = invoice.payment_intent as Stripe.PaymentIntent;
+
+  await clerkClient.users.updateUser(userId, {
+    privateMetadata: {
+      ...currentUser.privateMetadata,
+      stripeSubscriptionId: subscription.id,
+    } satisfies Partial<UserObjectCustomized["privateMetadata"]>,
+  });
+
+  return {
+    clientSecret: intent.client_secret,
+    subscriptionId: subscription.id,
+  };
 }

@@ -9,6 +9,7 @@ import { currentUser } from "@clerk/nextjs";
 import { billingPlan } from "@/config/billing";
 import { auth, clerkClient } from "@clerk/nextjs";
 import type { UserObjectCustomized } from "@/types";
+import { getSubscriptionPlanAction } from "@/actions/stripe/get-current-subscription";
 
 export async function createNewStoreAction(storeData: NewStore) {
   const { userId } = auth();
@@ -26,8 +27,22 @@ export async function createNewStoreAction(storeData: NewStore) {
     throw new Error("Store is already exist with that name.");
   }
 
+  const userPrivateMetadata = user?.privateMetadata;
+  let currentUserPlan: string;
+
+  if (userPrivateMetadata.stripeSubscriptionId) {
+    // Retrieve current user subscribed plan
+    const { subscribedPlanId } = await getSubscriptionPlanAction(
+      userPrivateMetadata.stripeSubscriptionId,
+    );
+    currentUserPlan = subscribedPlanId;
+  } else {
+    // Set default plan to hobby
+    currentUserPlan = billingPlan[0].id;
+  }
+
   const findCurrentUserPlan = billingPlan.find((plan) => {
-    return plan.title === user?.privateMetadata.plan ?? "Hobby";
+    return plan.id === currentUserPlan;
   });
 
   const isAbleToCreateNewStore =
@@ -41,12 +56,10 @@ export async function createNewStoreAction(storeData: NewStore) {
       description: storeData.description,
     });
 
-    const userDataPrivateMetadata = user?.privateMetadata;
-
     await clerkClient.users.updateUser(userId, {
       privateMetadata: {
-        ...userDataPrivateMetadata,
-        storeId: [...(userDataPrivateMetadata?.storeId as string[]), insertId],
+        ...userPrivateMetadata,
+        storeId: [...(userPrivateMetadata?.storeId as string[]), insertId],
       },
     });
 
