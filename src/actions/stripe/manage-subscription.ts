@@ -3,7 +3,7 @@
 import Stripe from "stripe";
 import { currentUser } from "@clerk/nextjs";
 import { stripe } from "@/lib/stripe";
-import { BillingPlan } from "@/types";
+import { BillingPlan, UserObjectCustomized } from "@/types";
 import { getAbsoluteUrl } from "@/lib/utils";
 
 // Price id coming from generated product on Stripe
@@ -22,6 +22,9 @@ export async function manageSubscriptionAction({
 
   const billingUrl = getAbsoluteUrl("/dashboard/billing");
 
+  const userStripeCustomerId = (user as UserObjectCustomized).privateMetadata
+    .stripeCustomerId;
+
   // When the user has not subscribed any plan, we create checkout session.
   const session = await stripe.checkout.sessions.create({
     billing_address_collection: "auto",
@@ -34,6 +37,10 @@ export async function manageSubscriptionAction({
     mode: "subscription",
     success_url: billingUrl,
     cancel_url: billingUrl,
+    customer: userStripeCustomerId,
+    metadata: {
+      clerkUserId: user.id,
+    },
   });
 
   return session;

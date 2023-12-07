@@ -1,10 +1,37 @@
 import Link from "next/link";
+import { db } from "@/db/core";
+import { stores } from "@/db/schema";
+import { inArray } from "drizzle-orm";
+import { redirect } from "next/navigation";
+import { currentUser } from "@clerk/nextjs";
+import { UserObjectCustomized } from "@/types";
 import { buttonVariants } from "@/components/ui/button";
-import { getAllOwnedStores } from "@/actions/stores/get-all-owned-stores";
 import DashboardStoreCard from "@/components/dashboard/store-card";
 
 export default async function DashboardStoresPage() {
-  const ownedStoresByUser = await getAllOwnedStores();
+  // const ownedStoresByUser = await getAllOwnedStores();
+  const user = await currentUser();
+
+  if (!user) {
+    redirect("/");
+  }
+
+  const userPrivateMetadata = (user as UserObjectCustomized).privateMetadata;
+  const userStores =
+    userPrivateMetadata.storeId.length > 0
+      ? await db
+          .select()
+          .from(stores)
+          .where(
+            inArray(
+              stores.id,
+              userPrivateMetadata.storeId.map((item) => {
+                return Number(item);
+              }),
+            ),
+          )
+      : [];
+
   return (
     <div className="h-1/2 w-full">
       <div className="w-full inline-flex border-b pb-4">
@@ -21,9 +48,9 @@ export default async function DashboardStoresPage() {
           </Link>
         </div>
       </div>
-      {ownedStoresByUser.length > 0 ? (
+      {userStores.length > 0 ? (
         <div className="h-full w-full grid grid-cols-3 mt-6 gap-2">
-          {ownedStoresByUser.map((store) => {
+          {userStores.map((store) => {
             return <DashboardStoreCard store={store} key={store.id} />;
           })}
         </div>

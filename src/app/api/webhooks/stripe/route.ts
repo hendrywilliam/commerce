@@ -1,14 +1,12 @@
 // Webhook stripe
 
 import Stripe from "stripe";
-import { db } from "@/db/core";
 import * as dotenv from "dotenv";
-import { eq } from "drizzle-orm";
 import { stripe } from "@/lib/stripe";
 import type { Readable } from "stream";
 import { headers } from "next/headers";
-import { payments, stores } from "@/db/schema";
 import { NextResponse } from "next/server";
+import { clerkClient } from "@clerk/nextjs";
 
 dotenv.config();
 
@@ -50,31 +48,32 @@ export async function POST(req: Request) {
       const { id: customerId } = data as Stripe.Customer;
       console.log(`🔔  Webhook received: ${event.type} ${customerId}`);
 
-    case "account.updated":
-      const { id: accountId, details_submitted } = data as Stripe.Account;
+    case "checkout.session.completed":
+      // Payment is successful and the subscription is created.
+      // You should provision the subscription and save the customer ID to your database.
+      console.log(`🔔  Webhook received: ${event.type}`);
+      const checkoutSessionObject = data.object as Omit<
+        Stripe.CheckoutSessionCompletedEvent.Data["object"],
+        "metadata"
+      > & {
+        metadata: {
+          clerkUserId: string;
+        };
+      };
 
-      const paymentRecord = await db.query.payments.findFirst({
-        where: eq(payments.stripeAccountId, accountId),
-      });
+      await clerkClient.users.updateUserMetadata(
+        checkoutSessionObject.metadata.clerkUserId,
+        {
+          privateMetadata: {
+            stripeSubscriptionId: checkoutSessionObject.subscription,
+          },
+        },
+      );
 
-      // Update store record
-      await db
-        .update(stores)
-        .set({
-          active: true,
-        })
-        .where(eq(stores.id, paymentRecord!.storeId as number));
-
-      // Update payment record
-      await db
-        .update(payments)
-        .set({
-          detailsSubmitted: details_submitted,
-        })
-        .where(eq(payments.id, paymentRecord!.id as number));
+      break;
 
     default:
-    //Unexpected event type
+      console.log(`🔔  Webhook received: ${event.type}`);
   }
   return NextResponse.json({ received: true }, { status: 200 });
 }

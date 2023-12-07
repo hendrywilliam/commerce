@@ -29,9 +29,6 @@ export interface UserObjectCustomized
     storeId: string[];
     stripeCustomerId: string;
     stripeSubscriptionId: string;
-    stripeSubscriptionEnd: number;
-    stripeSubscriptionStart: number;
-    addresses: number[];
   };
 }
 
