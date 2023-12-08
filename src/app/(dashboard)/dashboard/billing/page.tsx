@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import { billingPlan } from "@/config/billing";
 import { currentUser } from "@clerk/nextjs";
 import DashboardBillingPlanCard from "@/components/dashboard/billing-plan-card";
-import { getSubscriptionPlanAction } from "@/actions/stripe/get-current-subscription";
 import { UserObjectCustomized } from "@/types";
 
 export default async function DashboardBillingPage() {
@@ -25,7 +24,7 @@ export default async function DashboardBillingPage() {
           </p>
         </div>
       </div>
-      <div className="h-full w-full grid grid-cols-3 mt-6 gap-2">
+      <div className="h-full w-full grid grid-cols-3 mt-6 gap-4">
         {billingPlan.map((plan) => {
           return (
             <DashboardBillingPlanCard

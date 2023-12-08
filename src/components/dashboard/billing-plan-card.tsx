@@ -27,7 +27,7 @@ export default function DashboardBillingPlanCard({
         });
 
         if (session) {
-          window.location.href = session.url ?? "/dashobard/billing";
+          window.location.href = session.url ?? "/dashboard/billing";
         }
       } catch (error) {
         catchError(error);
@@ -37,7 +37,7 @@ export default function DashboardBillingPlanCard({
 
   return (
     <div
-      className="flex flex-col border rounded p-2 h-64 justify-between"
+      className="flex flex-col border rounded p-4 h-64 justify-between shadow-sm"
       key={plan.id}
     >
       <div>
