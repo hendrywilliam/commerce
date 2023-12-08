@@ -25,6 +25,28 @@ export async function manageSubscriptionAction({
     user as UserObjectCustomized
   ).privateMetadata;
 
+  // When the user has not subscribed any plan (fresh user.)
+  if (!stripeSubscriptionId) {
+    const session = await stripe.checkout.sessions.create({
+      billing_address_collection: "auto",
+      line_items: [
+        {
+          price: subscriptionPriceId,
+          quantity: 1,
+        },
+      ],
+      mode: "subscription",
+      success_url: billingUrl,
+      cancel_url: billingUrl,
+      customer: stripeCustomerId,
+      metadata: {
+        clerkUserId: user.id,
+      },
+    });
+
+    return session;
+  }
+
   const { isActive, subscribedPlanEnd, subscribedPlanStart } =
     await getCurrentSubscriptionAction(stripeSubscriptionId);
 
@@ -35,10 +57,9 @@ export async function manageSubscriptionAction({
       return_url: billingUrl,
     });
 
-    // Session is an object contains some properties, but we dont need much of it, we just need the URL that leads us to billing portal.
     return session;
   } else {
-    // When the user has not subscribed any plan, we create checkout session.
+    // When the user has subscribed any plan but the plan is expired or canceled.
     const session = await stripe.checkout.sessions.create({
       billing_address_collection: "auto",
       line_items: [

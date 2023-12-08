@@ -9,7 +9,7 @@ import { currentUser } from "@clerk/nextjs";
 import { billingPlan } from "@/config/billing";
 import { auth, clerkClient } from "@clerk/nextjs";
 import type { UserObjectCustomized } from "@/types";
-import { getSubscriptionPlanAction } from "@/actions/stripe/get-current-subscription";
+import { getCurrentSubscriptionAction } from "@/actions/stripe/get-current-subscription";
 
 export async function createNewStoreAction(storeData: NewStore) {
   const { userId } = auth();
@@ -32,7 +32,7 @@ export async function createNewStoreAction(storeData: NewStore) {
 
   if (userPrivateMetadata.stripeSubscriptionId) {
     // Retrieve current user subscribed plan
-    const { subscribedPlanId } = await getSubscriptionPlanAction(
+    const { subscribedPlanId } = await getCurrentSubscriptionAction(
       userPrivateMetadata.stripeSubscriptionId,
     );
     currentUserPlan = subscribedPlanId;

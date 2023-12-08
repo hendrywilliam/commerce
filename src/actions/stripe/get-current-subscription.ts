@@ -5,10 +5,6 @@ import { stripe } from "@/lib/stripe";
 export async function getCurrentSubscriptionAction(
   stripeSubscriptionId: string,
 ) {
-  if (!stripeSubscriptionId) {
-    throw new Error("Invalid Subscription ID, Please try again later.");
-  }
-
   const subscriptionPlan =
     await stripe.subscriptions.retrieve(stripeSubscriptionId);
 

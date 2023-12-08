@@ -50,3 +50,9 @@ export function getPrimaryEmail(user: User) {
 export function getAbsoluteUrl(href: string) {
   return `${baseUrl}${href}`;
 }
+
+export function unixToDateString(timestamp: number) {
+  return new Date(timestamp * 1000).toLocaleDateString("us-US", {
+    dateStyle: "full",
+  });
+}

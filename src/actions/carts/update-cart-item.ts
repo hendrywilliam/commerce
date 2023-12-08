@@ -21,19 +21,19 @@ export async function updateCartItemAction(itemId: number, quantity: number) {
     cartItems && (JSON.parse(cartItems[0].items as string) as CartItem[]);
 
   const isSelectedItemExistInCart = allItemsInCart.find(
-    (cartItem) => cartItem.id === itemId
+    (cartItem) => cartItem.id === itemId,
   );
-  
-  if (!isSelectedItemExistInCart)
+
+  if (!isSelectedItemExistInCart) {
     throw new Error("Item doesnt exist in cart. Please try again later.");
-  
-    const selectedItemDetails =
+  }
+
+  const selectedItemDetails =
     isSelectedItemExistInCart &&
     (await db.query.products.findFirst({
       where: (products, { eq }) =>
         eq(products.id, isSelectedItemExistInCart.id),
     }));
-
 
   const anyItemExcludingSelectedItem =
     isSelectedItemExistInCart &&

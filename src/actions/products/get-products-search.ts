@@ -21,7 +21,10 @@ export async function getProductsBySearchTermAction(searchTerm: string) {
       group[category].push(product);
       return group;
     },
-    {} as Record<string, Pick<Product, "name" | "id" | "category">[]>
+    {} as Record<
+      Product["category"],
+      Pick<Product, "name" | "id" | "category">[]
+    >,
   );
 
   return result;

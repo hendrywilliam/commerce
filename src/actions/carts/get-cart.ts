@@ -18,15 +18,15 @@ export async function getCartAction() {
       .from(carts)
       .where(eq(carts.id, Number(cartId))));
 
-  const cartItems = !isCartExist
-    ? []
-    : ((
+  const cartItems = isCartExist
+    ? ((
         await db
           .select()
           .from(carts)
           .where(eq(carts.id, Number(cartId)))
           .limit(1)
-      )[0]?.items as string);
+      )[0]?.items as string)
+    : [];
 
   // Get all items from the cart.
   const parsedCartItems = cartItems?.length
@@ -36,7 +36,7 @@ export async function getCartAction() {
   // Get all item details based on the parsedCartItems above.
   const cartItemDetails = await getCartDetailsAction(
     Number(cartId),
-    parsedCartItems
+    parsedCartItems,
   );
 
   return {

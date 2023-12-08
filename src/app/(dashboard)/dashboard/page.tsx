@@ -16,7 +16,7 @@ export default async function DashboardPage() {
         </span>
         !
       </p>
-      <div className="grid grid-cols-3 w-full mt-2 gap-2">
+      <div className="grid grid-cols-3 w-full mt-2 gap-4">
         {dashboardNavigation.map((item, i) => {
           return (
             <Link
