@@ -58,7 +58,7 @@ export default async function CategoriesShowcase() {
                 {product.icon}
               </div>
               <div>
-                <p>Backpack</p>
+                <p className="capitalize">{product.category}</p>
                 <p className="text-gray-300">{product.count} Products</p>
               </div>
             </div>

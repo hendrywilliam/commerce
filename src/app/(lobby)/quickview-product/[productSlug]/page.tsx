@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 interface QuickViewDynamicPage {
   params: {
-    productId: string;
+    productSlug: string;
   };
 }
 
@@ -14,8 +14,8 @@ export default async function QuickViewDynamicPage({
   params,
 }: QuickViewDynamicPage) {
   const product = (await db.query.products.findFirst({
-    where: eq(products.id, Number(params.productId)),
+    where: eq(products.slug, params.productSlug),
   })) as Product;
 
-  redirect(`/product/${params.productId}/${slugify(product?.name as string)}`);
+  redirect(`/product/${product.slug}`);
 }

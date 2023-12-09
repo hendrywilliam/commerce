@@ -65,7 +65,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               variant: "outline",
               class: "w-full inline-flex gap-1",
             })}
-            href={`/quickview-product/${product.id}`}
+            href={`/quickview-product/${product.slug}`}
           >
             <IconView />
             Quick View

@@ -5,14 +5,14 @@ import type { ProductImage } from "@/types";
 import ImagePlaceholder from "@/components/image-placeholder";
 
 export default async function ProductModal({
-  params: { productId },
+  params: { productSlug },
 }: {
   params: {
-    productId: string;
+    productSlug: string;
   };
 }) {
   const productDetails = await db.query.products.findFirst({
-    where: (products, { eq }) => eq(products.id, Number(productId)),
+    where: (products, { eq }) => eq(products.slug, productSlug),
   });
 
   const parsedImageUrl = (
