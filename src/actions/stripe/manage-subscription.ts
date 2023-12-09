@@ -25,7 +25,7 @@ export async function manageSubscriptionAction({
     user as UserObjectCustomized
   ).privateMetadata;
 
-  // When the user has not subscribed any plan (fresh user.)
+  // When the user has not subscribed any plan (fresh user.) we redirect them to checkout session.
   if (!stripeSubscriptionId) {
     const session = await stripe.checkout.sessions.create({
       billing_address_collection: "auto",

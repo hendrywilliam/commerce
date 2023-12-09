@@ -9,21 +9,35 @@ import {
   timestamp,
   boolean,
   json,
+  index,
 } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
 
-export const products = mysqlTable("products", {
-  id: serial("id").primaryKey(),
-  storeId: int("store_id"),
-  name: text("name"),
-  description: text("description"),
-  price: decimal("price", { precision: 10, scale: 2 }).notNull().default("0"),
-  stock: int("stock").notNull().default(1),
-  rating: int("rating").notNull().default(0),
-  category: mysqlEnum("category", ["clothing", "backpack", "shoes"]).notNull(),
-  image: json("image"),
-  createdAt: timestamp("createdAt").defaultNow(),
-});
+export const products = mysqlTable(
+  "products",
+  {
+    id: serial("id").primaryKey(),
+    storeId: int("store_id"),
+    name: text("name").notNull(),
+    slug: text("slug").notNull(),
+    description: text("description"),
+    price: decimal("price", { precision: 10, scale: 2 }).notNull().default("0"),
+    stock: int("stock").notNull().default(1),
+    rating: int("rating").notNull().default(0),
+    category: mysqlEnum("category", [
+      "clothing",
+      "backpack",
+      "shoes",
+    ]).notNull(),
+    image: json("image"),
+    createdAt: timestamp("createdAt").defaultNow(),
+  },
+  (table) => {
+    return {
+      slugIndex: index("slug_idx").on(table.slug),
+    };
+  },
+);
 
 export const productsRelations = relations(products, ({ one }) => ({
   store: one(stores, {
@@ -35,15 +49,24 @@ export const productsRelations = relations(products, ({ one }) => ({
 export type NewProduct = typeof products.$inferInsert;
 export type Product = typeof products.$inferSelect;
 
-export const stores = mysqlTable("stores", {
-  id: serial("id").primaryKey(),
-  name: varchar("name", {
-    length: 255,
-  }).notNull(),
-  description: text("description").notNull(),
-  active: boolean("active").notNull().default(false),
-  createdAt: timestamp("createdAt").defaultNow(),
-});
+export const stores = mysqlTable(
+  "stores",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", {
+      length: 255,
+    }).notNull(),
+    slug: text("slug").notNull(),
+    description: text("description").notNull(),
+    active: boolean("active").notNull().default(false),
+    createdAt: timestamp("createdAt").defaultNow(),
+  },
+  (table) => {
+    return {
+      slugIndex: index("slug_index").on(table.slug),
+    };
+  },
+);
 
 export const storesRelations = relations(stores, ({ many }) => ({
   products: many(products),

@@ -19,7 +19,7 @@ export default function StoreCard({ store }: StoreCardProps) {
           Not active
         </div>
       )}
-      <Link href={`/store/${store.id}/${slugify(store.name)}`}>
+      <Link href={`/store/${store.slug}`}>
         <div
           className="h-4/6"
           style={getRandomPatternStyle(String(store.id))}

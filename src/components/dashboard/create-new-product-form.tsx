@@ -59,7 +59,7 @@ export default function CreateNewProductForm() {
           ? JSON.stringify([...returnFromUploadedFile])
           : JSON.stringify([]),
         storeId: Number(routeParams.storeId),
-      } satisfies NewProduct;
+      } satisfies Omit<NewProduct, "slug">;
 
       await addNewProductAction(productData);
       toast.success("Success add new product.");

@@ -40,7 +40,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="absolute z-[2] top-2 right-2 rounded px-2 py-1 bg-foreground text-white font-semibold">
         <p className="text-xs">{formatCurrency(Number(product.price))}</p>
       </div>
-      <Link href={`/product/${product.id}/${slugify(product.name as string)}`}>
+      <Link href={`/product/${product.slug}`}>
         <div className="relative rounded h-4/6 overflow-hidden">
           {parsedImageUrl ? (
             <Image

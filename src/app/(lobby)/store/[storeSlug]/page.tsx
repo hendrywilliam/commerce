@@ -5,27 +5,26 @@ import { products } from "@/db/schema";
 import { Button } from "@/components/ui/button";
 import { IconStores } from "@/components/ui/icons";
 import ProductCard from "@/components/lobby/product-card";
+import { notFound } from "next/navigation";
 
 export default async function StorePage({
-  params: { storeId },
+  params,
 }: {
-  params: {
-    storeId: string[];
-  };
+  params: { storeSlug: string };
 }) {
   const storeData = await db.query.stores.findFirst({
-    where: eq(stores.id, Number(storeId[0])),
+    where: eq(stores.slug, params.storeSlug),
   });
 
+  if (!storeData) {
+    notFound();
+  }
+
   const productsData = await db
-    .select({
-      product: products,
-      store: stores,
-    })
+    .select()
     .from(products)
-    .leftJoin(stores, eq(products.storeId, stores.id))
     .orderBy(products.id)
-    .where(eq(products.storeId, Number(storeId[0])))
+    .where(eq(products.storeId, storeData.id))
     .limit(10);
 
   return (
@@ -43,7 +42,7 @@ export default async function StorePage({
           </div>
           {productsData.length ? (
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-              {productsData.map(({ product }) => (
+              {productsData.map((product) => (
                 <ProductCard product={product} key={product.id} />
               ))}
             </div>

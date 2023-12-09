@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     case "customer.created":
       const { id: customerId } = data as Stripe.Customer;
       console.log(`🔔  Webhook received: ${event.type} ${customerId}`);
-
+      break;
     case "checkout.session.completed":
       // Payment is successful and the subscription is created.
       // You should provision the subscription and save the customer ID to your database.

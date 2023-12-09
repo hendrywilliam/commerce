@@ -1,12 +1,13 @@
 "use server";
 
-import { NewProduct } from "@/db/schema";
 import { db } from "@/db/core";
-import { products } from "@/db/schema";
 import { auth } from "@clerk/nextjs";
+import { slugify } from "@/lib/utils";
+import { products } from "@/db/schema";
+import { NewProduct } from "@/db/schema";
 import { revalidatePath } from "next/cache";
 
-export async function addNewProductAction(input: NewProduct) {
+export async function addNewProductAction(input: Omit<NewProduct, "slug">) {
   const { userId } = auth();
 
   if (!userId) {
@@ -21,6 +22,6 @@ export async function addNewProductAction(input: NewProduct) {
     throw new Error("Product already exist in the store.");
   }
 
-  await db.insert(products).values({ ...input });
+  await db.insert(products).values({ ...input, slug: slugify(input.name) });
   revalidatePath("/");
 }

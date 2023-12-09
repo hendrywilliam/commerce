@@ -22,6 +22,7 @@ export default function ShoppingCartItemAction({
   const [itemQuantity, setItemQuantity] = useState(qty);
   const [isPending, startTransition] = useTransition();
   const [isDeletingItem, setIsDeletingItem] = useState(false);
+  const [isNewValue, setIsNewValue] = useState(false);
 
   async function handleDeleteItemFromCart() {
     setIsDeletingItem((isDeletingItem) => !isDeletingItem);
@@ -38,15 +39,17 @@ export default function ShoppingCartItemAction({
   }
 
   useEffect(() => {
-    const bounceUpdate = setTimeout(async () => {
-      startTransition(async () => {
-        await updateCartItemAction(id, itemQuantity);
-      });
-    }, 500);
+    if (isNewValue) {
+      const bounceUpdate = setTimeout(async () => {
+        startTransition(async () => {
+          await updateCartItemAction(id, itemQuantity);
+        });
+      }, 500);
 
-    return () => clearTimeout(bounceUpdate);
+      return () => clearTimeout(bounceUpdate);
+    }
     // eslint-disable-next-line
-  }, [itemQuantity]);
+  }, [itemQuantity, isNewValue]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -64,7 +67,10 @@ export default function ShoppingCartItemAction({
       </div>
       <div className="inline-flex gap-1">
         <Button
-          onClick={() => setItemQuantity((val) => val + 1)}
+          onClick={() => {
+            void setItemQuantity((val) => val + 1);
+            setIsNewValue(true);
+          }}
           variant={"outline"}
           size={"icon"}
           className="h-6 w-6"
@@ -82,7 +88,10 @@ export default function ShoppingCartItemAction({
           aria-disabled={isPending ? "true" : "false"}
         />
         <Button
-          onClick={() => setItemQuantity((val) => val - 1)}
+          onClick={() => {
+            setItemQuantity((val) => val - 1);
+            setIsNewValue(true);
+          }}
           variant={"outline"}
           size={"icon"}
           className="h-6 w-6"

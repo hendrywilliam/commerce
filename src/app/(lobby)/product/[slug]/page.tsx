@@ -13,26 +13,17 @@ import { Product, Store, products, stores } from "@/db/schema";
 import ProductPanel from "@/components/lobby/product/product-panel";
 
 export default async function ProductPage({
-  params: { slug },
+  params,
 }: {
-  params: {
-    slug: string[];
-  };
+  params: { slug: string };
 }) {
-  // Pattern -> [id, slug-from-product-name]
-  const isProductIdExistAndANumber = slug[0] && !isNaN(Number(slug[0]));
-
-  // If it is string -> not found
-  if (!isProductIdExistAndANumber) {
-    notFound();
-  }
-
   const { product, store } = (
     await db
       .select({ product: products, store: stores })
       .from(products)
-      .where(eq(products.id, Number(slug[0])))
+      .where(eq(products.slug, params.slug))
       .leftJoin(stores, eq(stores.id, products.storeId))
+      .limit(1)
   )[0] as {
     product: Product;
     store: Store;

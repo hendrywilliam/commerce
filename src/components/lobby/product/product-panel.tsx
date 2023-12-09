@@ -37,7 +37,7 @@ export default function ProductPanel({ product, store }: ProductPanelProps) {
         id: product.id,
         qty: productQuantity > product.stock ? product.stock : productQuantity,
       });
-      toast.success("Success add item to cart.");
+      toast.success("Item added to your cart.");
     } catch (err) {
       catchError(err);
     } finally {
@@ -106,7 +106,7 @@ export default function ProductPanel({ product, store }: ProductPanelProps) {
           Add To Cart
         </Button>
         <Button
-          onClick={() => void push(`/store/${store.id}/${slugify(store.name)}`)}
+          onClick={() => void push(`/store/${store.slug}`)}
           className="inline-flex gap-2"
           variant={"outline"}
         >
