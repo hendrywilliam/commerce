@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "b671bcb5-a30c-43e5-a4ad-e268554f92c3",
+  "id": "da6b8385-bd4d-4bc3-8d32-52ef1f0db4ee",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "addresses": {
@@ -162,6 +162,20 @@
           "notNull": true,
           "autoincrement": false
         },
+        "stripePaymentIntentId": {
+          "name": "stripePaymentIntentId",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "stripePaymentIntentStatus": {
+          "name": "stripePaymentIntentStatus",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "email": {
           "name": "email",
           "type": "text",
@@ -269,7 +283,7 @@
         },
         "name": {
           "name": "name",
-          "type": "text",
+          "type": "varchar(256)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -340,6 +354,13 @@
           "name": "productSlugIndex",
           "columns": [
             "slug"
+          ],
+          "isUnique": false
+        },
+        "productNameIndex": {
+          "name": "productNameIndex",
+          "columns": [
+            "name"
           ],
           "isUnique": false
         }

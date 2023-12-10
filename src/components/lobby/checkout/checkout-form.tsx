@@ -24,7 +24,7 @@ interface CheckoutForm {
 }
 
 export default function CheckoutForm({ clientSecret }: CheckoutForm) {
-  const { user, isLoaded } = useUser();
+  const { isLoaded } = useUser();
   const [isLoading, setIsLoading] = useState(false);
 
   // Initialize an instance of stripe

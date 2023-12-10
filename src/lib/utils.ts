@@ -64,3 +64,6 @@ export function unixToDateString(timestamp: number) {
     dateStyle: "full",
   });
 }
+
+// Type utils
+export type OmitAndExtend<T, U extends keyof T, V extends {}> = Omit<T, U> & V;

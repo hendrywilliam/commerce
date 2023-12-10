@@ -1,8 +1,6 @@
 "use client";
 
 import * as dotenv from "dotenv";
-import { useUser } from "@clerk/nextjs";
-import { UserObjectCustomized } from "@/types";
 import { Elements } from "@stripe/react-stripe-js";
 import SubscriptionCheckoutForm from "./checkout-form";
 import { StripeElementsOptions, loadStripe } from "@stripe/stripe-js";

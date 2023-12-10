@@ -1,3 +1,5 @@
+import { db } from "@/db/core";
+import { stripe } from "@/lib/stripe";
 import { redirect } from "next/navigation";
 import PageLayout from "@/components/layouts/page-layout";
 import { Checkout } from "@/components/lobby/checkout/checkout";
@@ -13,6 +15,11 @@ export default async function PaymentPage({
   if (!paymentIntentId && !clientSecret) {
     redirect("/");
   }
+
+  const paymentIntentResult =
+    await stripe.paymentIntents.retrieve(paymentIntentId);
+
+  // const detailedOrders = await db.select().f
 
   return (
     <PageLayout>

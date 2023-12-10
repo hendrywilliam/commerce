@@ -24,6 +24,8 @@ CREATE TABLE `orders` (
 	`items` json,
 	`total` decimal(10,2) DEFAULT '0',
 	`name` text NOT NULL,
+	`stripePaymentIntentId` varchar(256),
+	`stripePaymentIntentStatus` text,
 	`email` text NOT NULL,
 	`address` int,
 	`createdAt` timestamp DEFAULT (now()),
@@ -42,7 +44,7 @@ CREATE TABLE `payments` (
 CREATE TABLE `products` (
 	`id` serial AUTO_INCREMENT NOT NULL,
 	`store_id` int,
-	`name` text NOT NULL,
+	`name` varchar(256) NOT NULL,
 	`slug` varchar(256) NOT NULL,
 	`description` text,
 	`price` decimal(10,2) NOT NULL DEFAULT '0',
@@ -65,4 +67,5 @@ CREATE TABLE `stores` (
 );
 --> statement-breakpoint
 CREATE INDEX `productSlugIndex` ON `products` (`slug`);--> statement-breakpoint
+CREATE INDEX `productNameIndex` ON `products` (`name`);--> statement-breakpoint
 CREATE INDEX `storeSlugIndex` ON `stores` (`slug`);

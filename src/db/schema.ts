@@ -18,7 +18,7 @@ export const products = mysqlTable(
   {
     id: serial("id").primaryKey(),
     storeId: int("store_id"),
-    name: text("name").notNull(),
+    name: varchar("name", { length: 256 }).notNull(),
     slug: varchar("slug", { length: 256 }).notNull(),
     description: text("description"),
     price: decimal("price", { precision: 10, scale: 2 }).notNull().default("0"),
@@ -107,7 +107,7 @@ export const orders = mysqlTable("orders", {
   stripePaymentIntentId: varchar("stripePaymentIntentId", {
     length: 256,
   }),
-  stirpePaymentIntentStatus: text("stripePaymentIntentStatus"),
+  stripePaymentIntentStatus: text("stripePaymentIntentStatus"),
   email: text("email").notNull(),
   addressId: int("address"),
   createdAt: timestamp("createdAt").defaultNow(),

@@ -54,3 +54,18 @@ export type ProductImage = Pick<
   UploadFileResponse,
   "key" | "name" | "size" | "url"
 >;
+
+export interface PaymentIntentSucceededMetadata {
+  metadata: {
+    storeId: number;
+    cartId: string;
+    checkoutItem: string;
+    email: string;
+  };
+}
+
+export interface CheckoutSessionCompletedMetadata {
+  metadata: {
+    clerkUserId: string;
+  };
+}

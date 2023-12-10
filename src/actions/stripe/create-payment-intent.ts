@@ -2,11 +2,16 @@
 
 import { stripe } from "@/lib/stripe";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
-import { CartLineDetailedItems } from "@/types";
+import {
+  CartLineDetailedItems,
+  PaymentIntentSucceededMetadata,
+  UserObjectCustomized,
+} from "@/types";
 import { cartDetailedItemsValidation } from "@/lib/validations/stores";
+import { getPrimaryEmail } from "@/lib/utils";
 
-// Metadata cart id, store id, item id[]
 export async function createPaymentIntentAction({
   storeId,
   cartItem,
@@ -19,7 +24,7 @@ export async function createPaymentIntentAction({
   const user = await currentUser();
 
   if (!user) {
-    throw new Error("You have to login to perform this action.");
+    redirect("/sign-in");
   }
 
   if (!parsedCartItems.success) {
@@ -40,13 +45,23 @@ export async function createPaymentIntentAction({
     return (total + Number(item.price) * item.qty) * 100;
   }, 0);
 
-  console.log(priceAmount);
+  // We include the id and qty only.
+  const extractCartItem = JSON.stringify(
+    cartItem.map((item) => {
+      return {
+        id: item.id,
+        qty: item.qty,
+      };
+    }),
+  );
 
-  const extractCartItemId = JSON.stringify(cartItem.map((item) => item.id));
+  const userStripeCustomerId = (user as unknown as UserObjectCustomized)
+    .privateMetadata.stripeCustomerId;
 
   // Create payment intent.
   const paymentIntentCreated = await stripe.paymentIntents.create({
     amount: priceAmount,
+    customer: userStripeCustomerId,
     currency: "usd",
     // In latest version this properties is enabled by default, but i just love the express anything explicitly
     automatic_payment_methods: {
@@ -54,8 +69,11 @@ export async function createPaymentIntentAction({
     },
     metadata: {
       storeId,
-      cartItemId: extractCartItemId,
-    },
+      cartId: cartId as string,
+      // Due to limited capability of metadata to carry some data, we only embed the id and qty
+      checkoutItem: extractCartItem,
+      email: getPrimaryEmail(user),
+    } satisfies PaymentIntentSucceededMetadata["metadata"],
   });
 
   return {

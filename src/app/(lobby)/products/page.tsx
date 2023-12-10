@@ -1,7 +1,9 @@
+import { db } from "@/db/core";
+import { asc } from "drizzle-orm";
+import { stores } from "@/db/schema";
 import Products from "@/components/lobby/products/products";
-import { getAllStoresAction } from "@/actions/stores/get-all-stores";
-import { getAllProductsAndStoresAction } from "@/actions/products/get-all-products-and-stores";
 import { getProductsPageAction } from "@/actions/products/get-products-page";
+import { getAllProductsAndStoresAction } from "@/actions/products/get-all-products-and-stores";
 
 interface ProductsPageProps {
   searchParams: {
@@ -36,7 +38,7 @@ export default async function ProductsPage({
     page: currentPage,
   });
 
-  const stores = await getAllStoresAction();
+  const allStores = await db.select().from(stores).orderBy(asc(stores.name));
   const productsPageCount = await getProductsPageAction({
     pageSize,
     category,
@@ -51,7 +53,7 @@ export default async function ProductsPage({
         <h1 className="font-bold text-xl">Browse All Products</h1>
         <Products
           allStoresAndProducts={allProductsAndStore}
-          filterStoreItems={stores}
+          filterStoreItems={allStores}
           productsPageCount={productsPageCount}
           currentPage={currentPage}
         />
