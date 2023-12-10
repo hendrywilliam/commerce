@@ -19,7 +19,7 @@ export const products = mysqlTable(
     id: serial("id").primaryKey(),
     storeId: int("store_id"),
     name: text("name").notNull(),
-    slug: text("slug").notNull(),
+    slug: varchar("slug", { length: 256 }).notNull(),
     description: text("description"),
     price: decimal("price", { precision: 10, scale: 2 }).notNull().default("0"),
     stock: int("stock").notNull().default(1),
@@ -34,7 +34,8 @@ export const products = mysqlTable(
   },
   (table) => {
     return {
-      slugIndex: index("slug_idx").on(table.slug),
+      productSlugIndex: index("productSlugIndex").on(table.slug),
+      productNameIndex: index("productNameIndex").on(table.name),
     };
   },
 );
@@ -53,17 +54,15 @@ export const stores = mysqlTable(
   "stores",
   {
     id: serial("id").primaryKey(),
-    name: varchar("name", {
-      length: 255,
-    }).notNull(),
-    slug: text("slug").notNull(),
+    name: varchar("name", { length: 255 }).notNull(),
+    slug: varchar("slug", { length: 256 }).notNull(),
     description: text("description").notNull(),
     active: boolean("active").notNull().default(false),
     createdAt: timestamp("createdAt").defaultNow(),
   },
   (table) => {
     return {
-      slugIndex: index("slug_index").on(table.slug),
+      storeSlugIndex: index("storeSlugIndex").on(table.slug),
     };
   },
 );
@@ -105,6 +104,10 @@ export const orders = mysqlTable("orders", {
   items: json("items"),
   total: decimal("total", { precision: 10, scale: 2 }).default("0"),
   name: text("name").notNull(),
+  stripePaymentIntentId: varchar("stripePaymentIntentId", {
+    length: 256,
+  }),
+  stirpePaymentIntentStatus: text("stripePaymentIntentStatus"),
   email: text("email").notNull(),
   addressId: int("address"),
   createdAt: timestamp("createdAt").defaultNow(),

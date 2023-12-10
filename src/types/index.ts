@@ -10,13 +10,14 @@ export interface CartItem {
 
 export interface CartLineDetailedItems {
   id: number;
+  qty: number;
   name: string;
   price: string;
-  category: string;
-  storeId: number;
-  storeName: string;
   image: string;
-  qty: number;
+  storeId: number;
+  category: string;
+  storeName: string;
+  storeSlug: string;
 }
 
 export interface UserObjectCustomized

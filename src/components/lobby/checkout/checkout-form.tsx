@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import {
   useStripe,
   useElements,
+  AddressElement,
   PaymentElement,
 } from "@stripe/react-stripe-js";
 import { baseUrl } from "@/config/site";
@@ -56,7 +57,7 @@ export default function CheckoutForm({ clientSecret }: CheckoutForm) {
         elements,
         clientSecret,
         confirmParams: {
-          // Replace with completion page.
+          // Replace with payment completion page.
           return_url: baseUrl ?? "/",
         },
       });
@@ -77,13 +78,14 @@ export default function CheckoutForm({ clientSecret }: CheckoutForm) {
 
   return (
     <Form onSubmit={handleSubmitSubscriptionCheckout}>
+      <AddressElement options={{ mode: "shipping" }} />
       <PaymentElement options={paymentElementsOption} />
       <FormField className="mt-4">
         <Button
           className="inline-flex gap-2"
           disabled={!stripe || !elements || isLoading || !isLoaded}
         >
-          Subscribe {isLoading ? <IconLoading /> : <LockIcon />}
+          Confirm Payment {isLoading ? <IconLoading /> : <LockIcon />}
         </Button>
       </FormField>
     </Form>

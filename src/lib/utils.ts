@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { toast } from "sonner";
@@ -13,6 +14,13 @@ export function catchError(err: unknown) {
   const unknownError = "Something went wrong please try again later.";
   if (isClerkAPIResponseError(err)) {
     toast.error(err.errors[0].longMessage ?? unknownError);
+  } else if (err instanceof z.ZodError) {
+    const formatedError = err.issues
+      .map((issue) => {
+        return issue.message;
+      })
+      .join(";");
+    toast.error(formatedError);
   } else if (err instanceof Error) {
     toast.error(err.message);
   } else {

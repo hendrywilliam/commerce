@@ -9,3 +9,23 @@ export const storeValidation = z.object({
   }),
   active: z.boolean().default(true),
 });
+
+export const cartDetailedItemsValidation = z
+  .object({
+    id: z.number(),
+    qty: z.number(),
+    name: z.string(),
+    price: z.string(),
+    image: z.string(),
+    storeId: z.number(),
+    category: z.string(),
+    storeName: z.string(),
+    storeSlug: z.string(),
+  })
+  .required()
+  .array();
+
+export const storeCheckoutValidation = z.object({
+  storeId: z.number({ required_error: "Store ID is required to proceed." }),
+  cartLineDetailedItems: cartDetailedItemsValidation,
+});

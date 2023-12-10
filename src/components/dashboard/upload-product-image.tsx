@@ -48,7 +48,7 @@ export default function UploadProductImage({
       setSelectedFiles(embedPreviewInFileObject);
     },
     // eslint-disable-next-line
-    []
+    [],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -65,7 +65,7 @@ export default function UploadProductImage({
 
   return (
     <div
-      className="border border-dashed rounded h-44 shadow-sm"
+      className="border border-dashed w-1/4 rounded h-36 shadow-sm"
       {...getRootProps()}
     >
       <input
@@ -73,7 +73,7 @@ export default function UploadProductImage({
         {...getInputProps()}
       />
       <div className="relative w-full h-full flex flex-col justify-center items-center shadow-sm">
-        <IconUpload className="w-6 h-6" />
+        <IconUpload className="w-4 h-4" />
         {selectedFiles.length > 0 ? (
           <>
             <Button
@@ -81,6 +81,7 @@ export default function UploadProductImage({
               size={"icon"}
               disabled={isLoading}
               aria-disabled={isLoading ? "true" : "false"}
+              type="button"
               className="absolute top-2 right-2 h-6 w-6 z-10"
               onClick={(event) => {
                 event.stopPropagation();
@@ -99,7 +100,7 @@ export default function UploadProductImage({
             />
           </>
         ) : (
-          <p>Click or drag your file here.</p>
+          <p className="text-xs">Product Image</p>
         )}
       </div>
     </div>

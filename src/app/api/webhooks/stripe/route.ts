@@ -44,10 +44,6 @@ export async function POST(req: Request) {
   // Handle various event sent from Stripe
   // @see https://stripe.com/docs/webhooks#events-overview
   switch (event.type) {
-    case "customer.created":
-      const { id: customerId } = data as Stripe.Customer;
-      console.log(`🔔  Webhook received: ${event.type} ${customerId}`);
-      break;
     case "checkout.session.completed":
       // Payment is successful and the subscription is created.
       // You should provision the subscription and save the customer ID to your database.
@@ -55,11 +51,7 @@ export async function POST(req: Request) {
       const checkoutSessionObject = data.object as Omit<
         Stripe.CheckoutSessionCompletedEvent.Data["object"],
         "metadata"
-      > & {
-        metadata: {
-          clerkUserId: string;
-        };
-      };
+      > & { metadata: { clerkUserId: string } };
 
       await clerkClient.users.updateUserMetadata(
         checkoutSessionObject.metadata.clerkUserId,
@@ -69,9 +61,13 @@ export async function POST(req: Request) {
           },
         },
       );
+      break;
+    case "payment_intent.succeeded":
+      console.log(`🔔  Webhook received: ${event.type}`);
+      const paymentIntentObject =
+        data.object as Stripe.PaymentIntentSucceededEvent.Data["object"];
 
       break;
-
     default:
       console.log(`🔔  Webhook received: ${event.type}`);
   }

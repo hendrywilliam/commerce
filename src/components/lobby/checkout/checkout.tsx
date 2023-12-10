@@ -13,11 +13,10 @@ const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHEABLE_KEY!;
 const stripePromise = loadStripe(stripePublishableKey);
 
 interface CheckoutProps {
-  id: string;
   clientSecret: string;
 }
 
-export function Checkout({ id, clientSecret }: CheckoutProps) {
+export function Checkout({ clientSecret }: CheckoutProps) {
   const options: StripeElementsOptions = {
     clientSecret,
     appearance: {
@@ -27,9 +26,11 @@ export function Checkout({ id, clientSecret }: CheckoutProps) {
 
   return (
     <>
-      <Elements options={options} stripe={stripePromise}>
-        <SubscriptionCheckoutForm clientSecret={clientSecret} />
-      </Elements>
+      {clientSecret && (
+        <Elements options={options} stripe={stripePromise}>
+          <SubscriptionCheckoutForm clientSecret={clientSecret} />
+        </Elements>
+      )}
     </>
   );
 }

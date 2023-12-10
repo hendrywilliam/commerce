@@ -26,6 +26,7 @@ export async function getCartDetailsAction(
       image: products.image,
       storeId: products.storeId,
       storeName: stores.name,
+      storeSlug: stores.slug,
     })
     .from(products)
     .leftJoin(stores, eq(products.storeId, stores.id))

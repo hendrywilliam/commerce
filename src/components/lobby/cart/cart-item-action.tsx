@@ -66,9 +66,7 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
     <div className="flex justify-between gap-4 h-full w-full py-2">
       <div>
         <Button
-          onClick={() =>
-            void push(`/product/${cartItem.id}/${slugify(cartItem.name)}`)
-          }
+          onClick={() => void push(`/store/${cartItem.storeSlug}`)}
           className="w-6 h-6"
           size={"icon"}
           variant={"outline"}

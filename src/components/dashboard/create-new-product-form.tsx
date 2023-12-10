@@ -84,6 +84,16 @@ export default function CreateNewProductForm() {
         className="flex flex-col gap-2"
       >
         <FormField>
+          <FormLabel>Product image</FormLabel>
+          <UploadProductImage
+            isFieldHavingError={Boolean(errors["image"])}
+            setValue={setValue}
+            setSelectedFiles={setSelectedFiles}
+            selectedFiles={selectedFiles}
+            isLoading={isLoading}
+          />
+        </FormField>
+        <FormField>
           <FormLabel htmlFor="product-name-input">Product Name</FormLabel>
           <FormInput
             aria-invalid={errors["name"] ? "true" : "false"}
@@ -92,6 +102,28 @@ export default function CreateNewProductForm() {
             {...register("name")}
             id="product-name-input"
           />
+        </FormField>
+        <FormField>
+          <FormLabel>Product Category</FormLabel>
+          <Select
+            disabled={isLoading}
+            aria-disabled={isLoading ? "true" : "false"}
+            onValueChange={(value) =>
+              setValue(
+                "category",
+                value as Pick<NewProduct, "category">["category"],
+              )
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="clothing">Clothing</SelectItem>
+              <SelectItem value="backpack">Backpack</SelectItem>
+              <SelectItem value="shoes">Shoes</SelectItem>
+            </SelectContent>
+          </Select>
         </FormField>
         <FormField>
           <FormLabel htmlFor="product-description-input">
@@ -114,6 +146,8 @@ export default function CreateNewProductForm() {
             <FormInput
               aria-invalid={errors["price"] ? "true" : "false"}
               disabled={isLoading}
+              type="number"
+              min={0}
               aria-disabled={isLoading ? "true" : "false"}
               {...register("price")}
               className="w-full"
@@ -125,6 +159,8 @@ export default function CreateNewProductForm() {
             <FormInput
               aria-invalid={errors["stock"] ? "true" : "false"}
               disabled={isLoading}
+              type="number"
+              min={0}
               aria-disabled={isLoading ? "true" : "false"}
               {...register("stock", {
                 valueAsNumber: true,
@@ -134,40 +170,8 @@ export default function CreateNewProductForm() {
             />
           </FormField>
         </div>
-        <FormField>
-          <FormLabel>Product Category</FormLabel>
-          <Select
-            disabled={isLoading}
-            aria-disabled={isLoading ? "true" : "false"}
-            onValueChange={(value) =>
-              setValue(
-                "category",
-                value as Pick<NewProduct, "category">["category"],
-              )
-            }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select product category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="clothing">Clothing</SelectItem>
-              <SelectItem value="backpack">Backpack</SelectItem>
-              <SelectItem value="shoes">Shoes</SelectItem>
-            </SelectContent>
-          </Select>
-        </FormField>
-        <FormField>
-          <FormLabel>Product image</FormLabel>
-          <UploadProductImage
-            isFieldHavingError={Boolean(errors["image"])}
-            setValue={setValue}
-            setSelectedFiles={setSelectedFiles}
-            selectedFiles={selectedFiles}
-            isLoading={isLoading}
-          />
-        </FormField>
         <Button
-          className="inline-flex gap-2"
+          className="inline-flex gap-2 mt-10"
           aria-disabled={isLoading}
           disabled={isLoading}
           type="submit"
