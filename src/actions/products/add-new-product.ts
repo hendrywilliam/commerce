@@ -5,13 +5,24 @@ import { auth } from "@clerk/nextjs";
 import { slugify } from "@/lib/utils";
 import { products } from "@/db/schema";
 import { NewProduct } from "@/db/schema";
+import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import type { TweakedOmit } from "@/lib/utils";
+import { newProductValidation } from "@/lib/validations/product";
 
-export async function addNewProductAction(input: Omit<NewProduct, "slug">) {
+export async function addNewProductAction(
+  input: TweakedOmit<NewProduct, "slug">,
+) {
+  const parsedNewProductInput = await newProductValidation.spa(input);
+
+  if (!parsedNewProductInput.success) {
+    throw new Error(parsedNewProductInput.error.message);
+  }
+
   const { userId } = auth();
 
   if (!userId) {
-    throw new Error("You must be signed in to add a new product.");
+    redirect("/sign-in");
   }
 
   const newProductIsExistInStore = await db.query.products.findFirst({

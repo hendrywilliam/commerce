@@ -1,13 +1,14 @@
 "use server";
-import { Store } from "@/db/schema";
 import { db } from "@/db/core";
-import { stores } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { Store } from "@/db/schema";
+import { stores } from "@/db/schema";
+import { TweakedOmit } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { storeValidation } from "@/lib/validations/stores";
 
 export async function updateOwnedStoreAction(
-  storeRawInput: Omit<Store, "createdAt" | "active" | "slug">,
+  storeRawInput: TweakedOmit<Store, "createdAt" | "active" | "slug">,
 ) {
   // Runtime validation
   const parseStoreRawInput = storeValidation.parse(storeRawInput);

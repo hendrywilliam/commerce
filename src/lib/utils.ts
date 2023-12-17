@@ -67,3 +67,6 @@ export function unixToDateString(timestamp: number) {
 
 // Type utils
 export type OmitAndExtend<T, U extends keyof T, V extends {}> = Omit<T, U> & V;
+// Omit is not giving us any hint, because the second generic parameter (K) is accepting "any" instead of key from (T).
+export type TweakedOmit<T, U extends keyof T> = Omit<T, U>;
+export type Extends<T extends any, U extends any> = T & U;

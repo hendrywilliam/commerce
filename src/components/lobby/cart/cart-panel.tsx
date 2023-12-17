@@ -39,16 +39,15 @@ export default function CartPanel({ products }: CartPanelProps) {
               onClick={(e) =>
                 startTransition(async () => {
                   try {
-                    const { paymentIntentId, clientSecret } =
-                      await createPaymentIntentAction({
-                        storeId: items[0].storeId,
-                        cartItem: items,
-                      });
+                    const paymentIntent = await createPaymentIntentAction({
+                      storeId: items[0].storeId,
+                      cartItem: items,
+                    });
 
                     const storeSlug = items[0].storeSlug;
 
                     push(
-                      `/checkout/${storeSlug}/payment?payment_intent_id=${paymentIntentId}&client_secret=${clientSecret}`,
+                      `/checkout/${storeSlug}/payment?payment_intent_id=${paymentIntent.paymentIntentId}&client_secret=${paymentIntent.clientSecret}`,
                     );
                   } catch (error) {
                     catchError(error);

@@ -9,7 +9,7 @@ import { NextResponse } from "next/server";
 import { clerkClient } from "@clerk/nextjs";
 import { OmitAndExtend } from "@/lib/utils";
 import type {
-  PaymentIntentSucceededMetadata,
+  PaymentIntentMetadata,
   CheckoutSessionCompletedMetadata,
   CartItem,
 } from "@/types";
@@ -81,7 +81,7 @@ export async function POST(req: Request) {
       const paymentIntentObject = data.object as OmitAndExtend<
         Stripe.PaymentIntentSucceededEvent.Data["object"],
         "metadata",
-        PaymentIntentSucceededMetadata
+        PaymentIntentMetadata
       >;
 
       // Get corresponding cart
@@ -110,7 +110,7 @@ export async function POST(req: Request) {
         .set({
           items: anyItemsExcludingCheckoutItems.length
             ? JSON.stringify(anyItemsExcludingCheckoutItems)
-            : [],
+            : JSON.stringify([]),
           isClosed: anyItemsExcludingCheckoutItems.length === 0 ? true : false,
         })
         .where(eq(carts.id, correspondingCart.id));
@@ -136,6 +136,7 @@ export async function POST(req: Request) {
       const parsedCartItems = JSON.parse(
         paymentIntentObject.metadata.checkoutItem,
       ) as CartItem[];
+
       const correspondingProducts = await db
         .select()
         .from(products)

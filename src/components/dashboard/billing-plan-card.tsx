@@ -22,7 +22,6 @@ export default function DashboardBillingPlanCard({
     startTransition(async () => {
       try {
         const session = await manageSubscriptionAction({
-          stripeCustomerId,
           subscriptionPriceId: plan.id,
         });
 

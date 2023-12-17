@@ -1,18 +1,16 @@
 "use server";
 
-import { z } from "zod";
 import Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { clerkClient } from "@clerk/nextjs";
 import { getPrimaryEmail } from "@/lib/utils";
-import { registerValidation } from "@/lib/validations/user";
 import { UserObjectCustomized } from "@/types";
-
-type CreateUser = z.infer<typeof registerValidation>;
+import { CreateUser } from "@/lib/validations/user";
+import { registerValidation } from "@/lib/validations/user";
 
 // This will create clerk user and stripe customer
 export async function createStripeCustomerAction(rawUserData: CreateUser) {
-  const parsedRawData = await registerValidation.safeParseAsync(rawUserData);
+  const parsedRawData = await registerValidation.spa(rawUserData);
 
   if (!parsedRawData.success) {
     throw new Error(parsedRawData.error.message);

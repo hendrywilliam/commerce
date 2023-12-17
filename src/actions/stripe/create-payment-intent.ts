@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
 import {
   CartLineDetailedItems,
-  PaymentIntentSucceededMetadata,
+  PaymentIntentMetadata,
   UserObjectCustomized,
 } from "@/types";
 import { cartDetailedItemsValidation } from "@/lib/validations/stores";
@@ -20,15 +20,17 @@ export async function createPaymentIntentAction({
   cartItem: CartLineDetailedItems[];
 }) {
   const cartId = cookies().get("cart_id")?.value;
+
   const parsedCartItems = await cartDetailedItemsValidation.spa(cartItem);
+
+  if (!parsedCartItems.success) {
+    throw new Error(parsedCartItems.error.message);
+  }
+
   const user = await currentUser();
 
   if (!user) {
     redirect("/sign-in");
-  }
-
-  if (!parsedCartItems.success) {
-    throw new Error(parsedCartItems.error.message);
   }
 
   if (!storeId) {
@@ -40,7 +42,7 @@ export async function createPaymentIntentAction({
   }
 
   // This amount is using the smallest currency unit, which is cents.
-  // e.g real amount $600 -> stripe amount 600 * 100 -> 600 usd but in cents unit.
+  // e.g real amount $600 -> stripe amount 600 * 100 -> 60000 cents which is equal to $600
   const priceAmount = cartItem.reduce((total, item) => {
     return (total + Number(item.price) * item.qty) * 100;
   }, 0);
@@ -73,7 +75,7 @@ export async function createPaymentIntentAction({
       // Due to limited capability of metadata to carry some data, we only embed the id and qty
       checkoutItem: extractCartItem,
       email: getPrimaryEmail(user),
-    } satisfies PaymentIntentSucceededMetadata["metadata"],
+    } satisfies PaymentIntentMetadata["metadata"],
   });
 
   return {

@@ -55,7 +55,7 @@ export type ProductImage = Pick<
   "key" | "name" | "size" | "url"
 >;
 
-export interface PaymentIntentSucceededMetadata {
+export interface PaymentIntentMetadata {
   metadata: {
     storeId: number;
     cartId: string;

@@ -4,6 +4,7 @@ import { db } from "@/db/core";
 import { stores } from "@/db/schema";
 import { slugify } from "@/lib/utils";
 import { NewStore } from "@/db/schema";
+import { TweakedOmit } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { currentUser } from "@clerk/nextjs";
@@ -12,7 +13,9 @@ import { auth, clerkClient } from "@clerk/nextjs";
 import type { UserObjectCustomized } from "@/types";
 import { getCurrentSubscriptionAction } from "@/actions/stripe/get-current-subscription";
 
-export async function createNewStoreAction(storeData: Omit<NewStore, "slug">) {
+export async function createNewStoreAction(
+  storeData: TweakedOmit<NewStore, "slug" | "createdAt">,
+) {
   const { userId } = auth();
   const user = (await currentUser()) as unknown as UserObjectCustomized;
 

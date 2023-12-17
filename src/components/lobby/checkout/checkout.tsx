@@ -2,7 +2,7 @@
 
 import * as dotenv from "dotenv";
 import { Elements } from "@stripe/react-stripe-js";
-import SubscriptionCheckoutForm from "./checkout-form";
+import CheckoutForm from "./checkout-form";
 import { StripeElementsOptions, loadStripe } from "@stripe/stripe-js";
 
 dotenv.config();
@@ -26,7 +26,7 @@ export function Checkout({ clientSecret }: CheckoutProps) {
     <>
       {clientSecret && (
         <Elements options={options} stripe={stripePromise}>
-          <SubscriptionCheckoutForm clientSecret={clientSecret} />
+          <CheckoutForm clientSecret={clientSecret} />
         </Elements>
       )}
     </>

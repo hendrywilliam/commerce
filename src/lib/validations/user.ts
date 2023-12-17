@@ -42,3 +42,9 @@ export const loginValidation = z.object({
       message: "Please input your password.",
     }),
 });
+
+export const manageSubscriptionValidation = z.string().min(1, {
+  message: "Subscription ID is required.",
+});
+
+export type CreateUser = z.infer<typeof registerValidation>;

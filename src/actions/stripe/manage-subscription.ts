@@ -1,9 +1,10 @@
 "use server";
 
-import { currentUser } from "@clerk/nextjs";
 import { stripe } from "@/lib/stripe";
-import { UserObjectCustomized } from "@/types";
+import { currentUser } from "@clerk/nextjs";
 import { getAbsoluteUrl } from "@/lib/utils";
+import { UserObjectCustomized } from "@/types";
+import { manageSubscriptionValidation } from "@/lib/validations/user";
 import { getCurrentSubscriptionAction } from "@/actions/stripe/get-current-subscription";
 
 // Price id coming from generated product on Stripe
@@ -11,8 +12,14 @@ export async function manageSubscriptionAction({
   subscriptionPriceId,
 }: {
   subscriptionPriceId: string;
-  stripeCustomerId: string;
 }) {
+  const parsedSubscriptionPriceId =
+    await manageSubscriptionValidation.spa(subscriptionPriceId);
+
+  if (!parsedSubscriptionPriceId.success) {
+    throw new Error(parsedSubscriptionPriceId.error.message);
+  }
+
   const user = await currentUser();
 
   if (!user) {

@@ -66,3 +66,5 @@ export const newProductValidation = z.object({
       }
     }),
 });
+
+export const bulkProductsValidation = newProductValidation.array();
