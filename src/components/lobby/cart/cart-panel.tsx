@@ -1,10 +1,12 @@
 "use client";
 
 import { useTransition } from "react";
+import { redirect } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { catchError, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import type { CartLineDetailedItems } from "@/types";
+import { catchError, formatCurrency } from "@/lib/utils";
 import { IconLoading, LockIcon } from "@/components/ui/icons";
 import { createPaymentIntentAction } from "@/actions/stripe/create-payment-intent";
 
@@ -15,6 +17,7 @@ interface CartPanelProps {
 export default function CartPanel({ products }: CartPanelProps) {
   const [isPending, startTransition] = useTransition();
   const { push } = useRouter();
+  const { user } = useUser();
 
   return (
     <div className="w-full border p-4 rounded">
@@ -39,6 +42,10 @@ export default function CartPanel({ products }: CartPanelProps) {
               onClick={(e) =>
                 startTransition(async () => {
                   try {
+                    if (!user) {
+                      redirect("/sign-in");
+                    }
+
                     const paymentIntent = await createPaymentIntentAction({
                       storeId: items[0].storeId,
                       cartItem: items,

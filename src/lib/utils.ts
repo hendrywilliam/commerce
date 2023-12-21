@@ -65,6 +65,10 @@ export function unixToDateString(timestamp: number) {
   });
 }
 
+export function beautifyId(id: string) {
+  return id.split("_")[1];
+}
+
 // Type utils
 export type OmitAndExtend<T, U extends keyof T, V extends {}> = Omit<T, U> & V;
 // Omit is not giving us any hint, because the second generic parameter (K) is accepting "any" instead of key from (T).

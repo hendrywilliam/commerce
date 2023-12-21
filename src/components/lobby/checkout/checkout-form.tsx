@@ -58,7 +58,7 @@ export default function CheckoutForm({ clientSecret }: CheckoutForm) {
         clientSecret,
         confirmParams: {
           // Replace with payment completion page.
-          return_url: baseUrl ?? "/",
+          return_url: `${baseUrl}/checkout/order-status`,
         },
       });
 
@@ -79,7 +79,7 @@ export default function CheckoutForm({ clientSecret }: CheckoutForm) {
   return (
     <Form onSubmit={handleSubmitSubscriptionCheckout}>
       <AddressElement options={{ mode: "shipping" }} />
-      <PaymentElement options={paymentElementsOption} />
+      <PaymentElement options={paymentElementsOption} className="mt-3" />
       <FormField className="mt-4">
         <Button
           className="inline-flex gap-2"

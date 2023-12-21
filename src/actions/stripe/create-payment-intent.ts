@@ -21,6 +21,10 @@ export async function createPaymentIntentAction({
 }) {
   const cartId = cookies().get("cart_id")?.value;
 
+  if (isNaN(Number(cartId))) {
+    throw new Error("Invalid Cart ID. Please try again later.");
+  }
+
   const parsedCartItems = await cartDetailedItemsValidation.spa(cartItem);
 
   if (!parsedCartItems.success) {
@@ -35,10 +39,6 @@ export async function createPaymentIntentAction({
 
   if (!storeId) {
     throw new Error("Invalid Store ID, Please try again later.");
-  }
-
-  if (isNaN(Number(cartId))) {
-    throw new Error("Invalid Cart ID. Please try again later.");
   }
 
   // This amount is using the smallest currency unit, which is cents.
