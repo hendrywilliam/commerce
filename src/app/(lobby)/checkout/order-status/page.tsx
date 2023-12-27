@@ -8,6 +8,7 @@ import { Extends, beautifyId } from "@/lib/utils";
 import { type Product, products } from "@/db/schema";
 import PageLayout from "@/components/layouts/page-layout";
 import type { CartItem, PaymentIntentMetadata } from "@/types";
+import OrderStatus from "@/components/lobby/checkout/order-status";
 import OrderDetails from "@/components/lobby/checkout/order-details";
 
 export default async function OrderStatusPage({
@@ -32,7 +33,6 @@ export default async function OrderStatusPage({
     PaymentIntentMetadata
   >;
 
-  const cartId = currentOrder.metadata.storeId;
   const checkoutItems = JSON.parse(
     currentOrder.metadata.checkoutItem,
   ) as CartItem[];
@@ -59,11 +59,25 @@ export default async function OrderStatusPage({
         <h1 className="font-semibold text-2xl">Order Status</h1>
         <p className="font-medium">Order ID: {beautifyId(currentOrder.id)}</p>
       </div>
-      {currentOrder.status === "succeeded" && <p>Payment succeeded.</p>}
+      {!!currentOrder.status && (
+        <OrderStatus orderStatus={currentOrder.status} />
+      )}
       {!!allCheckoutItems.length && (
         <div className="w-full lg:w-1/2 p-4 border rounded">
-          <h1 className="font-semibold text-2xl mb-4">Your order</h1>
+          <h1 className="font-semibold text-2xl mb-4">Your order(s)</h1>
           <OrderDetails orderItems={allCheckoutItems} />
+        </div>
+      )}
+      {!!currentOrder.shipping?.address && (
+        <div className="border rounded w-full lg:w-1/2 p-4">
+          <h1 className="font-semibold text-2xl">Shipment</h1>
+          <p className="flex flex-col">
+            {Object.entries(currentOrder?.shipping?.address).map(
+              ([key, value]) => (
+                <span key={key}>{value}</span>
+              ),
+            )}
+          </p>
         </div>
       )}
     </PageLayout>

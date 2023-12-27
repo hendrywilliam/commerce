@@ -81,12 +81,14 @@ export default function CheckoutForm({ clientSecret }: CheckoutForm) {
       <AddressElement options={{ mode: "shipping" }} />
       <PaymentElement options={paymentElementsOption} className="mt-3" />
       <FormField className="mt-4">
-        <Button
-          className="inline-flex gap-2"
-          disabled={!stripe || !elements || isLoading || !isLoaded}
-        >
-          Confirm Payment {isLoading ? <IconLoading /> : <LockIcon />}
-        </Button>
+        {elements && (
+          <Button
+            className="inline-flex gap-2"
+            disabled={!stripe || !elements || isLoading || !isLoaded}
+          >
+            Confirm Payment {isLoading ? <IconLoading /> : <LockIcon />}
+          </Button>
+        )}
       </FormField>
     </Form>
   );

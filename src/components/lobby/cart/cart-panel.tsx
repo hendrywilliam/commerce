@@ -29,11 +29,13 @@ export default function CartPanel({ products }: CartPanelProps) {
               <h1 className="font-semibold">{storeName}</h1>
               <p>
                 Total Payment:{" "}
-                {formatCurrency(
-                  items.reduce((total, item) => {
-                    return total + Number(item.price) * item.qty;
-                  }, 0),
-                )}
+                <span className="text-lg font-medium">
+                  {formatCurrency(
+                    items.reduce((total, item) => {
+                      return total + Number(item.price) * item.qty;
+                    }, 0),
+                  )}
+                </span>
               </p>
             </div>
             <Button
@@ -72,7 +74,7 @@ export default function CartPanel({ products }: CartPanelProps) {
       <div className="mt-4">
         <p className="text-xs">
           Worry less! Ecremmoce is not storing your data including: Card
-          Information/Payment Information, Address.
+          Information, Payment Information and Your Personal Address.
         </p>
       </div>
     </div>
