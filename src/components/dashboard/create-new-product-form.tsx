@@ -36,7 +36,7 @@ export default function CreateNewProductForm() {
   const [selectedFiles, setSelectedFiles] = useState([] as FileWithPreview[]);
   const [isLoading, setIsLoading] = useState(false);
   const { startUpload } = useUploadThing("imageUploader");
-  const routeParams = useParams();
+  const routeParams = useParams<{ storeSlug: string }>();
 
   const {
     register,
@@ -55,13 +55,10 @@ export default function CreateNewProductForm() {
       const returnFromUploadedFile = await startUpload(data.image);
       const productData = {
         ...data,
-        image: returnFromUploadedFile
-          ? JSON.stringify([...returnFromUploadedFile])
-          : JSON.stringify([]),
-        storeId: Number(routeParams.storeId),
-      } satisfies Omit<NewProduct, "slug">;
+        image: returnFromUploadedFile ? [...returnFromUploadedFile] : [],
+      } satisfies Omit<NewProduct, "slug" | "storeId">;
 
-      await addNewProductAction(productData);
+      await addNewProductAction(productData, routeParams.storeSlug);
       toast.success("Success add new product.");
       setSelectedFiles([]);
       reset();

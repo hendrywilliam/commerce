@@ -18,7 +18,6 @@ interface DashboardStoreFrontGeneralZoneProps {
 export default function DashboardStoreFrontGeneralZone({
   store,
 }: DashboardStoreFrontGeneralZoneProps) {
-  // double state mirroring
   const [previousStorePublicInformation, setPreviousStorePublicInformation] =
     useState(store);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,20 +26,20 @@ export default function DashboardStoreFrontGeneralZone({
   const [storePublicInformation, setStorePublicInformation] = useState(store);
 
   async function updateSelectedStore() {
-    setIsLoading((value) => !value);
+    setIsLoading((isLoading) => !isLoading);
     await updateOwnedStoreAction({
       name: storePublicInformation.name,
       description: storePublicInformation.description,
       id: storePublicInformation.id,
     })
       .then((res) => {
-        toast("Your store has been updated.");
+        toast.success("Your store has been updated.");
       })
       .catch((err) => {
         catchError(err);
       })
       .finally(() => {
-        setIsLoading((value) => !value);
+        setIsLoading((isLoading) => !isLoading);
       });
   }
 

@@ -3,15 +3,17 @@
 import { db } from "@/db/core";
 import { auth } from "@clerk/nextjs";
 import { slugify } from "@/lib/utils";
-import { products } from "@/db/schema";
+import { products, stores } from "@/db/schema";
 import { NewProduct } from "@/db/schema";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import type { TweakedOmit } from "@/lib/utils";
 import { newProductValidation } from "@/lib/validations/product";
+import { eq } from "drizzle-orm";
 
 export async function addNewProductAction(
   input: TweakedOmit<NewProduct, "slug">,
+  storeSlug: string,
 ) {
   const parsedNewProductInput = await newProductValidation.spa(input);
 
@@ -33,6 +35,21 @@ export async function addNewProductAction(
     throw new Error("Product already exist in the store.");
   }
 
-  await db.insert(products).values({ ...input, slug: slugify(input.name) });
+  const store = await db.query.stores
+    .findFirst({
+      where: eq(stores.slug, storeSlug),
+    })
+    .execute();
+
+  if (!store) {
+    throw new Error("Store is not exist anymore, try again later.");
+  }
+
+  await db.insert(products).values({
+    ...input,
+    slug: slugify(input.name),
+    storeId: store.id,
+    image: JSON.stringify(input.image),
+  });
   revalidatePath("/");
 }
