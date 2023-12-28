@@ -7,11 +7,7 @@ import { Product } from "@/db/schema";
 export async function getProductsBySearchTermAction(searchTerm: string) {
   const result = (
     await db
-      .select({
-        id: products.id,
-        name: products.name,
-        category: products.category,
-      })
+      .select()
       .from(products)
       .where(like(products.name, `%${searchTerm}%`))
   ).reduce(
@@ -21,10 +17,7 @@ export async function getProductsBySearchTermAction(searchTerm: string) {
       group[category].push(product);
       return group;
     },
-    {} as Record<
-      Product["category"],
-      Pick<Product, "name" | "id" | "category">[]
-    >,
+    {} as Record<Product["category"], Product[]>,
   );
 
   return result;

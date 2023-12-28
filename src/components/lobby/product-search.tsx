@@ -25,8 +25,8 @@ export default function ProductSearch() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasNoResult, setHasNoResult] = useState(false);
   const [results, setResults] = useState<
-    Record<string, Pick<Product, "name" | "id" | "category">[]>
-  >({});
+    Record<Product["category"], Product[]> | {}
+  >();
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -91,7 +91,7 @@ export default function ProductSearch() {
               placeholder="Type product name... "
             />
           </div>
-          {!hasNoResult ? (
+          {!hasNoResult && results ? (
             Object.entries(results).map(([category, products], i) => {
               return (
                 <div key={i}>
@@ -105,7 +105,7 @@ export default function ProductSearch() {
                           variant={"ghost"}
                           className="w-full h-8 justify-start px-1 gap-2"
                           onClick={() =>
-                            void router.push(`/product/${item.id}`)
+                            void router.push(`/product/${item.slug}`)
                           }
                           key={item.id}
                         >
