@@ -6,9 +6,8 @@ import { Store } from "@/db/schema";
 import { stores } from "@/db/schema";
 import { slugify } from "@/lib/utils";
 import { TweakedOmit } from "@/lib/utils";
-import { revalidatePath } from "next/cache";
-import { storeValidation } from "@/lib/validations/stores";
 import { redirect } from "next/navigation";
+import { storeValidation } from "@/lib/validations/stores";
 
 export async function updateOwnedStoreAction(
   storeRawInput: TweakedOmit<Store, "createdAt" | "active" | "slug">,

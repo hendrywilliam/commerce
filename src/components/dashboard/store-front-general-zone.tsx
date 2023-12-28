@@ -9,7 +9,7 @@ import { IconLoading } from "@/components/ui/icons";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState, useTransition } from "react";
 import { updateOwnedStoreAction } from "@/actions/stores/update-store";
-import { createPayoutAccountAction } from "@/actions/stripe/create-payout-account";
+import { createAccountLinkAction } from "@/actions/stripe/create-account-link";
 
 interface DashboardStoreFrontGeneralZoneProps {
   store: Store;
@@ -73,7 +73,7 @@ export default function DashboardStoreFrontGeneralZone({
               aria-disabled={store.active ? "true" : "false"}
               onClick={() =>
                 startTransition(async () => {
-                  await createPayoutAccountAction(store.id);
+                  const url = await createAccountLinkAction(store.id);
                 })
               }
               className="inline-flex gap-2"
