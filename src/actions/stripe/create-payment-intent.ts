@@ -59,26 +59,24 @@ export async function createPaymentIntentAction({
   const userStripeCustomerId = (user as unknown as UserObjectCustomized)
     .privateMetadata.stripeCustomerId;
 
-  const paymentIntent = await stripe.paymentIntents.create(
-    {
-      amount: totalAmount,
-      // customer: userStripeCustomerId,
-      currency: "usd",
-      automatic_payment_methods: {
-        enabled: true,
-      },
-      application_fee_amount: feeAmount,
-      metadata: {
-        storeId,
-        cartId: cartId as string,
-        checkoutItem: extractCartItem,
-        email: getPrimaryEmail(user),
-      } satisfies PaymentIntentMetadata["metadata"],
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: totalAmount,
+    customer: userStripeCustomerId,
+    currency: "usd",
+    automatic_payment_methods: {
+      enabled: true,
     },
-    {
-      stripeAccount: accountDetails.id,
+    application_fee_amount: feeAmount,
+    metadata: {
+      storeId,
+      cartId: cartId as string,
+      checkoutItem: extractCartItem,
+      email: getPrimaryEmail(user),
+    } satisfies PaymentIntentMetadata["metadata"],
+    transfer_data: {
+      destination: accountDetails.id,
     },
-  );
+  });
 
   return {
     paymentIntentId: paymentIntent.id,
