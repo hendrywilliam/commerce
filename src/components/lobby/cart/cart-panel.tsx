@@ -43,16 +43,14 @@ export default function CartPanel({ products }: CartPanelProps) {
               aria-disabled={isPending ? "true" : "false"}
               onClick={(e) =>
                 startTransition(async () => {
+                  if (!user) {
+                    redirect("/sign-in");
+                  }
                   try {
-                    if (!user) {
-                      redirect("/sign-in");
-                    }
-
                     const paymentIntent = await createPaymentIntentAction({
                       storeId: items[0].storeId,
                       cartItem: items,
                     });
-
                     const storeSlug = items[0].storeSlug;
 
                     push(

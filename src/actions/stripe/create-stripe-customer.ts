@@ -26,7 +26,6 @@ export async function createStripeCustomerAction(rawUserData: CreateUser) {
     privateMetadata: {
       plan: "Hobby",
       storeId: [],
-      addresses: [],
     },
   });
 
@@ -40,6 +39,8 @@ export async function createStripeCustomerAction(rawUserData: CreateUser) {
   const stripeCustomer: Stripe.Customer = await stripe.customers.create({
     email,
   });
+
+  console.log(stripeCustomer);
 
   const userPrivateMetadata = userCreated.privateMetadata;
 

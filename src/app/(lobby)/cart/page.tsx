@@ -41,7 +41,7 @@ export default async function CartPage() {
             <p>You dont have any item in your current cart.</p>
           )}
         </div>
-        {cartItemDetails.length > 0 && (
+        {!!cartItemDetails.length && (
           <div className="w-1/4">
             <CartPanel products={groupProductByTheStore} />
           </div>

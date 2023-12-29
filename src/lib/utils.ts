@@ -1,10 +1,11 @@
 import { z } from "zod";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import { toast } from "sonner";
-import { isClerkAPIResponseError } from "@clerk/nextjs";
-import { User } from "@clerk/nextjs/server";
 import { baseUrl } from "@/config/site";
+import { twMerge } from "tailwind-merge";
+import { User } from "@clerk/nextjs/server";
+import { type ClassValue, clsx } from "clsx";
+import type { CartLineDetailedItems } from "@/types";
+import { isClerkAPIResponseError } from "@clerk/nextjs";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -67,6 +68,22 @@ export function unixToDateString(timestamp: number) {
 
 export function beautifyId(id: string) {
   return id.split("_")[1];
+}
+
+export function calculateOrderAmounts(checkoutItems: CartLineDetailedItems[]) {
+  const PLATFORM_FEE_IN_DECIMAL = 0.01;
+  const CENTS_UNIT_IN_DOLLAR = 100;
+  const total =
+    checkoutItems.reduce(
+      (total, item) => total + item.qty * Number(item.price),
+      0,
+    ) * CENTS_UNIT_IN_DOLLAR;
+  const fee = total * PLATFORM_FEE_IN_DECIMAL;
+
+  return {
+    totalAmount: total,
+    feeAmount: fee,
+  };
 }
 
 // Type utils

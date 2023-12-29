@@ -73,7 +73,7 @@ export default function DashboardStoreFrontGeneralZone({
               aria-disabled={store.active ? "true" : "false"}
               onClick={() =>
                 startTransition(async () => {
-                  const url = await createAccountLinkAction(store.id);
+                  await createAccountLinkAction(store.id);
                 })
               }
               className="inline-flex gap-2"
