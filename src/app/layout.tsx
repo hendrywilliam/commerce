@@ -2,11 +2,9 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import Toast from "@/components/toast";
-import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
-
-const inter = Inter({ subsets: ["latin"] });
+import { GeistSans } from "geist/font/sans";
 
 export const metadata: Metadata = {
   title: "ecremmoce by hendryw",
@@ -21,7 +19,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${inter.className} text-sm antialiased`}>
+        <body className={`${GeistSans.className} text-sm antialiased`}>
           <Toast />
           {children}
           <Analytics />
