@@ -1,14 +1,13 @@
 "use client";
 
-import { CartItem } from "@/types";
+import { toast } from "sonner";
+import { catchError } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { IconTrashCan, IconLoading } from "@/components/ui/icons";
 import { useState, useEffect, useTransition } from "react";
-import { deleteCartItemAction } from "@/actions/carts/delete-cart-item";
-import { catchError } from "@/lib/utils";
-import { toast } from "sonner";
+import { IconTrashCan, IconLoading } from "@/components/ui/icons";
 import { updateCartItemAction } from "@/actions/carts/update-cart-item";
+import { deleteCartItemAction } from "@/actions/carts/delete-cart-item";
 
 interface ShoppingCartItemActionProps {
   id: number;
@@ -42,7 +41,12 @@ export default function ShoppingCartItemAction({
     if (isNewValue) {
       const bounceUpdate = setTimeout(async () => {
         startTransition(async () => {
-          await updateCartItemAction(id, itemQuantity);
+          try {
+            await updateCartItemAction(id, itemQuantity);
+            toast.success("Your cart has been updated.");
+          } catch (error) {
+            catchError(error);
+          }
         });
       }, 500);
 

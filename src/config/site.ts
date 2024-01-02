@@ -58,3 +58,19 @@ export const dashboardNavigation = [
     description: "Gather information based on your purchase data.",
   },
 ];
+
+// export const storeFrontTabs = ["storefront", "products", "transaction"];
+export const storeFrontTabs = [
+  {
+    title: "Storefront",
+    value: "storefront",
+  },
+  {
+    title: "Products",
+    value: "products",
+  },
+  {
+    title: "Transaction",
+    value: "transaction",
+  },
+];

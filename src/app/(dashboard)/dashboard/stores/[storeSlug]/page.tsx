@@ -6,16 +6,15 @@ import { notFound } from "next/navigation";
 import { WarningIcon } from "@/components/ui/icons";
 import { buttonVariants } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import DashboardStoreFrontTab from "@/components/dashboard/store-front-tab";
+import DashboardStoreTabs from "@/components/dashboard/dashboard-store-tabs";
 import { getStoreProductsAction } from "@/actions/products/get-store-products";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import DashboardStoreProductTab from "@/components/dashboard/store-product-tab";
-import DashboardStoreTransactionTab from "@/components/dashboard/store-transaction-tab";
 
 export default async function DashboardDynamicStorePage({
   params,
+  searchParams,
 }: {
   params: { storeSlug: string };
+  searchParams: { tab: string };
 }) {
   const store = await db.query.stores.findFirst({
     where: eq(stores.slug, params.storeSlug),
@@ -62,22 +61,11 @@ export default async function DashboardDynamicStorePage({
         </div>
       </div>
       <div className="mt-6">
-        <Tabs defaultValue="storefront" className="w-full">
-          <TabsList>
-            <TabsTrigger value="storefront">Storefront</TabsTrigger>
-            <TabsTrigger value="products">Products</TabsTrigger>
-            <TabsTrigger value="transaction">Transaction</TabsTrigger>
-          </TabsList>
-          <TabsContent value="storefront">
-            <DashboardStoreFrontTab store={store} />
-          </TabsContent>
-          <TabsContent value="products">
-            <DashboardStoreProductTab storeProductData={storeProductData} />
-          </TabsContent>
-          <TabsContent value="transaction">
-            <DashboardStoreTransactionTab active={store.active} />
-          </TabsContent>
-        </Tabs>
+        <DashboardStoreTabs
+          searchParamsTab={searchParams.tab}
+          store={store}
+          storeProductData={storeProductData}
+        />
       </div>
     </div>
   );

@@ -12,9 +12,9 @@ import {
   AddressElement,
   PaymentElement,
 } from "@stripe/react-stripe-js";
-import { baseUrl } from "@/config/site";
 import { useUser } from "@clerk/nextjs";
 import { FormEvent, useState } from "react";
+import { getAbsoluteUrl } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { LockIcon, IconLoading } from "@/components/ui/icons";
@@ -35,9 +35,7 @@ export default function CheckoutForm({ clientSecret }: CheckoutForm) {
     return;
   }
 
-  async function handleSubmitSubscriptionCheckout(
-    event: FormEvent<HTMLFormElement>,
-  ) {
+  async function handleCheckoutPayment(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     // Disabled anything when Stripe.js/ Clerk has not loaded yet.
@@ -57,8 +55,7 @@ export default function CheckoutForm({ clientSecret }: CheckoutForm) {
         elements,
         clientSecret,
         confirmParams: {
-          // Replace with payment completion page.
-          return_url: `${baseUrl}/checkout/order-status`,
+          return_url: getAbsoluteUrl("/checkout/order-status"),
         },
       });
 
@@ -77,7 +74,7 @@ export default function CheckoutForm({ clientSecret }: CheckoutForm) {
   };
 
   return (
-    <Form onSubmit={handleSubmitSubscriptionCheckout}>
+    <Form onSubmit={handleCheckoutPayment}>
       <AddressElement options={{ mode: "shipping" }} />
       <PaymentElement options={paymentElementsOption} className="mt-3" />
       <FormField className="mt-4">

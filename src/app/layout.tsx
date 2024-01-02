@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${GeistSans.className} text-sm antialiased`}>
+        <body className={`${GeistSans.className} antialiased`}>
           <Toast />
           {children}
           <Analytics />
