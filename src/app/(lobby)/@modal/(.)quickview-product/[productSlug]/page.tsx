@@ -1,7 +1,7 @@
 import { db } from "@/db/core";
 import Image from "next/image";
 import Modal from "@/components/ui/modal";
-import type { ProductImage } from "@/types";
+import type { UploadData } from "@/types";
 import ImagePlaceholder from "@/components/image-placeholder";
 
 export default async function ProductModal({
@@ -16,7 +16,7 @@ export default async function ProductModal({
   });
 
   const parsedImageUrl = (
-    JSON.parse(productDetails?.image as string) as ProductImage[]
+    JSON.parse(productDetails?.image as string) as UploadData[]
   )[0]?.url;
   return (
     <Modal>

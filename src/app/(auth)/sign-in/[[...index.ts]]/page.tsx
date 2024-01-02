@@ -1,5 +1,6 @@
-import SignInForm from "@/components/auth/signin-form";
 import Link from "next/link";
+import SignInForm from "@/components/auth/signin-form";
+import { siteName } from "@/config/site";
 
 export default function SigninPage() {
   return (
@@ -20,7 +21,7 @@ export default function SigninPage() {
       </section>
       <section className="relative h-full w-2/4 border-l">
         <div className="absolute -left-20 top-1/2 py-6 px-4 bg-white z-2">
-          <h1 className="text-xl font-bold">ECREMMOCE</h1>
+          <h1 className="text-xl font-bold">{siteName}</h1>
         </div>
       </section>
     </div>

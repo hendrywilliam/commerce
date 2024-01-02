@@ -7,8 +7,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { GeistSans } from "geist/font/sans";
 
 export const metadata: Metadata = {
-  title: "ecremmoce by hendryw",
-  description: "Fictional marketplace by yrdenh",
+  title: "Commerce by hendryw",
+  description: "A fictional marketplace by hendryw",
 };
 
 export default function RootLayout({

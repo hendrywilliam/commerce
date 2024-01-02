@@ -5,7 +5,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Product } from "@/db/schema";
-import type { ProductImage } from "@/types";
+import type { UploadData } from "@/types";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, slugify } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -32,7 +32,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
 
   const parsedImageUrl = (
-    JSON.parse(product.image as string) as ProductImage[]
+    JSON.parse(product.image as string) as UploadData[]
   )[0]?.url;
 
   return (

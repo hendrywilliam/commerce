@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Product } from "@/db/schema";
-import type { ProductImage } from "@/types";
+import type { UploadData } from "@/types";
 import { formatCurrency, type Extends } from "@/lib/utils";
 import ImagePlaceholder from "@/components/image-placeholder";
 
@@ -13,7 +13,7 @@ export default function OrderDetails({
     <div className="w-full h-max">
       {orderItems.map((item) => {
         const parsedImageUrl = (
-          JSON.parse(item.image as string) as ProductImage[]
+          JSON.parse(item.image as string) as UploadData[]
         )[0]?.url;
 
         return (

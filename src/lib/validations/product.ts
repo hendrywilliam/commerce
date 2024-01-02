@@ -5,39 +5,31 @@ const MAXIMUM_FILE_UPLOAD_IN_BYTES = 1024 * 1024 * 4;
 const ALLOWED_FILE_EXTENSION = ["jpg", "jpeg", "png"];
 
 export const newProductValidation = z.object({
-  name: z
-    .string()
-    .min(5, {
-      message: "Product name must be 5 or more characters long.",
-    })
-    .describe("Name for the new product."),
-  category: z
-    .enum(["clothing", "backpack", "shoes"], {
-      required_error: "Product category is required.",
-    })
-    .describe("Collection of categories for new product."),
+  name: z.string().min(5, {
+    message: "Product name must be 5 or more characters long.",
+  }),
+  category: z.enum(["clothing", "backpack", "shoes"], {
+    required_error: "Product category is required.",
+  }),
   description: z
     .string({
       required_error: "Product description is required",
     })
     .min(1, {
       message: "Product description is required.",
-    })
-    .describe("A description for the new product, it is self explained."),
+    }),
   price: z
     .string({
       required_error: "Product price is required.",
     })
-    .default("0")
-    .describe("Price for the new product"),
+    .default("0"),
   stock: z
     .number({
       invalid_type_error:
         "Invalid type of data. Please only input numeric value.",
       required_error: "Stock is required.",
     })
-    .default(0)
-    .describe("Stock amount for the new product."),
+    .default(0),
   image: z
     .array(z.any())
     .min(1, {
@@ -67,4 +59,10 @@ export const newProductValidation = z.object({
     }),
 });
 
-export const bulkProductsValidation = newProductValidation.array();
+// Image property value is a string because we cant store plain JSON in db.
+export const incomingProductValidation = newProductValidation
+  .omit({ image: true })
+  .extend({
+    image: z.string(),
+  })
+  .array();

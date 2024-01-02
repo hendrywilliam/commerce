@@ -1,14 +1,21 @@
 "use server";
-import { db } from "@/db/core";
-import { products } from "@/db/schema";
-import { eq } from "drizzle-orm";
 
-// Add option for filtering/pagination/ordering later.
+import { db } from "@/db/core";
+import { eq } from "drizzle-orm";
+import { products, stores } from "@/db/schema";
+
 export async function getStoreProductsAction(storeSlug: string) {
-  return await db
-    .select()
-    .from(products)
-    .orderBy(products.id)
-    .where(eq(products.slug, storeSlug))
-    .limit(10);
+  const store = await db.query.stores.findFirst({
+    where: eq(stores.slug, storeSlug),
+  });
+
+  return store
+    ? await db
+        .select()
+        .from(products)
+        .orderBy(products.id)
+        .where(eq(products.storeId, store.id))
+        .limit(10)
+        .execute()
+    : [];
 }

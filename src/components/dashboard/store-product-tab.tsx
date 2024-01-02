@@ -9,8 +9,6 @@ export default function DashboardStoreProductTab({
   storeProductData,
 }: DashboardStoreProductTab) {
   return (
-    <>
-      <DashboardStoreProductShellTable storeProductData={storeProductData} />
-    </>
+    <DashboardStoreProductShellTable storeProductData={storeProductData} />
   );
 }

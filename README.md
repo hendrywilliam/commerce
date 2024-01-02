@@ -1,4 +1,4 @@
-# Ecremmoce
+# Commerce
 
 Work In Progress — A fictional marketplace built with App Router (everything new in Next.js), which allows users to purchase products, sign up and list their own product for sale. Users can create their own stores and collect payments for every transaction.
 

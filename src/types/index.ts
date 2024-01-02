@@ -1,7 +1,7 @@
 import { User } from "@clerk/nextjs/server";
 import { billingPlan } from "@/config/billing";
 import type { FileWithPath } from "@uploadthing/react";
-import { UploadFileResponse } from "uploadthing/client";
+// import { UploadFileResponse } from "uploadthing/client";
 
 export interface CartItem {
   id: number;
@@ -49,11 +49,11 @@ export interface SortFilterItem {
   reverse: boolean;
 }
 
-// fileUrl, fileName, ...rest is deprecated.
-export type ProductImage = Pick<
-  UploadFileResponse,
-  "key" | "name" | "size" | "url"
->;
+// // fileUrl, fileName, ...rest is deprecated.
+// export type ProductImage = Pick<
+//   UploadFileResponse,
+//   "key" | "name" | "size" | "url"
+// >;
 
 export interface PaymentIntentMetadata {
   metadata: {
@@ -69,3 +69,20 @@ export interface CheckoutSessionCompletedMetadata {
     clerkUserId: string;
   };
 }
+
+export type UploadFileResponse =
+  | { data: UploadData; error: null }
+  | { data: null; error: UploadError };
+
+export type UploadData = {
+  key: string;
+  url: string;
+  name: string;
+  size: number;
+};
+
+export type UploadError = {
+  code: string;
+  message: string;
+  data: any;
+};

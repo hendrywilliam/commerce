@@ -43,7 +43,8 @@ export default function DashboardStoreProductDataTableAction({
           onClick={deleteProductsInOwnedStore}
           className="flex gap-2"
         >
-          Delete {isLoading ? <IconLoading /> : <IconTrashCan />}
+          {isLoading ? <IconLoading /> : <IconTrashCan />}
+          Delete
         </Button>
       )}
     </div>
