@@ -71,6 +71,8 @@ export async function createNewStoreAction(
     revalidatePath("/dashboard");
     redirect("/dashboard/stores");
   } else {
-    throw new Error("New store creation limit reached");
+    throw new Error(
+      "New store creation limit reached. Please update your subscription plan.",
+    );
   }
 }

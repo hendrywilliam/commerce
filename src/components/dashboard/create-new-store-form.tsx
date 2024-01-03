@@ -34,7 +34,7 @@ export default function CreateNewStoreForm() {
       name: data.name,
     })
       .then((res) => {
-        toast("Success add a new store.");
+        toast.success("A new store created!");
       })
       .catch((err) => {
         catchError(err);
