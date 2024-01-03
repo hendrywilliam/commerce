@@ -19,16 +19,16 @@ export default function DashboardStoreFrontDangerZone({
   const [isConfirmedToDelete, setIsConfirmedToDelete] = useState(false);
 
   async function deleteThisStore() {
-    setIsDisabled((val) => !val);
-    setIsLoading((val) => !val);
+    setIsDisabled((isDisabled) => !isDisabled);
+    setIsLoading((isLoading) => !isLoading);
     try {
       await deleteOwnedStore(id);
-      toast("Success delete your store.");
+      toast.success("Store deleted successfully.");
     } catch (err) {
       catchError(err);
     } finally {
-      setIsDisabled((val) => !val);
-      setIsLoading((val) => !val);
+      setIsDisabled((isDisabled) => !isDisabled);
+      setIsLoading((isLoading) => !isLoading);
       setIsConfirmedToDelete(false);
     }
   }
@@ -52,8 +52,8 @@ export default function DashboardStoreFrontDangerZone({
               variant={"destructive"}
               disabled={isDisabled}
             >
-              Confirm?
               {isLoading && <IconLoading />}
+              Confirm?
             </Button>
           ) : (
             <Button

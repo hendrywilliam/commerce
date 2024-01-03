@@ -91,7 +91,6 @@ export default function SignUpForm() {
           aria-disabled={isLoading ? "true" : "false"}
           className="flex gap-1"
           type="submit"
-          size="sm"
         >
           {isLoading && <IconLoading />}
           Sign up

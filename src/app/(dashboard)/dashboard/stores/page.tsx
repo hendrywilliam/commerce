@@ -49,7 +49,7 @@ export default async function DashboardStoresPage() {
         </div>
       </div>
       {userStores.length > 0 ? (
-        <div className="h-full w-full grid grid-cols-3 mt-6 gap-2">
+        <div className="h-full w-full grid grid-cols-3 mt-6 gap-4">
           {userStores.map((store) => {
             return <DashboardStoreCard store={store} key={store.id} />;
           })}

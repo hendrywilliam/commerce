@@ -36,7 +36,7 @@ export default function SignInForm() {
         if (res.status === "complete") {
           setActive({ session: res.createdSessionId });
         }
-        toast.success("Login successfully. Redirecting to lobby.");
+        toast.success("Login succeeded. Redirecting to lobby.");
         router.push("/");
       })
       .catch((err) => catchError(err))
@@ -80,7 +80,6 @@ export default function SignInForm() {
           disabled={isLoading}
           className="flex gap-1"
           type="submit"
-          size="sm"
         >
           {isLoading && <IconLoading />}
           Sign in

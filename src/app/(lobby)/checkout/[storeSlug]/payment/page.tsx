@@ -10,6 +10,7 @@ import type { CartItem, PaymentIntentMetadata } from "@/types";
 import { Checkout } from "@/components/lobby/checkout/checkout";
 import OrderDetails from "@/components/lobby/checkout/order-details";
 import { hasConnectedStripeAccount } from "@/actions/stripe/check-connected-account";
+import { updateStripeAccountStatusAction } from "@/actions/stripe/update-stripe-account-status";
 
 export default async function PaymentPage({
   params,
@@ -28,10 +29,11 @@ export default async function PaymentPage({
   if (!getCurrentStore) {
     notFound();
   }
+  const currentStoreId = getCurrentStore.id;
 
-  const hasConnectedAccount = await hasConnectedStripeAccount(
-    getCurrentStore.id,
-  );
+  await updateStripeAccountStatusAction(currentStoreId);
+
+  const hasConnectedAccount = await hasConnectedStripeAccount(currentStoreId);
 
   if (!paymentIntentId && !clientSecret) {
     redirect("/");

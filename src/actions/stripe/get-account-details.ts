@@ -13,7 +13,7 @@ export async function getAccountDetailsAction(storeId: Store["id"]) {
 
   if (!payment || !payment.stripeAccountId) {
     throw new Error(
-      "This store is not available for a moment. Please try again later.",
+      "The store is not available for a moment. Please try again later or try to contact the store to confirm your order.",
     );
   }
 

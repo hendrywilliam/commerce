@@ -122,8 +122,8 @@ export default function DashboardStoreFrontGeneralZone({
               className="inline-flex gap-2"
               onClick={updateSelectedStore}
             >
-              Confirm Changes
               {isLoading && <IconLoading />}
+              Confirm Changes
             </Button>
           )}
         </div>

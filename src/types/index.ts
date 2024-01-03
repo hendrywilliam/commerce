@@ -49,12 +49,6 @@ export interface SortFilterItem {
   reverse: boolean;
 }
 
-// // fileUrl, fileName, ...rest is deprecated.
-// export type ProductImage = Pick<
-//   UploadFileResponse,
-//   "key" | "name" | "size" | "url"
-// >;
-
 export interface PaymentIntentMetadata {
   metadata: {
     storeId: number;
