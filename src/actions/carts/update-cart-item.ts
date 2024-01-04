@@ -25,7 +25,7 @@ export async function updateCartItemAction(itemId: number, quantity: number) {
   );
 
   if (!isSelectedItemExistInCart) {
-    throw new Error("Item doesnt exist in cart. Please try again later.");
+    throw new Error("Item does not exist in cart. Please try again later.");
   }
 
   const selectedItemDetails =
@@ -34,6 +34,10 @@ export async function updateCartItemAction(itemId: number, quantity: number) {
       where: (products, { eq }) =>
         eq(products.id, isSelectedItemExistInCart.id),
     }));
+
+  if (!selectedItemDetails) {
+    throw new Error("Item does not exist in store. Please try again later.");
+  }
 
   const anyItemExcludingSelectedItem =
     isSelectedItemExistInCart &&
@@ -51,9 +55,10 @@ export async function updateCartItemAction(itemId: number, quantity: number) {
               ...isSelectedItemExistInCart,
               qty:
                 selectedItemDetails &&
-                quantity > (selectedItemDetails.stock as number)
+                quantity + isSelectedItemExistInCart?.qty >
+                  (selectedItemDetails.stock as number)
                   ? selectedItemDetails.stock
-                  : quantity,
+                  : quantity + isSelectedItemExistInCart?.qty,
             },
           ]),
       })

@@ -7,7 +7,7 @@ import { useState } from "react";
 import { Product } from "@/db/schema";
 import type { UploadData } from "@/types";
 import { Button } from "@/components/ui/button";
-import { formatCurrency, slugify } from "@/lib/utils";
+import { catchError, formatCurrency, slugify } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import ImagePlaceholder from "@/components/image-placeholder";
 import { addItemInCartAction } from "@/actions/carts/add-item-in-cart";
@@ -21,14 +21,18 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   async function addToCart() {
-    setIsLoading((val) => !val);
-    await addItemInCartAction({ id: product.id, qty: 1 })
-      .then(() => {
-        toast.success("Item added to your cart.");
-      })
-      .finally(() => {
-        setIsLoading((val) => !val);
-      });
+    setIsLoading((isLoading) => !isLoading);
+    try {
+      await addItemInCartAction({ id: product.id, qty: 1 })
+        .then(() => {
+          toast.success("Item added to your cart.");
+        })
+        .finally(() => {
+          setIsLoading((isLoading) => !isLoading);
+        });
+    } catch (error) {
+      catchError(error);
+    }
   }
 
   const parsedImageUrl = (

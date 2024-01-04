@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/core";
-import { carts } from "@/db/schema";
+import { carts, products } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -20,6 +20,7 @@ export async function addItemInCartAction(newCartItem: CartItem) {
       .where(eq(carts.id, Number(cartId)))
       .limit(1));
 
+  // Check cart availability
   const cartAvailableAndOpen =
     isCartExist && isCartExist.length && !isCartExist[0]?.isClosed;
 
@@ -37,10 +38,23 @@ export async function addItemInCartAction(newCartItem: CartItem) {
       return item.id !== newCartItem.id;
     }) as CartItem[];
 
-    // is the new item exist in the cart? -> add new qty later
     const newCartItemInCart = allItemsInCart.find(
       (item) => item.id === newCartItem.id,
     );
+
+    const newCartItemDetails = await db.query.products.findFirst({
+      where: eq(products.id, newCartItem.id),
+    });
+
+    if (!newCartItemDetails) {
+      throw new Error(
+        "Product does not exist in store. Please try again or contact the store.",
+      );
+    }
+
+    if (newCartItem.qty + newCartItemInCart?.qty! > newCartItemDetails.stock) {
+      throw new Error("Stock limit exceeds.");
+    }
 
     await db
       .update(carts)
