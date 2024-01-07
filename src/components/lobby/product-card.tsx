@@ -23,14 +23,11 @@ export default function ProductCard({ product }: ProductCardProps) {
   async function addToCart() {
     setIsLoading((isLoading) => !isLoading);
     try {
-      await addItemInCartAction({ id: product.id, qty: 1 })
-        .then(() => {
-          toast.success("Item added to your cart.");
-        })
-        .finally(() => {
-          setIsLoading((isLoading) => !isLoading);
-        });
+      await addItemInCartAction({ id: product.id, qty: 1 });
+      toast.success("Item added to your cart.");
+      setIsLoading((isLoading) => !isLoading);
     } catch (error) {
+      console.log(error);
       catchError(error);
     }
   }

@@ -40,8 +40,6 @@ export async function createStripeCustomerAction(rawUserData: CreateUser) {
     email,
   });
 
-  console.log(stripeCustomer);
-
   const userPrivateMetadata = userCreated.privateMetadata;
 
   await clerkClient.users.updateUser(userCreated.id, {

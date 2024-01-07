@@ -84,11 +84,9 @@ export default function DashboardStoreFrontGeneralZone({
           </div>
         </div>
         <div>
-          <p className="font-bold">Store name</p>
-          <p>
-            Rename your own store into more recognizeable name, so you can
-            compete against your competitor.
-          </p>
+          <label htmlFor="store-name" className="font-bold">
+            Store name
+          </label>
           <Input
             onChange={(e) =>
               setStorePublicInformation({
@@ -96,13 +94,15 @@ export default function DashboardStoreFrontGeneralZone({
                 name: e.target.value,
               })
             }
+            name="store-name"
             value={storePublicInformation.name}
             className="border focus:ring-2 focus-visible:ring-muted outline-none disabled:opacity-75 w-1/4 mt-2"
           />
         </div>
         <div>
-          <p className="font-bold">Store description</p>
-          <p>Explain your cool ass store to the world.</p>
+          <label htmlFor="store-description" className="font-bold">
+            Store description
+          </label>
           <Textarea
             value={storePublicInformation.description}
             onChange={(e) =>
@@ -111,6 +111,7 @@ export default function DashboardStoreFrontGeneralZone({
                 description: e.target.value,
               })
             }
+            name="store-description"
             className="border focus:ring-2 ring-muted focus-visible:ring-muted outline-none focus:outline-none p-2 disabled:opacity-75 h-56 w-1/2 rounded resize-none mt-2"
           />
         </div>
