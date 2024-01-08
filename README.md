@@ -1,6 +1,6 @@
 # Commerce
 
-Work In Progress — A fictional marketplace built with App Router (everything new in Next.js), which allows users to purchase products, sign up and list their own product for sale. Users can create their own stores and collect payments for every transaction.
+Work In Progress (Expect bugs!) — A fictional marketplace built with everything new in Next.js 14 (App Router), which allows users to purchase products, sign up and list their own product for sale. Users can create their own stores and collect payments for every transaction.
 
 Key features:
 
@@ -10,6 +10,6 @@ Key features:
 - [x] MySQL Database and Drizzle ORM.
 - [x] Uploadthing for easy and type safety image uploader.
 - [x] User authentication using Clerk.
-- [ ] Payment integration using Stripe (on going)
+- [x] Payment integration using Stripe
 
 More feature will be added soon.
