@@ -13,7 +13,6 @@ interface DashboardBillingPlanCard extends BillingPlan {
 
 export default function DashboardBillingPlanCard({
   plan,
-  stripeCustomerId,
 }: DashboardBillingPlanCard) {
   const [isPending, startTransition] = useTransition();
 

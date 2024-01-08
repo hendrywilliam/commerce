@@ -1,10 +1,8 @@
 "use client";
 
-import type { Product } from "@/db/schema";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -17,7 +15,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
+import type { Product } from "@/db/schema";
 import { Dispatch, SetStateAction, useEffect } from "react";
 
 interface DashboardStoreProductDataTableProps {
@@ -25,7 +23,6 @@ interface DashboardStoreProductDataTableProps {
   columns: ColumnDef<Product>[];
   rowSelection: RowSelectionState;
   rawRowDataSelection: Product[];
-  // The pattern is id:true / id:false
   setRowSelection: Dispatch<SetStateAction<Record<string, boolean>>>;
   setRawRowDataSelection: Dispatch<SetStateAction<Product[]>>;
 }
@@ -36,7 +33,6 @@ export default function DashboardStoreProductDataTable({
   rowSelection,
   setRowSelection,
   setRawRowDataSelection,
-  rawRowDataSelection,
 }: DashboardStoreProductDataTableProps) {
   const productDataTable = useReactTable({
     data,
@@ -62,7 +58,6 @@ export default function DashboardStoreProductDataTable({
   return (
     <>
       <Table>
-        <TableCaption>All your products in the store.</TableCaption>
         <TableHeader>
           {productDataTable.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
