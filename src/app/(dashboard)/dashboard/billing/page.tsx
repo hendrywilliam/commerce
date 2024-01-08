@@ -1,10 +1,11 @@
-import { unixToDateString } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
 import { UserObjectCustomized } from "@/types";
 import { billingPlan } from "@/config/billing";
+import { unixToDateString } from "@/lib/utils";
 import DashboardBillingPlanCard from "@/components/dashboard/billing-plan-card";
 import { getCurrentSubscriptionAction } from "@/actions/stripe/get-current-subscription";
+import CancelSubscriptionButton from "@/components/dashboard/billing/cancel-subscription-button";
 
 export default async function DashboardBillingPage() {
   const user = await currentUser();
@@ -43,6 +44,11 @@ export default async function DashboardBillingPage() {
               <p> — </p>
               <p>{unixToDateString(userSubscribedPlan.subscribedPlanEnd)}</p>
             </div>
+          )}
+        </div>
+        <div className="flex w-full justify-end">
+          {!!userPrivateMetadata?.stripeSubscriptionId && (
+            <CancelSubscriptionButton />
           )}
         </div>
       </div>
