@@ -6,10 +6,10 @@ import { usePathname } from "next/navigation";
 import { storeFrontTabs } from "@/config/site";
 import { useSearchParams } from "next/navigation";
 import type { Product, Store } from "@/db/schema";
-import DashboardStoreFrontTab from "@/components/dashboard/store-front-tab";
-import DashboardStoreProductTab from "@/components/dashboard/store-product-tab";
+import DashboardStoreFrontTab from "@/components/dashboard/stores/store-front-tab";
+import DashboardStoreProductTab from "@/components/dashboard/stores/store-product-tab";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import DashboardStoreTransactionTab from "@/components/dashboard/store-transaction-tab";
+import DashboardStoreTransactionTab from "@/components/dashboard/stores/store-transaction-tab";
 
 interface DashboardStoreTabsProps {
   store: Store;

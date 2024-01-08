@@ -27,7 +27,7 @@ import { useZodForm } from "@/hooks/use-zod-form";
 import { useUploadThing } from "@/lib/uploadthing";
 import { IconLoading } from "@/components/ui/icons";
 import { newProductValidation } from "@/lib/validations/product";
-import UploadProductImage from "@/components/dashboard/upload-product-image";
+import UploadProductImage from "@/components/dashboard/stores/upload-product-image";
 import { addNewProductAction } from "@/actions/products/add-new-product";
 
 type NewProductInput = z.infer<typeof newProductValidation>;

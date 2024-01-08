@@ -3,7 +3,7 @@ import { currentUser } from "@clerk/nextjs";
 import { UserObjectCustomized } from "@/types";
 import { billingPlan } from "@/config/billing";
 import { unixToDateString } from "@/lib/utils";
-import DashboardBillingPlanCard from "@/components/dashboard/billing-plan-card";
+import DashboardBillingPlanCard from "@/components/dashboard/billing/billing-plan-card";
 import { getCurrentSubscriptionAction } from "@/actions/stripe/get-current-subscription";
 import CancelSubscriptionButton from "@/components/dashboard/billing/cancel-subscription-button";
 

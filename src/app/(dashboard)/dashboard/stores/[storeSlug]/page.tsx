@@ -8,7 +8,7 @@ import { payments, stores } from "@/db/schema";
 import { WarningIcon } from "@/components/ui/icons";
 import { buttonVariants } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import DashboardStoreTabs from "@/components/dashboard/dashboard-store-tabs";
+import DashboardStoreTabs from "@/components/dashboard/stores/dashboard-store-tabs";
 import { getStoreProductsAction } from "@/actions/products/get-store-products";
 
 export default async function DashboardDynamicStorePage({

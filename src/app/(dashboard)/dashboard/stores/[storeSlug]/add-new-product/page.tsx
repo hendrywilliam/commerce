@@ -1,4 +1,4 @@
-import CreateNewProductForm from "@/components/dashboard/create-new-product-form";
+import CreateNewProductForm from "@/components/dashboard/stores/create-new-product-form";
 
 export default function StoreAddNewProductPage() {
   return (
