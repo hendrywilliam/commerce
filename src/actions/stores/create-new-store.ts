@@ -11,6 +11,7 @@ import { currentUser } from "@clerk/nextjs";
 import { billingPlan } from "@/config/billing";
 import { auth, clerkClient } from "@clerk/nextjs";
 import type { UserObjectCustomized } from "@/types";
+import { check_store_availability_action } from "./check-store-availability";
 import { getCurrentSubscriptionAction } from "@/actions/stripe/get-current-subscription";
 
 export async function createNewStoreAction(
@@ -23,13 +24,7 @@ export async function createNewStoreAction(
     throw new Error("You must be signed in to create a new store");
   }
 
-  const isTheStoreExist = await db.query.stores.findFirst({
-    where: (stores, { eq }) => eq(stores.name, storeData.name as string),
-  });
-
-  if (isTheStoreExist) {
-    throw new Error("Store is already exist with that name.");
-  }
+  await check_store_availability_action({ storeName: storeData.name });
 
   const userPrivateMetadata = user?.privateMetadata;
   let currentUserPlan: string;

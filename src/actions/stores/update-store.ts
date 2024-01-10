@@ -8,6 +8,7 @@ import { slugify } from "@/lib/utils";
 import { TweakedOmit } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import { storeValidation } from "@/lib/validations/stores";
+import { check_store_availability_action } from "./check-store-availability";
 
 export async function updateOwnedStoreAction(
   storeRawInput: TweakedOmit<Store, "createdAt" | "active" | "slug">,
@@ -15,13 +16,10 @@ export async function updateOwnedStoreAction(
   try {
     const parseStoreRawInput = storeValidation.parse(storeRawInput);
 
-    const isTheStoreExist = await db.query.stores.findFirst({
-      where: (stores, { eq }) => eq(stores.id, storeRawInput.id),
+    await check_store_availability_action({
+      storeName: storeRawInput.name,
+      storeId: storeRawInput.id,
     });
-
-    if (!isTheStoreExist) {
-      throw new Error("Invalid store. Please try again.");
-    }
 
     await db
       .update(stores)
