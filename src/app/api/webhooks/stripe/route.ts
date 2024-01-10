@@ -1,21 +1,23 @@
 // Webhook stripe
 
 import Stripe from "stripe";
+import { db } from "@/db/core";
 import * as dotenv from "dotenv";
-import { stripe } from "@/lib/stripe";
-import type { Readable } from "stream";
-import { headers } from "next/headers";
-import { NextResponse } from "next/server";
-import { clerkClient } from "@clerk/nextjs";
-import { OmitAndExtend } from "@/lib/utils";
 import type {
   PaymentIntentMetadata,
   CheckoutSessionCompletedMetadata,
   CartItem,
 } from "@/types";
-import { db } from "@/db/core";
-import { type Cart, addresses, carts, orders, products } from "@/db/schema";
+import { stripe } from "@/lib/stripe";
+import { resend } from "@/lib/resend";
+import type { Readable } from "stream";
+import { headers } from "next/headers";
 import { eq, inArray } from "drizzle-orm";
+import { NextResponse } from "next/server";
+import { clerkClient } from "@clerk/nextjs";
+import { OmitAndExtend } from "@/lib/utils";
+import { type Cart, addresses, carts, orders, products } from "@/db/schema";
+import OrderSuccessEmail from "../../../../../react-email/emails/order-success-email";
 
 dotenv.config();
 
@@ -75,9 +77,7 @@ export async function POST(req: Request) {
       break;
     case "payment_intent.succeeded":
       console.log(`🔔  Webhook received: ${event.type}`);
-
       // Handling anything after payment succeeded.
-
       const paymentIntentObject = data.object as OmitAndExtend<
         Stripe.PaymentIntentSucceededEvent.Data["object"],
         "metadata",
@@ -137,7 +137,7 @@ export async function POST(req: Request) {
         paymentIntentObject.metadata.checkoutItem,
       ) as CartItem[];
 
-      const correspondingProducts = await db
+      const orderedProducts = await db
         .select()
         .from(products)
         .where(inArray(products.id, parsedCartItemId))
@@ -165,9 +165,24 @@ export async function POST(req: Request) {
         stripePaymentIntentStatus: paymentIntentObject.status,
         email: paymentIntentObject.metadata.email,
         addressId,
-        items: JSON.stringify(correspondingProducts),
+        items: JSON.stringify(orderedProducts),
       });
 
+      // Gather all informations needed before pass it in email params.
+      const customerEmail = paymentIntentObject.metadata.email;
+      const orderId = paymentIntentObject.id;
+
+      // Send order succeded email.
+      await resend.emails.send({
+        from: process.env.MARKETING_EMAIL!,
+        to: "hendriwilliam29@gmail.com",
+        subject: "Thank you for your order!",
+        react: OrderSuccessEmail({
+          orderItems: orderedProducts,
+          userEmail: customerEmail,
+          orderId,
+        }),
+      });
       break;
     default:
       console.log(`🔔  Webhook received: ${event.type}`);
