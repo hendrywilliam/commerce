@@ -33,10 +33,10 @@ import { addNewProductAction } from "@/actions/products/add-new-product";
 type NewProductInput = z.infer<typeof newProductValidation>;
 
 export default function CreateNewProductForm() {
-  const [selectedFiles, setSelectedFiles] = useState([] as FileWithPreview[]);
   const [isLoading, setIsLoading] = useState(false);
   const { startUpload } = useUploadThing("imageUploader");
   const routeParams = useParams<{ storeSlug: string }>();
+  const [selectedFiles, setSelectedFiles] = useState([] as FileWithPreview[]);
 
   const {
     register,

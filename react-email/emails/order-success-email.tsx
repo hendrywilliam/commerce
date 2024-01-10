@@ -31,24 +31,8 @@ interface OrderSuccessEmailProps {
 
 export const OrderSuccessEmail = ({
   userEmail = "Guest",
-  orderItems = [
-    {
-      id: 6,
-      storeId: 5,
-      name: "kucing",
-      slug: "kucing",
-      description: "asdsdsadad",
-      price: "22.00",
-      stock: 33,
-      rating: 0,
-      category: "clothing",
-      image:
-        '[{"fileName":"kucing_guangdong.jpeg","name":"kucing_guangdong.jpeg","fileSize":78118,"size":78118,"fileKey":"8903f484-57c2-4510-8496-133f07c6f387-mn3oxm.jpeg","key":"8903f484-57c2-4510-8496-133f07c6f387-mn3oxm.jpeg","fileUrl":"https://utfs.io/f/8903f484-57c2-4510-8496-133f07c6f387-mn3oxm.jpeg","url":"https://utfs.io/f/8903f484-57c2-4510-8496-133f07c6f387-mn3oxm.jpeg"}]',
-      createdAt: new Date(),
-      qty: 1,
-    },
-  ],
-  orderId = "pi_3OWcz9AaT0py2Y5O2URORKej",
+  orderItems,
+  orderId,
 }: OrderSuccessEmailProps) => {
   return (
     <Html>

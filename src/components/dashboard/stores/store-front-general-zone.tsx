@@ -2,6 +2,7 @@
 
 import { toast } from "sonner";
 import { Store } from "@/db/schema";
+import SeedButton from "./seed-button";
 import { catchError } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -128,6 +129,7 @@ export default function DashboardStoreFrontGeneralZone({
             </Button>
           )}
         </div>
+        {/* <SeedButton storeId={store.id} /> */}
       </div>
     </div>
   );
