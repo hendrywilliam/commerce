@@ -10,6 +10,7 @@ Key features:
 - [x] MySQL Database and Drizzle ORM.
 - [x] Uploadthing for easy and type safety image uploader.
 - [x] User authentication using Clerk.
-- [x] Payment integration using Stripe
+- [x] Payment integration using Stripe.
+- [x] Email system using React-Email and Resend.
 
 More feature will be added soon.
