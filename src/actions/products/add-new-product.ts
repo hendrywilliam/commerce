@@ -12,6 +12,7 @@ import { revalidatePath } from "next/cache";
 import type { TweakedOmit } from "@/lib/utils";
 import { products, stores } from "@/db/schema";
 import { newProductValidation } from "@/lib/validations/product";
+import { check_product_availability_action } from "./check-product-availability";
 
 export async function addNewProductAction(
   input: TweakedOmit<NewProduct, "slug">,
@@ -30,13 +31,9 @@ export async function addNewProductAction(
     redirect("/sign-in");
   }
 
-  const newProductIsExistInStore = await db.query.products.findFirst({
-    where: (products, { eq }) => eq(products.name, input.name as string),
+  await check_product_availability_action({
+    productName: input.name,
   });
-
-  if (newProductIsExistInStore) {
-    throw new Error("Product already exist in the store.");
-  }
 
   const store = await db.query.stores
     .findFirst({

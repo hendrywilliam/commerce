@@ -8,8 +8,8 @@ export async function check_store_availability_action({
   storeId,
   storeName,
 }: {
-  storeId?: number;
   storeName: string;
+  storeId?: number;
 }) {
   const store = await db.query.stores.findFirst({
     where: storeId
