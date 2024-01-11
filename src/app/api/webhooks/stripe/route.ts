@@ -175,7 +175,7 @@ export async function POST(req: Request) {
       // Send order succeded email.
       await resend.emails.send({
         from: process.env.MARKETING_EMAIL!,
-        to: "hendriwilliam29@gmail.com",
+        to: customerEmail,
         subject: "Thank you for your order!",
         react: OrderSuccessEmail({
           orderItems: orderedProducts,
