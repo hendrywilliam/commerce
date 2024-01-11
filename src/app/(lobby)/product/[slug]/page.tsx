@@ -38,7 +38,7 @@ export default async function ProductPage({
 
   return (
     <div className="flex flex-col container h-full w-full py-8">
-      <div className="flex h-full w-full my-2 gap-8">
+      <div className="flex flex-col lg:flex-row h-full w-full my-2 gap-8">
         <div className="group relative rounded h-[600px] w-full overflow-hidden">
           {parsedImageUrl ? (
             <Image

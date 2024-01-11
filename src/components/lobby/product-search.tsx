@@ -4,7 +4,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { IconMagnifyingGlass } from "@/components/ui/icons";
+import { SearchIcon } from "@/components/ui/icons";
 import { getProductsBySearchTermAction } from "@/actions/products/get-products-search";
 import { Product } from "@/db/schema";
 import { useRouter } from "next/navigation";
@@ -72,19 +72,22 @@ export default function ProductSearch() {
       <div>
         <Button
           variant={"outline"}
-          className="inline-flex w-64 h-full gap-2"
+          className="inline-flex w-9 p-2 lg:w-64 h-full"
           onClick={() => void setIsOpen((val) => !val)}
         >
-          Search any products..
-          <kbd className="w-max text-xs border rounded px-1 bg-muted-foreground/10">
-            Ctrl + K
-          </kbd>
+          <span className="hidden lg:inline-flex gap-2">
+            Search any products..
+            <kbd className="w-max text-xs border rounded px-1 bg-muted-foreground/10">
+              Ctrl + K
+            </kbd>
+          </span>
+          <SearchIcon className="flex lg:hidden w-[1em]" />
         </Button>
       </div>
       <Dialog open={isOpen} onOpenChange={(isOpen) => setIsOpen(isOpen)}>
         <DialogContent className="p-1 gap-1">
           <div className="inline-flex py-1 px-2">
-            <IconMagnifyingGlass className="flex self-center" />
+            <SearchIcon className="flex self-center" />
             <Input
               onChange={(e) => setSearchTerm(e.target.value)}
               className="border-0 outline-none focus-visible:ring-0 shadow-none"

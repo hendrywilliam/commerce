@@ -1,4 +1,4 @@
-import CreateNewProductForm from "@/components/dashboard/stores/create-new-product-form";
+import ProductForm from "@/components/dashboard/stores/product-form";
 
 export default function StoreAddNewProductPage() {
   return (
@@ -13,7 +13,7 @@ export default function StoreAddNewProductPage() {
         </div>
       </div>
       <div className="mt-6 w-1/2">
-        <CreateNewProductForm />
+        <ProductForm productStatus="new-product" />
       </div>
     </div>
   );

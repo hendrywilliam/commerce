@@ -17,7 +17,7 @@ export default async function IndexPage() {
   // .where(gte(products.rating, 3))) as Omit<Product, "createdAt">[];
 
   return (
-    <div className="flex flex-col container h-full w-full items-center py-8">
+    <div className="flex flex-col container h-full w-full items-center p-4">
       <section className="flex flex-col h-max w-full gap-4 mt-24">
         <h1 className="font-semibold text-4xl lg:text-6xl flex-wrap text-center w-full">
           A fictional marketplace to sell and buy, built with everything new in

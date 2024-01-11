@@ -135,7 +135,7 @@ export function IconTshirt(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-export function IconMagnifyingGlass(props: SVGProps<SVGSVGElement>) {
+export function SearchIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
