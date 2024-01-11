@@ -7,9 +7,9 @@ import { useState } from "react";
 import { Product } from "@/db/schema";
 import type { UploadData } from "@/types";
 import { Button } from "@/components/ui/button";
-import { catchError, formatCurrency, slugify } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import ImagePlaceholder from "@/components/image-placeholder";
+import { catchError, formatCurrency, parse_to_json } from "@/lib/utils";
 import { addItemInCartAction } from "@/actions/carts/add-item-in-cart";
 import { IconCart, IconLoading, IconView } from "@/components/ui/icons";
 
@@ -32,9 +32,8 @@ export default function ProductCard({ product }: ProductCardProps) {
     }
   }
 
-  const parsedImageUrl = (
-    JSON.parse(product.image as string) as UploadData[]
-  )[0]?.url;
+  const parsedImage = parse_to_json<UploadData[]>(product.image as string)[0]
+    .url;
 
   return (
     <div className="group relative h-80 w-full cursor">
@@ -43,9 +42,9 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
       <Link href={`/product/${product.slug}`}>
         <div className="relative rounded h-4/6 overflow-hidden">
-          {parsedImageUrl ? (
+          {parsedImage ? (
             <Image
-              src={parsedImageUrl}
+              src={parsedImage}
               fill
               sizes="100vw"
               alt={product.name as string}

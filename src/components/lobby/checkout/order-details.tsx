@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { Product } from "@/db/schema";
 import type { UploadData } from "@/types";
-import { formatCurrency, type Extends } from "@/lib/utils";
 import ImagePlaceholder from "@/components/image-placeholder";
+import { formatCurrency, type Extends, parse_to_json } from "@/lib/utils";
 
 export default function OrderDetails({
   orderItems,
@@ -12,17 +12,15 @@ export default function OrderDetails({
   return (
     <div className="w-full h-max">
       {orderItems.map((item) => {
-        const parsedImageUrl = (
-          JSON.parse(item.image as string) as UploadData[]
-        )[0]?.url;
-
+        const parsedImage = parse_to_json<UploadData[]>(item.image as string)[0]
+          .url;
         return (
           <div key={item.id} className="inline-flex justify-between w-full">
             <div className="inline-flex gap-2">
               <div className="relative w-12 h-12">
-                {parsedImageUrl ? (
+                {parsedImage ? (
                   <Image
-                    src={parsedImageUrl}
+                    src={parsedImage}
                     alt={item.name ?? "Product Image"}
                     className="object-cover rounded"
                     fill

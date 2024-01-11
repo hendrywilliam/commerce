@@ -2,6 +2,7 @@ import { db } from "@/db/core";
 import Image from "next/image";
 import Modal from "@/components/ui/modal";
 import type { UploadData } from "@/types";
+import { parse_to_json } from "@/lib/utils";
 import ImagePlaceholder from "@/components/image-placeholder";
 
 export default async function ProductModal({
@@ -15,17 +16,18 @@ export default async function ProductModal({
     where: (products, { eq }) => eq(products.slug, productSlug),
   });
 
-  const parsedImageUrl = (
-    JSON.parse(productDetails?.image as string) as UploadData[]
-  )[0]?.url;
+  const parsedImage = parse_to_json<UploadData[]>(
+    productDetails?.image as string,
+  )[0].url;
+
   return (
     <Modal>
       <div className="bg-background h-full w-full rounded mx-auto">
         <div className="h-full w-full">
           <div className="relative h-full w-full">
-            {parsedImageUrl ? (
+            {parsedImage ? (
               <Image
-                src={parsedImageUrl}
+                src={parsedImage}
                 fill
                 alt={productDetails?.name as string}
                 className="object-fill rounded"

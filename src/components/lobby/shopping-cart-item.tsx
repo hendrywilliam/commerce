@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { truncate } from "@/lib/utils";
+import type { UploadData } from "@/types";
+import { parse_to_json } from "@/lib/utils";
 import { formatCurrency } from "@/lib/utils";
 import type { CartLineDetailedItems } from "@/types";
 import ImagePlaceholder from "@/components/image-placeholder";
@@ -15,7 +17,9 @@ export default function ShoppingCartItem({
   const sumPriceForItem =
     Number(cartLineDetailedItem.price) * cartLineDetailedItem.qty;
 
-  const parsedImageUrl = JSON.parse(cartLineDetailedItem.image)[0]?.fileUrl;
+  const parsedImageUrl = parse_to_json<UploadData[]>(
+    cartLineDetailedItem.image,
+  )[0].url;
 
   return (
     <div className="inline-flex w-full h-20 gap-2 py-2 border-b">

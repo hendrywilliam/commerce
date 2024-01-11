@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { formatCurrency } from "@/lib/utils";
-import { CartLineDetailedItems } from "@/types";
+import { formatCurrency, parse_to_json } from "@/lib/utils";
 import ImagePlaceholder from "@/components/image-placeholder";
+import type { CartLineDetailedItems, UploadData } from "@/types";
 import CartItemAction from "@/components/lobby/cart/cart-item-action";
 
 interface CartItemProps {
@@ -9,14 +9,14 @@ interface CartItemProps {
 }
 
 export default function CartItem({ cartItem }: CartItemProps) {
-  const parsedImageUrl = JSON.parse(cartItem.image)[0]?.fileUrl;
+  const parsedImage = parse_to_json<UploadData[]>(cartItem.image)[0].url;
 
   return (
     <div className="flex py-4 gap-4 w-full h-full">
       <div className="relative w-24 h-20 border rounded">
-        {parsedImageUrl ? (
+        {parsedImage ? (
           <Image
-            src={parsedImageUrl}
+            src={parsedImage}
             fill
             alt={cartItem.name ?? "Product Image"}
             className="object-cover rounded"

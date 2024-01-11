@@ -4,7 +4,7 @@ import { baseUrl } from "@/config/site";
 import { twMerge } from "tailwind-merge";
 import { User } from "@clerk/nextjs/server";
 import { type ClassValue, clsx } from "clsx";
-import type { CartLineDetailedItems } from "@/types";
+import type { CartLineDetailedItems, UploadData } from "@/types";
 import { isClerkAPIResponseError } from "@clerk/nextjs";
 
 export function cn(...inputs: ClassValue[]) {
@@ -85,6 +85,11 @@ export function calculateOrderAmounts(checkoutItems: CartLineDetailedItems[]) {
     feeAmount: fee,
   };
 }
+
+export function parse_to_json<TParsedData>(data: string): TParsedData {
+  return JSON.parse(data);
+}
+
 // Type utils
 export type OmitAndExtend<T, U extends keyof T, V extends {}> = Omit<T, U> & V;
 // Omit is not giving us any hint, because the second generic parameter (K) is accepting "any" instead of key from (T).

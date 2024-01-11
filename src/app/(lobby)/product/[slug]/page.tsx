@@ -7,7 +7,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import type { UploadData } from "@/types";
 import { notFound } from "next/navigation";
+import { parse_to_json } from "@/lib/utils";
 import ImagePlaceholder from "@/components/image-placeholder";
 import { Product, Store, products, stores } from "@/db/schema";
 import ProductPanel from "@/components/lobby/product/product-panel";
@@ -33,16 +35,16 @@ export default async function ProductPage({
     notFound();
   }
 
-  const parsedImageUrl =
-    product.image && JSON.parse(product.image as string)[0]?.url;
+  const parsedImage = parse_to_json<UploadData[]>(product.image as string)[0]
+    .url;
 
   return (
     <div className="flex flex-col container h-full w-full py-8">
       <div className="flex flex-col lg:flex-row h-full w-full my-2 gap-8">
         <div className="group relative rounded h-[600px] w-full overflow-hidden">
-          {parsedImageUrl ? (
+          {parsedImage ? (
             <Image
-              src={parsedImageUrl as string}
+              src={parsedImage}
               fill
               alt={product.name ?? "Product Image"}
               className="w-full h-full object-fill rounded transition duration-300 ease-in-out group-hover:scale-105"
