@@ -8,6 +8,12 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { useTransition } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { rowsPerPage } from "@/config/products";
@@ -15,12 +21,6 @@ import { IconSort } from "@/components/ui/icons";
 import { search_params_builder } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { sortingProductsItem } from "@/config/products";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
 
 export default function StoreProductFilterPanel() {
   const [isPending, startTransition] = useTransition();
