@@ -7,6 +7,7 @@ import Pagination from "@/components/pagination";
 import { IconStores } from "@/components/ui/icons";
 import ProductCard from "@/components/lobby/product-card";
 import { get_products_page_fetcher } from "@/fetchers/products/get-products-page";
+import StoreProductFilterPanel from "@/components/lobby/store/store-product-filter-panel";
 import { get_all_products_and_store_fetcher } from "@/fetchers/products/get-all-products-and-stores";
 
 export default async function StorePage({
@@ -16,12 +17,19 @@ export default async function StorePage({
   params: { storeSlug: string };
   searchParams: {
     page: string;
+    page_size: string;
+    sort: string;
   };
 }) {
   const storeSlug = params.storeSlug;
+
+  const sort = searchParams.sort ?? "name.asc";
   const currentPage = isNaN(Number(searchParams.page))
     ? 1
     : Number(searchParams.page);
+  const pageSize = isNaN(Number(searchParams.page_size))
+    ? 10
+    : Number(searchParams.page_size);
 
   const storeData = await db.query.stores.findFirst({
     where: eq(stores.slug, storeSlug),
@@ -35,9 +43,12 @@ export default async function StorePage({
     await get_all_products_and_store_fetcher({
       sellers: storeSlug,
       page: currentPage,
+      pageSize,
+      sort,
     }),
     await get_products_page_fetcher({
       sellers: storeSlug,
+      pageSize,
     }),
   ]);
 
@@ -45,13 +56,18 @@ export default async function StorePage({
     <div className="flex flex-col container h-full w-full py-8">
       <div className="flex flex-col h-full w-full my-2 gap-2">
         <div className="mt-4">
-          <div className="flex flex-col my-4 gap-2">
-            <h1 className="font-bold text-xl">{storeData?.name}</h1>
-            <div>
-              <Button variant={"outline"} className="inline-flex gap-2">
-                <IconStores />
-                Chat Store
-              </Button>
+          <div className="flex justify-between">
+            <div className="flex-col my-4 gap-2">
+              <h1 className="font-bold text-xl">{storeData?.name}</h1>
+              <div>
+                <Button variant={"outline"} className="inline-flex gap-2">
+                  <IconStores />
+                  Chat Store
+                </Button>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <StoreProductFilterPanel />
             </div>
           </div>
           {storeProducts.length ? (

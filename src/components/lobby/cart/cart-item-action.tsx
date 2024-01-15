@@ -8,7 +8,7 @@ import {
   IconLoading,
 } from "@/components/ui/icons";
 import { toast } from "sonner";
-import { catchError, slugify } from "@/lib/utils";
+import { catchError } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { CartLineDetailedItems } from "@/types";

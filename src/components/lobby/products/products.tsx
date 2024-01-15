@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import Pagination from "@/components/pagination";
 import { IconSort } from "@/components/ui/icons";
 import { useCallback, useTransition } from "react";
+import { search_params_builder } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { buttonVariants } from "@/components/ui/button";
 import ProductCard from "@/components/lobby/product-card";
@@ -61,16 +62,6 @@ export default function Products({
   const searchParams = useSearchParams();
   const urlSearchParams = new URLSearchParams(searchParams);
 
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      urlSearchParams.set(name, value);
-
-      return urlSearchParams.toString();
-    },
-    // eslint-disable-next-line
-    [searchParams],
-  );
-
   const allProducts = allStoresAndProducts.map((storeAndProduct) => {
     return storeAndProduct.products;
   });
@@ -85,7 +76,10 @@ export default function Products({
         const joinedCategories = selectedCategories.join(".");
         startTransition(() => {
           void router.push(
-            `${pathname}?${createQueryString("category", joinedCategories)}`,
+            `${pathname}?${search_params_builder(
+              "category",
+              joinedCategories,
+            )}`,
           );
         });
       } else {
@@ -107,7 +101,7 @@ export default function Products({
         console.log(joinedSellers);
         startTransition(() => {
           void router.push(
-            `${pathname}?${createQueryString("sellers", joinedSellers)}`,
+            `${pathname}?${search_params_builder("sellers", joinedSellers)}`,
           );
         });
       } else {
@@ -125,10 +119,10 @@ export default function Products({
   useEffect(() => {
     const bounce = setTimeout(() => {
       if (isNewValue) {
-        createQueryString("pmin", String(minPrice));
+        search_params_builder("pmin", String(minPrice));
         startTransition(() => {
           void router.push(
-            `${pathname}?${createQueryString("pmax", String(maxPrice))}`,
+            `${pathname}?${search_params_builder("pmax", String(maxPrice))}`,
           );
         });
       }
@@ -148,7 +142,7 @@ export default function Products({
             onValueChange={(value) =>
               startTransition(() => {
                 void router.push(
-                  `${pathname}?${createQueryString("page_size", value)}`,
+                  `${pathname}?${search_params_builder("page_size", value)}`,
                 );
               })
             }
@@ -328,7 +322,7 @@ export default function Products({
                 key={i}
                 onClick={() =>
                   void router.push(
-                    `${pathname}?${createQueryString(
+                    `${pathname}?${search_params_builder(
                       "sort",
                       `${sortingItem.sortKey}.${
                         sortingItem.reverse ? "desc" : "asc"
