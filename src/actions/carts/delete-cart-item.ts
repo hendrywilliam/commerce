@@ -1,11 +1,11 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { db } from "@/db/core";
-import { Product, carts } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { CartItem } from "@/types";
+import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { Product, carts } from "@/db/schema";
 
 export async function deleteCartItemAction(productId: Product["id"]) {
   const cartId = cookies().get("cart_id")?.value;

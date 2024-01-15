@@ -12,7 +12,7 @@ import { billingPlan } from "@/config/billing";
 import { auth, clerkClient } from "@clerk/nextjs";
 import type { UserObjectCustomized } from "@/types";
 import { check_store_availability_action } from "./check-store-availability";
-import { getCurrentSubscriptionAction } from "@/actions/stripe/get-current-subscription";
+import { get_current_subscription_fetcher } from "@/fetchers/stripe/get-current-subscription";
 
 export async function createNewStoreAction(
   storeData: TweakedOmit<NewStore, "slug" | "createdAt">,
@@ -31,7 +31,7 @@ export async function createNewStoreAction(
 
   if (userPrivateMetadata.stripeSubscriptionId) {
     // Retrieve current user subscribed plan
-    const { subscribedPlanId } = await getCurrentSubscriptionAction(
+    const { subscribedPlanId } = await get_current_subscription_fetcher(
       userPrivateMetadata.stripeSubscriptionId,
     );
     currentUserPlan = subscribedPlanId;

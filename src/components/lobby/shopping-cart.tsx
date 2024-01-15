@@ -2,13 +2,13 @@ import Link from "next/link";
 import { IconCart } from "@/components/ui/icons";
 import type { CartLineDetailedItems } from "@/types";
 import { buttonVariants } from "@/components/ui/button";
-import { getCartAction } from "@/actions/carts/get-cart";
+import { get_cart_fetcher } from "@/fetchers/carts/get-cart";
 import ShoppingCartItem from "@/components/lobby/shopping-cart-item";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import ShoppingCartSummary from "@/components/lobby/shopping-cart-summary";
 
 export default async function ShoppingCart() {
-  const { parsedCartItems, cartItemDetails } = await getCartAction();
+  const { parsedCartItems, cartItemDetails } = await get_cart_fetcher();
 
   const sumQty = parsedCartItems.reduce((acc, val) => acc + Number(val.qty), 0);
 
@@ -23,7 +23,7 @@ export default async function ShoppingCart() {
     {} as Record<
       Pick<CartLineDetailedItems, "storeName">["storeName"],
       CartLineDetailedItems[]
-    >
+    >,
   );
 
   return (
@@ -64,7 +64,7 @@ export default async function ShoppingCart() {
                         })}
                       </div>
                     );
-                  }
+                  },
                 )}
               </div>
             </div>

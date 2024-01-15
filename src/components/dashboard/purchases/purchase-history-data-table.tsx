@@ -49,15 +49,6 @@ export default function PurchaseHistoryDataTable({
         ))}
       </TableHeader>
       <TableBody>
-        {/* {historyDataTable?.getRowModel().rows.map((row) => (
-          <TableRow key={row.id}>
-            {row.getVisibleCells().map((cell) => (
-              <TableCell key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </TableCell>
-            ))}
-          </TableRow>
-        ))} */}
         {historyDataTable.getRowModel().rows.map((row) => (
           <TableRow key={row.id}>
             {row.getVisibleCells().map((cell) => (

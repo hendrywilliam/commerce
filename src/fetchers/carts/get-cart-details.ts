@@ -1,13 +1,13 @@
 "use server";
 
 import { db } from "@/db/core";
-import { products } from "@/db/schema";
-import { stores } from "@/db/schema";
 import { CartItem } from "@/types";
+import { stores } from "@/db/schema";
+import { products } from "@/db/schema";
 import { eq, inArray } from "drizzle-orm";
 import { CartLineDetailedItems } from "@/types";
 
-export async function getCartDetailsAction(
+export async function get_cart_details_fetcher(
   cartId: number,
   cartItems: CartItem[],
 ) {

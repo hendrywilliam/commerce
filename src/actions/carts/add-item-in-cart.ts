@@ -1,11 +1,11 @@
 "use server";
 
 import { db } from "@/db/core";
-import { carts, products } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import type { CartItem } from "@/types";
+import { revalidatePath } from "next/cache";
+import { carts, products } from "@/db/schema";
 
 export async function addItemInCartAction(newCartItem: CartItem) {
   const cartId = cookies().get("cart_id")?.value;

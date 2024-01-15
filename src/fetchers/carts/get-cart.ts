@@ -1,13 +1,13 @@
 "use server";
 
 import { db } from "@/db/core";
-import { carts } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { carts } from "@/db/schema";
 import { cookies } from "next/headers";
 import type { CartItem } from "@/types";
-import { getCartDetailsAction } from "@/actions/carts/get-cart-details";
+import { get_cart_details_fetcher } from "@/fetchers/carts/get-cart-details";
 
-export async function getCartAction() {
+export async function get_cart_fetcher() {
   const cartId = cookies().get("cart_id")?.value;
 
   // Check if the cart is exist, and not the imaginary / made up one.
@@ -34,7 +34,7 @@ export async function getCartAction() {
     : [];
 
   // Get all item details based on the parsedCartItems above.
-  const cartItemDetails = await getCartDetailsAction(
+  const cartItemDetails = await get_cart_details_fetcher(
     Number(cartId),
     parsedCartItems,
   );

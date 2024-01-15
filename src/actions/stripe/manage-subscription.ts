@@ -5,7 +5,7 @@ import { currentUser } from "@clerk/nextjs";
 import { getAbsoluteUrl } from "@/lib/utils";
 import { UserObjectCustomized } from "@/types";
 import { manageSubscriptionValidation } from "@/lib/validations/user";
-import { getCurrentSubscriptionAction } from "@/actions/stripe/get-current-subscription";
+import { get_current_subscription_fetcher } from "@/fetchers/stripe/get-current-subscription";
 
 // Price id coming from generated product on Stripe
 export async function manageSubscriptionAction({
@@ -55,7 +55,7 @@ export async function manageSubscriptionAction({
   }
 
   const { isActive, subscribedPlanEnd, subscribedPlanStart } =
-    await getCurrentSubscriptionAction(stripeSubscriptionId);
+    await get_current_subscription_fetcher(stripeSubscriptionId);
 
   if (isActive && !!subscribedPlanEnd && !!subscribedPlanStart) {
     // When the user has subscribed any plan, we redirect them to billing portal

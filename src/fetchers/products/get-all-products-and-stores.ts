@@ -5,7 +5,7 @@ import { Product, products, stores } from "@/db/schema";
 import { unstable_noStore as noStore } from "next/cache";
 import { and, asc, desc, eq, gte, inArray, lte } from "drizzle-orm";
 
-export async function getAllProductsAndStoresAction({
+export async function get_all_products_and_store_fetcher({
   sort,
   pageSize,
   minPrice,

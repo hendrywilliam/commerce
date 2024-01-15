@@ -8,8 +8,8 @@ import { payments, stores } from "@/db/schema";
 import { WarningIcon } from "@/components/ui/icons";
 import { buttonVariants } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { get_store_product_fetcher } from "@/fetchers/products/get-store-products";
 import DashboardStoreTabs from "@/components/dashboard/stores/dashboard-store-tabs";
-import { getStoreProductsAction } from "@/actions/products/get-store-products";
 
 export default async function DashboardDynamicStorePage({
   params,
@@ -26,7 +26,7 @@ export default async function DashboardDynamicStorePage({
     notFound();
   }
 
-  const storeProductData = await getStoreProductsAction(params.storeSlug);
+  const storeProductData = await get_store_product_fetcher(params.storeSlug);
 
   // Get payment record
   const storePayment = await db.query.payments.findFirst({

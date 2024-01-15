@@ -1,18 +1,18 @@
 "use server";
 
-import { stripe } from "@/lib/stripe";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { currentUser } from "@clerk/nextjs";
 import {
   CartLineDetailedItems,
   PaymentIntentMetadata,
   UserObjectCustomized,
 } from "@/types";
+import { stripe } from "@/lib/stripe";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { currentUser } from "@clerk/nextjs";
 import { getPrimaryEmail } from "@/lib/utils";
 import { calculateOrderAmounts } from "@/lib/utils";
-import { getAccountDetailsAction } from "./get-account-details";
 import { cartDetailedItemsValidation } from "@/lib/validations/stores";
+import { get_account_details_fetcher } from "@/fetchers/stripe/get-account-details";
 
 export async function createPaymentIntentAction({
   storeId,
@@ -43,7 +43,7 @@ export async function createPaymentIntentAction({
     throw new Error("Invalid Store ID, Please try again later.");
   }
 
-  const accountDetails = await getAccountDetailsAction(storeId);
+  const accountDetails = await get_account_details_fetcher(storeId);
 
   const { totalAmount, feeAmount } = calculateOrderAmounts(cartItem);
 

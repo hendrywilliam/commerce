@@ -1,9 +1,9 @@
 "use server";
 
 import { db } from "@/db/core";
+import { eq } from "drizzle-orm";
 import { stripe } from "@/lib/stripe";
 import { payments, type Store } from "@/db/schema";
-import { eq } from "drizzle-orm";
 
 export async function createStripeAccountAction(storeId: Store["id"]) {
   const connectAccount = await stripe.accounts.create({

@@ -2,7 +2,7 @@
 
 import { stripe } from "@/lib/stripe";
 
-export async function getCurrentSubscriptionAction(
+export async function get_current_subscription_fetcher(
   stripeSubscriptionId: string,
 ) {
   const subscriptionPlan =

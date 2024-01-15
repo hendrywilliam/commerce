@@ -1,10 +1,14 @@
 "use client";
 
-import type { Product } from "@/db/schema";
-import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
+import Link from "next/link";
 import { useState, useMemo } from "react";
+import type { Product } from "@/db/schema";
+import { usePathname } from "next/navigation";
+import { Checkbox } from "@/components/ui/checkbox";
+import { buttonVariants } from "@/components/ui/button";
+import { ArrowOutwardIcon } from "@/components/ui/icons";
 import DashboardStoreProductDataTable from "./store-product-data-table";
+import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import DashboardStoreProductDataTableAction from "./store-product-data-table-action";
 
 const storeProductColumnHelper = createColumnHelper<Product>();
@@ -16,6 +20,7 @@ interface DashboardStoreProductShellTableProps {
 export default function DashboardStoreProductShellTable({
   storeProductData,
 }: DashboardStoreProductShellTableProps) {
+  const pathname = usePathname();
   const [rowSelection, setRowSelection] = useState({});
   const [rawRowDataSelection, setRawRowDataSelection] = useState<Product[]>([]);
   const columns = useMemo(
@@ -65,8 +70,23 @@ export default function DashboardStoreProductShellTable({
           cell: (info) => info.renderValue(),
           footer: (info) => info.column.id,
         }),
+        storeProductColumnHelper.display({
+          id: "product-link",
+          cell: ({ row }) => {
+            const data = row.original;
+            const slug = data.slug;
+            return (
+              <Link
+                href={`${pathname}/edit-product/${slug}`}
+                className={buttonVariants({ size: "icon" })}
+              >
+                <ArrowOutwardIcon />
+              </Link>
+            );
+          },
+        }),
       ] as ColumnDef<Product>[],
-    [],
+    [pathname],
   );
 
   return (

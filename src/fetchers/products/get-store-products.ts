@@ -1,10 +1,8 @@
-"use server";
-
 import { db } from "@/db/core";
 import { eq } from "drizzle-orm";
 import { products, stores } from "@/db/schema";
 
-export async function getStoreProductsAction(storeSlug: string) {
+export async function get_store_product_fetcher(storeSlug: string) {
   const store = await db.query.stores.findFirst({
     where: eq(stores.slug, storeSlug),
   });

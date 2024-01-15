@@ -6,7 +6,7 @@ import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { Store, payments } from "@/db/schema";
 
-export async function getAccountDetailsAction(storeId: Store["id"]) {
+export async function get_account_details_fetcher(storeId: Store["id"]) {
   const payment = await db.query.payments.findFirst({
     where: eq(payments.storeId, storeId),
   });

@@ -4,7 +4,7 @@ import { UserObjectCustomized } from "@/types";
 import { billingPlan } from "@/config/billing";
 import { unixToDateString } from "@/lib/utils";
 import DashboardBillingPlanCard from "@/components/dashboard/billing/billing-plan-card";
-import { getCurrentSubscriptionAction } from "@/actions/stripe/get-current-subscription";
+import { get_current_subscription_fetcher } from "@/fetchers/stripe/get-current-subscription";
 import CancelSubscriptionButton from "@/components/dashboard/billing/cancel-subscription-button";
 
 export default async function DashboardBillingPage() {
@@ -19,7 +19,7 @@ export default async function DashboardBillingPage() {
 
   const userSubscribedPlan =
     userPrivateMetadata.stripeSubscriptionId &&
-    (await getCurrentSubscriptionAction(
+    (await get_current_subscription_fetcher(
       userPrivateMetadata.stripeSubscriptionId,
     ));
 

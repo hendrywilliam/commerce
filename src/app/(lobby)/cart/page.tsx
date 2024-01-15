@@ -1,10 +1,10 @@
 import { CartLineDetailedItems } from "@/types";
-import { getCartAction } from "@/actions/carts/get-cart";
 import CartItem from "@/components/lobby/cart/cart-item";
 import CartPanel from "@/components/lobby/cart/cart-panel";
+import { get_cart_fetcher } from "@/fetchers/carts/get-cart";
 
 export default async function CartPage() {
-  const { cartItemDetails } = await getCartAction();
+  const { cartItemDetails } = await get_cart_fetcher();
 
   const groupProductByTheStore = cartItemDetails.reduce(
     (acc, val) => {

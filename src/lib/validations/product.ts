@@ -66,3 +66,13 @@ export const incomingProductValidation = newProductValidation
     image: z.string(),
   })
   .array();
+
+export const updateProductValidation = newProductValidation
+  .omit({
+    image: true,
+  })
+  .extend({
+    image: z.array(z.any()).min(1, {
+      message: "Image is required.",
+    }),
+  });

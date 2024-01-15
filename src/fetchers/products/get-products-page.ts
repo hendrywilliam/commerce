@@ -9,7 +9,7 @@ import { and, inArray, sql, gte, lte } from "drizzle-orm";
 // Page Size -> limit
 // Offset -> page
 
-export async function getProductsPageAction({
+export async function get_products_page_fetcher({
   pageSize,
   category,
   minPrice,
@@ -27,10 +27,9 @@ export async function getProductsPageAction({
     ? (category.split(".") as Pick<Product, "category">["category"][])
     : undefined;
 
-  const sellersId =
-    sellers 
-      ? sellers?.split(".").map((item) => Number(item))
-      : undefined;
+  const sellersId = sellers
+    ? sellers?.split(".").map((item) => Number(item))
+    : undefined;
 
   const productsCount = (
     await db

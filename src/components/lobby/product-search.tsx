@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SearchIcon } from "@/components/ui/icons";
-import { getProductsBySearchTermAction } from "@/actions/products/get-products-search";
+import { get_products_search_fetcher } from "@/fetchers/products/get-products-search";
 import { Product } from "@/db/schema";
 import { useRouter } from "next/navigation";
 import { IconBackpack, IconShoes, IconClothing } from "@/components/ui/icons";
@@ -54,7 +54,7 @@ export default function ProductSearch() {
       setIsLoading(true);
       setHasNoResult(false);
       setResults(
-        await getProductsBySearchTermAction(searchTerm)
+        await get_products_search_fetcher(searchTerm)
           .then((res) => {
             if (!Object.entries(res).length) setHasNoResult(true);
             return res;
