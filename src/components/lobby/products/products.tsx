@@ -53,7 +53,7 @@ export default function Products({
   const [minPrice, setMinPrice] = useState(0);
   const [isPending, startTransition] = useTransition();
   const [maxPrice, setMaxPrice] = useState(99999);
-  const [sellersId, setSellersId] = useState<number[]>([]);
+  const [sellersSlug, setSellersSlug] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState([] as string[]);
 
   const router = useRouter();
@@ -102,11 +102,12 @@ export default function Products({
 
   useEffect(() => {
     const bounceUpdate = setTimeout(() => {
-      if (sellersId.length) {
-        const joinedCategories = sellersId.join(".");
+      if (sellersSlug.length) {
+        const joinedSellers = sellersSlug.join(".");
+        console.log(joinedSellers);
         startTransition(() => {
           void router.push(
-            `${pathname}?${createQueryString("sellers", joinedCategories)}`,
+            `${pathname}?${createQueryString("sellers", joinedSellers)}`,
           );
         });
       } else {
@@ -119,7 +120,7 @@ export default function Products({
 
     return () => clearTimeout(bounceUpdate);
     // eslint-disable-next-line
-  }, [sellersId]);
+  }, [sellersSlug]);
 
   useEffect(() => {
     const bounce = setTimeout(() => {
@@ -234,18 +235,18 @@ export default function Products({
                       {uniqueStores.map((store, i) => (
                         <div className="inline-flex gap-2" key={i}>
                           <Checkbox
-                            checked={sellersId.includes(store?.id as number)}
+                            checked={sellersSlug.includes(store.slug)}
                             disabled={isPending}
                             aria-disabled={isPending ? "true" : "false"}
                             onCheckedChange={(checked) => {
                               return checked
-                                ? setSellersId((sellersId) => [
-                                    ...sellersId,
-                                    store?.id as number,
+                                ? setSellersSlug((sellersSlug) => [
+                                    ...sellersSlug,
+                                    store.slug,
                                   ])
-                                : setSellersId((sellersId) =>
-                                    sellersId.filter((id) => {
-                                      return id !== store?.id;
+                                : setSellersSlug((sellersSlug) =>
+                                    sellersSlug.filter((slug) => {
+                                      return slug !== store.slug;
                                     }),
                                   );
                             }}
@@ -300,8 +301,8 @@ export default function Products({
                       setMinPrice(0);
                       setMaxPrice(99999);
                       setSelectedCategories([]);
-                      setSellersId([]);
-                      void router.push("/products");
+                      setSellersSlug([]);
+                      router.push("/products");
                     })
                   }
                 >

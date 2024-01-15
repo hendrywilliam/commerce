@@ -27,9 +27,7 @@ export async function get_all_products_and_store_fetcher({
     ? (sort.split(".") as [keyof Product | undefined, "asc" | "desc"])
     : ["createdAt", "asc"];
 
-  const sellersId = sellers
-    ? sellers?.split(".").map((item) => Number(item))
-    : undefined;
+  const sellersSlug = sellers ? sellers?.split(".") : undefined;
 
   const categories = category
     ? (category.split(".") as Pick<Product, "category">["category"][])
@@ -47,7 +45,7 @@ export async function get_all_products_and_store_fetcher({
     .where(
       and(
         categories ? inArray(products.category, categories) : undefined,
-        sellersId ? inArray(products.storeId, sellersId) : undefined,
+        sellersSlug ? inArray(stores.slug, sellersSlug) : undefined,
         minPrice ? gte(products.price, minPrice) : undefined,
         maxPrice ? lte(products.price, maxPrice) : undefined,
       ),
