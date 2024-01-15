@@ -59,7 +59,6 @@ export const dashboardNavigation = [
   },
 ];
 
-// export const storeFrontTabs = ["storefront", "products", "transaction"];
 export const storeFrontTabs = [
   {
     title: "Storefront",

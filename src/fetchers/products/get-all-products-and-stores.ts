@@ -5,21 +5,24 @@ import { Product, products, stores } from "@/db/schema";
 import { unstable_noStore as noStore } from "next/cache";
 import { and, asc, desc, eq, gte, inArray, lte } from "drizzle-orm";
 
+// Page Size -> limit
+// Offset -> page
+
 export async function get_all_products_and_store_fetcher({
   sort,
-  pageSize,
   minPrice,
   maxPrice,
   sellers,
   category,
-  page,
+  pageSize = 10,
+  page = 1,
 }: {
-  sort: string;
-  page: number;
-  minPrice: string;
-  maxPrice: string;
-  pageSize: number;
+  sort?: string;
+  page?: number;
   sellers?: string;
+  maxPrice?: string;
+  minPrice?: string;
+  pageSize?: number;
   category?: string;
 }) {
   noStore();
@@ -27,7 +30,7 @@ export async function get_all_products_and_store_fetcher({
     ? (sort.split(".") as [keyof Product | undefined, "asc" | "desc"])
     : ["createdAt", "asc"];
 
-  const sellersSlug = sellers ? sellers?.split(".") : undefined;
+  const sellersSlug = sellers ? sellers.split(".") : undefined;
 
   const categories = category
     ? (category.split(".") as Pick<Product, "category">["category"][])

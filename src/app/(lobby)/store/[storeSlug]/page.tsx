@@ -1,31 +1,45 @@
 import { db } from "@/db/core";
 import { eq } from "drizzle-orm";
 import { stores } from "@/db/schema";
-import { products } from "@/db/schema";
+import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import Pagination from "@/components/pagination";
 import { IconStores } from "@/components/ui/icons";
 import ProductCard from "@/components/lobby/product-card";
-import { notFound } from "next/navigation";
+import { get_products_page_fetcher } from "@/fetchers/products/get-products-page";
+import { get_all_products_and_store_fetcher } from "@/fetchers/products/get-all-products-and-stores";
 
 export default async function StorePage({
   params,
+  searchParams,
 }: {
   params: { storeSlug: string };
+  searchParams: {
+    page: string;
+  };
 }) {
+  const storeSlug = params.storeSlug;
+  const currentPage = isNaN(Number(searchParams.page))
+    ? 1
+    : Number(searchParams.page);
+
   const storeData = await db.query.stores.findFirst({
-    where: eq(stores.slug, params.storeSlug),
+    where: eq(stores.slug, storeSlug),
   });
 
   if (!storeData) {
     notFound();
   }
 
-  const productsData = await db
-    .select()
-    .from(products)
-    .orderBy(products.id)
-    .where(eq(products.storeId, storeData.id))
-    .limit(10);
+  const [storeProducts, storeProductsCount] = await Promise.all([
+    await get_all_products_and_store_fetcher({
+      sellers: storeSlug,
+      page: currentPage,
+    }),
+    await get_products_page_fetcher({
+      sellers: storeSlug,
+    }),
+  ]);
 
   return (
     <div className="flex flex-col container h-full w-full py-8">
@@ -40,12 +54,19 @@ export default async function StorePage({
               </Button>
             </div>
           </div>
-          {productsData.length ? (
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-              {productsData.map((product) => (
-                <ProductCard product={product} key={product.id} />
-              ))}
-            </div>
+          {storeProducts.length ? (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 min-h-[720px] h-full">
+                {storeProducts.map((storeProduct) => {
+                  const product = storeProduct.products;
+                  return <ProductCard product={product} key={product.id} />;
+                })}
+              </div>
+              <Pagination
+                totalPage={storeProductsCount}
+                currentPage={currentPage}
+              />
+            </>
           ) : (
             <p>No product found</p>
           )}

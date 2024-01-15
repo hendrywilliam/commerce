@@ -1,21 +1,21 @@
 "use server";
 
 import { db } from "@/db/core";
-import { products, stores } from "@/db/schema";
 import type { Product } from "@/db/schema";
+import { products, stores } from "@/db/schema";
 import { unstable_noStore as noStore } from "next/cache";
 import { and, inArray, sql, gte, lte, eq } from "drizzle-orm";
 
 export async function get_products_page_fetcher({
-  pageSize,
+  pageSize = 10,
   category,
   minPrice,
   maxPrice,
   sellers,
 }: {
-  pageSize: number;
-  minPrice: string;
-  maxPrice: string;
+  pageSize?: number;
+  minPrice?: string;
+  maxPrice?: string;
   sellers?: string;
   category?: string;
 }) {

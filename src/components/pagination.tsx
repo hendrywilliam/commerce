@@ -27,14 +27,14 @@ export default function Pagination({
 
       return params.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   function moveForwardOnePage() {
     if (currentPage < totalPage) {
       void startTransition(() => {
         router.push(
-          `${pathname}?${createQueryString("page", String(currentPage + 1))}`
+          `${pathname}?${createQueryString("page", String(currentPage + 1))}`,
         );
       });
     }
@@ -44,7 +44,7 @@ export default function Pagination({
     if (currentPage > 1) {
       void startTransition(() => {
         router.push(
-          `${pathname}?${createQueryString("page", String(currentPage - 1))}`
+          `${pathname}?${createQueryString("page", String(currentPage - 1))}`,
         );
       });
     }
@@ -66,7 +66,7 @@ export default function Pagination({
             onClick={() =>
               void startTransition(() => {
                 router.push(
-                  `${pathname}?${createQueryString("page", String(i + 1))}`
+                  `${pathname}?${createQueryString("page", String(i + 1))}`,
                 );
               })
             }
