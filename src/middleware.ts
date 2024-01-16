@@ -13,6 +13,7 @@ export default authMiddleware({
     "/stores/(.*)",
     "/product/(.*)",
     "/products/(.*)",
+    "/checkout/(.*)",
     "/quickview-product/(.*)",
   ],
 
