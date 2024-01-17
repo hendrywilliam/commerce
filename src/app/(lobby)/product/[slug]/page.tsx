@@ -10,15 +10,34 @@ import {
 import type { UploadData } from "@/types";
 import { notFound } from "next/navigation";
 import { parse_to_json } from "@/lib/utils";
+import { siteStaticMetadata } from "@/config/site";
+import type { Metadata, ResolvingMetadata } from "next";
 import ImagePlaceholder from "@/components/image-placeholder";
 import { Product, Store, products, stores } from "@/db/schema";
 import ProductPanel from "@/components/lobby/product/product-panel";
 
-export default async function ProductPage({
-  params,
-}: {
+interface ProductPageProps {
   params: { slug: string };
-}) {
+}
+
+export async function generateMetadata(
+  { params }: ProductPageProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const productDetails = await db.query.products.findFirst({
+    where: eq(products.slug, params.slug),
+  });
+
+  return {
+    title: `${productDetails?.name} — commerce` ?? "commerce by hendryw",
+    description:
+      productDetails?.description ??
+      "A fictional marketplace built with everything new in Next.js 14",
+    ...siteStaticMetadata,
+  };
+}
+
+export default async function ProductPage({ params }: ProductPageProps) {
   const { product, store } = (
     await db
       .select({ product: products, store: stores })

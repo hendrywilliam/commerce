@@ -73,3 +73,22 @@ export const storeFrontTabs = [
     value: "transaction",
   },
 ];
+
+export const siteStaticMetadata = {
+  applicationName: "commerce by hendryw",
+  keywords: [
+    "Next.js",
+    "React.js",
+    "Typescript",
+    "Stripe",
+    "Payment",
+    "Commerce",
+  ],
+  authors: [
+    {
+      name: "Hendry William",
+      url: "https://github.com/hendrywilliam",
+    },
+  ],
+  creator: "Hendry William",
+};

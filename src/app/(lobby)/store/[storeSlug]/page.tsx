@@ -4,23 +4,44 @@ import { stores } from "@/db/schema";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Pagination from "@/components/pagination";
+import { Metadata, ResolvingMetadata } from "next";
+import { siteStaticMetadata } from "@/config/site";
 import { IconStores } from "@/components/ui/icons";
 import ProductCard from "@/components/lobby/product-card";
 import { get_products_page_fetcher } from "@/fetchers/products/get-products-page";
 import StoreProductFilterPanel from "@/components/lobby/store/store-product-filter-panel";
 import { get_all_products_and_store_fetcher } from "@/fetchers/products/get-all-products-and-stores";
 
-export default async function StorePage({
-  params,
-  searchParams,
-}: {
+interface StorePageProps {
   params: { storeSlug: string };
   searchParams: {
     page: string;
     page_size: string;
     sort: string;
   };
-}) {
+}
+
+export async function generateMetadata(
+  { params }: StorePageProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const store = await db.query.stores.findFirst({
+    where: eq(stores.slug, params.storeSlug),
+  });
+
+  return {
+    title: `${store?.name} — commerce` ?? "commerce by hendryw",
+    description:
+      store?.description ??
+      "A fictional marketplace built with everything new in Next.js 14",
+    ...siteStaticMetadata,
+  } satisfies Metadata;
+}
+
+export default async function StorePage({
+  params,
+  searchParams,
+}: StorePageProps) {
   const storeSlug = params.storeSlug;
 
   const sort = searchParams.sort ?? "name.asc";

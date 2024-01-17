@@ -7,7 +7,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { GeistSans } from "geist/font/sans";
 
 export const metadata: Metadata = {
-  title: "Commerce by hendryw",
+  title: "commerce by hendryw",
   description: "A fictional marketplace by hendryw",
 };
 
