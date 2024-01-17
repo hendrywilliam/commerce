@@ -36,7 +36,7 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
       );
       try {
         await deleteCartItemAction(cartItem.id);
-        toast.success("Your cart has been updated.");
+        toast.success("Item successfully removed from your cart.");
       } catch (err) {
         catchError(err);
       } finally {

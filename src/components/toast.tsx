@@ -33,5 +33,5 @@ interface ToasterProps {
 }
 
 export default function Toast({ position, ...props }: ToasterProps) {
-  return <CustomToast position="bottom-center" {...props} />;
+  return <CustomToast position="bottom-right" {...props} />;
 }

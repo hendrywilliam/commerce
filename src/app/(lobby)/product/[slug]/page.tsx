@@ -29,7 +29,9 @@ export async function generateMetadata(
   });
 
   return {
-    title: `${productDetails?.name} — commerce` ?? "commerce by hendryw",
+    title: productDetails?.name
+      ? `${productDetails?.name} — commerce`
+      : "commerce by hendryw",
     description:
       productDetails?.description ??
       "A fictional marketplace built with everything new in Next.js 14",

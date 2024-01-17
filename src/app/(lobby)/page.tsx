@@ -13,7 +13,7 @@ export default async function IndexPage() {
     "createdAt"
   >[];
 
-  const featuredProducts = await db.select().from(products).limit(8);
+  const featuredProducts = await db.select().from(products).limit(10);
   // .where(gte(products.rating, 3))) as Omit<Product, "createdAt">[];
 
   return (
@@ -42,9 +42,9 @@ export default async function IndexPage() {
       <div className="flex flex-col w-full mt-36 items-center gap-2">
         <h1 className="text-4xl font-bold">Featured Products</h1>
         <p className="font-medium text-center text-gray-500">
-          Top 8 products for this week.
+          Top 10 products for this week.
         </p>
-        <div className="grid grid-cols-1 lg:grid-cols-4 w-full gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 w-full gap-4">
           {featuredProducts.map((product) => {
             return <ProductCard product={product} key={product.id} />;
           })}

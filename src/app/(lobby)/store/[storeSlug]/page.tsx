@@ -30,7 +30,7 @@ export async function generateMetadata(
   });
 
   return {
-    title: `${store?.name} — commerce` ?? "commerce by hendryw",
+    title: store?.name ? `${store?.name} — commerce` : "commerce by hendryw",
     description:
       store?.description ??
       "A fictional marketplace built with everything new in Next.js 14",

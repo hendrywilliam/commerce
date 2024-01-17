@@ -47,15 +47,17 @@ export default function DashboardBillingPlanCard({
         <p className="text-gray-500">{plan.description}</p>
       </div>
       <div>
-        <Button
-          onClick={() => void handleSubscribeToPlan(plan.id)}
-          disabled={isPending}
-          aria-disabled={isPending ? "true" : "false"}
-          className="flex gap-2 w-full"
-        >
-          {plan.title === "Hobby" ? "Get started" : "Change Plan"}
-          {isPending && <IconLoading />}
-        </Button>
+        {plan.title !== "Hobby" && (
+          <Button
+            onClick={() => void handleSubscribeToPlan(plan.id)}
+            disabled={isPending}
+            aria-disabled={isPending ? "true" : "false"}
+            className="flex gap-2 w-full"
+          >
+            {isPending && <IconLoading />}
+            Change Plan
+          </Button>
+        )}
       </div>
     </div>
   );
