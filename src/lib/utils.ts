@@ -90,13 +90,6 @@ export function parse_to_json<TParsedData>(data: string): TParsedData {
   return JSON.parse(data);
 }
 
-export function search_params_builder(name: string, value: string): string {
-  const currentPath = new URL(String(window.location)).searchParams;
-  const searchParams = new URLSearchParams(currentPath);
-  searchParams.set(name, value);
-  return searchParams.toString();
-}
-
 // Type utils
 export type OmitAndExtend<T, U extends keyof T, V extends {}> = Omit<T, U> & V;
 // Omit is not giving us any hint, because the second generic parameter (K) is accepting "any" instead of key from (T).

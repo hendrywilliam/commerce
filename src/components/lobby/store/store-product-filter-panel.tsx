@@ -18,12 +18,13 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { rowsPerPage } from "@/config/products";
 import { IconSort } from "@/components/ui/icons";
-import { search_params_builder } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { sortingProductsItem } from "@/config/products";
+import { useQueryString } from "@/hooks/use-query-string";
 
 export default function StoreProductFilterPanel() {
   const [isPending, startTransition] = useTransition();
+  const { createQueryString, deleteQueryString } = useQueryString();
 
   const { push } = useRouter();
   const pathname = usePathname();
@@ -33,9 +34,8 @@ export default function StoreProductFilterPanel() {
       <Select
         onValueChange={(value) =>
           startTransition(() => {
-            void push(
-              `${pathname}?${search_params_builder("page_size", value)}`,
-            );
+            deleteQueryString("page");
+            void push(`${pathname}?${createQueryString("page_size", value)}`);
           })
         }
       >
@@ -65,7 +65,7 @@ export default function StoreProductFilterPanel() {
               key={i}
               onClick={() =>
                 void push(
-                  `${pathname}?${search_params_builder(
+                  `${pathname}?${createQueryString(
                     "sort",
                     `${sortingItem.sortKey}.${
                       sortingItem.reverse ? "desc" : "asc"

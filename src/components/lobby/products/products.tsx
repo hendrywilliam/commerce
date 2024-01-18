@@ -18,6 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTransition } from "react";
 import ReactSlider from "react-slider";
 import { useState, useEffect } from "react";
 import { Product, Store } from "@/db/schema";
@@ -25,13 +26,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Pagination from "@/components/pagination";
 import { IconSort } from "@/components/ui/icons";
-import { useCallback, useTransition } from "react";
-import { search_params_builder } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { buttonVariants } from "@/components/ui/button";
+import { useRouter, usePathname } from "next/navigation";
+import { useQueryString } from "@/hooks/use-query-string";
 import ProductCard from "@/components/lobby/product-card";
 import { IconFilter, IconTrashCan } from "@/components/ui/icons";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 interface ProductsProps {
@@ -56,11 +56,9 @@ export default function Products({
   const [maxPrice, setMaxPrice] = useState(99999);
   const [sellersSlug, setSellersSlug] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState([] as string[]);
-
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const urlSearchParams = new URLSearchParams(searchParams);
+  const { createQueryString, deleteQueryString } = useQueryString();
 
   const allProducts = allStoresAndProducts.map((storeAndProduct) => {
     return storeAndProduct.products;
@@ -72,20 +70,16 @@ export default function Products({
 
   useEffect(() => {
     const bounceUpdate = setTimeout(() => {
-      if (selectedCategories.length) {
+      if (!!selectedCategories.length) {
         const joinedCategories = selectedCategories.join(".");
         startTransition(() => {
           void router.push(
-            `${pathname}?${search_params_builder(
-              "category",
-              joinedCategories,
-            )}`,
+            `${pathname}?${createQueryString("category", joinedCategories)}`,
           );
         });
       } else {
-        urlSearchParams.delete("category");
         startTransition(() => {
-          void router.push(`${pathname}?${urlSearchParams}`);
+          void router.push(`${pathname}?${deleteQueryString("category")}`);
         });
       }
     }, 500);
@@ -96,18 +90,16 @@ export default function Products({
 
   useEffect(() => {
     const bounceUpdate = setTimeout(() => {
-      if (sellersSlug.length) {
+      if (!!sellersSlug.length) {
         const joinedSellers = sellersSlug.join(".");
-        console.log(joinedSellers);
         startTransition(() => {
           void router.push(
-            `${pathname}?${search_params_builder("sellers", joinedSellers)}`,
+            `${pathname}?${createQueryString("sellers", joinedSellers)}`,
           );
         });
       } else {
-        urlSearchParams.delete("sellers");
         startTransition(() => {
-          void router.push(`${pathname}?${urlSearchParams}`);
+          void router.push(`${pathname}?${deleteQueryString("sellers")}`);
         });
       }
     }, 500);
@@ -119,10 +111,10 @@ export default function Products({
   useEffect(() => {
     const bounce = setTimeout(() => {
       if (isNewValue) {
-        search_params_builder("pmin", String(minPrice));
+        createQueryString("pmin", String(minPrice));
         startTransition(() => {
           void router.push(
-            `${pathname}?${search_params_builder("pmax", String(maxPrice))}`,
+            `${pathname}?${createQueryString("pmax", String(maxPrice))}`,
           );
         });
       }
@@ -141,8 +133,9 @@ export default function Products({
           <Select
             onValueChange={(value) =>
               startTransition(() => {
-                void router.push(
-                  `${pathname}?${search_params_builder("page_size", value)}`,
+                deleteQueryString("page");
+                router.push(
+                  `${pathname}?${createQueryString("page_size", value)}`,
                 );
               })
             }
@@ -322,7 +315,7 @@ export default function Products({
                 key={i}
                 onClick={() =>
                   void router.push(
-                    `${pathname}?${search_params_builder(
+                    `${pathname}?${createQueryString(
                       "sort",
                       `${sortingItem.sortKey}.${
                         sortingItem.reverse ? "desc" : "asc"
