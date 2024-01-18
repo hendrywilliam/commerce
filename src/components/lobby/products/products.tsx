@@ -331,7 +331,7 @@ export default function Products({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      {allProducts.length ? (
+      {!!allProducts.length ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 min-h-[720px] h-full">
             {allProducts.map((product) => (

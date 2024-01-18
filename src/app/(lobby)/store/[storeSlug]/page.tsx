@@ -76,7 +76,7 @@ export default async function StorePage({
   return (
     <div className="flex flex-col container h-full w-full py-8">
       <div className="flex flex-col h-full w-full my-2 gap-2">
-        <div className="mt-4">
+        <div>
           <div className="flex justify-between">
             <div className="flex-col my-4 gap-2">
               <h1 className="font-bold text-xl">{storeData?.name}</h1>
@@ -91,7 +91,7 @@ export default async function StorePage({
               <StoreProductFilterPanel />
             </div>
           </div>
-          {storeProducts.length ? (
+          {!!storeProducts.length ? (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 min-h-[720px] h-full">
                 {storeProducts.map((storeProduct) => {

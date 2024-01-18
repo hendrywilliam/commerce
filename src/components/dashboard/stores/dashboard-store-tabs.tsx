@@ -15,12 +15,16 @@ interface DashboardStoreTabsProps {
   store: Store;
   storeProductData: Product[];
   searchParamsTab: string;
+  currentPage: number;
+  totalPage: number;
 }
 
 export default function DashboardStoreTabs({
   searchParamsTab,
   storeProductData,
   store,
+  currentPage,
+  totalPage,
 }: DashboardStoreTabsProps) {
   const { push } = useRouter();
   const pathname = usePathname();
@@ -63,7 +67,11 @@ export default function DashboardStoreTabs({
         <DashboardStoreFrontTab store={store} />
       </TabsContent>
       <TabsContent value="products">
-        <DashboardStoreProductTab storeProductData={storeProductData} />
+        <DashboardStoreProductTab
+          storeProductData={storeProductData}
+          currentPage={currentPage}
+          totalPage={totalPage}
+        />
       </TabsContent>
       <TabsContent value="transaction">
         <DashboardStoreTransactionTab active={store.active} />

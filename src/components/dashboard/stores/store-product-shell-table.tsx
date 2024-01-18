@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useMemo } from "react";
 import type { Product } from "@/db/schema";
+import { formatCurrency } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
 import { buttonVariants } from "@/components/ui/button";
@@ -52,7 +53,9 @@ export default function DashboardStoreProductShellTable({
         }),
         storeProductColumnHelper.accessor("price", {
           header: () => "Price",
-          cell: (info) => info.getValue(),
+          cell: (info) => (
+            <span>{formatCurrency(Number(info.getValue()))}</span>
+          ),
           footer: (info) => info.column.id,
         }),
         storeProductColumnHelper.accessor("category", {
@@ -91,11 +94,9 @@ export default function DashboardStoreProductShellTable({
 
   return (
     <>
-      {rawRowDataSelection.length > 0 && (
-        <DashboardStoreProductDataTableAction
-          rawRowDataSelection={rawRowDataSelection}
-        />
-      )}
+      <DashboardStoreProductDataTableAction
+        rawRowDataSelection={rawRowDataSelection}
+      />
       <DashboardStoreProductDataTable
         columns={columns}
         data={storeProductData}

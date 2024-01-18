@@ -1,6 +1,7 @@
 import { db } from "@/db/core";
 import { asc } from "drizzle-orm";
 import { stores } from "@/db/schema";
+import PageLayout from "@/components/layouts/page-layout";
 import Products from "@/components/lobby/products/products";
 import { get_products_page_fetcher } from "@/fetchers/products/get-products-page";
 import { get_all_products_and_store_fetcher } from "@/fetchers/products/get-all-products-and-stores";
@@ -48,7 +49,7 @@ export default async function ProductsPage({
   });
 
   return (
-    <div className="flex flex-col container h-full w-full py-8">
+    <PageLayout>
       <section>
         <h1 className="font-bold text-xl">Browse All Products</h1>
         <Products
@@ -58,6 +59,6 @@ export default async function ProductsPage({
           currentPage={currentPage}
         />
       </section>
-    </div>
+    </PageLayout>
   );
 }

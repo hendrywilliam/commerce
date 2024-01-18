@@ -36,17 +36,15 @@ export default function DashboardStoreProductDataTableAction({
 
   return (
     <div className="flex w-full my-4 h-10 justify-end">
-      {rawRowDataSelection.length > 0 && (
-        <Button
-          disabled={isLoading}
-          aria-disabled={isLoading}
-          onClick={deleteProductsInOwnedStore}
-          className="flex gap-2"
-        >
-          {isLoading ? <IconLoading /> : <IconTrashCan />}
-          Delete
-        </Button>
-      )}
+      <Button
+        disabled={isLoading || !!!rawRowDataSelection.length}
+        aria-disabled={isLoading || !!!rawRowDataSelection.length}
+        onClick={deleteProductsInOwnedStore}
+        className="flex gap-2"
+      >
+        {isLoading ? <IconLoading /> : <IconTrashCan />}
+        Delete
+      </Button>
     </div>
   );
 }

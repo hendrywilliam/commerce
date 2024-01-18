@@ -9,7 +9,6 @@ import { buttonVariants } from "@/components/ui/button";
 import DashboardStoreCard from "@/components/dashboard/stores/store-card";
 
 export default async function DashboardStoresPage() {
-  // const ownedStoresByUser = await getAllOwnedStores();
   const user = await currentUser();
 
   if (!user) {

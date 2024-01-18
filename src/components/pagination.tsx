@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useTransition, useCallback } from "react";
+import { useQueryString } from "@/hooks/use-query-string";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { IconArrowBackward, IconArrowForward } from "@/components/ui/icons";
 
@@ -15,20 +16,10 @@ export default function Pagination({
   currentPage,
 }: PaginationProps) {
   const [isPending, startTransition] = useTransition();
+  const { createQueryString } = useQueryString();
 
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams);
-      params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams],
-  );
 
   function moveForwardOnePage() {
     if (currentPage < totalPage) {

@@ -1,23 +1,33 @@
 import Link from "next/link";
 import { db } from "@/db/core";
 import { eq } from "drizzle-orm";
-import { stripe } from "@/lib/stripe";
-import { notFound } from "next/navigation";
+import { stores } from "@/db/schema";
+import { currentUser } from "@clerk/nextjs";
 import { formatCurrency } from "@/lib/utils";
-import { payments, stores } from "@/db/schema";
+import type { UserObjectCustomized } from "@/types";
 import { WarningIcon } from "@/components/ui/icons";
+import { notFound, redirect } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { get_store_product_fetcher } from "@/fetchers/products/get-store-products";
+import { get_store_balance_fetcher } from "@/fetchers/stores/get-store-balance";
+import { get_products_page_fetcher } from "@/fetchers/products/get-products-page";
 import DashboardStoreTabs from "@/components/dashboard/stores/dashboard-store-tabs";
+import { get_all_products_and_store_fetcher } from "@/fetchers/products/get-all-products-and-stores";
 
 export default async function DashboardDynamicStorePage({
   params,
   searchParams,
 }: {
   params: { storeSlug: string };
-  searchParams: { tab: string };
+  searchParams: { tab: string; page: string; page_size: string };
 }) {
+  const page = isNaN(Number(searchParams.page)) ? 1 : Number(searchParams.page);
+  const pageSize = isNaN(Number(searchParams.page_size))
+    ? 10
+    : Number(searchParams.page_size);
+
+  const user = (await currentUser()) as unknown as UserObjectCustomized;
+
   const store = await db.query.stores.findFirst({
     where: eq(stores.slug, params.storeSlug),
   });
@@ -26,37 +36,32 @@ export default async function DashboardDynamicStorePage({
     notFound();
   }
 
-  const storeProductData = await get_store_product_fetcher(params.storeSlug);
+  const storeOwned = user.privateMetadata.storeId.find(
+    (storeId) => storeId === String(store.id),
+  );
 
-  // Get payment record
-  const storePayment = await db.query.payments.findFirst({
-    where: eq(payments.storeId, store.id),
+  if (!storeOwned) {
+    redirect("/dashboard/stores");
+  }
+
+  const storeProductData = await get_all_products_and_store_fetcher({
+    page,
+    pageSize,
+    sellers: params.storeSlug,
+  }).then((storeProduct) => {
+    return storeProduct.map((product) => {
+      return product.products;
+    });
   });
 
-  // Available balance meaning the funds can be paid out now.
-  let availableBalance;
-  // Pending balance meaning the funds are not yet available to pay out.
-  let pendingBalance;
+  const totalPage = await get_products_page_fetcher({
+    pageSize,
+    sellers: params.storeSlug,
+  });
 
-  if (storePayment) {
-    const allBalance = await stripe.balance.retrieve({
-      stripeAccount: storePayment.stripeAccountId,
-    });
-
-    availableBalance = allBalance.available.reduce(
-      (total, availableBalance) => total + availableBalance.amount,
-      0,
-    );
-
-    pendingBalance = allBalance.pending.reduce(
-      (total, pendingBalance) => total + pendingBalance.amount,
-      0,
-    );
-  } else {
-    // Set default to 0
-    availableBalance = 0;
-    pendingBalance = 0;
-  }
+  const { availableBalance, pendingBalance } = await get_store_balance_fetcher(
+    store.id,
+  );
 
   return (
     <div>
@@ -112,6 +117,8 @@ export default async function DashboardDynamicStorePage({
           searchParamsTab={searchParams.tab}
           store={store}
           storeProductData={storeProductData}
+          currentPage={page}
+          totalPage={totalPage}
         />
       </div>
     </div>
