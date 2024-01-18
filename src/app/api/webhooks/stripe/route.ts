@@ -1,13 +1,12 @@
-// Webhook stripe
-
-import Stripe from "stripe";
-import { db } from "@/db/core";
-import * as dotenv from "dotenv";
 import type {
   PaymentIntentMetadata,
   CheckoutSessionCompletedMetadata,
   CartItem,
+  CustomerObjectMetadata,
 } from "@/types";
+import Stripe from "stripe";
+import { db } from "@/db/core";
+import * as dotenv from "dotenv";
 import { stripe } from "@/lib/stripe";
 import { resend } from "@/lib/resend";
 import type { Readable } from "stream";
@@ -53,7 +52,6 @@ export async function POST(req: Request) {
   const data: Stripe.Event.Data = event.data;
 
   // Handle various event sent from Stripe
-  // @see https://stripe.com/docs/webhooks#events-overview
   switch (event.type) {
     case "checkout.session.completed":
       // Payment is successful and the subscription is created.
@@ -75,6 +73,45 @@ export async function POST(req: Request) {
         },
       );
       break;
+    case "invoice.paid": {
+      // Continue to provision the subscription as payment continue to be made.
+      console.log(`🔔  Webhook received: ${event.type}`);
+
+      const invoice = data.object as Stripe.InvoicePaidEvent.Data["object"];
+
+      const customerId = String(invoice.customer);
+      const customer = (await stripe.customers.retrieve(
+        customerId,
+      )) as unknown as CustomerObjectMetadata;
+      const customerClerkId = customer.metadata.clerkId;
+
+      // Renew subscription id for the user.
+      await clerkClient.users.updateUserMetadata(customerClerkId, {
+        privateMetadata: {
+          stripeSubscriptionId: invoice.subscription,
+        },
+      });
+      break;
+    }
+    case "invoice.payment_failed": {
+      // The payment has failed due to invalid payment method.
+      // This can be happen when the payment method has no funds, inactive or invalid card information (e.g cvv, expiry date).
+      console.log(`🔔  Webhook received: ${event.type}`);
+      const invoice = data.object as Stripe.InvoicePaidEvent.Data["object"];
+
+      const customerId = String(invoice.customer);
+      const customer = (await stripe.customers.retrieve(
+        customerId,
+      )) as unknown as CustomerObjectMetadata;
+      const customerClerkId = customer.metadata.clerkId;
+
+      await clerkClient.users.updateUserMetadata(customerClerkId, {
+        privateMetadata: {
+          stripeSubscriptionId: "",
+        },
+      });
+      break;
+    }
     case "payment_intent.succeeded":
       console.log(`🔔  Webhook received: ${event.type}`);
       // Handling anything after payment succeeded.

@@ -38,6 +38,9 @@ export async function createStripeCustomerAction(rawUserData: CreateUser) {
   // Register user to Stripe.
   const stripeCustomer: Stripe.Customer = await stripe.customers.create({
     email,
+    metadata: {
+      clerkId: userCreated.id,
+    },
   });
 
   const userPrivateMetadata = userCreated.privateMetadata;

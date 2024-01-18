@@ -1,7 +1,8 @@
 import { User } from "@clerk/nextjs/server";
 import { billingPlan } from "@/config/billing";
+import type { OmitAndExtend, TweakedOmit } from "@/lib/utils";
 import type { FileWithPath } from "@uploadthing/react";
-// import { UploadFileResponse } from "uploadthing/client";
+import Stripe from "stripe";
 
 export interface CartItem {
   id: number;
@@ -63,6 +64,17 @@ export interface CheckoutSessionCompletedMetadata {
     clerkUserId: string;
   };
 }
+
+export interface CustomerObjectMetadata
+  extends OmitAndExtend<
+    Stripe.Customer,
+    "metadata",
+    {
+      metadata: {
+        clerkId: string;
+      };
+    }
+  > {}
 
 export type UploadFileResponse =
   | { data: UploadData; error: null }
