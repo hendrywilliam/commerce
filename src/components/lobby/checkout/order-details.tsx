@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Product } from "@/db/schema";
 import type { UploadData } from "@/types";
+import { Separator } from "@/components/ui/separator";
 import ImagePlaceholder from "@/components/image-placeholder";
 import { formatCurrency, type Extends, parse_to_json } from "@/lib/utils";
 
@@ -9,6 +10,10 @@ export default function OrderDetails({
 }: {
   orderItems: Extends<Product, { qty: number }>[];
 }) {
+  const totalOrderPrice = orderItems.reduce((total, item) => {
+    return total + Number(item.price) * item.qty;
+  }, 0);
+
   return (
     <div className="w-full h-max">
       {orderItems.map((item) => {
@@ -44,6 +49,21 @@ export default function OrderDetails({
           </div>
         );
       })}
+      <Separator />
+      <div className="flex flex-col w-full">
+        <div className="flex w-full justify-between my-1">
+          <p>Price</p>
+          <p className="font-medium">{formatCurrency(totalOrderPrice)}</p>
+        </div>
+        <div className="flex w-full justify-between my-1">
+          <p>Shipping</p>
+          <p className="font-medium">FREE</p>
+        </div>
+        <div className="flex w-full justify-between my-1">
+          <p>TAX</p>
+          <p className="font-medium">0%</p>
+        </div>
+      </div>
     </div>
   );
 }
