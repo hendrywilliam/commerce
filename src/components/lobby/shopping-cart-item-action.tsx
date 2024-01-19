@@ -72,7 +72,7 @@ export default function ShoppingCartItemAction({
       <div className="inline-flex gap-1">
         <Button
           onClick={() => {
-            void setItemQuantity((val) => val + 1);
+            setItemQuantity((itemQuantity) => itemQuantity + 1);
             setIsNewValue(true);
           }}
           variant={"outline"}
@@ -93,7 +93,7 @@ export default function ShoppingCartItemAction({
         />
         <Button
           onClick={() => {
-            setItemQuantity((val) => val - 1);
+            setItemQuantity((itemQuantity) => itemQuantity - 1);
             setIsNewValue(true);
           }}
           variant={"outline"}

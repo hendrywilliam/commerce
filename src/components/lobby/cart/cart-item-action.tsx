@@ -83,7 +83,7 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
             size={"icon"}
             variant={"outline"}
             onClick={() => {
-              void setProductQuantity((productQuantity) => productQuantity + 1);
+              setProductQuantity((productQuantity) => productQuantity + 1);
               setIsNewValue(true);
             }}
           >
@@ -110,9 +110,7 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
             size={"icon"}
             variant={"outline"}
             onClick={() => {
-              void setProductQuantity((productQuantity) =>
-                productQuantity > 1 ? productQuantity - 1 : 1,
-              );
+              setProductQuantity((productQuantity) => productQuantity - 1);
               setIsNewValue(true);
             }}
           >

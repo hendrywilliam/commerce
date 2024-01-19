@@ -2,9 +2,9 @@
 import { db } from "@/db/core";
 import { eq } from "drizzle-orm";
 import { CartItem } from "@/types";
+import { carts } from "@/db/schema";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { carts, products } from "@/db/schema";
 
 export async function updateCartItemAction(itemId: number, quantity: number) {
   const cartId = cookies().get("cart_id")?.value;
@@ -58,7 +58,7 @@ export async function updateCartItemAction(itemId: number, quantity: number) {
                 quantity + isSelectedItemExistInCart?.qty >
                   (selectedItemDetails.stock as number)
                   ? selectedItemDetails.stock
-                  : quantity + isSelectedItemExistInCart?.qty,
+                  : quantity,
             },
           ]),
       })
