@@ -1,9 +1,9 @@
 "use client";
 
+import { useTransition, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { useTransition, useCallback } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { useQueryString } from "@/hooks/use-query-string";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { IconArrowBackward, IconArrowForward } from "@/components/ui/icons";
 
 interface PaginationProps {
@@ -41,6 +41,34 @@ export default function Pagination({
     }
   }
 
+  const paginationButtons = useMemo(() => {
+    if (totalPage === 1) {
+      return [1];
+    }
+
+    const center = [
+        currentPage - 2,
+        currentPage - 1,
+        currentPage,
+        currentPage + 1,
+        currentPage + 2,
+      ],
+      filteredCenter = center.filter(
+        (page) => page > 1 && page < totalPage,
+      ) as [number | string],
+      includeThreeLeft = currentPage === 5,
+      includeThreeRight = currentPage === totalPage - 4,
+      includeLeftDots = currentPage > 5,
+      includeRightDots = currentPage < totalPage - 4;
+
+    if (includeThreeLeft) filteredCenter.unshift(2);
+    if (includeThreeRight) filteredCenter.push(totalPage - 1);
+    if (includeLeftDots) filteredCenter.unshift("...");
+    if (includeRightDots) filteredCenter.push("...");
+
+    return [1, ...filteredCenter, totalPage];
+  }, [totalPage, currentPage]);
+
   return (
     <div className="inline-flex w-full justify-center gap-2">
       <Button
@@ -51,22 +79,24 @@ export default function Pagination({
       >
         <IconArrowBackward />
       </Button>
-      {Array.from({ length: totalPage }).map((_, i) => {
-        return (
+      {paginationButtons.map((page) => {
+        return isNaN(Number(page)) ? (
+          <Button>{page}</Button>
+        ) : (
           <Button
             onClick={() =>
               void startTransition(() => {
                 router.push(
-                  `${pathname}?${createQueryString("page", String(i + 1))}`,
+                  `${pathname}?${createQueryString("page", String(page))}`,
                 );
               })
             }
-            size={"icon"}
-            variant={"outline"}
-            key={i}
+            size="icon"
+            variant={currentPage === page ? "default" : "outline"}
+            key={page}
             disabled={isPending}
           >
-            {i + 1}
+            {page}
           </Button>
         );
       })}

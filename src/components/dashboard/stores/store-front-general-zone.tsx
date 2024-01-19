@@ -58,7 +58,6 @@ export default function DashboardStoreFrontGeneralZone({
 
   return (
     <div className="flex flex-col mt-4 gap-1">
-      <h1 className="font-bold text-xl">General</h1>
       <div className="flex flex-col py-2 justify-between gap-4">
         <div>
           <p className="font-bold">Activate Your Store</p>
@@ -99,6 +98,10 @@ export default function DashboardStoreFrontGeneralZone({
             value={storePublicInformation.name}
             className="border focus:ring-2 focus-visible:ring-muted outline-none disabled:opacity-75 w-1/4 mt-2"
           />
+          <p className="text-gray-500 text-sm mt-2">
+            This is your store unique identifier. It can be anything as long it
+            does not contains any bad words.
+          </p>
         </div>
         <div>
           <label htmlFor="store-description" className="font-bold">
@@ -115,6 +118,10 @@ export default function DashboardStoreFrontGeneralZone({
             name="store-description"
             className="border focus:ring-2 ring-muted focus-visible:ring-muted outline-none focus:outline-none p-2 disabled:opacity-75 h-56 w-1/2 rounded resize-none mt-2"
           />
+          <p className="text-gray-500 text-sm mt-2">
+            Use any appropriate words to describe this store. This is visible to
+            public.
+          </p>
         </div>
         <div className="flex justify-end mt-4">
           {anyChangesCommited && (

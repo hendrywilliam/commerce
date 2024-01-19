@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { CheckmarkOrderStatusIcon } from "@/components/ui/icons";
+import { CheckmarkIcon } from "@/components/ui/icons";
 
 interface OrderStatusProps {
   orderStatus: Stripe.PaymentIntent.Status;
@@ -10,7 +10,7 @@ export default function OrderStatus({ orderStatus }: OrderStatusProps) {
     return (
       <div className="flex w-full justify-center text-center">
         <div className="flex flex-col w-full lg:w-1/2 p-4 items-center">
-          <CheckmarkOrderStatusIcon className="w-[2em] h-[2em]" />
+          <CheckmarkIcon className="w-[2em] h-[2em]" />
           <h1 className="font-semibold text-2xl">Payment Succeeded!</h1>
           <p>
             Thank you for your purchase. Your items will be delivered next to
