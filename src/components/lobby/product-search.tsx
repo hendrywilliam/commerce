@@ -1,14 +1,14 @@
 "use client";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Product } from "@/db/schema";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SearchIcon } from "@/components/ui/icons";
-import { get_products_search_fetcher } from "@/fetchers/products/get-products-search";
-import { Product } from "@/db/schema";
-import { useRouter } from "next/navigation";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { IconBackpack, IconShoes, IconClothing } from "@/components/ui/icons";
+import { get_products_search_fetcher } from "@/fetchers/products/get-products-search";
 
 const getCategoryIcon = (category: string) => {
   switch (category) {
@@ -94,38 +94,40 @@ export default function ProductSearch() {
               placeholder="Type product name... "
             />
           </div>
-          {!hasNoResult && results ? (
-            Object.entries(results).map(([category, products], i) => {
-              return (
-                <div key={i}>
-                  <div className="text-xs px-1 text-gray-400">
-                    <h2>{category}</h2>
+          <div className="max-h-[300px] overflow-y-auto">
+            {!hasNoResult && results ? (
+              Object.entries(results).map(([category, products], i) => {
+                return (
+                  <div key={i}>
+                    <div className="text-xs px-1 text-gray-400">
+                      <h2>{category}</h2>
+                    </div>
+                    <div className="px-1 py-2">
+                      {products.map((item) => {
+                        return (
+                          <Button
+                            variant={"ghost"}
+                            className="w-full h-8 justify-start px-1 gap-2"
+                            onClick={() =>
+                              void router.push(`/product/${item.slug}`)
+                            }
+                            key={item.id}
+                          >
+                            {getCategoryIcon(item.category)}
+                            {item.name}
+                          </Button>
+                        );
+                      })}
+                    </div>
                   </div>
-                  <div className="px-1 py-2">
-                    {products.map((item) => {
-                      return (
-                        <Button
-                          variant={"ghost"}
-                          className="w-full h-8 justify-start px-1 gap-2"
-                          onClick={() =>
-                            void router.push(`/product/${item.slug}`)
-                          }
-                          key={item.id}
-                        >
-                          {getCategoryIcon(item.category)}
-                          {item.name}
-                        </Button>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })
-          ) : (
-            <div className="flex p-2 w-full justify-center">
-              <p>No results found.</p>
-            </div>
-          )}
+                );
+              })
+            ) : (
+              <div className="flex p-2 w-full justify-center">
+                <p>No results found.</p>
+              </div>
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </>
