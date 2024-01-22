@@ -5,6 +5,7 @@ import { inArray } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
 import { UserObjectCustomized } from "@/types";
+import { AddStoreIcon } from "@/components/ui/icons";
 import { buttonVariants } from "@/components/ui/button";
 import DashboardStoreCard from "@/components/dashboard/stores/store-card";
 
@@ -40,10 +41,11 @@ export default async function DashboardStoresPage() {
         </div>
         <div className="flex-1">
           <Link
-            className={buttonVariants({ class: "w-max" })}
+            className={buttonVariants({ class: "w-max flex gap-2" })}
             href={"stores/new-store"}
           >
-            Create Store
+            New Store
+            <AddStoreIcon />
           </Link>
         </div>
       </div>

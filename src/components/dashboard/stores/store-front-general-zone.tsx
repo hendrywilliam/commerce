@@ -12,13 +12,13 @@ import { useEffect, useState, useTransition } from "react";
 import { updateOwnedStoreAction } from "@/actions/stores/update-store";
 import { createAccountLinkAction } from "@/actions/stripe/create-account-link";
 
-interface DashboardStoreFrontGeneralZoneProps {
+interface StorefrontGeneralZoneProps {
   store: Store;
 }
 
-export default function DashboardStoreFrontGeneralZone({
+export default function StorefrontGeneralZone({
   store,
-}: DashboardStoreFrontGeneralZoneProps) {
+}: StorefrontGeneralZoneProps) {
   const [previousStorePublicInformation, setPreviousStorePublicInformation] =
     useState(store);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,17 +57,10 @@ export default function DashboardStoreFrontGeneralZone({
   }, [storePublicInformation, previousStorePublicInformation]);
 
   return (
-    <div className="flex flex-col mt-4 gap-1">
-      <div className="flex flex-col py-2 justify-between gap-4">
+    <div className="flex flex-col">
+      <div className="flex flex-col justify-between gap-4">
         <div>
-          <p className="font-bold">Activate Your Store</p>
           <div className="inline-flex justify-between w-full">
-            <p>
-              Your store status is:{" "}
-              <span className="font-semibold">
-                {store.active ? "Active" : "Not Active"}
-              </span>
-            </p>
             <Button
               disabled={store.active || isPending}
               aria-disabled={store.active ? "true" : "false"}
@@ -79,13 +72,13 @@ export default function DashboardStoreFrontGeneralZone({
               className="inline-flex gap-2"
             >
               {isPending && <IconLoading />}
-              Activate
+              Activate Store
             </Button>
           </div>
         </div>
         <div>
           <label htmlFor="store-name" className="font-bold">
-            Store name
+            Store Name
           </label>
           <Input
             onChange={(e) =>
@@ -105,7 +98,7 @@ export default function DashboardStoreFrontGeneralZone({
         </div>
         <div>
           <label htmlFor="store-description" className="font-bold">
-            Store description
+            Store Description
           </label>
           <Textarea
             value={storePublicInformation.description}
@@ -123,18 +116,16 @@ export default function DashboardStoreFrontGeneralZone({
             public.
           </p>
         </div>
-        <div className="flex justify-end mt-4">
-          {anyChangesCommited && (
-            <Button
-              disabled={isLoading}
-              aria-disabled={isLoading ? "true" : "false"}
-              className="inline-flex gap-2"
-              onClick={updateSelectedStore}
-            >
-              {isLoading && <IconLoading />}
-              Confirm Changes
-            </Button>
-          )}
+        <div className="mt-4">
+          <Button
+            disabled={isLoading || !anyChangesCommited}
+            aria-disabled={isLoading || !anyChangesCommited ? "true" : "false"}
+            className="inline-flex gap-2"
+            onClick={updateSelectedStore}
+          >
+            {isLoading && <IconLoading />}
+            Confirm Changes
+          </Button>
         </div>
         {/* <SeedButton storeId={store.id} /> */}
       </div>

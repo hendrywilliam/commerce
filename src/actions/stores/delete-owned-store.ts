@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 import { UserObjectCustomized } from "@/types";
 import { currentUser, clerkClient, auth } from "@clerk/nextjs";
 
-export async function deleteOwnedStore(id: Store["id"]) {
+export async function delete_owned_store_action(id: Store["id"]) {
   const { userId } = auth();
 
   if (!userId) {

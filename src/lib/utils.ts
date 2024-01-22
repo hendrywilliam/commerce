@@ -2,7 +2,6 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { baseUrl } from "@/config/site";
 import { twMerge } from "tailwind-merge";
-import { BillingPlan } from "@/types";
 import { User } from "@clerk/nextjs/server";
 import { type ClassValue, clsx } from "clsx";
 import type { CartLineDetailedItems } from "@/types";

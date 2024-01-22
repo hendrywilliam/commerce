@@ -1,28 +1,29 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { deleteOwnedStore } from "@/actions/stores/delete-owned-store";
 import { useState } from "react";
+import { Store } from "@/db/schema";
 import { catchError } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { IconLoading } from "@/components/ui/icons";
+import { delete_owned_store_action } from "@/actions/stores/delete-owned-store";
 
-interface DashboardStoreFrontDangerZoneProps {
-  id: number;
+interface StorefrontDangerZone {
+  storeId: Store["id"];
 }
 
-export default function DashboardStoreFrontDangerZone({
-  id,
-}: DashboardStoreFrontDangerZoneProps) {
+export default function StorefrontDangerZone({
+  storeId,
+}: StorefrontDangerZone) {
   const [isDisabled, setIsDisabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isConfirmedToDelete, setIsConfirmedToDelete] = useState(false);
 
-  async function deleteThisStore() {
+  async function delete_store() {
     setIsDisabled((isDisabled) => !isDisabled);
     setIsLoading((isLoading) => !isLoading);
     try {
-      await deleteOwnedStore(id);
+      await delete_owned_store_action(storeId);
       toast.success("Store deleted successfully.");
     } catch (err) {
       catchError(err);
@@ -34,7 +35,7 @@ export default function DashboardStoreFrontDangerZone({
   }
 
   return (
-    <div className="flex flex-col mt-4 gap-1">
+    <div className="flex flex-col text-sm mt-4 gap-1">
       <h1 className="font-bold text-xl text-destructive">Danger Zone</h1>
       <div className="flex border border-destructive rounded p-2 justify-between">
         <div>
@@ -48,7 +49,7 @@ export default function DashboardStoreFrontDangerZone({
           {isConfirmedToDelete ? (
             <Button
               className="flex gap-1"
-              onClick={deleteThisStore}
+              onClick={delete_store}
               variant={"destructive"}
               disabled={isDisabled}
             >
