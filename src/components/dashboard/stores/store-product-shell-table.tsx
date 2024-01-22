@@ -48,7 +48,9 @@ export default function DashboardStoreProductShellTable({
         }),
         storeProductColumnHelper.accessor("name", {
           header: () => "Name",
-          cell: (info) => info.getValue(),
+          cell: (info) => (
+            <span className="font-medium">{info.getValue()}</span>
+          ),
           footer: (info) => info.column.id,
         }),
         storeProductColumnHelper.accessor("price", {
