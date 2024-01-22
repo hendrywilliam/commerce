@@ -4,8 +4,12 @@ import { useTransition } from "react";
 import type { BillingPlan } from "@/types";
 import { Button } from "@/components/ui/button";
 import { catchError, formatCurrency } from "@/lib/utils";
-import { IconLoading, IconArrowForward } from "@/components/ui/icons";
 import { manageSubscriptionAction } from "@/actions/stripe/manage-subscription";
+import {
+  IconLoading,
+  IconArrowForward,
+  CheckmarkIcon,
+} from "@/components/ui/icons";
 
 interface DashboardBillingPlanCard extends BillingPlan {
   stripeCustomerId: string;
@@ -18,7 +22,7 @@ export default function DashboardBillingPlanCard({
 
   return (
     <div
-      className="flex flex-col border rounded p-4 h-96 justify-between shadow-sm"
+      className="flex flex-col border rounded p-4 h-96 max-h-fit justify-between shadow-sm"
       key={plan.id}
     >
       <div>
@@ -29,8 +33,16 @@ export default function DashboardBillingPlanCard({
         </p>
         <p className="text-gray-500 text-sm">{plan.description}</p>
         <div className="my-4">
-          <ul>
-            <li></li>
+          <ul className="flex flex-col gap-2">
+            {plan.advantages.map((advantage, index) => (
+              <li
+                className="inline-flex items-center gap-2 text-gray-500"
+                key={index}
+              >
+                <CheckmarkIcon />
+                <span>{advantage}</span>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

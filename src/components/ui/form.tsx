@@ -44,7 +44,7 @@ export const FormField = forwardRef<FormFieldRef, FormField>(
         {props.children}
       </fieldset>
     );
-  }
+  },
 );
 
 FormField.displayName = "FormField";
@@ -69,7 +69,7 @@ export const FormLabel = forwardRef<FormLabelRef, FormLabel>(
         {props.children}
       </label>
     );
-  }
+  },
 );
 
 FormLabel.displayName = "FormLabel";
@@ -107,11 +107,12 @@ export const FormInput = forwardRef<FormInputRef, FormInput>(
     return (
       <input
         className={cn(formInputVariant({ variant, size, className }))}
+        autoComplete="off"
         {...props}
         ref={ref}
       />
     );
-  }
+  },
 );
 
 FormInput.displayName = "FormInput";
@@ -124,7 +125,7 @@ export interface FormMessage
 
 type FormMessageRef = HTMLParagraphElement;
 
-const formMessageVariant = cva("text-base mt-2", {
+const formMessageVariant = cva("text-sm text-gray-500", {
   variants: {
     variant: {
       error: "text-destructive text-sm",
@@ -147,14 +148,14 @@ export const FormMessage = forwardRef<FormMessageRef, FormMessage>(
             variant,
             size,
             className,
-          })
+          }),
         )}
         {...props}
       >
         {props.children}
       </p>
     );
-  }
+  },
 );
 
 FormMessage.displayName = "FormMessage";
@@ -167,7 +168,7 @@ export interface FormTextarea
 type FormTextareaRef = HTMLTextAreaElement;
 
 const formTextVariants = cva(
-  "border rounded-md resize-none p-2 text-sm focus:ring-2 ring-muted outline-none bg-transparent disabled:opacity-75"
+  "border rounded-md resize-none p-2 text-sm focus:ring-2 ring-muted outline-none bg-transparent disabled:opacity-75",
 );
 
 type FormTextareaVariants = VariantProps<typeof formTextVariants>;
@@ -183,7 +184,7 @@ export const FormTextarea = forwardRef<FormTextareaRef, FormTextarea>(
         {props.children}
       </textarea>
     );
-  }
+  },
 );
 
 FormTextarea.displayName = "FormTextarea";

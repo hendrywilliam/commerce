@@ -5,6 +5,7 @@ import {
   FormInput,
   FormLabel,
   FormTextarea,
+  FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { catchError } from "@/lib/utils";
@@ -29,28 +30,31 @@ export default function CreateNewStoreForm() {
 
   const onSubmit = handleSubmit(async function (data) {
     setIsLoading(true);
-    await createNewStoreAction({
-      description: data.description,
-      name: data.name,
-    })
-      .then((res) => {
-        toast.success("A new store created!");
-      })
-      .catch((err) => {
-        catchError(err);
-      })
-      .finally(() => {
-        void setIsLoading(false);
-        formRef.current?.reset();
+    try {
+      await createNewStoreAction({
+        description: data.description,
+        name: data.name,
       });
+      toast.success("A new store created.");
+    } catch (error) {
+      catchError(error);
+    } finally {
+      setIsLoading((isLoading) => !isLoading);
+      formRef.current?.reset();
+    }
   });
 
   return (
     <div className="mt-4">
-      <Form ref={formRef} onSubmit={onSubmit}>
+      <Form ref={formRef} onSubmit={onSubmit} className="flex flex-col gap-2">
         <FormField>
           <FormLabel>Store Name</FormLabel>
           <FormInput {...register("name")} />
+          <FormMessage>
+            Your store unique identifier. Users can see this.
+          </FormMessage>
+        </FormField>
+        <FormField>
           <FormLabel>Description</FormLabel>
           <FormTextarea
             rows={1}
@@ -58,13 +62,18 @@ export default function CreateNewStoreForm() {
             className="h-52"
             {...register("description")}
           />
+          <FormMessage>
+            Describe your store in simple words. Users can see this.
+          </FormMessage>
+        </FormField>
+        <FormField className="mt-4">
           <Button
             className="gap-1 disabled:opacity-75"
             type="submit"
             disabled={isLoading}
           >
             {isLoading && <IconLoading />}
-            Submit
+            Add New Store
           </Button>
         </FormField>
       </Form>
