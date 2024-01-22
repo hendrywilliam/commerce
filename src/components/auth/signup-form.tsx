@@ -2,15 +2,16 @@
 
 import { toast } from "sonner";
 import { useState } from "react";
+import { siteName } from "@/config/site";
 import { catchError } from "@/lib/utils";
+import { useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useZodForm } from "@/hooks/use-zod-form";
-import { useSignUp } from "@clerk/nextjs";
 import { IconLoading } from "@/components/ui/icons";
 import { registerValidation } from "@/lib/validations/user";
-import { createStripeCustomerAction } from "@/actions/stripe/create-stripe-customer";
 import { Form, FormField, FormInput, FormLabel } from "@/components/ui/form";
+import { createStripeCustomerAction } from "@/actions/stripe/create-stripe-customer";
 
 export default function SignUpForm() {
   const { isLoaded } = useSignUp();
@@ -35,7 +36,7 @@ export default function SignUpForm() {
         confirmPassword: data.confirmPassword,
       });
       toast.success("Register success. Redirecting to lobby.");
-      router.push("/");
+      router.push("/sign-in");
     } catch (error) {
       catchError(errors);
     } finally {
@@ -82,9 +83,9 @@ export default function SignUpForm() {
             name="confirmPassword"
           />
         </FormField>
-        <p className="text-xs text-gray-600">
-          By registering, you agree to processing your personal data by
-          pointaside
+        <p className="text-sm text-gray-500">
+          By registering, you agree to processing your personal data by{" "}
+          {siteName}
         </p>
         <Button
           disabled={isLoading}

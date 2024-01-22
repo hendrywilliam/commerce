@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { db } from "@/db/core";
 import { eq } from "drizzle-orm";
 import { stores } from "@/db/schema";
@@ -6,6 +7,7 @@ import Pagination from "@/components/pagination";
 import type { UserObjectCustomized } from "@/types";
 import { notFound, redirect } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
+import { buttonVariants } from "@/components/ui/button";
 import { get_products_page_fetcher } from "@/fetchers/products/get-products-page";
 import { get_all_products_and_store_fetcher } from "@/fetchers/products/get-all-products-and-stores";
 import DashboardStoreProductShellTable from "@/components/dashboard/stores/store-product-shell-table";
@@ -70,9 +72,21 @@ export default async function DashboardStoreProductsPage({
 
   return (
     <div>
-      <div>
-        <h1 className="font-bold text-2xl">Products</h1>
-        <p className="text-gray-500">List of store products.</p>
+      <div className="w-full flex">
+        <div className="w-full">
+          <h1 className="font-bold text-2xl">Products</h1>
+          <p className="text-gray-500">List of store products.</p>
+        </div>
+        <div>
+          <Link
+            href="products/add-new-product"
+            className={buttonVariants({
+              class: "w-max",
+            })}
+          >
+            New Product
+          </Link>
+        </div>
       </div>
       <Separator />
       <DashboardStoreProductShellTable storeProductData={productData} />

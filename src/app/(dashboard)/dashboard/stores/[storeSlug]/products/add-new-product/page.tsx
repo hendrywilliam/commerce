@@ -6,8 +6,8 @@ export default function StoreAddNewProductPage() {
       <div className="w-full">
         <div className="w-full inline-flex border-b pb-4">
           <div className="w-full">
-            <h1 className="font-bold text-2xl w-[75%]">Store Product</h1>
-            <p className="w-[75%]">Add new product to your store.</p>
+            <h1 className="font-bold text-2xl">New Product</h1>
+            <p className="text-gray-500">Add new product to your store.</p>
           </div>
           <div className="flex-1"></div>
         </div>
