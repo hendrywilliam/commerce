@@ -1,8 +1,8 @@
-import { FileWithPath } from "@uploadthing/react";
 import { z } from "zod";
+import { UploadData } from "@/types";
 
 const MAXIMUM_FILE_UPLOAD_IN_BYTES = 1024 * 1024 * 4;
-const ALLOWED_FILE_EXTENSION = ["jpg", "jpeg", "png"];
+const ALLOWED_FILE_EXTENSION = ["jpeg", "png", "jpg"];
 
 export const newProductValidation = z.object({
   name: z.string().min(5, {
@@ -35,21 +35,25 @@ export const newProductValidation = z.object({
     .min(1, {
       message: "Product image is required",
     })
-    .max(1)
-    .superRefine((val: FileWithPath[], ctx) => {
-      if (val[0]?.size > MAXIMUM_FILE_UPLOAD_IN_BYTES) {
+    .max(4)
+    .superRefine((files: UploadData[], ctx) => {
+      const isExceedingSizeLimit = files.every(
+        (file) => file.size > MAXIMUM_FILE_UPLOAD_IN_BYTES,
+      );
+
+      if (isExceedingSizeLimit) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: "File size exceeds limit",
         });
       }
 
-      const getImageExtension = val[0].name.split(".");
-      if (
-        !ALLOWED_FILE_EXTENSION.includes(
-          getImageExtension[getImageExtension.length - 1],
-        )
-      ) {
+      const isInvalidType = files.every((file) => {
+        const fileExtension = file.name.split(".").pop();
+        return !ALLOWED_FILE_EXTENSION.includes(fileExtension!);
+      });
+
+      if (isInvalidType) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message:

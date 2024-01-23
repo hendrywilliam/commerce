@@ -14,14 +14,21 @@ import { products, stores } from "@/db/schema";
 import { newProductValidation } from "@/lib/validations/product";
 import { check_product_availability_action } from "./check-product-availability";
 
+async function fallback_delete_images(images: NewProduct["image"]) {
+  const utapi = new UTApi();
+  const imageFileKeys = (images as UploadData[]).map((image) => image.key);
+  return await utapi.deleteFiles(imageFileKeys);
+}
+
 export async function addNewProductAction(
   input: TweakedOmit<NewProduct, "slug">,
   storeSlug: string,
 ) {
   const parsedNewProductInput = await newProductValidation.spa(input);
-  const utapi = new UTApi();
 
   if (!parsedNewProductInput.success) {
+    await fallback_delete_images(input.image);
+
     throw new Error(parsedNewProductInput.error.message);
   }
 
@@ -53,13 +60,7 @@ export async function addNewProductAction(
   });
 
   if (!product) {
-    // Fallback delete the files.
-    const imageFileKeys = (input.image as UploadData[]).map(
-      (image) => image.key,
-    );
-
-    await utapi.deleteFiles(imageFileKeys);
-    throw new Error("Something went wrong. Please try again later.");
+    await fallback_delete_images(input.image);
   }
 
   revalidatePath("/");

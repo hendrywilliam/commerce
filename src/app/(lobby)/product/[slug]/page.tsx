@@ -57,7 +57,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   const parsedImage = parse_to_json<UploadData[]>(product.image as string)[0]
-    .url;
+    ?.url;
 
   return (
     <div className="flex flex-col container h-full w-full py-8">

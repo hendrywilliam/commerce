@@ -53,6 +53,7 @@ export default function ProductForm() {
   async function onSubmit(data: NewProductInput) {
     setIsLoading((isLoading) => !isLoading);
     try {
+      console.log(data);
       const returnFromUploadedFile = await startUpload(data.image);
       const productData = {
         ...data,
@@ -60,7 +61,7 @@ export default function ProductForm() {
       } satisfies Omit<NewProduct, "slug" | "storeId">;
 
       await addNewProductAction(productData, routeParams.storeSlug);
-      toast.success("Success add new product.");
+      toast.success("New product added to store.");
       setSelectedFiles([]);
       reset();
     } catch (err) {
@@ -89,7 +90,9 @@ export default function ProductForm() {
           selectedFiles={selectedFiles}
           isLoading={isLoading}
         />
-        <FormMessage>Upload product image with maximum 4MB each.</FormMessage>
+        <FormMessage>
+          Upload product images with maximum 4 images, and 4MB each.
+        </FormMessage>
       </FormField>
       <FormField>
         <FormLabel htmlFor="product-name-input">Product Name</FormLabel>
