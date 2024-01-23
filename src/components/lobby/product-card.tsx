@@ -9,8 +9,8 @@ import type { UploadData } from "@/types";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
 import ImagePlaceholder from "@/components/image-placeholder";
-import { catchError, formatCurrency, parse_to_json } from "@/lib/utils";
 import { addItemInCartAction } from "@/actions/carts/add-item-in-cart";
+import { catchError, formatCurrency, parse_to_json } from "@/lib/utils";
 import { IconCart, IconLoading, IconView } from "@/components/ui/icons";
 
 type ProductCardProps = {
@@ -36,7 +36,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     .url;
 
   return (
-    <div className="group relative h-80 w-full cursor">
+    <div className="group relative h-80 w-full">
       <div className="absolute z-[2] top-2 right-2 rounded px-2 py-1 bg-foreground text-white font-semibold">
         <p className="text-xs">{formatCurrency(Number(product.price))}</p>
       </div>

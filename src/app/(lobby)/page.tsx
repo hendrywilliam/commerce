@@ -6,6 +6,7 @@ import StoreCard from "@/components/lobby/store-card";
 import { buttonVariants } from "@/components/ui/button";
 import ProductCard from "@/components/lobby/product-card";
 import CategoriesShowcase from "@/components/lobby/categories-showcase";
+import ProductCardSkeleton from "@/components/lobby/product-card-skeleton";
 
 export default async function IndexPage() {
   const featuredStores = (await db.select().from(stores).limit(4)) as Omit<

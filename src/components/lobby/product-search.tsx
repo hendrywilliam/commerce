@@ -69,21 +69,19 @@ export default function ProductSearch() {
 
   return (
     <>
-      <div>
-        <Button
-          variant={"outline"}
-          className="inline-flex w-9 p-2 lg:w-64 h-full"
-          onClick={() => void setIsOpen((val) => !val)}
-        >
-          <span className="hidden lg:inline-flex gap-2">
-            Search any products..
-            <kbd className="w-max text-xs border rounded px-1 bg-muted-foreground/10">
-              Ctrl + K
-            </kbd>
-          </span>
-          <SearchIcon className="flex lg:hidden w-[1em]" />
-        </Button>
-      </div>
+      <Button
+        variant={"outline"}
+        className="inline-flex w-9 p-2 lg:w-max h-full"
+        onClick={() => void setIsOpen((val) => !val)}
+      >
+        <span className="hidden lg:inline-flex gap-2">
+          Search products..
+          <kbd className="w-max text-xs border rounded px-1 bg-muted-foreground/10">
+            Ctrl + K
+          </kbd>
+        </span>
+        <SearchIcon className="flex lg:hidden w-[1em]" />
+      </Button>
       <Dialog open={isOpen} onOpenChange={(isOpen) => setIsOpen(isOpen)}>
         <DialogContent className="p-1 gap-1">
           <div className="inline-flex py-1 px-2">

@@ -17,6 +17,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { useTransition } from "react";
 import ReactSlider from "react-slider";
@@ -310,6 +312,8 @@ export default function Products({
             Sort <IconSort />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-40">
+            <DropdownMenuLabel>Sort Products</DropdownMenuLabel>
+            <DropdownMenuSeparator />
             {sortingProductsItem.map((sortingItem, i) => (
               <DropdownMenuItem
                 key={i}
