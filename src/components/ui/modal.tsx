@@ -1,10 +1,19 @@
 "use client";
-import { useCallback, useRef, useEffect, MouseEventHandler } from "react";
+
+import {
+  useCallback,
+  useRef,
+  useEffect,
+  MouseEventHandler,
+  ElementRef,
+} from "react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { XmarkIcon } from "@/components/ui/icons";
 
 export default function Modal({ children }: { children: React.ReactNode }) {
-  const overlay = useRef(null);
-  const wrapper = useRef(null);
+  const overlay = useRef<ElementRef<"div">>(null);
+  const wrapper = useRef<ElementRef<"div">>(null);
   const router = useRouter();
 
   const onDismiss = useCallback(() => {
@@ -17,14 +26,14 @@ export default function Modal({ children }: { children: React.ReactNode }) {
         if (onDismiss) onDismiss();
       }
     },
-    [onDismiss, overlay, wrapper]
+    [onDismiss, overlay, wrapper],
   );
 
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") onDismiss();
     },
-    [onDismiss]
+    [onDismiss],
   );
 
   useEffect(() => {
@@ -35,13 +44,18 @@ export default function Modal({ children }: { children: React.ReactNode }) {
   return (
     <div
       ref={overlay}
-      className="fixed z-30 left-0 right-0 top-0 bottom-0 mx-auto bg-black/60"
+      className="fixed z-30 left-0 right-0 top-0 bottom-0 mx-auto bg-black/60 backdrop-blur-sm"
       onClick={onClick}
     >
       <div
         ref={wrapper}
-        className="absolute h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full sm:w-10/12 md:w-8/12 lg:w-1/2 p-6"
+        className="absolute flex flex-col h-1/2 bg-background rounded top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full md:w-3/4 lg:w-1/2 p-4 "
       >
+        <div className="flex w-full justify-end">
+          <Button onClick={onDismiss} variant="ghost" className="px-2.5 py-0">
+            <XmarkIcon />
+          </Button>
+        </div>
         {children}
       </div>
     </div>

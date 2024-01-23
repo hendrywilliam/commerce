@@ -37,8 +37,8 @@ export default async function DashboardStoresPage() {
     <div className="h-1/2 w-full">
       <div className="w-full inline-flex">
         <div className="w-full">
-          <h1 className="font-bold text-2xl w-[75%]">Stores</h1>
-          <p className="w-[75%] text-gray-500">
+          <h1 className="font-bold text-2xl">Stores</h1>
+          <p className="text-gray-500">
             Manage your stores or create a new one.
           </p>
         </div>

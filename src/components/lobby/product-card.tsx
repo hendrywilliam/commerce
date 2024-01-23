@@ -27,7 +27,6 @@ export default function ProductCard({ product }: ProductCardProps) {
       toast.success("Item added to your cart.");
       setIsLoading((isLoading) => !isLoading);
     } catch (error) {
-      console.log(error);
       catchError(error);
     }
   }
@@ -36,7 +35,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     .url;
 
   return (
-    <div className="group relative h-80 w-full">
+    <div className="group relative h-80 w-full border rounded">
       <div className="absolute z-[2] top-2 right-2 rounded px-2 py-1 bg-foreground text-white font-semibold">
         <p className="text-xs">{formatCurrency(Number(product.price))}</p>
       </div>
