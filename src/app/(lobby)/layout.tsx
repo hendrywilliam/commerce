@@ -7,7 +7,7 @@ export default function LobbyLayout(props: {
 }) {
   return (
     <div>
-      <div className="flex flex-col min-h-screen w-full text-sm">
+      <div className="flex flex-col min-h-screen w-full">
         <SiteHeader />
         <main className="flex-1">{props.children}</main>
         <SiteFooter />

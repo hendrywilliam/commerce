@@ -345,8 +345,11 @@ export default function Products({
           <Pagination totalPage={productsPageCount} currentPage={currentPage} />
         </>
       ) : (
-        <div className="w-full">
-          <p>No product found.</p>
+        <div className="flex items-center justify-center min-h-[450px] text-center">
+          <h1 className="text-xl">
+            Unfortunately, there is no product found. Try to change the filter
+            or refresh the page.
+          </h1>
         </div>
       )}
     </div>

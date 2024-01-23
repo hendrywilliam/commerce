@@ -27,6 +27,10 @@ export async function createPaymentIntentAction({
     throw new Error("Invalid Cart ID. Please try again later.");
   }
 
+  if (!storeId) {
+    throw new Error("Invalid Store ID, Please try again later.");
+  }
+
   const parsedCartItems = await cartDetailedItemsValidation.spa(cartItem);
 
   if (!parsedCartItems.success) {
@@ -37,10 +41,6 @@ export async function createPaymentIntentAction({
 
   if (!user) {
     redirect("/sign-in");
-  }
-
-  if (!storeId) {
-    throw new Error("Invalid Store ID, Please try again later.");
   }
 
   const accountDetails = await get_account_details_fetcher(storeId);

@@ -105,7 +105,11 @@ export default async function StorePage({
               />
             </>
           ) : (
-            <p>No product found</p>
+            <div className="flex items-center justify-center min-h-[450px] text-center">
+              <h1 className="text-xl">
+                No product in this store or try to refresh the page.
+              </h1>
+            </div>
           )}
         </div>
       </div>

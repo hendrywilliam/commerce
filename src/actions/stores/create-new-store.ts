@@ -11,6 +11,7 @@ import { currentUser } from "@clerk/nextjs";
 import { billingPlan } from "@/config/billing";
 import { auth, clerkClient } from "@clerk/nextjs";
 import type { UserObjectCustomized } from "@/types";
+import { newStoreValidation } from "@/lib/validations/stores";
 import { check_store_availability_action } from "./check-store-availability";
 import { get_current_subscription_fetcher } from "@/fetchers/stripe/get-current-subscription";
 
@@ -22,6 +23,12 @@ export async function createNewStoreAction(
 
   if (!userId) {
     throw new Error("You must be signed in to create a new store");
+  }
+
+  const validateStoreData = await newStoreValidation.spa(storeData);
+
+  if (!validateStoreData.success) {
+    throw new Error(validateStoreData.error.message);
   }
 
   await check_store_availability_action({ storeName: storeData.name });

@@ -2,7 +2,7 @@
 
 import { db } from "@/db/core";
 import { stores } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
+import { and, eq, not } from "drizzle-orm";
 
 export async function check_store_availability_action({
   storeId,
@@ -13,7 +13,7 @@ export async function check_store_availability_action({
 }) {
   const store = await db.query.stores.findFirst({
     where: storeId
-      ? and(eq(stores.id, storeId), eq(stores.name, storeName))
+      ? and(not(eq(stores.id, storeId)), eq(stores.name, storeName))
       : eq(stores.name, storeName),
   });
 

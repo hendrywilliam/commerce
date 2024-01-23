@@ -7,8 +7,10 @@ export const storeValidation = z.object({
   description: z.string().min(1, {
     message: "Description is required",
   }),
-  active: z.boolean().default(true),
+  active: z.boolean().default(false),
 });
+
+export const newStoreValidation = storeValidation.omit({ active: true });
 
 export const cartDetailedItemsValidation = z
   .object({

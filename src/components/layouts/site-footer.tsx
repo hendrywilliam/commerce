@@ -1,17 +1,19 @@
+import { GithubIcon } from "@/components/ui/icons";
+import { buttonVariants } from "@/components/ui/button";
 import { footerNavigation, siteName } from "@/config/site";
 
 export default function SiteFooter() {
   return (
-    <footer className="border-t text-sm h-64">
+    <footer className="border-t text-sm h-full">
       <div className="container h-full w-full py-8">
-        <div className="flex justify-between h-full">
-          <div className="flex flex-col h-full w-1/2 justify-between">
+        <div className="flex flex-col gap-4 lg:flex-row justify-between h-full">
+          <div className="flex flex-col w-full h-full order-2 lg:w-1/2 lg:order-1 justify-between">
             <p className="font-bold">{siteName}</p>
-            <p className="text-xs">
+            <p className="text-sm">
               Made by <span className="font-bold">hendry</span>
             </p>
           </div>
-          <div className="grid grid-cols-2 w-1/2">
+          <div className="grid grid-cols-2 w-full order-1 lg:w-1/2 lg:order-2">
             {footerNavigation.map((item, i) => {
               return (
                 <div key={i}>
@@ -34,6 +36,17 @@ export default function SiteFooter() {
               );
             })}
           </div>
+        </div>
+        <div className="flex w-full justify-end">
+          <a
+            className={buttonVariants({
+              variant: "ghost",
+              size: "icon",
+            })}
+            href="https://github.com/hendrywilliam/commerce"
+          >
+            <GithubIcon className="h-4 w-4" />
+          </a>
         </div>
       </div>
     </footer>
