@@ -257,27 +257,15 @@ export default function ProductForm({
         />
         <FormMessage>Input your product stock, minimal value is 1.</FormMessage>
       </FormField>
-      {productStatus === "new-product" ? (
-        <Button
-          className="inline-flex gap-2 mt-10"
-          aria-disabled={isLoading}
-          disabled={isLoading}
-          type="submit"
-        >
-          {isLoading && <IconLoading />}
-          Submit Product
-        </Button>
-      ) : (
-        <Button
-          className="inline-flex gap-2 mt-10"
-          aria-disabled={isLoading}
-          disabled={isLoading}
-          type="submit"
-        >
-          {isLoading && <IconLoading />}
-          Update Product
-        </Button>
-      )}
+      <Button
+        className="inline-flex gap-2 mt-10"
+        aria-disabled={isLoading}
+        disabled={isLoading}
+        type="submit"
+      >
+        {isLoading && <IconLoading />}
+        {productStatus === "new-product" ? "Submit Product" : "Update Product"}
+      </Button>
     </Form>
   );
 }

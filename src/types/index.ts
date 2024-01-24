@@ -61,37 +61,21 @@ export interface PaymentIntentMetadata {
 }
 
 export interface CheckoutSessionCompletedMetadata {
-  metadata: {
-    clerkUserId: string;
-  };
+  metadata: { clerkUserId: string };
 }
 
 export interface CustomerObjectMetadata
   extends OmitAndExtend<
     Stripe.Customer,
     "metadata",
-    {
-      metadata: {
-        clerkId: string;
-      };
-    }
+    { metadata: { clerkId: string } }
   > {}
-
-export type UploadFileResponse =
-  | { data: UploadData; error: null }
-  | { data: null; error: UploadError };
 
 export type UploadData = {
   key: string;
   url: string;
   name: string;
   size: number;
-};
-
-export type UploadError = {
-  code: string;
-  message: string;
-  data: any;
 };
 
 export type ProductFormData = OmitAndExtend<

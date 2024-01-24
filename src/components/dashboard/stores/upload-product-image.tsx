@@ -98,7 +98,7 @@ export default function UploadProductImage({
                 disabled={isLoading}
                 aria-disabled={isLoading ? "true" : "false"}
                 type="button"
-                className="absolute top-2 right-2 h-6 w-6 z-10"
+                className="absolute top-2 right-2 h-6 w-6 z-[9]"
                 onClick={() => {
                   const productFilteredImages = parse_to_json<UploadData[]>(
                     formValues!.image as string,
@@ -140,7 +140,7 @@ export default function UploadProductImage({
                   disabled={isLoading}
                   aria-disabled={isLoading ? "true" : "false"}
                   type="button"
-                  className="absolute top-2 right-2 h-6 w-6 z-10"
+                  className="absolute top-2 right-2 h-6 w-6 z-[9]"
                   onClick={(event) => {
                     event.stopPropagation();
                     URL.revokeObjectURL(item.preview);
