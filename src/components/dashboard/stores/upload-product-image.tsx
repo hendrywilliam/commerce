@@ -4,35 +4,41 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { useEffect } from "react";
 import { useCallback } from "react";
+import { parse_to_json } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Dispatch, SetStateAction } from "react";
 import { IconUpload } from "@/components/ui/icons";
 import { IconTrashCan } from "@/components/ui/icons";
 import { useDropzone } from "@uploadthing/react/hooks";
-import type { FileWithPreview, UploadData } from "@/types";
 import type { FileRejection, FileWithPath } from "@uploadthing/react";
+import type { FileWithPreview, UploadData, ProductFormData } from "@/types";
 
 interface UploadProductImageProps {
   isLoading: boolean;
   selectedFiles: FileWithPreview[];
   setSelectedFiles: Dispatch<SetStateAction<FileWithPreview[]>>;
-  type?: "new-product" | "existing-product";
   accept?: Record<string, string[]>;
   maxSize?: number;
   maxFiles?: number;
-  existingImage?: UploadData[];
+  existingImages?: UploadData[];
+  setImagesToDelete?: Dispatch<SetStateAction<UploadData[]>>;
+  setFormValues?: Dispatch<SetStateAction<ProductFormData>>;
+  formValues?: ProductFormData;
 }
 
 export default function UploadProductImage({
-  type = "new-product",
   isLoading,
   maxFiles = 4,
   selectedFiles,
   accept = {
-    "image/*": [],
+    "": [".png", ".jpg", ".jpeg"],
   },
   setSelectedFiles,
   maxSize = 1024 * 1024 * 4,
+  existingImages = [],
+  setImagesToDelete,
+  setFormValues,
+  formValues,
 }: UploadProductImageProps) {
   const onDrop = useCallback(
     (acceptedFiles: FileWithPath[]) => {
@@ -79,17 +85,58 @@ export default function UploadProductImage({
         </div>
       </div>
       <p>Preview Images</p>
-      {!!selectedFiles.length && (
-        <div className="grid grid-cols-4 gap-2" id="preview-images">
-          {selectedFiles.map((item, index) => {
+      <div className="grid grid-cols-4 gap-2" id="preview-images">
+        {!!existingImages.length &&
+          existingImages.map((existingImage) => (
+            <div
+              key={existingImage.name}
+              className="relative w-full h-36 border rounded shadow-sm"
+            >
+              <Button
+                variant="secondary"
+                size="icon"
+                disabled={isLoading}
+                aria-disabled={isLoading ? "true" : "false"}
+                type="button"
+                className="absolute top-2 right-2 h-6 w-6 z-10"
+                onClick={() => {
+                  const productFilteredImages = parse_to_json<UploadData[]>(
+                    formValues!.image as string,
+                  ).filter((image) => image.name !== existingImage.name);
+                  setFormValues!((formValues) => ({
+                    ...formValues,
+                    image: JSON.stringify(
+                      !!productFilteredImages.length
+                        ? productFilteredImages
+                        : [],
+                    ),
+                  }));
+                  setImagesToDelete!((imagesToDelete) => [
+                    ...imagesToDelete,
+                    existingImage,
+                  ]);
+                }}
+              >
+                <IconTrashCan />
+              </Button>
+              <Image
+                src={existingImage.url}
+                fill
+                alt={existingImage.name}
+                className="object-cover rounded"
+              />
+            </div>
+          ))}
+        {!!selectedFiles.length &&
+          selectedFiles.map((item, index) => {
             return (
               <div
                 key={index}
                 className="relative w-full h-36 border rounded shadow-sm"
               >
                 <Button
-                  variant={"secondary"}
-                  size={"icon"}
+                  variant="secondary"
+                  size="icon"
                   disabled={isLoading}
                   aria-disabled={isLoading ? "true" : "false"}
                   type="button"
@@ -103,7 +150,6 @@ export default function UploadProductImage({
                     ) as FileWithPreview[];
 
                     setSelectedFiles([...filteredImages]);
-                    // setValue("image", [...filteredImages]);
                   }}
                 >
                   <IconTrashCan />
@@ -117,8 +163,7 @@ export default function UploadProductImage({
               </div>
             );
           })}
-        </div>
-      )}
+      </div>
     </>
   );
 }

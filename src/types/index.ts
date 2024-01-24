@@ -1,8 +1,9 @@
+import Stripe from "stripe";
+import { NewProduct } from "@/db/schema";
 import { User } from "@clerk/nextjs/server";
 import { billingPlan } from "@/config/billing";
-import type { OmitAndExtend, TweakedOmit } from "@/lib/utils";
+import type { OmitAndExtend } from "@/lib/utils";
 import type { FileWithPath } from "@uploadthing/react";
-import Stripe from "stripe";
 
 export interface CartItem {
   id: number;
@@ -92,3 +93,9 @@ export type UploadError = {
   message: string;
   data: any;
 };
+
+export type ProductFormData = OmitAndExtend<
+  NewProduct,
+  "storeId" | "createdAt" | "id" | "slug" | "category",
+  { category: NewProduct["category"] | string }
+>;

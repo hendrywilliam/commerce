@@ -21,10 +21,11 @@ import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useUploadThing } from "@/lib/uploadthing";
 import { IconLoading } from "@/components/ui/icons";
-import { OmitAndExtend, catchError } from "@/lib/utils";
 import type { NewProduct, Product } from "@/db/schema";
-import type { FileWithPreview, UploadData } from "@/types";
+import { catchError, parse_to_json, OmitAndExtend } from "@/lib/utils";
 import { addNewProductAction } from "@/actions/products/add-new-product";
+import { update_product_action } from "@/actions/products/update-product";
+import type { FileWithPreview, UploadData, ProductFormData } from "@/types";
 import UploadProductImage from "@/components/dashboard/stores/upload-product-image";
 
 interface ProductFromProps {
@@ -39,11 +40,7 @@ const defaultValues = {
   price: "1",
   stock: 1,
   category: "",
-} satisfies OmitAndExtend<
-  NewProduct,
-  "storeId" | "createdAt" | "id" | "slug" | "category",
-  { category: NewProduct["category"] | string }
->;
+} satisfies ProductFormData;
 
 export default function ProductForm({
   productStatus = "new-product",
@@ -54,13 +51,9 @@ export default function ProductForm({
   const [selectedFiles, setSelectedFiles] = useState([] as FileWithPreview[]);
   const [imagesToDelete, setImagesToDelete] = useState([] as UploadData[]);
 
-  const [formValues, setFormValues] = useState<
-    OmitAndExtend<
-      NewProduct,
-      "storeId" | "createdAt" | "id" | "slug" | "category",
-      { category: NewProduct["category"] | string }
-    >
-  >(initialValues ?? defaultValues);
+  const [formValues, setFormValues] = useState<ProductFormData>(
+    initialValues ?? defaultValues,
+  );
 
   const { startUpload } = useUploadThing("imageUploader", {
     onUploadError: () => {
@@ -74,13 +67,17 @@ export default function ProductForm({
     // Add new product
     if (productStatus === "new-product") {
       try {
-        const returnFromUploadedFile = await startUpload(selectedFiles);
+        const uploadFileResponse = await startUpload(selectedFiles);
         const productData = {
           ...formValues,
           price: String(formValues.price),
           stock: Number(formValues.stock),
-          image: returnFromUploadedFile ? [...returnFromUploadedFile] : [],
-        } as NewProduct;
+          image: uploadFileResponse ? [...uploadFileResponse] : [],
+        } as OmitAndExtend<
+          NewProduct,
+          "image" | "slug",
+          { image: UploadData[] }
+        >;
         await addNewProductAction(productData, storeSlug);
         toast.success("New product added to store.");
       } catch (err) {
@@ -92,6 +89,29 @@ export default function ProductForm({
       }
     } else {
       // Update existing product
+      let uploadedFiles;
+      if (!!selectedFiles.length) {
+        uploadedFiles = await startUpload(selectedFiles);
+      }
+      const updatedProductData = {
+        ...formValues,
+        image: [
+          ...parse_to_json<UploadData[]>(formValues.image as string),
+          ...(uploadedFiles ? uploadedFiles : []),
+        ],
+      } as OmitAndExtend<NewProduct, "image", { image: UploadData[] }>;
+      try {
+        await update_product_action({
+          imagesToDelete: !!imagesToDelete.length ? imagesToDelete : [],
+          input: updatedProductData,
+        });
+        toast.success("Product updated successfully.");
+      } catch (error) {
+        catchError(error);
+      } finally {
+        setIsLoading((isLoading) => !isLoading);
+        setSelectedFiles([]);
+      }
     }
   }
 
@@ -102,13 +122,28 @@ export default function ProductForm({
     >
       <FormField>
         <FormLabel>Product image</FormLabel>
-        <UploadProductImage
-          setSelectedFiles={setSelectedFiles}
-          selectedFiles={selectedFiles}
-          isLoading={isLoading}
-        />
+        {productStatus === "existing-product" ? (
+          <UploadProductImage
+            setSelectedFiles={setSelectedFiles}
+            selectedFiles={selectedFiles}
+            isLoading={isLoading}
+            setImagesToDelete={setImagesToDelete}
+            existingImages={parse_to_json<UploadData[]>(
+              formValues.image as string,
+            )}
+            formValues={formValues}
+            setFormValues={setFormValues}
+          />
+        ) : (
+          <UploadProductImage
+            setSelectedFiles={setSelectedFiles}
+            selectedFiles={selectedFiles}
+            isLoading={isLoading}
+          />
+        )}
         <FormMessage>
-          Upload product images with maximum 4 images, and 4MB each.
+          Upload product images with maximum 4 images, and 4MB each. Only
+          support .jpeg, .jpg and .png.
         </FormMessage>
       </FormField>
       <FormField>
@@ -144,7 +179,11 @@ export default function ProductForm({
           }
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select Category" />
+            <SelectValue
+              placeholder={
+                !!formValues.category ? formValues.category : "Select Category"
+              }
+            />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="clothing">Clothing</SelectItem>

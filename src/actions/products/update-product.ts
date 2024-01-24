@@ -3,28 +3,20 @@
 import { db } from "@/db/core";
 import { eq } from "drizzle-orm";
 import { UploadData } from "@/types";
-import { UTApi } from "uploadthing/server";
-import { type TweakedOmit, slugify } from "@/lib/utils";
-import { products, type NewProduct, type Store } from "@/db/schema";
-
-const utapi = new UTApi();
+import { revalidatePath } from "next/cache";
+import { products, type NewProduct } from "@/db/schema";
+import { type TweakedOmit, slugify, delete_existing_images } from "@/lib/utils";
 
 export async function update_product_action({
   input,
-  storeId,
   imagesToDelete = [],
 }: {
-  storeId: Store["id"];
-  imagesToDelete: UploadData["key"][];
   input: TweakedOmit<NewProduct, "createdAt" | "slug">;
+  imagesToDelete: UploadData[];
 }) {
-  if (storeId) {
-    throw new Error("Store ID is not valid. Please try again later.");
-  }
-
   // Delete existing images
   if (!!imagesToDelete.length) {
-    await utapi.deleteFiles(imagesToDelete);
+    await delete_existing_images(imagesToDelete);
   }
 
   const updateValue: TweakedOmit<NewProduct, "createdAt"> = {
@@ -33,7 +25,6 @@ export async function update_product_action({
     slug: slugify(input.name),
     description: input.description,
     image: JSON.stringify(input.image),
-    // Decimal is a string, see: https://github.com/sidorares/node-mysql2/issues/795
     price:
       isNaN(Number(input.price)) || Number(input.price) < 0
         ? "0"
@@ -41,7 +32,6 @@ export async function update_product_action({
     stock:
       isNaN(Number(input.stock)) || Number(input.stock) < 0 ? 0 : input.stock,
     rating: !!input.rating && input.rating > 0 ? input.rating : 0,
-    storeId: storeId,
   };
 
   try {
@@ -52,4 +42,5 @@ export async function update_product_action({
   } catch (error) {
     throw error;
   }
+  revalidatePath("/dashboard/stores");
 }

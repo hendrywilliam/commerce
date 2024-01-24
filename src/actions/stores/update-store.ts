@@ -6,6 +6,7 @@ import { Store } from "@/db/schema";
 import { stores } from "@/db/schema";
 import { slugify } from "@/lib/utils";
 import { TweakedOmit } from "@/lib/utils";
+import { revalidatePath } from "next/cache";
 import { storeValidation } from "@/lib/validations/stores";
 import { check_store_availability_action } from "./check-store-availability";
 
@@ -28,6 +29,8 @@ export async function updateOwnedStoreAction(
         slug: slugify(parseStoreRawInput.name),
       })
       .where(eq(stores.id, storeRawInput.id));
+
+    revalidatePath("/dashboard/stores");
   } catch (error) {
     throw error;
   }

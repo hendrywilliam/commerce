@@ -1,19 +1,18 @@
 "use server";
 
 import { db } from "@/db/core";
+import { UploadData } from "@/types";
 import { inArray } from "drizzle-orm";
 import { Product } from "@/db/schema";
 import { products } from "@/db/schema";
-import { UTApi } from "uploadthing/server";
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
-import type { UploadFileResponse } from "uploadthing/client";
+import { delete_existing_images } from "@/lib/utils";
 import { incomingProductValidation } from "@/lib/validations/product";
 
 export async function deleteStoreProductsAction(selectedProducts: Product[]) {
   const user = await currentUser();
-  const utapi = new UTApi();
 
   if (!user) {
     redirect("/sign-in");
@@ -32,12 +31,11 @@ export async function deleteStoreProductsAction(selectedProducts: Product[]) {
 
   // Extract images key
   const productImagesKey = selectedProducts
-    .map((item) => JSON.parse(item.image as string) as UploadFileResponse)
-    .flat()
-    .map((item) => item.fileKey);
+    .map((item) => JSON.parse(item.image as string) as UploadData[])
+    .flat();
 
   // Delete images and products
-  await utapi.deleteFiles(productImagesKey);
+  await delete_existing_images(productImagesKey);
   await db.delete(products).where(inArray(products.id, extractProductId));
 
   revalidatePath(`/dashboard/stores/${storeId}`);

@@ -8,22 +8,19 @@ import { NewProduct } from "@/db/schema";
 import type { UploadData } from "@/types";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import type { TweakedOmit } from "@/lib/utils";
 import { products, stores } from "@/db/schema";
-import { delete_existing_images } from "@/lib/utils";
 import { newProductValidation } from "@/lib/validations/product";
+import { delete_existing_images, type OmitAndExtend } from "@/lib/utils";
 import { check_product_availability_action } from "./check-product-availability";
 
 export async function addNewProductAction(
-  input: TweakedOmit<NewProduct, "slug">,
+  input: OmitAndExtend<NewProduct, "slug" | "image", { image: UploadData[] }>,
   storeSlug: string,
 ) {
   const parsedNewProductInput = await newProductValidation.spa(input);
 
   if (!parsedNewProductInput.success) {
-    !!(input.image as UploadData[]).length &&
-      (await delete_existing_images(input.image));
-
+    !!input.image.length && (await delete_existing_images(input.image));
     throw new Error(parsedNewProductInput.error.issues[0].message);
   }
 

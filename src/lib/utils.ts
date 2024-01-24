@@ -92,9 +92,9 @@ export function parse_to_json<TParsedData>(data: string): TParsedData {
   return JSON.parse(data);
 }
 
-export async function delete_existing_images(images: NewProduct["image"]) {
+export async function delete_existing_images(images: UploadData[]) {
   const utapi = new UTApi();
-  const imageFileKeys = (images as UploadData[]).map((image) => image.key);
+  const imageFileKeys = images.map((image) => image.key);
   return await utapi.deleteFiles(imageFileKeys);
 }
 

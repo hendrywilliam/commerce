@@ -1,15 +1,15 @@
 "use server";
 
 import { db } from "@/db/core";
-import { stores } from "@/db/schema";
+import { stores, Store } from "@/db/schema";
 import { and, eq, not } from "drizzle-orm";
 
 export async function check_store_availability_action({
   storeId,
   storeName,
 }: {
-  storeName: string;
-  storeId?: number;
+  storeName: Store["name"];
+  storeId?: Store["id"];
 }) {
   const store = await db.query.stores.findFirst({
     where: storeId

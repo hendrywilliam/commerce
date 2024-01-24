@@ -2,14 +2,14 @@
 
 import { db } from "@/db/core";
 import { and, eq } from "drizzle-orm";
-import { products } from "@/db/schema";
+import { products, Product } from "@/db/schema";
 
 export async function check_product_availability_action({
   productId,
   productName,
 }: {
-  productName: string;
-  productId?: number;
+  productName: Product["name"];
+  productId?: Product["id"];
 }) {
   const product = await db.query.products.findFirst({
     where: productId
