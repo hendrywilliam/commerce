@@ -1,35 +1,30 @@
 "use client";
 
-import { useDropzone } from "@uploadthing/react/hooks";
-import { useCallback, useTransition } from "react";
-import type { FileRejection, FileWithPath } from "@uploadthing/react";
-import { FileWithPreview } from "@/types";
-import { useEffect } from "react";
-import { Dispatch, SetStateAction } from "react";
-import { IconUpload } from "@/components/ui/icons";
-import { Button } from "@/components/ui/button";
-import { IconTrashCan } from "@/components/ui/icons";
-import { UseFormSetValue } from "react-hook-form";
-import { newProductValidation } from "@/lib/validations/product";
-import { z } from "zod";
 import Image from "next/image";
 import { toast } from "sonner";
+import { useEffect } from "react";
+import { useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import { Dispatch, SetStateAction } from "react";
+import { IconUpload } from "@/components/ui/icons";
+import { IconTrashCan } from "@/components/ui/icons";
+import { useDropzone } from "@uploadthing/react/hooks";
+import type { FileWithPreview, UploadData } from "@/types";
+import type { FileRejection, FileWithPath } from "@uploadthing/react";
 
 interface UploadProductImageProps {
   isLoading: boolean;
-  isFieldHavingError: boolean;
   selectedFiles: FileWithPreview[];
   setSelectedFiles: Dispatch<SetStateAction<FileWithPreview[]>>;
-  setValue: UseFormSetValue<z.infer<typeof newProductValidation>>;
-  type?: "upload" | "edit";
-  maxFiles?: number;
-  maxSize?: number;
+  type?: "new-product" | "existing-product";
   accept?: Record<string, string[]>;
+  maxSize?: number;
+  maxFiles?: number;
+  existingImage?: UploadData[];
 }
 
 export default function UploadProductImage({
-  type = "upload",
-  setValue,
+  type = "new-product",
   isLoading,
   maxFiles = 4,
   selectedFiles,
@@ -37,12 +32,10 @@ export default function UploadProductImage({
     "image/*": [],
   },
   setSelectedFiles,
-  isFieldHavingError,
   maxSize = 1024 * 1024 * 4,
 }: UploadProductImageProps) {
   const onDrop = useCallback(
     (acceptedFiles: FileWithPath[]) => {
-      setValue("image", acceptedFiles);
       const embedPreviewFiles = acceptedFiles.map((file) => {
         return Object.assign(file, {
           preview: URL.createObjectURL(file),
@@ -79,10 +72,7 @@ export default function UploadProductImage({
         className="border border-dashed w-1/4 rounded h-36 shadow-sm"
         {...getRootProps()}
       >
-        <input
-          aria-invalid={isFieldHavingError ? "true" : "false"}
-          {...getInputProps()}
-        />
+        <input {...getInputProps()} />
         <div className="relative w-full h-full flex flex-col justify-center items-center shadow-sm">
           <IconUpload className="w-4 h-4" />
           <p className="text-xs">Product Image</p>
@@ -113,7 +103,7 @@ export default function UploadProductImage({
                     ) as FileWithPreview[];
 
                     setSelectedFiles([...filteredImages]);
-                    setValue("image", [...filteredImages]);
+                    // setValue("image", [...filteredImages]);
                   }}
                 >
                   <IconTrashCan />

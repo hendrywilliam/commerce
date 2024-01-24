@@ -2,10 +2,12 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { baseUrl } from "@/config/site";
 import { twMerge } from "tailwind-merge";
+import { UTApi } from "uploadthing/server";
 import { User } from "@clerk/nextjs/server";
 import { type ClassValue, clsx } from "clsx";
-import type { CartLineDetailedItems } from "@/types";
+import type { NewProduct } from "@/db/schema";
 import { isClerkAPIResponseError } from "@clerk/nextjs";
+import type { CartLineDetailedItems, UploadData } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -88,6 +90,12 @@ export function calculateOrderAmounts(checkoutItems: CartLineDetailedItems[]) {
 
 export function parse_to_json<TParsedData>(data: string): TParsedData {
   return JSON.parse(data);
+}
+
+export async function delete_existing_images(images: NewProduct["image"]) {
+  const utapi = new UTApi();
+  const imageFileKeys = (images as UploadData[]).map((image) => image.key);
+  return await utapi.deleteFiles(imageFileKeys);
 }
 
 // Type utils

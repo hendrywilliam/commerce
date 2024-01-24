@@ -2,29 +2,29 @@
 
 import { db } from "@/db/core";
 import { eq } from "drizzle-orm";
+import { UploadData } from "@/types";
 import { UTApi } from "uploadthing/server";
 import { type TweakedOmit, slugify } from "@/lib/utils";
 import { products, type NewProduct, type Store } from "@/db/schema";
-import { UploadData } from "@/types";
 
 const utapi = new UTApi();
 
 export async function update_product_action({
   input,
   storeId,
-  imagesFileKey = [],
+  imagesToDelete = [],
 }: {
-  input: TweakedOmit<NewProduct, "createdAt" | "slug">;
   storeId: Store["id"];
-  imagesFileKey: UploadData["key"][];
+  imagesToDelete: UploadData["key"][];
+  input: TweakedOmit<NewProduct, "createdAt" | "slug">;
 }) {
   if (storeId) {
     throw new Error("Store ID is not valid. Please try again later.");
   }
 
   // Delete existing images
-  if (!!imagesFileKey.length) {
-    await utapi.deleteFiles(imagesFileKey);
+  if (!!imagesToDelete.length) {
+    await utapi.deleteFiles(imagesToDelete);
   }
 
   const updateValue: TweakedOmit<NewProduct, "createdAt"> = {

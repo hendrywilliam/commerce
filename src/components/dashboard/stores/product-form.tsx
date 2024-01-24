@@ -15,77 +15,94 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { z } from "zod";
 import { toast } from "sonner";
-import { useState } from "react";
-import { catchError } from "@/lib/utils";
+import { FormEvent, useState } from "react";
 import { useParams } from "next/navigation";
-import { FieldErrors } from "react-hook-form";
-import type { NewProduct } from "@/db/schema";
-import type { FileWithPreview } from "@/types";
 import { Button } from "@/components/ui/button";
-import { useZodForm } from "@/hooks/use-zod-form";
 import { useUploadThing } from "@/lib/uploadthing";
 import { IconLoading } from "@/components/ui/icons";
-import { newProductValidation } from "@/lib/validations/product";
+import { OmitAndExtend, catchError } from "@/lib/utils";
+import type { NewProduct, Product } from "@/db/schema";
+import type { FileWithPreview, UploadData } from "@/types";
 import { addNewProductAction } from "@/actions/products/add-new-product";
 import UploadProductImage from "@/components/dashboard/stores/upload-product-image";
 
-type NewProductInput = z.infer<typeof newProductValidation>;
+interface ProductFromProps {
+  productStatus: "existing-product" | "new-product";
+  initialValues?: Product;
+}
 
-export default function ProductForm() {
+const defaultValues = {
+  name: "",
+  description: "",
+  image: [],
+  price: "1",
+  stock: 1,
+  category: "",
+} satisfies OmitAndExtend<
+  NewProduct,
+  "storeId" | "createdAt" | "id" | "slug" | "category",
+  { category: NewProduct["category"] | string }
+>;
+
+export default function ProductForm({
+  productStatus = "new-product",
+  initialValues,
+}: ProductFromProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const { startUpload } = useUploadThing("imageUploader");
-  const routeParams = useParams<{ storeSlug: string }>();
+  const { storeSlug } = useParams<{ storeSlug: string }>();
   const [selectedFiles, setSelectedFiles] = useState([] as FileWithPreview[]);
+  const [imagesToDelete, setImagesToDelete] = useState([] as UploadData[]);
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useZodForm({
-    schema: newProductValidation,
-    mode: "onSubmit",
+  const [formValues, setFormValues] = useState<
+    OmitAndExtend<
+      NewProduct,
+      "storeId" | "createdAt" | "id" | "slug" | "category",
+      { category: NewProduct["category"] | string }
+    >
+  >(initialValues ?? defaultValues);
+
+  const { startUpload } = useUploadThing("imageUploader", {
+    onUploadError: () => {
+      toast.error("Error occured while uploading. Please try again later.");
+    },
   });
 
-  async function onSubmit(data: NewProductInput) {
+  async function onSubmitData(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     setIsLoading((isLoading) => !isLoading);
-    try {
-      console.log(data);
-      const returnFromUploadedFile = await startUpload(data.image);
-      const productData = {
-        ...data,
-        image: returnFromUploadedFile ? [...returnFromUploadedFile] : [],
-      } satisfies Omit<NewProduct, "slug" | "storeId">;
-
-      await addNewProductAction(productData, routeParams.storeSlug);
-      toast.success("New product added to store.");
-      setSelectedFiles([]);
-      reset();
-    } catch (err) {
-      catchError(err);
-    } finally {
-      setIsLoading((isLoading) => !isLoading);
+    // Add new product
+    if (productStatus === "new-product") {
+      try {
+        const returnFromUploadedFile = await startUpload(selectedFiles);
+        const productData = {
+          ...formValues,
+          price: String(formValues.price),
+          stock: Number(formValues.stock),
+          image: returnFromUploadedFile ? [...returnFromUploadedFile] : [],
+        } as NewProduct;
+        await addNewProductAction(productData, storeSlug);
+        toast.success("New product added to store.");
+      } catch (err) {
+        catchError(err);
+      } finally {
+        setSelectedFiles([]);
+        setFormValues(defaultValues);
+        setIsLoading((isLoading) => !isLoading);
+      }
+    } else {
+      // Update existing product
     }
-  }
-
-  function onError(error: FieldErrors<NewProductInput>) {
-    const firstErrorInErrorList = Object.values(error)[0];
-    toast.error(String(firstErrorInErrorList.message));
   }
 
   return (
     <Form
-      onSubmit={handleSubmit(onSubmit, onError)}
+      onSubmit={(event) => onSubmitData(event)}
       className="flex flex-col space-y-6"
     >
       <FormField>
         <FormLabel>Product image</FormLabel>
         <UploadProductImage
-          isFieldHavingError={Boolean(errors["image"])}
-          setValue={setValue}
           setSelectedFiles={setSelectedFiles}
           selectedFiles={selectedFiles}
           isLoading={isLoading}
@@ -95,13 +112,18 @@ export default function ProductForm() {
         </FormMessage>
       </FormField>
       <FormField>
-        <FormLabel htmlFor="product-name-input">Product Name</FormLabel>
+        <FormLabel htmlFor="name">Product Name</FormLabel>
         <FormInput
-          aria-invalid={errors["name"] ? "true" : "false"}
+          id="name"
+          name="name"
           disabled={isLoading}
           aria-disabled={isLoading ? "true" : "false"}
-          {...register("name")}
-          id="product-name-input"
+          value={formValues.name}
+          onChange={(event) =>
+            setFormValues((formValues) => {
+              return { ...formValues, [event.target.name]: event.target.value };
+            })
+          }
         />
         <FormMessage>
           This is your product identifier and it must be atleast 5 characters.
@@ -109,15 +131,16 @@ export default function ProductForm() {
         </FormMessage>
       </FormField>
       <FormField>
-        <FormLabel>Product Category</FormLabel>
+        <FormLabel htmlFor="product-category">Product Category</FormLabel>
         <Select
+          name="category"
           disabled={isLoading}
           aria-disabled={isLoading ? "true" : "false"}
           onValueChange={(value) =>
-            setValue(
-              "category",
-              value as Pick<NewProduct, "category">["category"],
-            )
+            setFormValues((formValues) => ({
+              ...formValues,
+              category: value as NewProduct["category"],
+            }))
           }
         >
           <SelectTrigger>
@@ -134,63 +157,88 @@ export default function ProductForm() {
         </FormMessage>
       </FormField>
       <FormField>
-        <FormLabel htmlFor="product-description-input">
-          Product Description
-        </FormLabel>
+        <FormLabel htmlFor="description">Product Description</FormLabel>
         <FormTextarea
-          {...register("description")}
-          id="product-description-input"
-          aria-invalid={errors["description"] ? "true" : "false"}
-          disabled={isLoading}
-          aria-disabled={isLoading ? "true" : "false"}
+          name="description"
+          id="description"
+          onChange={(event) =>
+            setFormValues((formValues) => ({
+              ...formValues,
+              [event.target.name]: event.target.value,
+            }))
+          }
+          value={formValues.description as string}
           cols={1}
           rows={1}
+          disabled={isLoading}
           className="resize-none h-36"
+          aria-disabled={isLoading ? "true" : "false"}
         />
         <FormMessage>
           Explain your product in short and precise way.
         </FormMessage>
       </FormField>
       <FormField>
-        <FormLabel htmlFor="product-price-input">Product Price</FormLabel>
+        <FormLabel htmlFor="price">Product Price</FormLabel>
         <FormInput
-          aria-invalid={errors["price"] ? "true" : "false"}
-          disabled={isLoading}
-          defaultValue={1}
-          type="number"
           min={1}
-          aria-disabled={isLoading ? "true" : "false"}
-          {...register("price")}
+          id="price"
+          name="price"
+          onChange={(event) =>
+            setFormValues((formValues) => ({
+              ...formValues,
+              [event.target.name]: event.target.value,
+            }))
+          }
+          value={Number(formValues.price)}
+          type="number"
           className="w-full"
-          id="product-price-input"
+          disabled={isLoading}
+          aria-disabled={isLoading ? "true" : "false"}
         />
         <FormMessage>Input your product price in dollar.</FormMessage>
       </FormField>
       <FormField>
-        <FormLabel htmlFor="product-stock-input">Product Stock</FormLabel>
+        <FormLabel htmlFor="stock">Product Stock</FormLabel>
         <FormInput
-          aria-invalid={errors["stock"] ? "true" : "false"}
+          id="stock"
+          name="stock"
           disabled={isLoading}
           type="number"
           min={1}
-          defaultValue={1}
-          aria-disabled={isLoading ? "true" : "false"}
-          {...register("stock", {
-            valueAsNumber: true,
-          })}
+          onChange={(event) =>
+            setFormValues((formValues) => ({
+              ...formValues,
+              [event.target.name]: event.target.value,
+            }))
+          }
+          value={formValues.stock}
           className="w-full"
-          id="product-stock-input"
+          aria-disabled={isLoading ? "true" : "false"}
         />
         <FormMessage>Input your product stock, minimal value is 1.</FormMessage>
       </FormField>
-      <Button
-        className="inline-flex gap-2 mt-10"
-        aria-disabled={isLoading}
-        disabled={isLoading}
-        type="submit"
-      >
-        {isLoading && <IconLoading />}Submit Product
-      </Button>
+      {productStatus === "new-product" ? (
+        <Button
+          className="inline-flex gap-2 mt-10"
+          aria-disabled={isLoading}
+          disabled={isLoading}
+          type="submit"
+        >
+          {isLoading && <IconLoading />}
+          Submit Product
+        </Button>
+      ) : (
+        <Button
+          className="inline-flex gap-2 mt-10"
+          aria-disabled={isLoading}
+          disabled={isLoading}
+          type="submit"
+        >
+          {isLoading && <IconLoading />}
+          Update Product
+        </Button>
+      )}
     </Form>
   );
 }

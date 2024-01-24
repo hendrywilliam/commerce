@@ -6,19 +6,13 @@ import { auth } from "@clerk/nextjs";
 import { slugify } from "@/lib/utils";
 import { NewProduct } from "@/db/schema";
 import type { UploadData } from "@/types";
-import { UTApi } from "uploadthing/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import type { TweakedOmit } from "@/lib/utils";
 import { products, stores } from "@/db/schema";
+import { delete_existing_images } from "@/lib/utils";
 import { newProductValidation } from "@/lib/validations/product";
 import { check_product_availability_action } from "./check-product-availability";
-
-async function fallback_delete_images(images: NewProduct["image"]) {
-  const utapi = new UTApi();
-  const imageFileKeys = (images as UploadData[]).map((image) => image.key);
-  return await utapi.deleteFiles(imageFileKeys);
-}
 
 export async function addNewProductAction(
   input: TweakedOmit<NewProduct, "slug">,
@@ -27,9 +21,10 @@ export async function addNewProductAction(
   const parsedNewProductInput = await newProductValidation.spa(input);
 
   if (!parsedNewProductInput.success) {
-    await fallback_delete_images(input.image);
+    !!(input.image as UploadData[]).length &&
+      (await delete_existing_images(input.image));
 
-    throw new Error(parsedNewProductInput.error.message);
+    throw new Error(parsedNewProductInput.error.issues[0].message);
   }
 
   const { userId } = auth();
@@ -39,7 +34,7 @@ export async function addNewProductAction(
   }
 
   await check_product_availability_action({
-    productName: input.name,
+    productName: parsedNewProductInput.data.name,
   });
 
   const store = await db.query.stores
@@ -52,15 +47,19 @@ export async function addNewProductAction(
     throw new Error("Store is not exist anymore, try again later.");
   }
 
-  const product = await db.insert(products).values({
-    ...input,
+  const { insertId: productId } = await db.insert(products).values({
+    name: parsedNewProductInput.data.name,
+    category: parsedNewProductInput.data.category,
+    description: parsedNewProductInput.data.description,
+    price: String(parsedNewProductInput.data.price),
+    stock: Number(parsedNewProductInput.data.stock),
     slug: slugify(input.name),
     storeId: store.id,
-    image: JSON.stringify(input.image),
+    image: JSON.stringify(parsedNewProductInput.data.image),
   });
 
-  if (!product) {
-    await fallback_delete_images(input.image);
+  if (!productId) {
+    await delete_existing_images(input.image);
   }
 
   revalidatePath("/");

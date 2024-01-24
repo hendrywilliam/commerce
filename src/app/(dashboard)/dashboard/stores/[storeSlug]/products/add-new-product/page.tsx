@@ -13,7 +13,7 @@ export default function StoreAddNewProductPage() {
         </div>
       </div>
       <div className="mt-6 w-1/2">
-        <ProductForm />
+        <ProductForm productStatus="new-product" />
       </div>
     </>
   );

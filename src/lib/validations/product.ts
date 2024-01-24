@@ -9,11 +9,13 @@ export const newProductValidation = z.object({
     message: "Product name must be 5 or more characters long.",
   }),
   category: z.enum(["clothing", "backpack", "shoes"], {
-    required_error: "Product category is required.",
+    errorMap: (issue, ctx) => ({
+      message: "Invalid category value. Please select product category.",
+    }),
   }),
   description: z
     .string({
-      required_error: "Product description is required",
+      required_error: "Product description is required.",
     })
     .min(1, {
       message: "Product description is required.",
@@ -33,7 +35,7 @@ export const newProductValidation = z.object({
   image: z
     .array(z.any())
     .min(1, {
-      message: "Product image is required",
+      message: "Product image is required.",
     })
     .max(4)
     .superRefine((files: UploadData[], ctx) => {
@@ -44,7 +46,7 @@ export const newProductValidation = z.object({
       if (isExceedingSizeLimit) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "File size exceeds limit",
+          message: "File size exceeds limit.",
         });
       }
 
@@ -57,7 +59,7 @@ export const newProductValidation = z.object({
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message:
-            "Invalid image file format. Only support .jpeg, .jpg and .png",
+            "Invalid image file format. Only support .jpeg, .jpg and .png.",
         });
       }
     }),
