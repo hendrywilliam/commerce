@@ -69,15 +69,21 @@ export default function ProductCard({ product }: ProductCardProps) {
             <IconView />
             Quick View
           </Link>
-          <Button
-            onClick={addToCart}
-            size={"sm"}
-            className="inline-flex w-full gap-1"
-            disabled={isLoading}
-          >
-            {isLoading ? <IconLoading /> : <IconCart />}
-            Add to cart
-          </Button>
+          {product.stock > 0 ? (
+            <Button
+              onClick={addToCart}
+              size="sm"
+              className="inline-flex w-full gap-1"
+              disabled={isLoading}
+            >
+              {isLoading ? <IconLoading /> : <IconCart />}
+              Add to cart
+            </Button>
+          ) : (
+            <Button size="sm" className="inline-flex w-full gap-1" disabled>
+              Out of stock
+            </Button>
+          )}
         </div>
       </div>
     </div>

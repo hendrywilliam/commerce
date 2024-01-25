@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   IconArrowDown,
   IconArrowUp,
@@ -13,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { Product, Store } from "@/db/schema";
+import { buttonVariants } from "@/components/ui/button";
 import { catchError, formatCurrency } from "@/lib/utils";
 import { addItemInCartAction } from "@/actions/carts/add-item-in-cart";
 
@@ -94,23 +96,31 @@ export default function ProductPanel({ product, store }: ProductPanelProps) {
         </Button>
       </div>
       <div className="inline-flex w-full gap-2">
-        <Button
-          disabled={isLoading}
-          aria-disabled={isLoading ? "true" : "false"}
-          className="inline-flex gap-2"
-          onClick={handleAddItemToCart}
+        {product.stock > 0 ? (
+          <Button
+            disabled={isLoading}
+            aria-disabled={isLoading ? "true" : "false"}
+            className="inline-flex gap-2"
+            onClick={handleAddItemToCart}
+          >
+            {isLoading ? <IconLoading /> : <IconCart />}
+            Add To Cart
+          </Button>
+        ) : (
+          <Button disabled className="inline-flex gap-2">
+            Out of Stock
+          </Button>
+        )}
+        <Link
+          href={`/store/${store.slug}`}
+          className={buttonVariants({
+            variant: "outline",
+            class: "inline-flex gap-2",
+          })}
         >
-          {isLoading ? <IconLoading /> : <IconCart />}
-          Add To Cart
-        </Button>
-        <Button
-          onClick={() => void push(`/store/${store.slug}`)}
-          className="inline-flex gap-2"
-          variant={"outline"}
-        >
-          <IconStores />
           Visit Store
-        </Button>
+          <IconStores />
+        </Link>
       </div>
     </div>
   );

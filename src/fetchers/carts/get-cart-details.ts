@@ -24,6 +24,7 @@ export async function get_cart_details_fetcher(
       price: products.price,
       category: products.category,
       image: products.image,
+      stock: products.stock,
       storeId: products.storeId,
       storeName: stores.name,
       storeSlug: stores.slug,

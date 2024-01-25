@@ -13,6 +13,8 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
@@ -60,6 +62,8 @@ export default function StoreProductFilterPanel() {
           Sort <IconSort />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-40">
+          <DropdownMenuLabel>Sort Products</DropdownMenuLabel>
+          <DropdownMenuSeparator />
           {sortingProductsItem.map((sortingItem, i) => (
             <DropdownMenuItem
               key={i}

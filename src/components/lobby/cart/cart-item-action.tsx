@@ -68,8 +68,8 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
         <Button
           onClick={() => void push(`/store/${cartItem.storeSlug}`)}
           className="w-6 h-6"
-          size={"icon"}
-          variant={"outline"}
+          size="icon"
+          variant="outline"
         >
           <IconStores />
         </Button>
@@ -80,8 +80,8 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
             disabled={isPending}
             aria-disabled={isPending ? "true" : "false"}
             className="w-6 h-6"
-            size={"icon"}
-            variant={"outline"}
+            size="icon"
+            variant="outline"
             onClick={() => {
               setProductQuantity((productQuantity) => productQuantity + 1);
               setIsNewValue(true);
@@ -107,8 +107,8 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
             disabled={isPending}
             aria-disabled={isPending ? "true" : "false"}
             className="w-6 h-6"
-            size={"icon"}
-            variant={"outline"}
+            size="icon"
+            variant="outline"
             onClick={() => {
               setProductQuantity((productQuantity) => productQuantity - 1);
               setIsNewValue(true);
@@ -121,8 +121,8 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
           <Button
             onClick={() => void deleteCurrentItemInCart()}
             className="w-6 h-6"
-            size={"icon"}
-            variant={"outline"}
+            size="icon"
+            variant="outline"
             disabled={isDeletingCurrentItem}
             aria-disabled={isDeletingCurrentItem ? "true" : "false"}
           >

@@ -1,8 +1,8 @@
 import Stripe from "stripe";
-import { NewProduct } from "@/db/schema";
+import { NewProduct, Product } from "@/db/schema";
 import { User } from "@clerk/nextjs/server";
 import { billingPlan } from "@/config/billing";
-import type { OmitAndExtend } from "@/lib/utils";
+import type { Extends, OmitAndExtend } from "@/lib/utils";
 import type { FileWithPath } from "@uploadthing/react";
 
 export interface CartItem {
@@ -16,11 +16,14 @@ export interface CartLineDetailedItems {
   name: string;
   price: string;
   image: string;
+  stock: number;
   storeId: number;
   category: string;
   storeName: string;
   storeSlug: string;
 }
+
+export type ProductWithQuantity = Extends<Product, { qty: number }>;
 
 export interface UserObjectCustomized
   extends Omit<User, "privateMetadata" | "publicMetadata"> {

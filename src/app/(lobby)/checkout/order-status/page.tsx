@@ -24,7 +24,6 @@ export default async function OrderStatusPage({
     [key: string]: string;
   };
 }) {
-  // {payment_intent, payment_intent_client_secret, redirect_status}
   const paymentIntentId = searchParams["payment_intent"];
 
   if (!paymentIntentId) {
@@ -85,9 +84,11 @@ export default async function OrderStatusPage({
             <Separator />
             <div className="w-full text-center">
               <p className="font-medium">Shipment Address</p>
-              <p>
-                Your order will be delivered to this address. Wrong address?
-                Please contact the store.
+              <p className="text-gray-500">
+                Your order will be delivered to this address.
+              </p>
+              <p className="text-gray-500 text-sm">
+                Wrong address? Please contact the store.
               </p>
             </div>
             <p className="flex flex-col mt-4">

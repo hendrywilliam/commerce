@@ -38,34 +38,38 @@ export default function CartPanel({ products }: CartPanelProps) {
                 </span>
               </p>
             </div>
-            <Button
-              disabled={isPending}
-              aria-disabled={isPending ? "true" : "false"}
-              onClick={(e) =>
-                startTransition(async () => {
-                  if (!user) {
-                    redirect("/sign-in");
-                  }
-                  try {
-                    const paymentIntent = await createPaymentIntentAction({
-                      storeId: items[0].storeId,
-                      cartItem: items,
-                    });
-                    const storeSlug = items[0].storeSlug;
+            {items.every((item) => item.stock > 0) ? (
+              <Button
+                disabled={isPending}
+                aria-disabled={isPending ? "true" : "false"}
+                onClick={(e) =>
+                  startTransition(async () => {
+                    if (!user) {
+                      redirect("/sign-in");
+                    }
+                    try {
+                      const paymentIntent = await createPaymentIntentAction({
+                        storeId: items[0].storeId,
+                        cartItem: items,
+                      });
+                      const storeSlug = items[0].storeSlug;
 
-                    push(
-                      `/checkout/${storeSlug}/payment?payment_intent_id=${paymentIntent.paymentIntentId}&client_secret=${paymentIntent.clientSecret}`,
-                    );
-                  } catch (error) {
-                    catchError(error);
-                  }
-                })
-              }
-              className="flex gap-2"
-            >
-              {isPending ? <IconLoading /> : <LockIcon />}
-              <span className="text-xs">Checkout from {storeName} </span>
-            </Button>
+                      push(
+                        `/checkout/${storeSlug}/payment?payment_intent_id=${paymentIntent.paymentIntentId}&client_secret=${paymentIntent.clientSecret}`,
+                      );
+                    } catch (error) {
+                      catchError(error);
+                    }
+                  })
+                }
+                className="flex gap-2"
+              >
+                {isPending ? <IconLoading /> : <LockIcon />}
+                <span className="text-xs">Checkout from {storeName} </span>
+              </Button>
+            ) : (
+              <Button disabled>Out of stock</Button>
+            )}
           </div>
         ))}
       </div>

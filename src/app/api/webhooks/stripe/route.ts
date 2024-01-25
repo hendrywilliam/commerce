@@ -3,6 +3,7 @@ import type {
   CheckoutSessionCompletedMetadata,
   CartItem,
   CustomerObjectMetadata,
+  CartLineDetailedItems,
 } from "@/types";
 import Stripe from "stripe";
 import { db } from "@/db/core";
@@ -14,7 +15,11 @@ import { headers } from "next/headers";
 import { eq, inArray } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { clerkClient } from "@clerk/nextjs";
-import { OmitAndExtend } from "@/lib/utils";
+import {
+  OmitAndExtend,
+  calculateOrderAmounts,
+  parse_to_json,
+} from "@/lib/utils";
 import { type Cart, addresses, carts, orders, products } from "@/db/schema";
 import OrderSuccessEmail from "../../../../../react-email/emails/order-success-email";
 
@@ -112,7 +117,7 @@ export async function POST(req: Request) {
       });
       break;
     }
-    case "payment_intent.succeeded":
+    case "payment_intent.succeeded": {
       console.log(`🔔  Webhook received: ${event.type}`);
       // Handling anything after payment succeeded.
       const paymentIntentObject = data.object as OmitAndExtend<
@@ -126,34 +131,34 @@ export async function POST(req: Request) {
         where: eq(carts.id, Number(paymentIntentObject.metadata.cartId)),
       })) as Cart;
 
-      const allItemsInCart = JSON.parse(
+      const allItemsInCart = parse_to_json<CartItem[]>(
         correspondingCart.items as string,
-      ) as CartItem[];
+      );
 
       // Parse cartItemId from checkout session and extract the id
-      const parsedCartItemId = (
-        JSON.parse(paymentIntentObject.metadata.checkoutItem) as CartItem[]
+      const parsedCheckoutItemsId = parse_to_json<CartItem[]>(
+        paymentIntentObject.metadata.checkoutItem,
       ).map(({ id, qty }) => id) as number[];
 
       const anyItemsExcludingCheckoutItems = allItemsInCart.filter((item) => {
-        if (!parsedCartItemId.includes(item.id)) {
+        if (!parsedCheckoutItemsId.includes(item.id)) {
           return item;
         }
       });
 
-      // Remove all corresponding items from cart
+      // Remove all checkout items in cart.
       await db
         .update(carts)
         .set({
-          items: anyItemsExcludingCheckoutItems.length
-            ? JSON.stringify(anyItemsExcludingCheckoutItems)
-            : JSON.stringify([]),
+          items:
+            anyItemsExcludingCheckoutItems.length > 0
+              ? JSON.stringify(anyItemsExcludingCheckoutItems)
+              : JSON.stringify([]),
           isClosed: anyItemsExcludingCheckoutItems.length === 0 ? true : false,
         })
         .where(eq(carts.id, correspondingCart.id));
 
-      // Shipping address works well with paymentintent.
-      // It will occurs inside paymentintent object.
+      // Add new shipping address
       const { city, country, line1, line2, postal_code, state } =
         paymentIntentObject.shipping?.address as Stripe.Address;
 
@@ -167,22 +172,20 @@ export async function POST(req: Request) {
         state,
       });
 
-      // We get all corresponding items
-      // Include anything from the items just to ensure it will persist even when the
-      // owner has deleted the item.
-      const parsedCartItems = JSON.parse(
+      // Parsed checkout item with qty.
+      const parsedCheckoutItems = parse_to_json<CartItem[]>(
         paymentIntentObject.metadata.checkoutItem,
-      ) as CartItem[];
+      );
 
       const orderedProducts = await db
         .select()
         .from(products)
-        .where(inArray(products.id, parsedCartItemId))
+        .where(inArray(products.id, parsedCheckoutItemsId))
         .execute()
         .then((products) => {
           return products.map((product) => {
-            const qty = parsedCartItems.find(
-              (parsedItem) => parsedItem.id === product.id,
+            const qty = parsedCheckoutItems.find(
+              (parsedCheckoutItem) => parsedCheckoutItem.id === product.id,
             )?.qty;
             return {
               ...product,
@@ -191,25 +194,41 @@ export async function POST(req: Request) {
           });
         });
 
-      // TODO -> add userid so if the user has bought some product then the
-      // corresponding user is eligible to give a comment/ comments (?)
+      const { totalAmount: totalOrderAmount } =
+        calculateOrderAmounts(orderedProducts);
+
+      // todo add user id for comment (?)
       await db.insert(orders).values({
-        // Weird error, no property called name
         // @ts-expect-error
-        name: paymentIntentObject.shipping?.name,
+        name: paymentIntentObject.shipping.name,
         storeId: paymentIntentObject.metadata.storeId,
         stripePaymentIntentId: paymentIntentObject.id,
         stripePaymentIntentStatus: paymentIntentObject.status,
         email: paymentIntentObject.metadata.email,
         addressId,
+        total: totalOrderAmount,
         items: JSON.stringify(orderedProducts),
       });
+
+      // Update product quantity.
+      for await (const orderedProduct of orderedProducts) {
+        await db
+          .update(products)
+          .set({
+            stock:
+              orderedProduct.stock > 0 &&
+              orderedProduct.stock - orderedProduct.qty > 0
+                ? orderedProduct.stock - orderedProduct.qty
+                : 0,
+          })
+          .where(eq(products.id, orderedProduct.id));
+      }
 
       // Gather all informations needed before pass it in email params.
       const customerEmail = paymentIntentObject.metadata.email;
       const orderId = paymentIntentObject.id;
 
-      // Send order succeded email.
+      // Send order succeeded email.
       await resend.emails.send({
         from: process.env.MARKETING_EMAIL!,
         to: customerEmail,
@@ -221,6 +240,7 @@ export async function POST(req: Request) {
         }),
       });
       break;
+    }
     default:
       console.log(`🔔  Webhook received: ${event.type}`);
   }
