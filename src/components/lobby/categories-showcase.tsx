@@ -1,8 +1,8 @@
 import Image from "next/image";
-import { IconBackpack, IconShoes, IconTshirt } from "@/components/ui/icons";
 import { db } from "@/db/core";
-import { products } from "@/db/schema";
 import { sql } from "drizzle-orm";
+import { products } from "@/db/schema";
+import { IconBackpack, IconShoes, IconTshirt } from "@/components/ui/icons";
 
 export default async function CategoriesShowcase() {
   const allProductsWithCount = await db
@@ -39,7 +39,7 @@ export default async function CategoriesShowcase() {
     <section className="flex flex-col mt-64 w-full lg:w-3/4 items-center gap-2">
       <h1 className="text-4xl font-bold">Categories</h1>
       <p className="font-medium text-center text-gray-500">
-        Find any item that suits you the best.
+        Browse hundreds products based on the category.
       </p>
       <div className="grid grid-cols-1 lg:grid-cols-3 w-full mt-4 gap-4">
         {embedImageForProduct.map((product, i) => (

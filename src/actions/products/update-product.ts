@@ -3,9 +3,10 @@
 import { db } from "@/db/core";
 import { eq } from "drizzle-orm";
 import { UploadData } from "@/types";
-import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { products, type NewProduct } from "@/db/schema";
 import { type TweakedOmit, slugify, delete_existing_images } from "@/lib/utils";
+import { revalidatePath } from "next/cache";
 
 export async function update_product_action({
   input,
@@ -14,7 +15,6 @@ export async function update_product_action({
   input: TweakedOmit<NewProduct, "createdAt" | "slug">;
   imagesToDelete: UploadData[];
 }) {
-  // Delete existing images
   if (!!imagesToDelete.length) {
     await delete_existing_images(imagesToDelete);
   }
@@ -42,5 +42,7 @@ export async function update_product_action({
   } catch (error) {
     throw error;
   }
+
   revalidatePath("/dashboard/stores");
+  redirect(`${slugify(decodeURI(input.name))}`);
 }

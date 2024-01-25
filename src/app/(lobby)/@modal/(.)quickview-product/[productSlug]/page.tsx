@@ -35,20 +35,21 @@ export default async function ProductModal({
                 src={parsedImage}
                 fill
                 alt={productDetails.name}
-                className="object-cover rounded"
+                className="object-cover rounded-l"
               />
             ) : (
               <ImagePlaceholder />
             )}
           </div>
-          <div className="px-4 w-1/2 justify-between">
-            <div className="space-y-4">
+          <div className="p-4 w-1/2 justify-between">
+            <div className="space-y-2">
               <h1 className="font-bold text-2xl">
                 {truncate(productDetails.name, 28)}
               </h1>
               <p className="font-medium">
                 {formatCurrency(Number(productDetails.price))}
               </p>
+              <p className="text-gray-500">{productDetails.stock} in stock</p>
               <p className="text-gray-500 leading-7 text-wrap">
                 {productDetails?.description}
               </p>

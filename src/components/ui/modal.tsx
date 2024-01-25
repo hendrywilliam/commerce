@@ -49,10 +49,10 @@ export default function Modal({ children }: { children: React.ReactNode }) {
     >
       <div
         ref={wrapper}
-        className="absolute flex flex-col h-1/2 bg-background rounded top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full md:w-3/4 lg:w-1/2 p-4 "
+        className="relative flex flex-col h-1/2 bg-background rounded top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full md:w-3/4 lg:w-1/2"
       >
-        <div className="flex w-full justify-end">
-          <Button onClick={onDismiss} variant="ghost" className="px-2.5 py-0">
+        <div className="absolute flex w-full justify-end p-1 top-0 right-0">
+          <Button onClick={onDismiss} variant="ghost" className="px-1 h-6">
             <XmarkIcon />
           </Button>
         </div>

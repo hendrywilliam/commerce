@@ -71,7 +71,7 @@ export default function ProductSearch() {
     <>
       <Button
         variant={"outline"}
-        className="inline-flex w-9 p-2 lg:w-max h-full"
+        className="inline-flex w-9 p-2 lg:w-max h-9"
         onClick={() => void setIsOpen((val) => !val)}
       >
         <span className="hidden lg:inline-flex gap-2">
