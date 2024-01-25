@@ -1,20 +1,13 @@
 import { db } from "@/db/core";
-import Image from "next/image";
 import { eq } from "drizzle-orm";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import type { UploadData } from "@/types";
 import { notFound } from "next/navigation";
 import { parse_to_json } from "@/lib/utils";
 import { siteStaticMetadata } from "@/config/site";
 import type { Metadata, ResolvingMetadata } from "next";
-import ImagePlaceholder from "@/components/image-placeholder";
 import { Product, Store, products, stores } from "@/db/schema";
 import ProductPanel from "@/components/lobby/product/product-panel";
+import ImageSelector from "@/components/lobby/product/image-selector";
 
 interface ProductPageProps {
   params: { slug: string };
@@ -56,35 +49,18 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  const parsedImage = parse_to_json<UploadData[]>(product.image as string)[0]
-    ?.url;
+  const parsedImage = parse_to_json<UploadData[]>(product.image as string);
 
   return (
     <div className="flex flex-col container h-full w-full py-8">
-      <div className="flex flex-col lg:flex-row h-full w-full my-2 gap-8">
-        <div className="group relative rounded h-[600px] w-full overflow-hidden">
-          {parsedImage ? (
-            <Image
-              src={parsedImage}
-              fill
-              alt={product.name ?? "Product Image"}
-              className="w-full h-full object-fill rounded transition duration-300 ease-in-out group-hover:scale-105"
-            />
-          ) : (
-            <ImagePlaceholder />
-          )}
+      <div className="flex flex-col lg:flex-row h-[600px] w-full my-2 gap-8">
+        <div className="group relative rounded h-full w-full overflow-hidden">
+          <ImageSelector images={parsedImage} />
         </div>
         <div className="flex flex-col w-full gap-2">
           <h1 className="font-bold text-xl">{product.name}</h1>
+          <p className="text-gray-500">{product.description}</p>
           <ProductPanel product={product} store={store} />
-          <Accordion type="single" collapsible>
-            <AccordionItem value="item-1">
-              <AccordionTrigger className="text-gray-400">
-                Product Description
-              </AccordionTrigger>
-              <AccordionContent>{product.description}</AccordionContent>
-            </AccordionItem>
-          </Accordion>
         </div>
       </div>
     </div>

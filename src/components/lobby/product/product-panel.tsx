@@ -9,13 +9,11 @@ import {
 } from "@/components/ui/icons";
 import { toast } from "sonner";
 import { useState } from "react";
-import { slugify } from "@/lib/utils";
-import { catchError } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { formatCurrency } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { Product, Store } from "@/db/schema";
+import { catchError, formatCurrency } from "@/lib/utils";
 import { addItemInCartAction } from "@/actions/carts/add-item-in-cart";
 
 interface ProductPanelProps {

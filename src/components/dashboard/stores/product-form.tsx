@@ -17,11 +17,11 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { FormEvent, useState } from "react";
-import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useUploadThing } from "@/lib/uploadthing";
 import { IconLoading } from "@/components/ui/icons";
 import type { NewProduct, Product } from "@/db/schema";
+import { useParams, useRouter } from "next/navigation";
 import { catchError, parse_to_json, OmitAndExtend } from "@/lib/utils";
 import { addNewProductAction } from "@/actions/products/add-new-product";
 import { update_product_action } from "@/actions/products/update-product";
@@ -186,9 +186,9 @@ export default function ProductForm({
             />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="clothing">Clothing</SelectItem>
-            <SelectItem value="backpack">Backpack</SelectItem>
-            <SelectItem value="shoes">Shoes</SelectItem>
+            <SelectItem value="clothing">clothing</SelectItem>
+            <SelectItem value="backpack">backpack</SelectItem>
+            <SelectItem value="shoes">shoes</SelectItem>
           </SelectContent>
         </Select>
         <FormMessage>

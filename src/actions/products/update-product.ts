@@ -44,5 +44,5 @@ export async function update_product_action({
   }
 
   revalidatePath("/dashboard/stores");
-  redirect(`${slugify(decodeURI(input.name))}`);
+  redirect(`${slugify(input.name)}`);
 }

@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { db } from "@/db/core";
+import { desc } from "drizzle-orm";
 import type { Store } from "@/db/schema";
 import { stores, products } from "@/db/schema";
 import StoreCard from "@/components/lobby/store-card";
 import { buttonVariants } from "@/components/ui/button";
+import { IconArrowForward } from "@/components/ui/icons";
 import ProductCard from "@/components/lobby/product-card";
 import CategoriesShowcase from "@/components/lobby/categories-showcase";
-import ProductCardSkeleton from "@/components/lobby/product-card-skeleton";
 
 export default async function IndexPage() {
   const featuredStores = (await db.select().from(stores).limit(4)) as Omit<
@@ -14,7 +15,11 @@ export default async function IndexPage() {
     "createdAt"
   >[];
 
-  const featuredProducts = await db.select().from(products).limit(10);
+  const featuredProducts = await db
+    .select()
+    .from(products)
+    .limit(10)
+    .orderBy(desc(products.createdAt));
   // .where(gte(products.rating, 3))) as Omit<Product, "createdAt">[];
 
   return (
@@ -41,32 +46,59 @@ export default async function IndexPage() {
       </section>
       <CategoriesShowcase />
       <div className="flex flex-col w-full mt-36 items-center gap-2">
-        <h1 className="text-4xl font-bold">Featured Products</h1>
-        <p className="font-medium text-center text-gray-500">
-          Top 10 products for this week.
-        </p>
+        <div className="inline-flex mb-4 w-full justify-between">
+          <div>
+            <h1 className="text-4xl font-bold">Featured Products</h1>
+            <p className="font-medium text-gray-500">
+              Top 10 products for this week.
+            </p>
+          </div>
+          <div>
+            <Link
+              href="/products"
+              className={buttonVariants({
+                class: "inline-flex mt-4 gap-2",
+                variant: "outline",
+              })}
+            >
+              View all products
+              <IconArrowForward />
+            </Link>
+          </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 w-full gap-4">
           {featuredProducts.map((product) => {
             return <ProductCard product={product} key={product.id} />;
           })}
         </div>
-        <Link href="/products" className={buttonVariants({ class: "mt-4" })}>
-          View all products
-        </Link>
       </div>
-      <div className="flex flex-col w-full mt-36 items-center gap-2">
-        <h1 className="text-4xl font-bold">Featured Stores</h1>
-        <p className="font-medium text-center text-gray-500">
-          Shop hundreds of products from these featured stores for this week.
-        </p>
+      <div className="flex flex-col w-full mt-36 mb-12 items-center gap-2">
+        <div className="inline-flex mb-4 w-full justify-between">
+          <div>
+            <h1 className="text-4xl font-bold">Featured Stores</h1>
+            <p className="font-medium text-center text-gray-500">
+              Shop hundreds of products from these featured stores for this
+              week.
+            </p>
+          </div>
+          <div>
+            <Link
+              href="/stores"
+              className={buttonVariants({
+                class: "inline-flex mt-4 gap-2",
+                variant: "outline",
+              })}
+            >
+              View all stores
+              <IconArrowForward />
+            </Link>
+          </div>
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-4 w-full gap-4">
           {featuredStores.map((store) => {
             return <StoreCard store={store} key={store.id} />;
           })}
         </div>
-        <Link href="/stores" className={buttonVariants({ class: "mt-4" })}>
-          View all stores
-        </Link>
       </div>
     </div>
   );
