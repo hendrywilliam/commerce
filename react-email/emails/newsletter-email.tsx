@@ -26,83 +26,8 @@ interface NewsletterEmailProps {
 
 export const NewsletterEmail = ({
   email = "Guest",
-  baseUrl = "http://localhost:3001",
-  products = [
-    {
-      id: 69,
-      name: "lofi girl",
-      price: "69",
-      slug: "lofi-girl",
-      stock: 69,
-      storeId: 100,
-      rating: 0,
-      storeName: "ok",
-      category: "backpack",
-      description: "Ok",
-      image: JSON.stringify([
-        {
-          fileName: "Lofi_girl_logo.png",
-          name: "Lofi_girl_logo.png",
-          fileSize: 621783,
-          size: 621783,
-          fileKey: "726c4eef-935e-4a88-b054-e41767445c6f-cv6hnv.png",
-          key: "726c4eef-935e-4a88-b054-e41767445c6f-cv6hnv.png",
-          fileUrl:
-            "https://utfs.io/f/726c4eef-935e-4a88-b054-e41767445c6f-cv6hnv.png",
-          url: "https://utfs.io/f/726c4eef-935e-4a88-b054-e41767445c6f-cv6hnv.png",
-        },
-        {
-          fileName: "ab67706c0000da84e5c731700a747e480e4d11eb.png",
-          name: "ab67706c0000da84e5c731700a747e480e4d11eb.png",
-          fileSize: 732692,
-          size: 732692,
-          fileKey: "58c89340-ab81-4f84-9157-618fb726ec5d-h4wayq.png",
-          key: "58c89340-ab81-4f84-9157-618fb726ec5d-h4wayq.png",
-          fileUrl:
-            "https://utfs.io/f/58c89340-ab81-4f84-9157-618fb726ec5d-h4wayq.png",
-          url: "https://utfs.io/f/58c89340-ab81-4f84-9157-618fb726ec5d-h4wayq.png",
-        },
-      ]),
-      createdAt: null,
-    },
-    {
-      id: 69,
-      name: "lofi girl",
-      price: "69",
-      slug: "lofi-girl",
-      stock: 69,
-      storeId: 100,
-      rating: 0,
-      storeName: "ok",
-      category: "backpack",
-      description: "Ok",
-      image: JSON.stringify([
-        {
-          fileName: "Lofi_girl_logo.png",
-          name: "Lofi_girl_logo.png",
-          fileSize: 621783,
-          size: 621783,
-          fileKey: "726c4eef-935e-4a88-b054-e41767445c6f-cv6hnv.png",
-          key: "726c4eef-935e-4a88-b054-e41767445c6f-cv6hnv.png",
-          fileUrl:
-            "https://utfs.io/f/726c4eef-935e-4a88-b054-e41767445c6f-cv6hnv.png",
-          url: "https://utfs.io/f/726c4eef-935e-4a88-b054-e41767445c6f-cv6hnv.png",
-        },
-        {
-          fileName: "ab67706c0000da84e5c731700a747e480e4d11eb.png",
-          name: "ab67706c0000da84e5c731700a747e480e4d11eb.png",
-          fileSize: 732692,
-          size: 732692,
-          fileKey: "58c89340-ab81-4f84-9157-618fb726ec5d-h4wayq.png",
-          key: "58c89340-ab81-4f84-9157-618fb726ec5d-h4wayq.png",
-          fileUrl:
-            "https://utfs.io/f/58c89340-ab81-4f84-9157-618fb726ec5d-h4wayq.png",
-          url: "https://utfs.io/f/58c89340-ab81-4f84-9157-618fb726ec5d-h4wayq.png",
-        },
-      ]),
-      createdAt: null,
-    },
-  ],
+  baseUrl,
+  products,
 }: NewsletterEmailProps) => {
   return (
     <Html>
