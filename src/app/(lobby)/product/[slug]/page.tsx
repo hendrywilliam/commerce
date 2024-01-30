@@ -33,7 +33,7 @@ export async function generateMetadata(
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { product, store } = (
+  const productAndStore = (
     await db
       .select({ product: products, store: stores })
       .from(products)
@@ -45,11 +45,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
     store: Store;
   };
 
-  if (!product) {
+  if (!productAndStore) {
     notFound();
   }
 
-  const parsedImage = parse_to_json<UploadData[]>(product.image as string);
+  const { product, store } = productAndStore;
+  const parsedImage = parse_to_json<UploadData[]>(
+    productAndStore.product.image as string,
+  );
 
   return (
     <div className="flex flex-col container h-full w-full py-8">
