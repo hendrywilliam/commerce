@@ -35,6 +35,7 @@ export interface UserObjectCustomized
     storeId: string[];
     stripeCustomerId: string;
     stripeSubscriptionId: string;
+    newsletterSubscriptionId?: number;
   };
 }
 

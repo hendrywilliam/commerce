@@ -20,9 +20,6 @@ export async function createStripeCustomerAction(rawUserData: CreateUser) {
   const userCreated = await clerkClient.users.createUser({
     emailAddress: [parsedRawData.data.email],
     password: parsedRawData.data.password,
-    publicMetadata: {
-      address: "",
-    },
     privateMetadata: {
       plan: "Hobby",
       storeId: [],

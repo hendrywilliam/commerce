@@ -28,7 +28,7 @@ export async function get_all_products_and_store_fetcher({
   noStore();
   const [column, order] = sort
     ? (sort.split(".") as [keyof Product | undefined, "asc" | "desc"])
-    : ["createdAt", "asc"];
+    : ["createdAt", "desc"];
 
   const sellersSlug = sellers ? sellers.split(".") : undefined;
 
@@ -61,6 +61,5 @@ export async function get_all_products_and_store_fetcher({
           : // @ts-expect-error
             desc(products[column])
         : desc(products.createdAt),
-    )
-    .groupBy(products.id);
+    );
 }

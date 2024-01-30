@@ -8,6 +8,11 @@ import { get_all_products_and_store_fetcher } from "@/fetchers/products/get-all-
 
 interface ProductsPageProps {
   searchParams: {
+    pmin: string;
+    sort: string;
+    pmax: string;
+    sellers: string;
+    category: string;
     [key: string]: string;
   };
 }
@@ -18,8 +23,8 @@ export default async function ProductsPage({
   const sellers = searchParams.sellers;
   const category = searchParams.category;
   const minPrice = searchParams.pmin ?? "0";
-  const sort = searchParams.sort ?? "name.asc";
   const maxPrice = searchParams.pmax ?? "9999999";
+  const sort = searchParams.sort ?? "createdAt.desc";
 
   // Empty / non existence searchParams property will be consider as undefined.
   const currentPage = isNaN(Number(searchParams.page))
