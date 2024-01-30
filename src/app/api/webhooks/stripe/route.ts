@@ -3,7 +3,6 @@ import type {
   CheckoutSessionCompletedMetadata,
   CartItem,
   CustomerObjectMetadata,
-  CartLineDetailedItems,
 } from "@/types";
 import Stripe from "stripe";
 import { db } from "@/db/core";
@@ -244,5 +243,8 @@ export async function POST(req: Request) {
     default:
       console.log(`🔔  Webhook received: ${event.type}`);
   }
-  return NextResponse.json({ received: true }, { status: 200 });
+  return NextResponse.json(
+    { received: true, action: "webhook" },
+    { status: 200 },
+  );
 }

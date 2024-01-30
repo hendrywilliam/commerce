@@ -15,13 +15,12 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 import { UploadData } from "@/types";
-import { Extends } from "../../src/lib/utils";
 import { Product } from "../../src/db/schema";
 
 interface NewsletterEmailProps {
   email: string;
   baseUrl: string;
-  products: Extends<Product, { storeName?: string }>[];
+  products: Product[];
 }
 
 export const NewsletterEmail = ({
