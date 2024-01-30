@@ -38,7 +38,7 @@ export async function subscribe_newsletter_action({
       .set({
         status: "subscribed",
       })
-      .where(eq(products.id, isSubscriptionExist.id));
+      .where(eq(newsletters.id, isSubscriptionExist.id));
   } else {
     try {
       const { insertId: subscriptionId } = await db.insert(newsletters).values({
