@@ -11,7 +11,7 @@ import {
   json,
   index,
 } from "drizzle-orm/mysql-core";
-import { relations } from "drizzle-orm";
+import { relations, InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 export const products = mysqlTable(
   "products",
@@ -126,3 +126,15 @@ export const payments = mysqlTable("payments", {
 
 export type Payments = typeof payments.$inferSelect;
 export type NewPayments = typeof payments.$inferInsert;
+
+export const newsletters = mysqlTable("newsletters", {
+  id: serial("id").primaryKey(),
+  email: varchar("email", {
+    length: 256,
+  }).notNull(),
+  status: mysqlEnum("status", ["subscribed", "unsubscribed"]).notNull(),
+  createdAt: timestamp("createdAt").defaultNow(),
+});
+
+export type Newsletters = InferSelectModel<typeof newsletters>;
+export type NewNewsletters = InferInsertModel<typeof newsletters>;

@@ -27,7 +27,10 @@ export async function seed_products({
       description: faker.commerce.productDescription(),
       rating: faker.number.int({ min: 2, max: 5 }),
       stock: faker.number.int({ min: 50, max: 150 }),
-      price: faker.commerce.price(),
+      price: faker.commerce.price({
+        min: 10,
+        max: 100,
+      }),
       slug: slugify(productName),
       category: shuffleCategory,
       createdAt: faker.date.past(),

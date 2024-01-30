@@ -146,7 +146,7 @@ export async function POST(req: Request) {
         }
       });
 
-      // Remove all checkout items in cart.
+      // Remove all checkout-ed item in cart.
       await db
         .update(carts)
         .set({
@@ -210,7 +210,7 @@ export async function POST(req: Request) {
         items: JSON.stringify(orderedProducts),
       });
 
-      // Update product quantity.
+      // Update product's stock.
       for await (const orderedProduct of orderedProducts) {
         await db
           .update(products)
@@ -235,7 +235,7 @@ export async function POST(req: Request) {
         subject: "Thank you for your order!",
         react: OrderSuccessEmail({
           orderItems: orderedProducts,
-          userEmail: customerEmail,
+          email: customerEmail,
           orderId,
         }),
       });
