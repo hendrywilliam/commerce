@@ -45,7 +45,7 @@ export default function SignUpForm() {
   });
 
   return (
-    <div className="w-full h-max">
+    <div className="w-[500px] h-max">
       {Object.values(errors)[0] && (
         <div className="w-full border-l-2 border-destructive py-4 px-2 mb-4 bg-destructive/20">
           <p className="text-xs">{Object.values(errors)[0].message}</p>
@@ -60,7 +60,7 @@ export default function SignUpForm() {
           <FormLabel>Email</FormLabel>
           <FormInput
             {...register("email")}
-            placeholder="casey_stoner27@gmail.com"
+            placeholder="aaron_swartz@gmail.com"
             aria-description="Email input"
             name="email"
           />
@@ -83,10 +83,6 @@ export default function SignUpForm() {
             name="confirmPassword"
           />
         </FormField>
-        <p className="text-sm text-gray-500">
-          By registering, you agree to processing your personal data by{" "}
-          {siteName}
-        </p>
         <Button
           disabled={isLoading}
           aria-disabled={isLoading ? "true" : "false"}

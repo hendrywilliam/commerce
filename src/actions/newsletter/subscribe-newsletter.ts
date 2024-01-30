@@ -4,7 +4,7 @@ import { db } from "@/db/core";
 import { eq } from "drizzle-orm";
 import { auth } from "@clerk/nextjs";
 import { clerkClient } from "@clerk/nextjs";
-import { newsletters, type Newsletters } from "@/db/schema";
+import { newsletters, products, type Newsletters } from "@/db/schema";
 import { subscribeNewsletterValidation } from "@/lib/validations/newsletter";
 
 export async function subscribe_newsletter_action({
@@ -33,7 +33,12 @@ export async function subscribe_newsletter_action({
   let newsletterSubscriptionId;
 
   if (isSubscriptionExist) {
-    throw new Error("Subscription is already exist.");
+    await db
+      .update(newsletters)
+      .set({
+        status: "subscribed",
+      })
+      .where(eq(products.id, isSubscriptionExist.id));
   } else {
     try {
       const { insertId: subscriptionId } = await db.insert(newsletters).values({
