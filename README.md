@@ -1,6 +1,6 @@
 # Commerce
 
-Work In Progress (Expect bugs!) — A fictional marketplace built with everything new in Next.js 14 (App Router), which allows users to purchase products, sign up and list their own product for sale. Users can create their own stores and collect payments for every transaction.
+Work In Progress (Expect bugs!) / Preview Mode — A fictional marketplace built with everything new in Next.js 14 (App Router), which allows users to purchase products, sign up and list their own product for sale. Users can create their own stores and collect payments for every transaction.
 
 Key features:
 
@@ -12,6 +12,7 @@ Key features:
 - [x] User authentication using Clerk.
 - [x] Payment integration using Stripe.
 - [x] Email system using React-Email and Resend.
+- [x] Scheduled task using Qstash.
 
 More feature will be added soon.
 
