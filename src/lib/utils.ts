@@ -1,3 +1,8 @@
+import type {
+  CartLineDetailedItems,
+  UploadData,
+  ProductWithQuantity,
+} from "@/types";
 import { z } from "zod";
 import { toast } from "sonner";
 import { baseUrl } from "@/config/site";
@@ -6,11 +11,6 @@ import { UTApi } from "uploadthing/server";
 import { User } from "@clerk/nextjs/server";
 import { type ClassValue, clsx } from "clsx";
 import { isClerkAPIResponseError } from "@clerk/nextjs";
-import type {
-  CartLineDetailedItems,
-  UploadData,
-  ProductWithQuantity,
-} from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -19,19 +19,15 @@ export function cn(...inputs: ClassValue[]) {
 export function catchError(err: unknown) {
   const unknownError = "Something went wrong please try again later.";
   if (isClerkAPIResponseError(err)) {
-    toast.error(err.errors[0].longMessage ?? unknownError);
-  } else if (err instanceof z.ZodError) {
-    const formatedError = err.issues
-      .map((issue) => {
-        return issue.message;
-      })
-      .join(";");
-    toast.error(formatedError);
-  } else if (err instanceof Error) {
-    toast.error(err.message);
-  } else {
-    toast.error(unknownError);
+    return toast.error(err.errors[0].longMessage ?? unknownError);
   }
+  if (err instanceof z.ZodError) {
+    return toast.error(err.issues[0].message);
+  }
+  if (err instanceof Error) {
+    return toast.error(err.message);
+  }
+  return toast.error(unknownError);
 }
 
 export function formatCurrency(amount: number) {

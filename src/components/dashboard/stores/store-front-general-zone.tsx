@@ -5,10 +5,10 @@ import { Store } from "@/db/schema";
 import SeedButton from "./seed-button";
 import { catchError } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
+import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { IconLoading } from "@/components/ui/icons";
 import { Textarea } from "@/components/ui/textarea";
-import { useEffect, useState, useTransition } from "react";
 import { updateOwnedStoreAction } from "@/actions/stores/update-store";
 import { createAccountLinkAction } from "@/actions/stripe/create-account-link";
 
@@ -19,42 +19,28 @@ interface StorefrontGeneralZoneProps {
 export default function StorefrontGeneralZone({
   store,
 }: StorefrontGeneralZoneProps) {
-  const [previousStorePublicInformation, setPreviousStorePublicInformation] =
-    useState(store);
   const [isLoading, setIsLoading] = useState(false);
+  const [storeData, setStoreData] = useState(store);
   const [isPending, startTransition] = useTransition();
-  const [anyChangesCommited, setAnyChangesCommited] = useState(false);
-  const [storePublicInformation, setStorePublicInformation] = useState(store);
 
   async function updateSelectedStore() {
     setIsLoading((isLoading) => !isLoading);
-    await updateOwnedStoreAction({
-      name: storePublicInformation.name,
-      description: storePublicInformation.description,
-      id: storePublicInformation.id,
-    })
-      .then((res) => {
-        toast.success("Your store has been updated.");
-      })
-      .catch((err) => {
-        catchError(err);
-      })
-      .finally(() => {
-        setIsLoading((isLoading) => !isLoading);
+    try {
+      await updateOwnedStoreAction({
+        id: storeData.id,
+        name: storeData.name,
+        description: storeData.description,
       });
+      toast.success("Your store has been updated.");
+    } catch (error) {
+      catchError(error);
+    } finally {
+      setIsLoading((isLoading) => !isLoading);
+    }
   }
 
-  useEffect(() => {
-    // compare two different object
-    if (
-      JSON.stringify(previousStorePublicInformation) !==
-      JSON.stringify(storePublicInformation)
-    ) {
-      setAnyChangesCommited(true);
-    }
-
-    return () => setAnyChangesCommited(false);
-  }, [storePublicInformation, previousStorePublicInformation]);
+  const anyChangesCommited =
+    JSON.stringify(store) !== JSON.stringify(storeData);
 
   return (
     <div className="flex flex-col">
@@ -82,13 +68,13 @@ export default function StorefrontGeneralZone({
           </label>
           <Input
             onChange={(e) =>
-              setStorePublicInformation({
-                ...storePublicInformation,
+              setStoreData({
+                ...storeData,
                 name: e.target.value,
               })
             }
             name="store-name"
-            value={storePublicInformation.name}
+            value={storeData.name}
             className="border focus:ring-2 focus-visible:ring-muted outline-none disabled:opacity-75 w-1/4 mt-2"
           />
           <p className="text-gray-500 text-sm mt-2">
@@ -101,10 +87,10 @@ export default function StorefrontGeneralZone({
             Store Description
           </label>
           <Textarea
-            value={storePublicInformation.description}
+            value={storeData.description}
             onChange={(e) =>
-              setStorePublicInformation({
-                ...storePublicInformation,
+              setStoreData({
+                ...storeData,
                 description: e.target.value,
               })
             }
