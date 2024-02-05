@@ -1,7 +1,7 @@
 import Link from "next/link";
 import PageLayout from "@/components/layouts/page-layout";
 
-export default function StoreOrderNotFoundPage() {
+export default function StoreOrderHistoryNotFoundPage() {
   return (
     <PageLayout>
       <Link
@@ -10,7 +10,7 @@ export default function StoreOrderNotFoundPage() {
       >
         Back to Dashboard
       </Link>
-      <h1 className="font-bold text-xl">No store found.</h1>
+      <h1 className="font-bold text-xl">No order found.</h1>
     </PageLayout>
   );
 }

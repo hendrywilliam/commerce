@@ -68,12 +68,18 @@ export default async function DashboardDynamicStorePage({
               Public store information. Your users can see this information.
             </p>
           </div>
-          <div>
+          <div className="flex gap-2">
             <Link
               href={`${store.slug}/products`}
-              className={buttonVariants({ class: "w-max" })}
+              className={buttonVariants({ class: "w-full" })}
             >
               Products
+            </Link>
+            <Link
+              href={`${store.slug}/orders`}
+              className={buttonVariants({ class: "w-full" })}
+            >
+              Orders
             </Link>
           </div>
         </div>

@@ -67,8 +67,6 @@ export function unixToDateString(timestamp: number) {
   });
 }
 
-export function isStoreOwner() {}
-
 export function beautifyId(id: string) {
   return id.split("_")[1];
 }
