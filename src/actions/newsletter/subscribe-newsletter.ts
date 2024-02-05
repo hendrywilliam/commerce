@@ -46,7 +46,7 @@ export async function subscribe_newsletter_action({
     });
     newsletterSubscriptionId = subscriptionId;
 
-    if (subscriptionId) {
+    if (!subscriptionId) {
       throw new Error("Unable to create a newsletter subscription");
     }
   }

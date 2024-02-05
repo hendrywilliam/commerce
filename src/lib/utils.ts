@@ -10,7 +10,7 @@ import { twMerge } from "tailwind-merge";
 import { UTApi } from "uploadthing/server";
 import { User } from "@clerk/nextjs/server";
 import { type ClassValue, clsx } from "clsx";
-import { isClerkAPIResponseError } from "@clerk/nextjs";
+import { isClerkAPIResponseError, useUser } from "@clerk/nextjs";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -66,6 +66,8 @@ export function unixToDateString(timestamp: number) {
     dateStyle: "full",
   });
 }
+
+export function isStoreOwner() {}
 
 export function beautifyId(id: string) {
   return id.split("_")[1];

@@ -57,7 +57,9 @@ export default function ProductForm({
 
   const { startUpload } = useUploadThing("imageUploader", {
     onUploadError: () => {
-      toast.error("Error occured while uploading. Please try again later.");
+      return toast.error(
+        "Error occured while uploading. Please try again later.",
+      );
     },
   });
 

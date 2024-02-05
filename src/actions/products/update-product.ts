@@ -4,9 +4,9 @@ import { db } from "@/db/core";
 import { eq } from "drizzle-orm";
 import { UploadData } from "@/types";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { products, type NewProduct } from "@/db/schema";
 import { type TweakedOmit, slugify, delete_existing_images } from "@/lib/utils";
-import { revalidatePath } from "next/cache";
 
 export async function update_product_action({
   input,
