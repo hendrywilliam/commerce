@@ -14,26 +14,26 @@ import { check_store_availability_action } from "./check-store-availability";
 export async function updateOwnedStoreAction(
   storeRawInput: TweakedOmit<Store, "createdAt" | "active" | "slug">,
 ) {
-  try {
-    const parseStoreRawInput = storeValidation.parse(storeRawInput);
+  const parseStoreRawInput = await storeValidation.spa(storeRawInput);
 
-    await check_store_availability_action({
-      storeName: parseStoreRawInput.name,
-      storeId: storeRawInput.id,
-    });
-
-    await db
-      .update(stores)
-      .set({
-        description: parseStoreRawInput.description,
-        name: parseStoreRawInput.name,
-        slug: slugify(parseStoreRawInput.name),
-      })
-      .where(eq(stores.id, storeRawInput.id));
-
-    revalidatePath("/dashboard/stores");
-    redirect("/dashboard/stores");
-  } catch (error) {
-    throw error;
+  if (!parseStoreRawInput.success) {
+    throw new Error(parseStoreRawInput.error.issues[0].message);
   }
+
+  await check_store_availability_action({
+    storeName: parseStoreRawInput.data.name,
+    storeId: storeRawInput.id,
+  });
+
+  await db
+    .update(stores)
+    .set({
+      description: parseStoreRawInput.data.description,
+      name: parseStoreRawInput.data.name,
+      slug: slugify(parseStoreRawInput.data.name),
+    })
+    .where(eq(stores.id, storeRawInput.id));
+
+  revalidatePath("/dashboard/stores");
+  redirect("/dashboard/stores");
 }

@@ -40,14 +40,14 @@ export async function subscribe_newsletter_action({
       })
       .where(eq(newsletters.id, isSubscriptionExist.id));
   } else {
-    try {
-      const { insertId: subscriptionId } = await db.insert(newsletters).values({
-        email,
-        status: "subscribed",
-      });
-      newsletterSubscriptionId = subscriptionId;
-    } catch (error) {
-      throw new Error("Failed to subscribe newsletter. Try again later.");
+    const { insertId: subscriptionId } = await db.insert(newsletters).values({
+      email,
+      status: "subscribed",
+    });
+    newsletterSubscriptionId = subscriptionId;
+
+    if (subscriptionId) {
+      throw new Error("Unable to create a newsletter subscription");
     }
   }
 

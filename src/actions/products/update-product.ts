@@ -34,14 +34,10 @@ export async function update_product_action({
     rating: !!input.rating && input.rating > 0 ? input.rating : 0,
   };
 
-  try {
-    await db
-      .update(products)
-      .set(updateValue)
-      .where(eq(products.id, input.id as number));
-  } catch (error) {
-    throw error;
-  }
+  await db
+    .update(products)
+    .set(updateValue)
+    .where(eq(products.id, input.id as number));
 
   revalidatePath("/dashboard/stores");
   redirect(`${slugify(input.name)}`);
