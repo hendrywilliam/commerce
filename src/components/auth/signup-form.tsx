@@ -60,7 +60,7 @@ export default function SignUpForm() {
           <FormLabel>Email</FormLabel>
           <FormInput
             {...register("email")}
-            placeholder="aaron_swartz@gmail.com"
+            placeholder="miki_matsubara@gmail.com"
             aria-description="Email input"
             name="email"
           />

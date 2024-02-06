@@ -26,23 +26,6 @@ export const registerValidation = z
     path: ["confirmPassword"],
   });
 
-export const loginValidation = z.object({
-  email: z
-    .string({
-      required_error: "Email is required.",
-    })
-    .min(1, {
-      message: "Please input your email.",
-    }),
-  password: z
-    .string({
-      required_error: "Password is required.",
-    })
-    .min(1, {
-      message: "Please input your password.",
-    }),
-});
-
 export const manageSubscriptionValidation = z.string().min(1, {
   message: "Subscription ID is required.",
 });

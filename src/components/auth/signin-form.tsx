@@ -1,67 +1,66 @@
 "use client";
 
 import { toast } from "sonner";
-import { useState } from "react";
 import { catchError } from "@/lib/utils";
 import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { useZodForm } from "@/hooks/use-zod-form";
 import { IconLoading } from "@/components/ui/icons";
-import { loginValidation } from "@/lib/validations/user";
+import { useCallback, useState, FormEvent } from "react";
 import { Form, FormField, FormInput, FormLabel } from "@/components/ui/form";
 
 export default function SignInForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useZodForm({
-    schema: loginValidation,
-    mode: "onSubmit",
+  const [identifier, setIdentifer] = useState({
+    email: "",
+    password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const { isLoaded, signIn, setActive } = useSignIn();
   const router = useRouter();
 
-  const submitLogin = handleSubmit(async (data) => {
-    if (!isLoaded) return;
-    setIsLoading(true);
-    await signIn
-      .create({
-        identifier: data.email,
-        password: data.password,
-      })
-      .then((res) => {
-        if (res.status === "complete") {
-          setActive({ session: res.createdSessionId });
+  const submitLogin = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      if (!isLoaded) return;
+      setIsLoading(true);
+      try {
+        const createSession = await signIn.create({
+          identifier: identifier.email,
+          password: identifier.password,
+        });
+
+        if (createSession.status === "complete") {
+          setActive({ session: createSession.createdSessionId });
+          toast.success("Login succeeded. Redirecting to lobby.");
+          router.push("/");
         }
-        toast.success("Login succeeded. Redirecting to lobby.");
-        router.push("/");
-      })
-      .catch((err) => catchError(err))
-      .finally(() => {
+      } catch (error) {
+        catchError(error);
+      } finally {
         setIsLoading(false);
-      });
-  });
+      }
+    },
+    // eslint-disable-next-line
+    [identifier],
+  );
 
   return (
     <div className="w-full h-max">
-      {Object.values(errors)[0] && (
-        <div className="border-l-2 border-destructive py-4 px-2 mb-4 bg-destructive/20">
-          <p className="text-xs">{Object.values(errors)[0].message}</p>
-        </div>
-      )}
       <Form
         className="flex flex-col gap-4"
-        onSubmit={submitLogin}
+        onSubmit={(event) => submitLogin(event)}
         aria-description="Registration Form"
       >
         <FormField>
           <FormLabel>Email</FormLabel>
           <FormInput
-            {...register("email")}
-            placeholder="casey_stoner27@gmail.com"
+            onChange={(event) =>
+              setIdentifer({
+                ...identifier,
+                [event.target.name]: event.target.value,
+              })
+            }
+            placeholder="miki_matsubara@gmail.com"
             aria-description="Email input"
             name="email"
           />
@@ -69,8 +68,13 @@ export default function SignInForm() {
         <FormField>
           <FormLabel>Password</FormLabel>
           <FormInput
+            onChange={(event) =>
+              setIdentifer({
+                ...identifier,
+                [event.target.name]: event.target.value,
+              })
+            }
             aria-description="Password input"
-            {...register("password")}
             type="password"
             name="password"
           />
