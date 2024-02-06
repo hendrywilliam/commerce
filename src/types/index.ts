@@ -1,9 +1,8 @@
 import Stripe from "stripe";
-import { NewProduct, Product } from "@/db/schema";
 import { User } from "@clerk/nextjs/server";
 import { billingPlan } from "@/config/billing";
+import { NewProduct, Product } from "@/db/schema";
 import type { Extends, OmitAndExtend } from "@/lib/utils";
-import type { FileWithPath } from "@uploadthing/react";
 
 export interface CartItem {
   id: number;
@@ -45,7 +44,7 @@ export interface BillingPlan {
   };
 }
 
-export interface FileWithPreview extends FileWithPath {
+export interface FileWithPreview extends File {
   preview: string;
 }
 

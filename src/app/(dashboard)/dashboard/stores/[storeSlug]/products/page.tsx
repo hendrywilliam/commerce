@@ -71,7 +71,7 @@ export default async function DashboardStoreProductsPage({
   ]);
 
   return (
-    <div>
+    <div className="h-full">
       <div className="w-full flex">
         <div className="w-full">
           <h1 className="font-bold text-2xl">Products</h1>
@@ -89,7 +89,9 @@ export default async function DashboardStoreProductsPage({
         </div>
       </div>
       <Separator />
-      <DashboardStoreProductShellTable storeProductData={productData} />
+      <div className="h-[650px]">
+        <DashboardStoreProductShellTable storeProductData={productData} />
+      </div>
       <div className="mt-4 flex items-end">
         <Pagination currentPage={page} totalPage={pageData} />
       </div>

@@ -53,7 +53,12 @@ export default async function StoreOrderDynamicPage({
           {shipmentAddress && (
             <li>
               <p className="text-sm text-gray-500">Shipment Address</p>
+              <p>{shipmentAddress.city}</p>
+              <p>{shipmentAddress.country}</p>
+              <p>{shipmentAddress.postal_code}</p>
+              <p>{shipmentAddress.state}</p>
               <p>{shipmentAddress.line1}</p>
+              <p>{shipmentAddress.line2}</p>
             </li>
           )}
         </ul>

@@ -9,8 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Dispatch, SetStateAction } from "react";
 import { IconUpload } from "@/components/ui/icons";
 import { IconTrashCan } from "@/components/ui/icons";
-import { useDropzone } from "@uploadthing/react/hooks";
-import type { FileRejection, FileWithPath } from "@uploadthing/react";
+import { FileRejection, useDropzone } from "react-dropzone";
 import type { FileWithPreview, UploadData, ProductFormData } from "@/types";
 
 interface UploadProductImageProps {
@@ -31,7 +30,8 @@ export default function UploadProductImage({
   maxFiles = 4,
   selectedFiles,
   accept = {
-    "": [".png", ".jpg", ".jpeg"],
+    "image/jpeg": [],
+    "image/png": [],
   },
   setSelectedFiles,
   maxSize = 1024 * 1024 * 4,
@@ -41,7 +41,7 @@ export default function UploadProductImage({
   formValues,
 }: UploadProductImageProps) {
   const onDrop = useCallback(
-    (acceptedFiles: FileWithPath[]) => {
+    (acceptedFiles: File[]) => {
       const embedPreviewFiles = acceptedFiles.map((file) => {
         return Object.assign(file, {
           preview: URL.createObjectURL(file),
@@ -54,9 +54,7 @@ export default function UploadProductImage({
   );
 
   const onDropRejected = useCallback((fileRejections: FileRejection[]) => {
-    toast.error(
-      fileRejections[0].errors.map((error) => error.message).join(". "),
-    );
+    toast.error("Invalid file, Please check your image type or size.");
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({

@@ -48,8 +48,9 @@ export default function ProductForm({
 }: ProductFromProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { storeSlug } = useParams<{ storeSlug: string }>();
-  const [selectedFiles, setSelectedFiles] = useState([] as FileWithPreview[]);
   const [imagesToDelete, setImagesToDelete] = useState([] as UploadData[]);
+  const [selectedFiles, setSelectedFiles] = useState([] as FileWithPreview[]);
+  const [uploadError, setUploadError] = useState(false);
 
   const [formValues, setFormValues] = useState<ProductFormData>(
     initialValues ?? defaultValues,
@@ -57,14 +58,15 @@ export default function ProductForm({
 
   const { startUpload } = useUploadThing("imageUploader", {
     onUploadError: () => {
-      return toast.error(
-        "Error occured while uploading. Please try again later.",
-      );
+      toast.error("Error occured while uploading. Please try again later.");
+      setUploadError((uploadError) => !uploadError);
     },
   });
 
   async function onSubmitData(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (uploadError) return;
     setIsLoading((isLoading) => !isLoading);
     // Add new product
     if (productStatus === "new-product") {
@@ -82,11 +84,11 @@ export default function ProductForm({
         >;
         await addNewProductAction(productData, storeSlug);
         toast.success("New product added to store.");
+        setSelectedFiles([]);
+        setFormValues(defaultValues);
       } catch (err) {
         catchError(err);
       } finally {
-        setSelectedFiles([]);
-        setFormValues(defaultValues);
         setIsLoading((isLoading) => !isLoading);
       }
     } else {
@@ -108,11 +110,11 @@ export default function ProductForm({
           input: updatedProductData,
         });
         toast.success("Product updated successfully.");
+        setSelectedFiles([]);
       } catch (error) {
         catchError(error);
       } finally {
         setIsLoading((isLoading) => !isLoading);
-        setSelectedFiles([]);
       }
     }
   }

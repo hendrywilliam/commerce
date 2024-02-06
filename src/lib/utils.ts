@@ -57,8 +57,8 @@ export function getPrimaryEmail(user: User) {
   return user.emailAddresses[0].emailAddress;
 }
 
-export function getAbsoluteUrl(href: string) {
-  return `${baseUrl}${href}`;
+export function getAbsoluteUrl(segments: string) {
+  return `${baseUrl}${segments}`;
 }
 
 export function unixToDateString(timestamp: number) {

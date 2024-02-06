@@ -1,7 +1,15 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { currentUser } from "@clerk/nextjs";
+import { z } from "zod";
 
-const f = createUploadthing();
+const f = createUploadthing({
+  errorFormatter: (err) => {
+    return {
+      message: err.message,
+      zodError: err.cause instanceof z.ZodError ? err.cause.flatten() : null,
+    };
+  },
+});
 
 export const uploadFileRouter = {
   imageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 4 } })
