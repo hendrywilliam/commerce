@@ -63,6 +63,7 @@ export default function SignInForm() {
             placeholder="miki_matsubara@gmail.com"
             aria-description="Email input"
             name="email"
+            data-testid="email"
           />
         </FormField>
         <FormField>
@@ -77,6 +78,7 @@ export default function SignInForm() {
             aria-description="Password input"
             type="password"
             name="password"
+            data-testid="password"
           />
         </FormField>
         <Button
@@ -84,6 +86,7 @@ export default function SignInForm() {
           disabled={isLoading}
           className="flex gap-1"
           type="submit"
+          data-testid="submit"
         >
           {isLoading && <IconLoading />}
           Sign in

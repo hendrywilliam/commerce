@@ -15,7 +15,7 @@ export const registerValidation = z
       })
       .regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{8,}$/, {
         message:
-          "Password must contains atleast 8 characters, including 1 non numerical character, with a number and an uppercase character.",
+          "Your password must contain atleast one number, one alphanumerical character and one uppercase letter.",
       }),
     confirmPassword: z.string({
       required_error: "Confirm Password is required.",

@@ -2,7 +2,6 @@
 
 import { toast } from "sonner";
 import { useState } from "react";
-import { siteName } from "@/config/site";
 import { catchError } from "@/lib/utils";
 import { useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
@@ -57,21 +56,23 @@ export default function SignUpForm() {
         aria-description="Registration Form"
       >
         <FormField>
-          <FormLabel>Email</FormLabel>
+          <FormLabel htmlFor="email">Email</FormLabel>
           <FormInput
             {...register("email")}
             placeholder="miki_matsubara@gmail.com"
             aria-description="Email input"
             name="email"
+            data-testid="email"
           />
         </FormField>
         <FormField>
-          <FormLabel>Password</FormLabel>
+          <FormLabel htmlFor="password">Password</FormLabel>
           <FormInput
             aria-description="Password input"
             {...register("password")}
             type="password"
             name="password"
+            data-testid="password"
           />
         </FormField>
         <FormField>
@@ -81,6 +82,7 @@ export default function SignUpForm() {
             {...register("confirmPassword")}
             type="password"
             name="confirmPassword"
+            data-testid="confirmPassword"
           />
         </FormField>
         <Button
@@ -88,6 +90,7 @@ export default function SignUpForm() {
           aria-disabled={isLoading ? "true" : "false"}
           className="flex gap-1"
           type="submit"
+          data-testid="submit"
         >
           {isLoading && <IconLoading />}
           Sign up
