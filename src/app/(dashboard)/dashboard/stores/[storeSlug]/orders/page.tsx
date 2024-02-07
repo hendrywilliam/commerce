@@ -13,6 +13,7 @@ interface DashboardStoreOrdersPageProps {
     [key: string]: string;
   };
   searchParams: {
+    name: string;
     page: string;
   };
 }
@@ -21,6 +22,7 @@ export default async function DashboardStoreOrdersPage({
   params,
   searchParams,
 }: DashboardStoreOrdersPageProps) {
+  const customerName = searchParams.name;
   const slug = params.storeSlug;
   const page = isNaN(Number(searchParams.page)) ? 1 : Number(searchParams.page);
   const pageSize = 10;
@@ -44,6 +46,7 @@ export default async function DashboardStoreOrdersPage({
   const storeOrders = await db
     .select()
     .from(orders)
+    .where(eq(orders.name, customerName))
     .limit(pageSize)
     .offset((page - 1) * pageSize);
 

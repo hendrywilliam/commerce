@@ -72,6 +72,9 @@ export default function ProductForm({
     if (productStatus === "new-product") {
       try {
         const uploadFileResponse = await startUpload(selectedFiles);
+
+        if (!uploadFileResponse) return;
+
         const productData = {
           ...formValues,
           price: String(formValues.price),
@@ -97,6 +100,8 @@ export default function ProductForm({
       if (!!selectedFiles.length) {
         uploadedFiles = await startUpload(selectedFiles);
       }
+      if (!uploadedFiles) return;
+
       const updatedProductData = {
         ...formValues,
         image: [
