@@ -15,7 +15,7 @@ export const registerValidation = z
       })
       .regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{8,}$/, {
         message:
-          "Your password must contain atleast one number, one alphanumerical character and one uppercase letter.",
+          "Your password must contain atleast one number, one non-alphanumerical character and one uppercase letter.",
       }),
     confirmPassword: z.string({
       required_error: "Confirm Password is required.",
