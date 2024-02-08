@@ -36,7 +36,7 @@ export default function OrderDetails({
               </div>
               <div className="flex flex-col my-auto">
                 <p className="font-medium">{item.name}</p>
-                <p>Quantity: {item.qty}</p>
+                <p className="text-sm text-gray-500">Qty - {item.qty}</p>
               </div>
             </div>
             <div className="flex items-center">
@@ -50,17 +50,17 @@ export default function OrderDetails({
         );
       })}
       <Separator />
-      <div className="flex flex-col w-full">
-        <div className="flex w-full justify-between my-1">
+      <div className="flex flex-col w-full space-y-1">
+        <div className="flex w-full justify-between">
           <p>Price</p>
           <p className="font-medium">{formatCurrency(totalOrderPrice)}</p>
         </div>
-        <div className="flex w-full justify-between my-1">
+        <div className="flex w-full justify-between">
           <p>Shipping</p>
           <p className="font-medium">FREE</p>
         </div>
-        <div className="flex w-full justify-between my-1">
-          <p>TAX</p>
+        <div className="flex w-full justify-between">
+          <p>Tax</p>
           <p className="font-medium">0%</p>
         </div>
       </div>
