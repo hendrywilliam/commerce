@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { Input } from "@/components/ui/input";
@@ -9,21 +10,22 @@ export default function OrdersHistoryDataTableToolbar() {
   const { push } = useRouter();
   const pathname = usePathname();
   const [filter, setFilter] = useState("");
-  const { createQueryString } = useQueryString();
   const [isPending, startTransition] = useTransition();
   const [hasInteraction, setHasInteraction] = useState(false);
+  const { createQueryString, deleteQueryString } = useQueryString();
 
   useEffect(() => {
     const debounce = setTimeout(() => {
       startTransition(() => {
-        if (hasInteraction) {
+        if (hasInteraction && !!filter.length) {
           void push(`${pathname}?${createQueryString("name", filter)}`);
+        } else {
+          void push(`${pathname}?${deleteQueryString("name")}`);
         }
       });
     }, 1000);
 
     return () => clearTimeout(debounce);
-    // eslint-disable-next-line
   }, [filter]);
 
   return (

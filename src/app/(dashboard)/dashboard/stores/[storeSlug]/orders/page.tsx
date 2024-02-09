@@ -1,5 +1,5 @@
 import { db } from "@/db/core";
-import { eq } from "drizzle-orm";
+import { and, like, eq } from "drizzle-orm";
 import { currentUser } from "@clerk/nextjs";
 import { orders, stores } from "@/db/schema";
 import { UserObjectCustomized } from "@/types";
@@ -46,7 +46,9 @@ export default async function DashboardStoreOrdersPage({
   const storeOrders = await db
     .select()
     .from(orders)
-    .where(eq(orders.name, customerName))
+    .where(
+      and(customerName ? like(orders.name, `%${customerName}%`) : undefined),
+    )
     .limit(pageSize)
     .offset((page - 1) * pageSize);
 

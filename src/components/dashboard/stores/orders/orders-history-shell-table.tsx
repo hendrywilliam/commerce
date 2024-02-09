@@ -1,12 +1,12 @@
 "use client";
 
+import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { useMemo } from "react";
 import { beautifyId } from "@/lib/utils";
 import type { Orders } from "@/db/schema";
 import { usePathname } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
-import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
 import OrdersHistoryDataTable from "@/components/dashboard/stores/orders/orders-history-data-table";
 import OrdersHistoryDataTableToolbar from "@/components/dashboard/stores/orders/orders-history-data-table-toolbar";
 
@@ -20,9 +20,15 @@ export default function OrdersHistoryShellTable({
   orders,
 }: OrdersHistoryShellTableProps) {
   const pathname = usePathname();
+
   const columns = useMemo(
     () =>
       [
+        storeOrdersColumnHelper.accessor("stripePaymentIntentId", {
+          header: () => "Payment ID",
+          cell: (info) => <span>{beautifyId(String(info.getValue()))}</span>,
+          footer: (info) => info.column.id,
+        }),
         storeOrdersColumnHelper.accessor("name", {
           header: () => "Customer Name",
           cell: (info) => (
@@ -40,9 +46,15 @@ export default function OrdersHistoryShellTable({
           cell: (info) => <span>{info.getValue()}</span>,
           footer: (info) => info.column.id,
         }),
-        storeOrdersColumnHelper.accessor("stripePaymentIntentId", {
-          header: () => "Payment ID",
-          cell: (info) => <span>{beautifyId(String(info.getValue()))}</span>,
+        storeOrdersColumnHelper.accessor("createdAt", {
+          header: () => "Date",
+          cell: (info) => (
+            <span>
+              {info.getValue()?.toLocaleDateString("us-US", {
+                dateStyle: "full",
+              })}
+            </span>
+          ),
           footer: (info) => info.column.id,
         }),
         storeOrdersColumnHelper.display({

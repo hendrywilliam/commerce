@@ -20,7 +20,7 @@ export default async function DashboardPage() {
         {dashboardNavigation.map((item, i) => {
           return (
             <Link
-              className="flex flex-col border rounded h-52 "
+              className="flex flex-col border rounded h-52 shadow"
               href={item.href}
               key={i}
             >

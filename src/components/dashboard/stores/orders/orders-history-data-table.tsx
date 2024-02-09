@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import {
@@ -14,6 +15,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { cn } from "@/lib/utils";
 import { type Orders } from "@/db/schema";
 
 interface OrdersHistoryDataTableProps {
@@ -30,12 +32,11 @@ export default function OrdersHistoryDataTable({
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
-
   return (
     <Table>
       <TableHeader>
         {ordersTable.getHeaderGroups().map((headerGroup) => (
-          <TableRow key={headerGroup.id}>
+          <TableRow key={headerGroup.id} className="w-full">
             {headerGroup.headers.map((header) => (
               <TableHead key={header.id}>
                 {flexRender(
@@ -48,15 +49,21 @@ export default function OrdersHistoryDataTable({
         ))}
       </TableHeader>
       <TableBody>
-        {ordersTable.getRowModel().rows.map((row) => (
-          <TableRow key={row.id}>
-            {row.getVisibleCells().map((cell) => (
-              <TableCell key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </TableCell>
-            ))}
+        {!!ordersTable.getRowModel().rows.length ? (
+          ordersTable.getRowModel().rows.map((row) => (
+            <TableRow key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell>No record found.</TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
     </Table>
   );

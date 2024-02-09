@@ -10,7 +10,7 @@ export default function DashboardStoreCard({ store }: FeaturedStore) {
   return (
     <Link
       href={`stores/${store.slug}`}
-      className="relative h-max w-full border rounded"
+      className="relative h-max w-full border rounded shadow"
     >
       {store.active ? (
         <div className="absolute top-2 right-2 px-2 py-1 border rounded-md bg-green-100 text-black outline-none border-none text-xs font-semibold">
