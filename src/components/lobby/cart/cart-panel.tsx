@@ -73,12 +73,6 @@ export default function CartPanel({ products }: CartPanelProps) {
           </div>
         ))}
       </div>
-      <div className="mt-4">
-        <p className="text-xs">
-          Worry less! Ecremmoce is not storing your data including: Card
-          Information, Payment Information and Your Personal Address.
-        </p>
-      </div>
     </div>
   );
 }

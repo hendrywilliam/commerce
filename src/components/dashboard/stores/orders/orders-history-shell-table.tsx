@@ -48,13 +48,7 @@ export default function OrdersHistoryShellTable({
         }),
         storeOrdersColumnHelper.accessor("createdAt", {
           header: () => "Date",
-          cell: (info) => (
-            <span>
-              {info.getValue()?.toLocaleDateString("us-US", {
-                dateStyle: "full",
-              })}
-            </span>
-          ),
+          cell: (info) => <span>{info.getValue()?.toUTCString()}</span>,
           footer: (info) => info.column.id,
         }),
         storeOrdersColumnHelper.display({
