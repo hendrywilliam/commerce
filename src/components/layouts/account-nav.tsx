@@ -22,9 +22,14 @@ export default function AccountNavigation() {
   return (
     <div className="flex self-center">
       {!isSignedIn ? (
-        <Button onClick={() => void router.push("/sign-in")}>Sign in</Button>
+        <Button
+          data-testid="signin-button"
+          onClick={() => void router.push("/sign-in")}
+        >
+          Sign in
+        </Button>
       ) : (
-        <DropdownMenu>
+        <DropdownMenu data-testid="account-menu">
           <DropdownMenuTrigger className="focus:outline-none">
             <Avatar>
               {user ? (

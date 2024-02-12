@@ -34,9 +34,10 @@ export default async function ShoppingCart() {
           size: "icon",
           class: "relative rounded",
         })}
+        data-testid="cart-trigger"
       >
         <div className="absolute px-1.5 -top-1 -right-1 rounded-full border bg-background text-xs">
-          <p>{sumQty > 99 ? 99 : sumQty}</p>
+          <p data-testid="cart-items-indicator">{sumQty > 99 ? 99 : sumQty}</p>
         </div>
         <IconCart />
       </SheetTrigger>
@@ -72,6 +73,7 @@ export default async function ShoppingCart() {
             <Link
               href={"/cart"}
               className={buttonVariants({ class: "w-full" })}
+              data-testid="view-full-cart-button"
             >
               View Full Cart
             </Link>

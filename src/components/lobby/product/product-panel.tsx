@@ -26,7 +26,6 @@ interface ProductPanelProps {
 export default function ProductPanel({ product, store }: ProductPanelProps) {
   const [productQuantity, setProductQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const { push } = useRouter();
 
   const subTotalProduct = productQuantity * Number(product.price);
 
@@ -88,8 +87,8 @@ export default function ProductPanel({ product, store }: ProductPanelProps) {
               productQuantity > 1 ? productQuantity - 1 : 1,
             )
           }
-          variant={"outline"}
-          size={"icon"}
+          variant="outline"
+          size="icon"
           className="h-8 w-8"
         >
           <IconArrowDown />
@@ -102,6 +101,7 @@ export default function ProductPanel({ product, store }: ProductPanelProps) {
             aria-disabled={isLoading ? "true" : "false"}
             className="inline-flex gap-2"
             onClick={handleAddItemToCart}
+            data-testid="add-to-cart-button"
           >
             {isLoading ? <IconLoading /> : <IconCart />}
             Add To Cart

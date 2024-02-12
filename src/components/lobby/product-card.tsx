@@ -62,12 +62,10 @@ export default function ProductCard({ product }: ProductCardProps) {
             className={buttonVariants({
               size: "sm",
               variant: "outline",
-              class: "w-full inline-flex gap-1",
             })}
             href={`/quickview-product/${product.slug}`}
           >
             <IconView />
-            Quick View
           </Link>
           {product.stock > 0 ? (
             <Button

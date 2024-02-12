@@ -34,7 +34,7 @@ export default function SignUpForm() {
         password: data.password,
         confirmPassword: data.confirmPassword,
       });
-      toast.success("Register success. Redirecting to lobby.");
+      toast.success("Registration completed. You may log in now.");
       router.push("/sign-in");
     } catch (error) {
       catchError(errors);

@@ -49,7 +49,7 @@ export default function SignInForm() {
       <Form
         className="flex flex-col gap-4"
         onSubmit={(event) => submitLogin(event)}
-        aria-description="Registration Form"
+        aria-description="Login Form"
       >
         <FormField>
           <FormLabel>Email</FormLabel>

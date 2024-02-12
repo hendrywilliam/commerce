@@ -1,4 +1,3 @@
-import { getAbsoluteUrl } from "@/lib/utils";
 import { expect, test } from "@playwright/test";
 import { authentication } from "../config/auth";
 
@@ -8,7 +7,7 @@ const { email, pass } = authentication;
 test.skip("[happy path] user can able to register and login.", async ({
   page,
 }) => {
-  await page.goto(getAbsoluteUrl("/sign-up"));
+  await page.goto("/sign-up");
   await expect(page.getByRole("heading", { name: "Sign up" })).toBeVisible();
 
   // Fill registration form
@@ -30,7 +29,7 @@ test.skip("[happy path] user can able to register and login.", async ({
 test("[edge case] registration with invalid email shows error message.", async ({
   page,
 }) => {
-  await page.goto(getAbsoluteUrl("/sign-up"));
+  await page.goto("/sign-up");
 
   await page.getByTestId("email").fill("skater");
   await page.getByTestId("password").fill("wong_saya_suka_kok");
@@ -46,7 +45,7 @@ test("[edge case] registration with invalid email shows error message.", async (
 test("[edge case] registration with invalid confirm/password format shows error message.", async ({
   page,
 }) => {
-  await page.goto(getAbsoluteUrl("/sign-up"));
+  await page.goto("/sign-up");
 
   await page.getByTestId("email").fill("skater@gmail.com");
   await page.getByTestId("password").fill(pass);
