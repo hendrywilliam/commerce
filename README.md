@@ -1,6 +1,8 @@
 # Commerce
 
-Work In Progress (Expect bugs!) / Preview Mode — A fictional marketplace built with everything new in Next.js 14 (App Router), which allows users to purchase products, sign up and list their own product for sale. Users can create their own stores and collect payments for every transaction.
+https://commerce.hendryw.com/
+
+Work In Progress / Preview Mode — A fictional marketplace built with everything new in Next.js 14 (App Router), which allows users to purchase products, sign up and list their own product for sale. Users can create their own stores and collect payments for every transaction.
 
 Key features:
 
