@@ -79,10 +79,6 @@ export default function Products({
             `${pathname}?${createQueryString("category", joinedCategories)}`,
           );
         });
-      } else {
-        startTransition(() => {
-          void router.push(`${pathname}?${deleteQueryString("category")}`);
-        });
       }
     }, 500);
 
@@ -92,16 +88,12 @@ export default function Products({
 
   useEffect(() => {
     const bounceUpdate = setTimeout(() => {
-      if (!!sellersSlug.length) {
+      if (!!sellersSlug.length && isNewValue) {
         const joinedSellers = sellersSlug.join(".");
         startTransition(() => {
           void router.push(
             `${pathname}?${createQueryString("sellers", joinedSellers)}`,
           );
-        });
-      } else {
-        startTransition(() => {
-          void router.push(`${pathname}?${deleteQueryString("sellers")}`);
         });
       }
     }, 500);
@@ -228,6 +220,7 @@ export default function Products({
                             disabled={isPending}
                             aria-disabled={isPending ? "true" : "false"}
                             onCheckedChange={(checked) => {
+                              setIsNewValue((isNewValue) => isNewValue);
                               return checked
                                 ? setSellersSlug((sellersSlug) => [
                                     ...sellersSlug,
@@ -257,6 +250,7 @@ export default function Products({
                               category.value,
                             )}
                             onCheckedChange={(checked) => {
+                              setIsNewValue((isNewValue) => isNewValue);
                               return checked
                                 ? setSelectedCategories(
                                     (selectedCategories) => [
