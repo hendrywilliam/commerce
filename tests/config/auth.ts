@@ -1,4 +1,7 @@
+import * as dotenv from "dotenv";
+dotenv.config();
+
 export const authentication = {
-  email: "miki_matsubara@gmail.com",
-  pass: "Staywithm3!",
+  email: process.env.TEST_EMAIL,
+  pass: process.env.TEST_PASSWORD,
 };

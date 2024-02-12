@@ -74,6 +74,58 @@ export const storeFrontTabs = [
   },
 ];
 
+export const navigationMenu: {
+  [key: string]: {
+    title: string;
+    href: string;
+    description: string;
+  }[];
+} = {
+  clothing: [
+    {
+      title: "Low Price",
+      href: "/products?category=clothing&pmax=100",
+      description: "Browse clothing products with low prices.",
+    },
+    {
+      title: "High Price",
+      href: "/products?category=clothing&pmin=100",
+      description: "Browse clothing products with high prices.",
+    },
+  ],
+  backpack: [
+    {
+      title: "High Rating",
+      href: "/products?category=backpack&rating=4",
+      description: "Browse backpack products with highest rating.",
+    },
+    {
+      title: "Low Price",
+      href: "/products?category=backpack&pmax=100",
+      description:
+        "Save more. Discover our top picks for high-quality items at low prices.",
+    },
+    {
+      title: "High Price",
+      href: "/products?category=backpack&pmin=100",
+      description:
+        "Shop our top-tier items for the best in quality and style, perfect for those who love a little luxury",
+    },
+  ],
+  shoes: [
+    {
+      title: "Low Price",
+      href: "/products?category=shoes&pmax=100",
+      description: "Snag a great deal on stylish shoes without spending a lot.",
+    },
+    {
+      title: "High Price",
+      href: "/products?category=shoes&pmin=100",
+      description: "Browse premium shoes for high-quality finds.",
+    },
+  ],
+};
+
 export const siteStaticMetadata = {
   applicationName: "commerce by hendryw",
   keywords: [
