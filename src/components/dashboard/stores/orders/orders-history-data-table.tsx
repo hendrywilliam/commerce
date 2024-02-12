@@ -15,7 +15,6 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { cn } from "@/lib/utils";
 import { type Orders } from "@/db/schema";
 
 interface OrdersHistoryDataTableProps {

@@ -1,5 +1,6 @@
 import { db } from "@/db/core";
 import { eq } from "drizzle-orm";
+import { Suspense } from "react";
 import type { UploadData } from "@/types";
 import { notFound } from "next/navigation";
 import { parse_to_json } from "@/lib/utils";
@@ -8,6 +9,8 @@ import type { Metadata, ResolvingMetadata } from "next";
 import { Product, Store, products, stores } from "@/db/schema";
 import ProductPanel from "@/components/lobby/product/product-panel";
 import ImageSelector from "@/components/lobby/product/image-selector";
+import MoreStoreProducts from "@/components/lobby/product/more-store-products";
+import ProductCardSkeleton from "@/components/lobby/product-card-skeleton";
 
 interface ProductPageProps {
   params: { slug: string };
@@ -55,7 +58,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   );
 
   return (
-    <div className="flex flex-col container h-full w-full py-8">
+    <div className="flex flex-col container h-full w-full py-8 space-y-4">
       <div className="flex flex-col lg:flex-row h-[600px] w-full my-2 gap-8">
         <div className="group relative rounded h-full w-full overflow-hidden">
           <ImageSelector images={parsedImage} />
@@ -65,6 +68,20 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <p className="text-gray-500">{product.description}</p>
           <ProductPanel product={product} store={store} />
         </div>
+      </div>
+      <div>
+        <h1 className="font-bold text-2xl">More products from {store.name}</h1>
+        <Suspense
+          fallback={
+            <div className="w-full grid sm:grid-cols-4 lg:grid-cols-5 gap-2 mt-4">
+              {Array.from({ length: 5 }).map((item, index) => (
+                <ProductCardSkeleton key={index} />
+              ))}
+            </div>
+          }
+        >
+          <MoreStoreProducts store={store} />
+        </Suspense>
       </div>
     </div>
   );
