@@ -13,6 +13,7 @@ interface ProductsPageProps {
     pmax: string;
     sellers: string;
     category: string;
+    rating: string;
     [key: string]: string;
   };
 }
@@ -27,6 +28,9 @@ export default async function ProductsPage({
   const sort = searchParams.sort ?? "createdAt.desc";
 
   // Empty / non existence searchParams property will be consider as undefined.
+  const rating = isNaN(Number(searchParams.rating))
+    ? 1
+    : Number(searchParams.rating);
   const currentPage = isNaN(Number(searchParams.page))
     ? 1
     : Number(searchParams.page);
@@ -44,6 +48,7 @@ export default async function ProductsPage({
         category,
         pageSize,
         page: currentPage,
+        rating,
       }),
       await db.select().from(stores).orderBy(asc(stores.name)),
       await get_products_page_fetcher({
@@ -52,6 +57,7 @@ export default async function ProductsPage({
         sellers,
         minPrice,
         maxPrice,
+        rating,
       }),
     ],
   );

@@ -16,6 +16,7 @@ export async function get_all_products_and_store_fetcher({
   category,
   pageSize = 10,
   page = 1,
+  rating,
 }: {
   sort?: string;
   page?: number;
@@ -24,6 +25,7 @@ export async function get_all_products_and_store_fetcher({
   minPrice?: string;
   pageSize?: number;
   category?: string;
+  rating?: number;
 }) {
   noStore();
   const [column, order] = sort
@@ -47,6 +49,7 @@ export async function get_all_products_and_store_fetcher({
     .offset((page - 1) * pageSize)
     .where(
       and(
+        rating ? gte(products.rating, rating) : undefined,
         categories ? inArray(products.category, categories) : undefined,
         sellersSlug ? inArray(stores.slug, sellersSlug) : undefined,
         minPrice ? gte(products.price, minPrice) : undefined,
