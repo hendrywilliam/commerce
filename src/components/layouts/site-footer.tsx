@@ -6,12 +6,12 @@ import NewsLetterPanel from "@/components/newsletter-panel";
 export default function SiteFooter() {
   return (
     <footer className="border-t text-sm h-fit">
-      <div className="container h-full w-full py-8">
-        <div className="w-full grid grid-cols-4 h-full">
+      <div className="container h-full w-full py-8 p-4">
+        <div className="w-full grid grid-cols-1 grid-rows-3 lg:grid-cols-3 lg:grid-rows-1 h-full">
           <div>
             <h2 className="font-bold">{siteName}</h2>
           </div>
-          <div className="grid grid-cols-2 col-span-2 w-full">
+          <div className="grid grid-cols-2 w-full">
             {footerNavigation.map((item, i) => {
               return (
                 <div key={i}>
@@ -36,7 +36,7 @@ export default function SiteFooter() {
           </div>
           <NewsLetterPanel />
         </div>
-        <div className="w-full grid grid-cols-2 mt-2">
+        <div className="w-full grid grid-cols-2 mt-4">
           <div>
             <p>
               Made by <span className="font-bold">hendry</span>

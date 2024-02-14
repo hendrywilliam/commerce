@@ -1,14 +1,18 @@
 import Link from "next/link";
 import { siteName } from "@/config/site";
+import MenuNavigation from "@/components/layouts/menu-nav";
 import ShoppingCart from "@/components/lobby/shopping-cart";
 import ProductSearch from "@/components/lobby/product-search";
 import AccountNavigation from "@/components/layouts/account-nav";
-import MenuNavigation from "@/components/layouts/menu-nav";
+import MobileMenuNavigation from "@/components/layouts/mobile-menu-nav";
 
 export default async function SiteHeader() {
   return (
     <nav className="sticky top-0 z-10 py-2 w-full border-b bg-background">
       <div className="container flex justify-between h-full items-center">
+        <div className="flex md:hidden">
+          <MobileMenuNavigation />
+        </div>
         <div className="hidden md:flex items-center font-semibold">
           <Link href="/" className="mr-6">
             {siteName}

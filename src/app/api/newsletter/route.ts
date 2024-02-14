@@ -6,7 +6,6 @@ import { newsletters, products } from "@/db/schema";
 import { NextResponse } from "next/server";
 import NewsletterEmail from "../../../../react-email/emails/newsletter-email";
 
-// Scheduled task, firing every 5 minutes past hour.
 export async function POST() {
   // Get 5 new arrival products & total newsletter subscription
   const [newArrivalProducts, totalNewsletterSubs] = await Promise.all([

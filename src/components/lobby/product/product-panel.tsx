@@ -118,8 +118,8 @@ export default function ProductPanel({ product, store }: ProductPanelProps) {
             class: "inline-flex gap-2",
           })}
         >
-          Visit Store
           <IconStores />
+          Visit Store
         </Link>
       </div>
     </div>

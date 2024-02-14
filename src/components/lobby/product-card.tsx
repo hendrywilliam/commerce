@@ -36,7 +36,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div className="group relative h-80 w-full border rounded shadow">
-      <div className="absolute z-[2] top-2 right-2 rounded px-2 py-1 bg-foreground text-white font-semibold">
+      <div className="absolute z-[2] top-2 right-2 rounded px-2 py-1 bg-foreground text-background font-semibold">
         <p className="text-xs">{formatCurrency(Number(product.price))}</p>
       </div>
       <Link href={`/product/${product.slug}`}>
@@ -54,7 +54,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
       </Link>
-      <div className="h-2/6 border-t p-2">
+      <div className="h-2/6 border-t p-2 ">
         <p className="font-semibold">{product.name}</p>
         <p className="text-sm text-gray-400 truncate">{product.description}</p>
         <div className="inline-flex w-full gap-2 justify-between mt-2">

@@ -18,7 +18,7 @@ export default async function MoreStoreProducts({
     .limit(5);
 
   return (
-    <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 mt-4">
+    <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mt-4">
       {moreStoreProducts.map((storeProduct) => (
         <ProductCard key={storeProduct.id} product={storeProduct} />
       ))}

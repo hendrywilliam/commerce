@@ -73,7 +73,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <h1 className="font-bold text-2xl">More products from {store.name}</h1>
         <Suspense
           fallback={
-            <div className="w-full grid sm:grid-cols-4 lg:grid-cols-5 gap-2 mt-4">
+            <div className="w-full grid sm:grid-cols-4 lg:grid-cols-5 gap-3 mt-4">
               {Array.from({ length: 5 }).map((item, index) => (
                 <ProductCardSkeleton key={index} />
               ))}
