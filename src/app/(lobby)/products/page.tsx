@@ -31,9 +31,10 @@ export default async function ProductsPage({
   const rating = isNaN(Number(searchParams.rating))
     ? 1
     : Number(searchParams.rating);
-  const currentPage = isNaN(Number(searchParams.page))
-    ? 1
-    : Number(searchParams.page);
+  const currentPage =
+    Number(searchParams.page) === 0 || isNaN(Number(searchParams.page))
+      ? 1
+      : Number(searchParams.page);
   const pageSize = isNaN(Number(searchParams.page_size))
     ? 10
     : Number(searchParams.page_size);

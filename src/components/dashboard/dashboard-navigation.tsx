@@ -8,7 +8,7 @@ import { dashboardNavigation } from "@/config/site";
 export default function DashboardNavigation() {
   const pathname = usePathname();
   return (
-    <div className="flex py-4 gap-2">
+    <div className="flex py-1 px-1 my-4 gap-2 border rounded w-max">
       {dashboardNavigation.map((item, index) => {
         return (
           <Link
