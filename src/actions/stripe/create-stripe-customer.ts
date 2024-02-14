@@ -21,7 +21,6 @@ export async function createStripeCustomerAction(rawUserData: CreateUser) {
     emailAddress: [parsedRawData.data.email],
     password: parsedRawData.data.password,
     privateMetadata: {
-      plan: "Hobby",
       storeId: [],
     },
   });

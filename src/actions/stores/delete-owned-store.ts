@@ -11,14 +11,14 @@ export async function delete_owned_store_action(id: Store["id"]) {
   const { userId } = auth();
 
   if (!userId) {
-    throw new Error("You must be signed in to create a new store");
+    throw new Error("You must be signed in to delete a new store");
   }
 
   const userData = (await currentUser()) as unknown as UserObjectCustomized;
 
   await db.delete(stores).where(eq(stores.id, id));
 
-  const storesIdWithoutDeletedOne = userData.privateMetadata.storeId.filter(
+  const filterDeletedStore = userData.privateMetadata.storeId.filter(
     (item) => item !== String(id),
   );
 
@@ -27,7 +27,7 @@ export async function delete_owned_store_action(id: Store["id"]) {
   await clerkClient.users.updateUser(userId, {
     privateMetadata: {
       ...userDataPrivateMetadata,
-      storeId: [...storesIdWithoutDeletedOne],
+      storeId: [...filterDeletedStore],
     },
   });
 

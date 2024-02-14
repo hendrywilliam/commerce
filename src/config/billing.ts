@@ -1,6 +1,9 @@
+import * as dotenv from "dotenv";
+dotenv.config();
+
 export const billingPlan = [
   {
-    id: "price_1OICDUAaT0py2Y5OeeHaAGG0",
+    id: process.env.HOBBY_PLAN_ID,
     title: "Hobby",
     description: "Start your side project.",
     limit: 5,
@@ -8,7 +11,7 @@ export const billingPlan = [
     advantages: ["Able to create 5 stores.", "Unlimited products."],
   },
   {
-    id: "price_1OIC7EAaT0py2Y5O7oG6MdDg",
+    id: process.env.PRO_PLAN_ID,
     title: "Pro",
     description: "Everything in hobby plus higher limits.",
     limit: 15,
@@ -16,7 +19,7 @@ export const billingPlan = [
     advantages: ["Able to create 15 stores.", "Unlimited products."],
   },
   {
-    id: "price_1OICBxAaT0py2Y5OIO5ve8JO",
+    id: process.env.ENTERPRISE_PLAN_ID,
     title: "Enterprise",
     description:
       "Everything in pro, suits for those who want to become a monopoly practicioner.",

@@ -10,12 +10,13 @@ import { UserObjectCustomized } from "@/types";
 export async function cancelCurrentSubscriptionAction() {
   // Get subscription ID
   const user = (await currentUser()) as unknown as UserObjectCustomized;
-  const privateMetadata = user.privateMetadata;
-  const subscriptionId = user.privateMetadata.stripeSubscriptionId;
 
   if (!user) {
     redirect("/sign-in");
   }
+
+  const privateMetadata = user.privateMetadata;
+  const subscriptionId = user.privateMetadata.stripeSubscriptionId;
 
   // Cancel subscription immediately
   await stripe.subscriptions.cancel(subscriptionId);

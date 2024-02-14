@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/db/core";
+import * as dotenv from "dotenv";
 import { stores } from "@/db/schema";
 import { slugify } from "@/lib/utils";
 import { NewStore } from "@/db/schema";
@@ -14,6 +15,8 @@ import type { UserObjectCustomized } from "@/types";
 import { newStoreValidation } from "@/lib/validations/stores";
 import { check_store_availability_action } from "./check-store-availability";
 import { get_current_subscription_fetcher } from "@/fetchers/stripe/get-current-subscription";
+
+dotenv.config();
 
 export async function createNewStoreAction(
   storeData: TweakedOmit<NewStore, "slug" | "createdAt">,
@@ -34,21 +37,21 @@ export async function createNewStoreAction(
   await check_store_availability_action({ storeName: storeData.name });
 
   const userPrivateMetadata = user?.privateMetadata;
-  let currentUserPlan: string;
+  let currentUserPlanId: string;
 
   if (userPrivateMetadata.stripeSubscriptionId) {
     // Retrieve current user subscribed plan
     const { subscribedPlanId } = await get_current_subscription_fetcher(
       userPrivateMetadata.stripeSubscriptionId,
     );
-    currentUserPlan = subscribedPlanId;
+    currentUserPlanId = subscribedPlanId;
   } else {
     // Set default plan to hobby
-    currentUserPlan = billingPlan[0].id;
+    currentUserPlanId = process.env.HOBBY_PLAN_ID as string;
   }
 
   const findCurrentUserPlan = billingPlan.find((plan) => {
-    return plan.id === currentUserPlan;
+    return plan.id === currentUserPlanId;
   });
 
   const isAbleToCreateNewStore =
