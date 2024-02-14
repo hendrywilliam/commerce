@@ -56,10 +56,11 @@ export interface SortFilterItem {
 
 export interface PaymentIntentMetadata {
   metadata: {
-    storeId: number;
-    cartId: string;
-    checkoutItem: string;
     email: string;
+    cartId: string;
+    userId: string;
+    storeId: number;
+    checkoutItem: string;
   };
 }
 

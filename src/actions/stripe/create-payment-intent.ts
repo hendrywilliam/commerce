@@ -71,6 +71,7 @@ export async function createPaymentIntentAction({
       storeId,
       cartId: cartId as string,
       checkoutItem: extractCartItem,
+      userId: user.id,
       email: getPrimaryEmail(user),
     } satisfies PaymentIntentMetadata["metadata"],
     transfer_data: {

@@ -7,7 +7,7 @@ import MenuNavigation from "@/components/layouts/menu-nav";
 
 export default async function SiteHeader() {
   return (
-    <nav className="sticky top-0 z-10 py-2 w-full border-b bg-background/95 backdrop-blur">
+    <nav className="sticky top-0 z-10 py-2 w-full border-b bg-background">
       <div className="container flex justify-between h-full items-center">
         <div className="hidden md:flex items-center font-semibold">
           <Link href="/" className="mr-6">

@@ -15,6 +15,13 @@
       "when": 1706596104248,
       "tag": "0001_great_princess_powerful",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1707893403308,
+      "tag": "0002_lonely_giant_man",
+      "breakpoints": true
     }
   ]
 }

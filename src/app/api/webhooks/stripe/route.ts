@@ -201,6 +201,7 @@ export async function POST(req: Request) {
         // @ts-expect-error
         name: paymentIntentObject.shipping.name,
         storeId: paymentIntentObject.metadata.storeId,
+        userId: paymentIntentObject.metadata.userId,
         stripePaymentIntentId: paymentIntentObject.id,
         stripePaymentIntentStatus: paymentIntentObject.status,
         email: paymentIntentObject.metadata.email,

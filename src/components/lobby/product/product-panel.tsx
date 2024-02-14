@@ -94,12 +94,12 @@ export default function ProductPanel({ product, store }: ProductPanelProps) {
           <IconArrowDown />
         </Button>
       </div>
-      <div className="inline-flex w-full gap-2">
+      <div className="flex flex-col w-full gap-2">
         {product.stock > 0 ? (
           <Button
             disabled={isLoading}
             aria-disabled={isLoading ? "true" : "false"}
-            className="inline-flex gap-2"
+            className="inline-flex gap-2 w-full h-12"
             onClick={handleAddItemToCart}
             data-testid="add-to-cart-button"
           >

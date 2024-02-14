@@ -100,6 +100,9 @@ export type NewAddress = typeof addresses.$inferInsert;
 
 export const orders = mysqlTable("orders", {
   id: serial("id").primaryKey(),
+  userId: varchar("userId", {
+    length: 256,
+  }),
   storeId: int("storeId"),
   items: json("items"),
   total: decimal("total", { precision: 10, scale: 2 }).default("0"),
