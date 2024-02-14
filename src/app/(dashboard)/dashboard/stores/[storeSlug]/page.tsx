@@ -43,8 +43,8 @@ export default async function DashboardDynamicStorePage({
   );
 
   return (
-    <div>
-      <div className="h-1/2 w-full">
+    <div className="mt-4 mb-6">
+      <div className="w-full">
         {!store.active && (
           <div className="mb-4">
             <Alert

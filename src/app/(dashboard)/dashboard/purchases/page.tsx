@@ -48,8 +48,10 @@ export default async function DashboardPurchasePage({
       <p className="text-gray-500">Your purchase history stored here.</p>
       <Separator />
       <PurchaseHistoryShellTable purchaseHistory={orderHistory} />
-      <div>
-        <Pagination currentPage={page} totalPage={totalPage} />
+      <div className="mt-4">
+        {orderHistory.length > 0 && (
+          <Pagination currentPage={page} totalPage={totalPage} />
+        )}
       </div>
     </div>
   );

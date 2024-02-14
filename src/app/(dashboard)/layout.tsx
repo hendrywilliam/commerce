@@ -5,11 +5,9 @@ export default function DashboardLayout({ children }: React.PropsWithChildren) {
   return (
     <div className="flex flex-col h-screen">
       <SiteHeader />
-      <div className="flex container flex-1 w-ful">
+      <div className="flex flex-col container flex-1">
         <DashboardNavigation />
-        <div className="w-full h-full pl-12 py-8 overflow-y-auto">
-          {children}
-        </div>
+        <div className="w-full h-full overflow-y-auto">{children}</div>
       </div>
     </div>
   );
