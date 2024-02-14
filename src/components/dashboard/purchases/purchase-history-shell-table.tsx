@@ -1,15 +1,16 @@
 "use client";
 
-import Stripe from "stripe";
 import { useMemo } from "react";
+import { Orders } from "@/db/schema";
+import { beautifyId } from "@/lib/utils";
 import PurchaseHistoryDataTable from "./purchase-history-data-table";
 import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
 
 interface PurchaseHistoryShellProps {
-  purchaseHistory: Stripe.PaymentIntent[];
+  purchaseHistory: Orders[];
 }
 
-const purchaseHistoryColumnHelper = createColumnHelper<Stripe.PaymentIntent>();
+const purchaseHistoryColumnHelper = createColumnHelper<Orders>();
 
 export default function PurchaseHistoryShellTable({
   purchaseHistory,
@@ -17,21 +18,31 @@ export default function PurchaseHistoryShellTable({
   const columns = useMemo(
     () =>
       [
-        purchaseHistoryColumnHelper.accessor("id", {
-          header: () => <span>ID</span>,
+        purchaseHistoryColumnHelper.accessor("stripePaymentIntentId", {
+          header: () => <span>Order ID</span>,
+          cell: (info) => <span>{beautifyId(info.getValue() as string)}</span>,
+          footer: (info) => info.column.id,
+        }),
+        purchaseHistoryColumnHelper.accessor("email", {
+          header: () => <span>Email</span>,
           cell: (info) => info.getValue(),
           footer: (info) => info.column.id,
         }),
-        purchaseHistoryColumnHelper.accessor("amount", {
-          header: () => <span>Order Amount</span>,
+        purchaseHistoryColumnHelper.accessor("stripePaymentIntentStatus", {
+          header: () => <span>Payment Status</span>,
           cell: (info) => info.getValue(),
           footer: (info) => info.column.id,
         }),
-      ] as ColumnDef<Stripe.PaymentIntent>[],
+        purchaseHistoryColumnHelper.accessor("createdAt", {
+          header: () => <span>Date</span>,
+          cell: (info) => (
+            <span>{(info.getValue() as Date).toUTCString()}</span>
+          ),
+          footer: (info) => info.column.id,
+        }),
+      ] as ColumnDef<Orders>[],
     [],
   );
 
-  return (
-    <PurchaseHistoryDataTable columns={columns} dataTable={purchaseHistory} />
-  );
+  return <PurchaseHistoryDataTable columns={columns} data={purchaseHistory} />;
 }

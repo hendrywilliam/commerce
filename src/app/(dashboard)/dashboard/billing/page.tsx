@@ -31,8 +31,8 @@ export default async function DashboardBillingPage() {
     <div className="h-1/2 w-full">
       <div className="w-full inline-flex border-b pb-4">
         <div className="w-full">
-          <h1 className="font-bold text-2xl w-[75%]">Billing</h1>
-          <p className="w-[75%]">
+          <h1 className="font-bold text-2xl">Billing</h1>
+          <p className="text-gray-500">
             Your current plan:{" "}
             <span className="font-semibold">
               {findUserPlan ? findUserPlan.title : "Hobby"}

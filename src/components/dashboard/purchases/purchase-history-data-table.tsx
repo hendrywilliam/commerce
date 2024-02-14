@@ -14,20 +14,19 @@ import {
   TableRow,
   TableHead,
 } from "@/components/ui/table";
-import Stripe from "stripe";
+import { Orders } from "@/db/schema";
 
 interface PurchaseHistoryDataTableProps {
-  dataTable: Stripe.PaymentIntent[];
-  columns: ColumnDef<Stripe.PaymentIntent>[];
+  data: Orders[];
+  columns: ColumnDef<Orders>[];
 }
 
 export default function PurchaseHistoryDataTable({
-  dataTable,
+  data,
   columns,
 }: PurchaseHistoryDataTableProps) {
-  const historyDataTable = useReactTable({
-    dataTable,
-    // @ts-expect-error
+  const purchaseTable = useReactTable({
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -35,7 +34,7 @@ export default function PurchaseHistoryDataTable({
   return (
     <Table>
       <TableHeader>
-        {historyDataTable.getHeaderGroups().map((headerGroup) => (
+        {purchaseTable.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
               <TableHead key={header.id}>
@@ -49,15 +48,21 @@ export default function PurchaseHistoryDataTable({
         ))}
       </TableHeader>
       <TableBody>
-        {historyDataTable.getRowModel().rows.map((row) => (
-          <TableRow key={row.id}>
-            {row.getVisibleCells().map((cell) => (
-              <TableCell key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </TableCell>
-            ))}
+        {purchaseTable.getRowModel().rows.length > 0 ? (
+          purchaseTable.getRowModel().rows.map((row) => (
+            <TableRow key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell>No order found.</TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
     </Table>
   );

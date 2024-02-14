@@ -1,0 +1,1 @@
+ALTER TABLE `orders` MODIFY COLUMN `stripePaymentIntentStatus` enum('canceled','processing','succeeded');

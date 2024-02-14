@@ -110,7 +110,11 @@ export const orders = mysqlTable("orders", {
   stripePaymentIntentId: varchar("stripePaymentIntentId", {
     length: 256,
   }),
-  stripePaymentIntentStatus: text("stripePaymentIntentStatus"),
+  stripePaymentIntentStatus: mysqlEnum("stripePaymentIntentStatus", [
+    "canceled",
+    "processing",
+    "succeeded",
+  ]),
   email: text("email").notNull(),
   addressId: int("address"),
   createdAt: timestamp("createdAt").defaultNow(),
