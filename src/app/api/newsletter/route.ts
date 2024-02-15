@@ -40,7 +40,7 @@ export async function POST() {
 
   for await (const subscriber of newsletterSubscribers) {
     await resend.emails.send({
-      from: process.env.MARKETING_EMAIL!,
+      from: `Commerce Team <noreply@${process.env.MARKETING_DOMAIN!}>`,
       to: subscriber.email,
       subject: "Weekly newsletter!",
       react: NewsletterEmail({

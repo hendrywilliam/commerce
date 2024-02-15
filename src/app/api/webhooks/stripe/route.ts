@@ -230,7 +230,7 @@ export async function POST(req: Request) {
 
       // Send order succeeded email.
       await resend.emails.send({
-        from: process.env.MARKETING_EMAIL!,
+        from: `Commerce Team <noreply@${process.env.MARKETING_DOMAIN!}>`,
         to: customerEmail,
         subject: "Thank you for your order!",
         react: OrderSuccessEmail({

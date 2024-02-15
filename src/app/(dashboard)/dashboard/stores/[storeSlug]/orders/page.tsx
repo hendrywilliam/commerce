@@ -47,7 +47,10 @@ export default async function DashboardStoreOrdersPage({
     .select()
     .from(orders)
     .where(
-      and(customerName ? like(orders.name, `%${customerName}%`) : undefined),
+      and(
+        customerName ? like(orders.name, `%${customerName}%`) : undefined,
+        eq(orders.storeId, store.id),
+      ),
     )
     .limit(pageSize)
     .offset((page - 1) * pageSize);
