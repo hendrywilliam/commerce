@@ -54,7 +54,7 @@ export default function DashboardBillingPlanCard({
                 try {
                   // Plan id is equal to Price Id (Product identifier in Stripe)
                   const session = await manageSubscriptionAction({
-                    subscriptionPriceId: plan.id,
+                    subscriptionPriceId: plan.id as string,
                   });
 
                   if (session) {
