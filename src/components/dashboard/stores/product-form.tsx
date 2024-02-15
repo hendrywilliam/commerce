@@ -97,10 +97,10 @@ export default function ProductForm({
     } else {
       // Update existing product
       let uploadedFiles;
-      if (!!selectedFiles.length) {
+
+      if (selectedFiles.length > 0) {
         uploadedFiles = await startUpload(selectedFiles);
       }
-      if (!uploadedFiles) return;
 
       const updatedProductData = {
         ...formValues,
@@ -267,7 +267,7 @@ export default function ProductForm({
         <FormMessage>Input your product stock, minimal value is 1.</FormMessage>
       </FormField>
       <Button
-        className="inline-flex gap-2 mt-10 h-14"
+        className="inline-flex gap-2 mt-10"
         aria-disabled={isLoading}
         disabled={isLoading}
         type="submit"

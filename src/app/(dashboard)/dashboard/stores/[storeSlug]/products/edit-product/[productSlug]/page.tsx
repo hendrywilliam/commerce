@@ -26,7 +26,7 @@ export default async function EditProductPage({
   }
 
   return (
-    <>
+    <div className="mt-4 mb-10">
       <div className="w-full">
         <div className="w-full inline-flex border-b pb-4">
           <div className="w-full">
@@ -44,6 +44,6 @@ export default async function EditProductPage({
           initialValues={productDetails}
         />
       </div>
-    </>
+    </div>
   );
 }

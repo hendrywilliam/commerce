@@ -130,7 +130,7 @@ export default function UploadProductImage({
             return (
               <div
                 key={index}
-                className="relative w-full h-36 border rounded shadow-sm"
+                className="relative w-full h-44 border rounded shadow-sm"
               >
                 <Button
                   variant="secondary"

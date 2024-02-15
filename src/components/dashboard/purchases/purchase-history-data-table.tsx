@@ -32,24 +32,24 @@ export default function PurchaseHistoryDataTable({
   });
 
   return (
-    <Table>
-      <TableHeader>
-        {purchaseTable.getHeaderGroups().map((headerGroup) => (
-          <TableRow key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <TableHead key={header.id}>
-                {flexRender(
-                  header.column.columnDef.header,
-                  header.getContext(),
-                )}
-              </TableHead>
-            ))}
-          </TableRow>
-        ))}
-      </TableHeader>
-      <TableBody>
-        {purchaseTable.getRowModel().rows.length > 0 ? (
-          purchaseTable.getRowModel().rows.map((row) => (
+    <>
+      <Table>
+        <TableHeader>
+          {purchaseTable.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <TableHead key={header.id}>
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext(),
+                  )}
+                </TableHead>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {purchaseTable.getRowModel().rows.map((row) => (
             <TableRow key={row.id}>
               {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>
@@ -57,13 +57,14 @@ export default function PurchaseHistoryDataTable({
                 </TableCell>
               ))}
             </TableRow>
-          ))
-        ) : (
-          <TableRow>
-            <TableCell>No order found.</TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+          ))}
+        </TableBody>
+      </Table>
+      {purchaseTable.getRowModel().rows.length === 0 && (
+        <div className="mt-4 w-full h-36 flex items-center justify-center">
+          <p>No purchase history.</p>
+        </div>
+      )}
+    </>
   );
 }
