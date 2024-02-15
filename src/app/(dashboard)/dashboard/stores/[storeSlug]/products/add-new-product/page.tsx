@@ -2,7 +2,7 @@ import ProductForm from "@/components/dashboard/stores/product-form";
 
 export default function StoreAddNewProductPage() {
   return (
-    <>
+    <div className="mt-4 mb-10">
       <div className="w-full">
         <div className="w-full inline-flex border-b pb-4">
           <div className="w-full">
@@ -15,6 +15,6 @@ export default function StoreAddNewProductPage() {
       <div className="mt-6 w-1/2">
         <ProductForm productStatus="new-product" />
       </div>
-    </>
+    </div>
   );
 }

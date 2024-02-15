@@ -13,7 +13,7 @@ export default function ShoppingCartSummary({
   }, 0);
 
   return (
-    <div className="border-t space-y-2 py-2">
+    <div className="border-t space-y-2 py-2 h-28">
       <div className="flex justify-between">
         <p>Shipping</p>
         <p>Free</p>

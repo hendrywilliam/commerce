@@ -1,5 +1,6 @@
 import { CartLineDetailedItems } from "@/types";
 import CartItem from "@/components/lobby/cart/cart-item";
+import PageLayout from "@/components/layouts/page-layout";
 import CartPanel from "@/components/lobby/cart/cart-panel";
 import { get_cart_fetcher } from "@/fetchers/carts/get-cart";
 
@@ -20,10 +21,10 @@ export default async function CartPage() {
   );
 
   return (
-    <div className="container mx-auto h-full py-8">
+    <PageLayout>
       <h1 className="font-semibold text-2xl">Cart</h1>
-      <div className="flex mt-2 gap-4">
-        <div className="w-3/4">
+      <div className="flex flex-col lg:flex-row mt-2 gap-4">
+        <div className="w-full">
           {cartItemDetails.length ? (
             <div className="flex flex-col gap-4">
               {Object.entries(groupProductByTheStore).map(
@@ -42,11 +43,11 @@ export default async function CartPage() {
           )}
         </div>
         {!!cartItemDetails.length && (
-          <div className="w-1/4">
+          <div className="w-full lg:w-[500px]">
             <CartPanel products={groupProductByTheStore} />
           </div>
         )}
       </div>
-    </div>
+    </PageLayout>
   );
 }

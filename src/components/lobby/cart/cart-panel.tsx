@@ -6,6 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import type { CartLineDetailedItems } from "@/types";
+import { Separator } from "@/components/ui/separator";
 import { catchError, formatCurrency } from "@/lib/utils";
 import { IconLoading, LockIcon } from "@/components/ui/icons";
 import { createPaymentIntentAction } from "@/actions/stripe/create-payment-intent";
@@ -22,12 +23,13 @@ export default function CartPanel({ products }: CartPanelProps) {
   return (
     <div className="w-full border p-4 rounded">
       <h1 className="font-semibold text-2xl">Checkout</h1>
+      <Separator />
       <div className="flex flex-col gap-2 mt-2">
         {Object.entries(products).map(([storeName, items], i) => (
           <div key={i} className="flex flex-col gap-2">
             <div className="flex flex-col">
               <h1 className="font-semibold">{storeName}</h1>
-              <p>
+              <p className="text-sm flex justify-between mt-2">
                 Total Payment:{" "}
                 <span className="text-lg font-medium">
                   {formatCurrency(

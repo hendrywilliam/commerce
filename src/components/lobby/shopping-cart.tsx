@@ -41,13 +41,12 @@ export default async function ShoppingCart() {
         </div>
         <IconCart />
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="p-0">
         {parsedCartItems.length > 0 ? (
-          <div className="h-full flex flex-col justify-between">
-            <div className=" h-full">
+          <div className="h-full flex flex-col justify-between overflow-y-auto p-4">
+            <div className="h-full">
               <div className="flex flex-col">
                 <h1 className="font-semibold">Cart ({sumQty})</h1>
-                <div className="mt-4"></div>
               </div>
               <div className="flex flex-col w-full h-full overflow-y-auto gap-2">
                 {Object.entries(groupProductByItsStore).map(
@@ -55,14 +54,16 @@ export default async function ShoppingCart() {
                     return (
                       <div key={i}>
                         <h1 className="font-semibold">{storeName}</h1>
-                        {products.map((product) => {
-                          return (
-                            <ShoppingCartItem
-                              key={product.id}
-                              cartLineDetailedItem={product}
-                            />
-                          );
-                        })}
+                        <div className="basis-1 overflow-y-auto">
+                          {products.map((product) => {
+                            return (
+                              <ShoppingCartItem
+                                key={product.id}
+                                cartLineDetailedItem={product}
+                              />
+                            );
+                          })}
+                        </div>
                       </div>
                     );
                   },

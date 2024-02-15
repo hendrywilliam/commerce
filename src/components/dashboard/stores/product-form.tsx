@@ -267,7 +267,7 @@ export default function ProductForm({
         <FormMessage>Input your product stock, minimal value is 1.</FormMessage>
       </FormField>
       <Button
-        className="inline-flex gap-2 mt-10"
+        className="inline-flex gap-2 mt-10 h-14"
         aria-disabled={isLoading}
         disabled={isLoading}
         type="submit"

@@ -73,7 +73,7 @@ export default function UploadProductImage({
   return (
     <>
       <div
-        className="border border-dashed w-1/4 rounded h-36 shadow-sm"
+        className="border border-dashed w-1/4 rounded h-44 shadow-sm"
         {...getRootProps()}
       >
         <input {...getInputProps()} />
@@ -88,7 +88,7 @@ export default function UploadProductImage({
           existingImages.map((existingImage) => (
             <div
               key={existingImage.name}
-              className="relative w-full h-36 border rounded shadow-sm"
+              className="relative w-full h-44 border rounded shadow-sm"
             >
               <Button
                 variant="secondary"
