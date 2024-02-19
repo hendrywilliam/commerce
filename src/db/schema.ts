@@ -10,6 +10,7 @@ import {
   boolean,
   json,
   index,
+  tinyint,
 } from "drizzle-orm/mysql-core";
 import { relations, InferInsertModel, InferSelectModel } from "drizzle-orm";
 
@@ -145,3 +146,15 @@ export const newsletters = mysqlTable("newsletters", {
 
 export type Newsletters = InferSelectModel<typeof newsletters>;
 export type NewNewsletters = InferInsertModel<typeof newsletters>;
+
+export const comments = mysqlTable("comments", {
+  id: serial("id").primaryKey(),
+  productId: int("product_id").notNull(),
+  userId: int("user_id").notNull(),
+  comment: text("comment").notNull(),
+  rating: tinyint("rating").notNull().default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export type Comment = InferSelectModel<typeof comments>;
+export type NewComment = InferInsertModel<typeof comments>;

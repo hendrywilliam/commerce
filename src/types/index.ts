@@ -22,7 +22,10 @@ export interface CartLineDetailedItems {
   storeSlug: string;
 }
 
-export type ProductWithQuantity = Extends<Product, { qty: number }>;
+export type ProductWithQuantity = Extends<
+  Product,
+  { qty: number; user_has_comment?: boolean; user_comment_id?: number | string }
+>;
 
 export interface UserObjectCustomized
   extends Omit<User, "privateMetadata" | "publicMetadata"> {

@@ -1,8 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo } from "react";
 import { Orders } from "@/db/schema";
 import { beautifyId } from "@/lib/utils";
+import { usePathname } from "next/navigation";
+import { buttonVariants } from "@/components/ui/button";
 import PurchaseHistoryDataTable from "./purchase-history-data-table";
 import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
 
@@ -15,6 +18,8 @@ const purchaseHistoryColumnHelper = createColumnHelper<Orders>();
 export default function PurchaseHistoryShellTable({
   purchaseHistory,
 }: PurchaseHistoryShellProps) {
+  const pathname = usePathname();
+
   const columns = useMemo(
     () =>
       [
@@ -40,8 +45,23 @@ export default function PurchaseHistoryShellTable({
           ),
           footer: (info) => info.column.id,
         }),
+        purchaseHistoryColumnHelper.display({
+          id: "purchase-details",
+          cell: ({ row }) => {
+            const data = row.original;
+            const purchaseId = data.id;
+            return (
+              <Link
+                className={buttonVariants()}
+                href={`${pathname}/${purchaseId}`}
+              >
+                Detail
+              </Link>
+            );
+          },
+        }),
       ] as ColumnDef<Orders>[],
-    [],
+    [pathname],
   );
 
   return <PurchaseHistoryDataTable columns={columns} data={purchaseHistory} />;
