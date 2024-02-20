@@ -28,7 +28,7 @@ export async function seed_products({
       totalRating: String(
         faker.number.float({ min: 1, max: 4, fractionDigits: 1 }),
       ),
-      stock: faker.number.int({ min: 50, max: 150 }),
+      stock: faker.number.int({ min: 50, max: 75 }),
       price: faker.commerce.price({
         min: 10,
         max: 100,

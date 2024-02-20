@@ -24,7 +24,7 @@ export const products = mysqlTable(
     description: text("description"),
     price: decimal("price", { precision: 10, scale: 2 }).notNull().default("0"),
     stock: int("stock").notNull().default(1),
-    totalRating: decimal("total_rating", { precision: 1, scale: 1 })
+    totalRating: decimal("total_rating", { precision: 2, scale: 1 })
       .notNull()
       .default("0"),
     category: mysqlEnum("category", [
