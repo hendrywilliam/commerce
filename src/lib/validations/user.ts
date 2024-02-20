@@ -20,6 +20,8 @@ export const registerValidation = z
     confirmPassword: z.string({
       required_error: "Confirm Password is required.",
     }),
+    firstname: z.string().min(1, "First name is required."),
+    lastname: z.string().min(1, "Last name is required."),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Password does not match with confirm password.",

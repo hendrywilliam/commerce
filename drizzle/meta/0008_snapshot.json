@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "26142d7b-5383-4a5d-8fea-fa537430ce4e",
-  "prevId": "d3676fde-71dc-456b-8e5b-b5547d615abf",
+  "id": "96ed5e1f-20aa-4e12-a6bd-2932ac4ec00d",
+  "prevId": "e55f7602-d3f4-47ae-b32a-e2a0118e7b69",
   "tables": {
     "addresses": {
       "name": "addresses",
@@ -135,6 +135,13 @@
         },
         "product_id": {
           "name": "product_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "order_id": {
+          "name": "order_id",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
@@ -432,11 +439,11 @@
         },
         "total_rating": {
           "name": "total_rating",
-          "type": "int",
+          "type": "decimal(2,1)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": 0
+          "default": "'0'"
         },
         "category": {
           "name": "category",
@@ -561,20 +568,6 @@
   "_meta": {
     "schemas": {},
     "tables": {},
-    "columns": {
-      "\"addresses\".\"postalCode\"": "\"addresses\".\"postal_code\"",
-      "\"addresses\".\"createdAt\"": "\"addresses\".\"created_at\"",
-      "\"carts\".\"createdAt\"": "\"carts\".\"created_at\"",
-      "\"orders\".\"stripePaymentIntentId\"": "\"orders\".\"stripe_payment_intent_id\"",
-      "\"orders\".\"stripePaymentIntentStatus\"": "\"orders\".\"stripe_payment_intent_status\"",
-      "\"orders\".\"createdAt\"": "\"orders\".\"created_at\"",
-      "\"payments\".\"storeId\"": "\"payments\".\"store_id\"",
-      "\"payments\".\"stripeAccountId\"": "\"payments\".\"stripe_account_id\"",
-      "\"payments\".\"detailsSubmitted\"": "\"payments\".\"details_submitted\"",
-      "\"payments\".\"createdAt\"": "\"payments\".\"created_at\"",
-      "\"products\".\"rating\"": "\"products\".\"total_rating\"",
-      "\"products\".\"createdAt\"": "\"products\".\"created_at\"",
-      "\"stores\".\"createdAt\"": "\"stores\".\"created_at\""
-    }
+    "columns": {}
   }
 }

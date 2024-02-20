@@ -32,6 +32,8 @@ export default function SignUpForm() {
       await createStripeCustomerAction({
         email: data.email,
         password: data.password,
+        firstname: data.firstname,
+        lastname: data.lastname,
         confirmPassword: data.confirmPassword,
       });
       toast.success("Registration completed. You may log in now.");
@@ -46,15 +48,35 @@ export default function SignUpForm() {
   return (
     <div className="w-[500px] h-max">
       {Object.values(errors)[0] && (
-        <div className="w-full border-l-2 border-destructive py-4 px-2 mb-4 bg-destructive/20">
-          <p className="text-xs">{Object.values(errors)[0].message}</p>
-        </div>
+        <p className="text-destructive mb-4">
+          {Object.values(errors)[0].message}
+        </p>
       )}
       <Form
         className="flex flex-col gap-4"
         onSubmit={submitRegistration}
         aria-description="Registration Form"
       >
+        <FormField>
+          <div className="flex gap-4">
+            <div>
+              <FormLabel htmlFor="firstname">First Name</FormLabel>
+              <FormInput
+                {...register("firstname")}
+                placeholder="Miki"
+                className="w-full"
+              />
+            </div>
+            <div>
+              <FormLabel htmlFor="firstname">Last Name</FormLabel>
+              <FormInput
+                {...register("lastname")}
+                placeholder="Matsubara"
+                className="w-full"
+              />
+            </div>
+          </div>
+        </FormField>
         <FormField>
           <FormLabel htmlFor="email">Email</FormLabel>
           <FormInput

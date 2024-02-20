@@ -59,21 +59,6 @@ export const dashboardNavigation = [
   },
 ];
 
-export const storeFrontTabs = [
-  {
-    title: "Storefront",
-    value: "storefront",
-  },
-  {
-    title: "Products",
-    value: "products",
-  },
-  {
-    title: "Transaction",
-    value: "transaction",
-  },
-];
-
 export const navigationMenu: {
   [key: string]: {
     title: string;

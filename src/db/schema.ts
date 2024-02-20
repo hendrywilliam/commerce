@@ -152,6 +152,7 @@ export type NewNewsletter = InferInsertModel<typeof newsletters>;
 export const comments = mysqlTable("comments", {
   id: serial("id").primaryKey(),
   productId: int("product_id").notNull(),
+  orderId: int("order_id").notNull(),
   userId: int("user_id").notNull(),
   comment: text("comment").notNull(),
   rating: tinyint("rating").notNull().default(0),
