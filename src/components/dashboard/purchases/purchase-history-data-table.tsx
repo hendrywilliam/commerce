@@ -14,11 +14,11 @@ import {
   TableRow,
   TableHead,
 } from "@/components/ui/table";
-import { Orders } from "@/db/schema";
+import { Order } from "@/db/schema";
 
 interface PurchaseHistoryDataTableProps {
-  data: Orders[];
-  columns: ColumnDef<Orders>[];
+  data: Order[];
+  columns: ColumnDef<Order>[];
 }
 
 export default function PurchaseHistoryDataTable({

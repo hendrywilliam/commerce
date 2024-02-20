@@ -4,9 +4,9 @@ import { db } from "@/db/core";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
-import { payments, type Payments } from "@/db/schema";
+import { payments, type Payment } from "@/db/schema";
 
-export async function hasConnectedStripeAccount(storeId: Payments["storeId"]) {
+export async function hasConnectedStripeAccount(storeId: Payment["storeId"]) {
   const user = await currentUser();
 
   if (!user) {

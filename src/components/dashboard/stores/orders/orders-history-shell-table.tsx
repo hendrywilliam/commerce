@@ -1,19 +1,19 @@
 "use client";
 
-import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { useMemo } from "react";
 import { beautifyId } from "@/lib/utils";
-import type { Orders } from "@/db/schema";
+import type { Order } from "@/db/schema";
 import { usePathname } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
+import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
 import OrdersHistoryDataTable from "@/components/dashboard/stores/orders/orders-history-data-table";
 import OrdersHistoryDataTableToolbar from "@/components/dashboard/stores/orders/orders-history-data-table-toolbar";
 
-const storeOrdersColumnHelper = createColumnHelper<Orders>();
+const storeOrdersColumnHelper = createColumnHelper<Order>();
 
 interface OrdersHistoryShellTableProps {
-  orders: Orders[];
+  orders: Order[];
 }
 
 export default function OrdersHistoryShellTable({
@@ -66,7 +66,7 @@ export default function OrdersHistoryShellTable({
             );
           },
         }),
-      ] as ColumnDef<Orders>[],
+      ] as ColumnDef<Order>[],
     [pathname],
   );
 

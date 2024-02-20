@@ -41,11 +41,7 @@ export interface UserObjectCustomized
   };
 }
 
-export interface BillingPlan {
-  plan: {
-    [Key in keyof (typeof billingPlan)[0]]: (typeof billingPlan)[0][Key];
-  };
-}
+export type BillingPlan = (typeof billingPlan)[0];
 
 export interface FileWithPreview extends File {
   preview: string;

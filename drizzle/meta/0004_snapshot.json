@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "d3676fde-71dc-456b-8e5b-b5547d615abf",
-  "prevId": "88c7b360-5525-40b4-a1da-99184ca88feb",
+  "id": "26142d7b-5383-4a5d-8fea-fa537430ce4e",
+  "prevId": "d3676fde-71dc-456b-8e5b-b5547d615abf",
   "tables": {
     "addresses": {
       "name": "addresses",
@@ -42,8 +42,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "postalCode": {
-          "name": "postalCode",
+        "postal_code": {
+          "name": "postal_code",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -56,8 +56,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
@@ -94,16 +94,16 @@
           "notNull": false,
           "autoincrement": false
         },
-        "isClosed": {
-          "name": "isClosed",
+        "is_closed": {
+          "name": "is_closed",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
           "default": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
@@ -116,6 +116,66 @@
       "compositePrimaryKeys": {
         "carts_id": {
           "name": "carts_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "comments": {
+      "name": "comments",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "product_id": {
+          "name": "product_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "comment": {
+          "name": "comment",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "rating": {
+          "name": "rating",
+          "type": "tinyint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "comments_id": {
+          "name": "comments_id",
           "columns": [
             "id"
           ]
@@ -214,15 +274,15 @@
           "notNull": true,
           "autoincrement": false
         },
-        "stripePaymentIntentId": {
-          "name": "stripePaymentIntentId",
+        "stripe_payment_intent_id": {
+          "name": "stripe_payment_intent_id",
           "type": "varchar(256)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "stripePaymentIntentStatus": {
-          "name": "stripePaymentIntentStatus",
+        "stripe_payment_intent_status": {
+          "name": "stripe_payment_intent_status",
           "type": "enum('canceled','processing','succeeded')",
           "primaryKey": false,
           "notNull": false,
@@ -242,8 +302,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
@@ -273,30 +333,30 @@
           "notNull": true,
           "autoincrement": true
         },
-        "storeId": {
-          "name": "storeId",
+        "store_id": {
+          "name": "store_id",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "stripeAccountId": {
-          "name": "stripeAccountId",
+        "stripe_account_id": {
+          "name": "stripe_account_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "detailsSubmitted": {
-          "name": "detailsSubmitted",
+        "details_submitted": {
+          "name": "details_submitted",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
           "default": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
@@ -370,8 +430,8 @@
           "autoincrement": false,
           "default": 1
         },
-        "rating": {
-          "name": "rating",
+        "total_rating": {
+          "name": "total_rating",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
@@ -392,8 +452,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
@@ -467,8 +527,8 @@
           "autoincrement": false,
           "default": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
@@ -501,6 +561,20 @@
   "_meta": {
     "schemas": {},
     "tables": {},
-    "columns": {}
+    "columns": {
+      "\"addresses\".\"postalCode\"": "\"addresses\".\"postal_code\"",
+      "\"addresses\".\"createdAt\"": "\"addresses\".\"created_at\"",
+      "\"carts\".\"createdAt\"": "\"carts\".\"created_at\"",
+      "\"orders\".\"stripePaymentIntentId\"": "\"orders\".\"stripe_payment_intent_id\"",
+      "\"orders\".\"stripePaymentIntentStatus\"": "\"orders\".\"stripe_payment_intent_status\"",
+      "\"orders\".\"createdAt\"": "\"orders\".\"created_at\"",
+      "\"payments\".\"storeId\"": "\"payments\".\"store_id\"",
+      "\"payments\".\"stripeAccountId\"": "\"payments\".\"stripe_account_id\"",
+      "\"payments\".\"detailsSubmitted\"": "\"payments\".\"details_submitted\"",
+      "\"payments\".\"createdAt\"": "\"payments\".\"created_at\"",
+      "\"products\".\"rating\"": "\"products\".\"total_rating\"",
+      "\"products\".\"createdAt\"": "\"products\".\"created_at\"",
+      "\"stores\".\"createdAt\"": "\"stores\".\"created_at\""
+    }
   }
 }

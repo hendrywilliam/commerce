@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 export function useZodForm<TSchema extends z.ZodType>(
   props: Omit<UseFormProps<TSchema>, "resolver"> & {
     schema: TSchema;
-  }
+  },
 ) {
   const { schema } = props;
   const form = useForm<TSchema["_output"]>({

@@ -2,9 +2,9 @@
 
 import { db } from "@/db/core";
 import { and, eq, sql } from "drizzle-orm";
-import { currentUser } from "@clerk/nextjs";
-import { Orders, orders } from "@/db/schema";
 import { redirect } from "next/navigation";
+import { currentUser } from "@clerk/nextjs";
+import { Order, orders } from "@/db/schema";
 
 export async function get_purchase_history_fetcher({
   page,
@@ -13,7 +13,7 @@ export async function get_purchase_history_fetcher({
 }: {
   page: number;
   pageSize: number;
-  status: Orders["stripePaymentIntentStatus"];
+  status: Order["stripePaymentIntentStatus"];
 }) {
   const user = await currentUser();
 

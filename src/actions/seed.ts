@@ -25,7 +25,9 @@ export async function seed_products({
       id: new Date().getTime() + new Date().getMilliseconds() + i,
       name: productName,
       description: faker.commerce.productDescription(),
-      rating: faker.number.int({ min: 2, max: 5 }),
+      totalRating: String(
+        faker.number.float({ min: 1, max: 4, fractionDigits: 1 }),
+      ),
       stock: faker.number.int({ min: 50, max: 150 }),
       price: faker.commerce.price({
         min: 10,

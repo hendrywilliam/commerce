@@ -56,7 +56,12 @@ export default async function DashboardBillingPage() {
         {billingPlan.map((plan) => {
           return (
             <DashboardBillingPlanCard
-              plan={plan}
+              advantages={plan.advantages}
+              description={plan.description}
+              id={plan.id}
+              limit={plan.limit}
+              price={plan.price}
+              title={plan.title}
               key={plan.id}
               stripeCustomerId={userPrivateMetadata.stripeCustomerId}
             />

@@ -65,7 +65,7 @@ export default function DashboardStoreProductShellTable({
           cell: (info) => info.renderValue(),
           footer: (info) => info.column.id,
         }),
-        storeProductColumnHelper.accessor("rating", {
+        storeProductColumnHelper.accessor("totalRating", {
           header: () => "Rating",
           cell: (info) => info.renderValue(),
           footer: (info) => info.column.id,

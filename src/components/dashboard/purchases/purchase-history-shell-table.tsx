@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo } from "react";
-import { Orders } from "@/db/schema";
+import { Order } from "@/db/schema";
 import { beautifyId } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
@@ -10,10 +10,10 @@ import PurchaseHistoryDataTable from "./purchase-history-data-table";
 import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
 
 interface PurchaseHistoryShellProps {
-  purchaseHistory: Orders[];
+  purchaseHistory: Order[];
 }
 
-const purchaseHistoryColumnHelper = createColumnHelper<Orders>();
+const purchaseHistoryColumnHelper = createColumnHelper<Order>();
 
 export default function PurchaseHistoryShellTable({
   purchaseHistory,
@@ -60,7 +60,7 @@ export default function PurchaseHistoryShellTable({
             );
           },
         }),
-      ] as ColumnDef<Orders>[],
+      ] as ColumnDef<Order>[],
     [pathname],
   );
 

@@ -1,4 +1,4 @@
-import { Orders } from "@/db/schema";
+import { Order } from "@/db/schema";
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
 import Pagination from "@/components/pagination";
@@ -10,7 +10,7 @@ import PurchaseHistoryShellTable from "@/components/dashboard/purchases/purchase
 interface DashboardPurchasePageProps {
   searchParams: {
     page: string;
-    status: Orders["stripePaymentIntentStatus"];
+    status: Order["stripePaymentIntentStatus"];
   };
 }
 

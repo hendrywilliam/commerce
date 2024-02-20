@@ -86,30 +86,20 @@ export default async function DashboardDynamicStorePage({
       </div>
       <Separator />
       <div className="mt-6 space-y-6">
-        <div className="border rounded p-4 shadow-sm">
-          <ul className="flex flex-col text-gray-500 gap-1">
-            <li>
-              <Badge variant={store.active ? "default" : "destructive"}>
-                {store.active ? "Active" : "Not Active"}
-              </Badge>
-            </li>
-            <li>
-              <p>{store.name}</p>
-            </li>
-            <li>
-              <p>
-                <span>{formatCurrency(availableBalance)}</span>
-              </p>
-            </li>
-            {!!pendingBalance && (
-              <li>
-                <p>
-                  You have <span>{formatCurrency(pendingBalance)}</span> pending
-                  balance, make sure to complete the onboarding process.
-                </p>
-              </li>
-            )}
-          </ul>
+        <div>
+          <p>Store Status</p>
+          <Badge variant={store.active ? "default" : "destructive"}>
+            {store.active ? "Active" : "Not Active"}
+          </Badge>
+          <p className="mt-2">
+            Store Balance - {formatCurrency(availableBalance)}
+          </p>
+          {!!pendingBalance && (
+            <p>
+              You have <span>{formatCurrency(pendingBalance)}</span> pending
+              balance, make sure to complete the onboarding process.
+            </p>
+          )}
         </div>
         <StorefrontGeneralZone store={store} />
         <StorefrontDangerZone storeId={store.id} />

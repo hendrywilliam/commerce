@@ -29,8 +29,8 @@ export default async function ProductsPage({
 
   // Empty / non existence searchParams property will be consider as undefined.
   const rating = isNaN(Number(searchParams.rating))
-    ? 0
-    : Number(searchParams.rating);
+    ? String(0)
+    : searchParams.rating;
   const currentPage =
     Number(searchParams.page) === 0 || isNaN(Number(searchParams.page))
       ? 1

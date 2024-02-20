@@ -24,14 +24,16 @@ export const products = mysqlTable(
     description: text("description"),
     price: decimal("price", { precision: 10, scale: 2 }).notNull().default("0"),
     stock: int("stock").notNull().default(1),
-    rating: int("rating").notNull().default(0),
+    totalRating: decimal("total_rating", { precision: 1, scale: 1 })
+      .notNull()
+      .default("0"),
     category: mysqlEnum("category", [
       "clothing",
       "backpack",
       "shoes",
     ]).notNull(),
     image: json("image"),
-    createdAt: timestamp("createdAt").defaultNow(),
+    createdAt: timestamp("created_at").defaultNow(),
   },
   (table) => {
     return {
@@ -59,7 +61,7 @@ export const stores = mysqlTable(
     slug: varchar("slug", { length: 256 }).notNull(),
     description: text("description").notNull(),
     active: boolean("active").notNull().default(false),
-    createdAt: timestamp("createdAt").defaultNow(),
+    createdAt: timestamp("created_at").defaultNow(),
   },
   (table) => {
     return {
@@ -78,8 +80,8 @@ export type NewStore = typeof stores.$inferInsert;
 export const carts = mysqlTable("carts", {
   id: serial("id").primaryKey(),
   items: json("items"),
-  isClosed: boolean("isClosed").default(false),
-  createdAt: timestamp("createdAt").defaultNow(),
+  isClosed: boolean("is_closed").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export type Cart = typeof carts.$inferSelect;
@@ -91,9 +93,9 @@ export const addresses = mysqlTable("addresses", {
   line2: text("line2"),
   city: text("city").notNull(),
   state: text("state").notNull(),
-  postal_code: text("postalCode").notNull(),
+  postal_code: text("postal_code").notNull(),
   country: text("country").notNull(),
-  createdAt: timestamp("createdAt").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export type Address = typeof addresses.$inferSelect;
@@ -108,32 +110,32 @@ export const orders = mysqlTable("orders", {
   items: json("items"),
   total: decimal("total", { precision: 10, scale: 2 }).default("0"),
   name: text("name").notNull(),
-  stripePaymentIntentId: varchar("stripePaymentIntentId", {
+  stripePaymentIntentId: varchar("stripe_payment_intent_id", {
     length: 256,
   }),
-  stripePaymentIntentStatus: mysqlEnum("stripePaymentIntentStatus", [
+  stripePaymentIntentStatus: mysqlEnum("stripe_payment_intent_status", [
     "canceled",
     "processing",
     "succeeded",
   ]),
   email: text("email").notNull(),
   addressId: int("address"),
-  createdAt: timestamp("createdAt").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
-export type Orders = typeof orders.$inferSelect;
-export type NewOrders = typeof orders.$inferInsert;
+export type Order = typeof orders.$inferSelect;
+export type NewOrder = typeof orders.$inferInsert;
 
 export const payments = mysqlTable("payments", {
   id: serial("id").primaryKey(),
-  storeId: int("storeId").notNull(),
-  stripeAccountId: text("stripeAccountId").notNull(),
-  detailsSubmitted: boolean("detailsSubmitted").default(false),
-  createdAt: timestamp("createdAt").defaultNow(),
+  storeId: int("store_id").notNull(),
+  stripeAccountId: text("stripe_account_id").notNull(),
+  detailsSubmitted: boolean("details_submitted").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
-export type Payments = typeof payments.$inferSelect;
-export type NewPayments = typeof payments.$inferInsert;
+export type Payment = typeof payments.$inferSelect;
+export type NewPayment = typeof payments.$inferInsert;
 
 export const newsletters = mysqlTable("newsletters", {
   id: serial("id").primaryKey(),
@@ -144,8 +146,8 @@ export const newsletters = mysqlTable("newsletters", {
   createdAt: timestamp("createdAt").defaultNow(),
 });
 
-export type Newsletters = InferSelectModel<typeof newsletters>;
-export type NewNewsletters = InferInsertModel<typeof newsletters>;
+export type Newsletter = InferSelectModel<typeof newsletters>;
+export type NewNewsletter = InferInsertModel<typeof newsletters>;
 
 export const comments = mysqlTable("comments", {
   id: serial("id").primaryKey(),

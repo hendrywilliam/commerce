@@ -15,11 +15,11 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { type Orders } from "@/db/schema";
+import { type Order } from "@/db/schema";
 
 interface OrdersHistoryDataTableProps {
-  data: Orders[];
-  columns: ColumnDef<Orders>[];
+  data: Order[];
+  columns: ColumnDef<Order>[];
 }
 
 export default function OrdersHistoryDataTable({

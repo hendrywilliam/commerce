@@ -19,7 +19,7 @@ export async function get_products_page_fetcher({
   maxPrice?: string;
   sellers?: string;
   category?: string;
-  rating?: number;
+  rating?: string;
 }) {
   noStore();
   const categories = category
@@ -36,7 +36,7 @@ export async function get_products_page_fetcher({
       .limit(1)
       .where(
         and(
-          rating ? gte(products.rating, rating) : undefined,
+          rating ? gte(products.totalRating, rating) : undefined,
           categories ? inArray(products.category, categories) : undefined,
           sellersSlug ? inArray(stores.slug, sellersSlug) : undefined,
           minPrice ? gte(products.price, minPrice) : undefined,
