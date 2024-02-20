@@ -41,23 +41,31 @@ interface ProductsProps {
     products: Product;
     stores: Store | null;
   }[];
-  filterStoreItems: Store[];
+  allStores: Store[];
   productsPageCount: number;
   currentPage: number;
+  sellers?: string;
+  categories?: string;
 }
 
 export default function Products({
   allStoresAndProducts,
-  filterStoreItems,
+  allStores,
   productsPageCount,
   currentPage,
+  sellers,
+  categories,
 }: ProductsProps) {
   const [isNewValue, setIsNewValue] = useState(false);
   const [minPrice, setMinPrice] = useState(0);
   const [isPending, startTransition] = useTransition();
   const [maxPrice, setMaxPrice] = useState(99999);
-  const [sellersSlug, setSellersSlug] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState([] as string[]);
+  const [sellersSlug, setSellersSlug] = useState<string[]>(
+    sellers?.split(".") ?? [],
+  );
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    categories?.split(".") ?? [],
+  );
   const router = useRouter();
   const pathname = usePathname();
   const { createQueryString, deleteQueryString } = useQueryString();
@@ -67,17 +75,23 @@ export default function Products({
   });
 
   const uniqueStores = [
-    ...new Map(filterStoreItems.map((store) => [store?.name, store])).values(),
+    ...new Map(allStores.map((store) => [store?.name, store])).values(),
   ];
 
   useEffect(() => {
     const bounceUpdate = setTimeout(() => {
-      if (!!selectedCategories.length) {
+      if (selectedCategories.length > 0 && isNewValue) {
         const joinedCategories = selectedCategories.join(".");
         startTransition(() => {
           void router.push(
             `${pathname}?${createQueryString("category", joinedCategories)}`,
           );
+        });
+      }
+
+      if (selectedCategories.length === 0 && isNewValue) {
+        startTransition(() => {
+          void router.push(`${pathname}?${deleteQueryString("category")}`);
         });
       }
     }, 500);
@@ -88,12 +102,18 @@ export default function Products({
 
   useEffect(() => {
     const bounceUpdate = setTimeout(() => {
-      if (!!sellersSlug.length && isNewValue) {
+      if (sellersSlug.length > 0 && isNewValue) {
         const joinedSellers = sellersSlug.join(".");
         startTransition(() => {
           void router.push(
             `${pathname}?${createQueryString("sellers", joinedSellers)}`,
           );
+        });
+      }
+
+      if (sellersSlug.length === 0 && isNewValue) {
+        startTransition(() => {
+          void router.push(`${pathname}?${deleteQueryString("sellers")}`);
         });
       }
     }, 500);
@@ -213,14 +233,14 @@ export default function Products({
                   <div className="flex flex-col gap-2 overflow-y-auto">
                     <h1 className="font-semibold text-base">Stores</h1>
                     <ul className="flex flex-col gap-2">
-                      {uniqueStores.map((store, i) => (
-                        <div className="inline-flex gap-2" key={i}>
+                      {uniqueStores.map((store) => (
+                        <li className="inline-flex gap-2" key={store.id}>
                           <Checkbox
                             checked={sellersSlug.includes(store.slug)}
                             disabled={isPending}
                             aria-disabled={isPending ? "true" : "false"}
                             onCheckedChange={(checked) => {
-                              setIsNewValue((isNewValue) => isNewValue);
+                              setIsNewValue((isNewValue) => true);
                               return checked
                                 ? setSellersSlug((sellersSlug) => [
                                     ...sellersSlug,
@@ -233,8 +253,8 @@ export default function Products({
                                   );
                             }}
                           />
-                          <li>{store?.name}</li>
-                        </div>
+                          <p>{store?.name}</p>
+                        </li>
                       ))}
                     </ul>
                   </div>
@@ -250,7 +270,7 @@ export default function Products({
                               category.value,
                             )}
                             onCheckedChange={(checked) => {
-                              setIsNewValue((isNewValue) => isNewValue);
+                              setIsNewValue((isNewValue) => true);
                               return checked
                                 ? setSelectedCategories(
                                     (selectedCategories) => [

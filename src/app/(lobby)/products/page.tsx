@@ -69,9 +69,11 @@ export default async function ProductsPage({
         <h1 className="font-bold text-2xl">Browse All Products</h1>
         <Products
           allStoresAndProducts={allProductsAndStore}
-          filterStoreItems={allStores}
+          allStores={allStores}
           productsPageCount={productsPageCount}
           currentPage={currentPage}
+          sellers={sellers}
+          categories={category}
         />
       </section>
     </PageLayout>

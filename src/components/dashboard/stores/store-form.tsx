@@ -59,60 +59,58 @@ export default function StoreForm({
   }
 
   return (
-    <div className="mt-4">
-      <Form
-        ref={formRef}
-        onSubmit={(event) => onSubmit(event)}
-        className="flex flex-col gap-2"
-      >
-        <FormField>
-          <FormLabel htmlFor="store-name">Store Name</FormLabel>
-          <FormInput
-            name="name"
-            className="w-full lg:w-1/2"
-            value={storeData["name"]}
-            onChange={(e) =>
-              setStoreData({
-                ...storeData,
-                [e.target.name]: e.target.value,
-              })
-            }
-            id="store-name"
-          />
-          <FormMessage>
-            Your store unique identifier. Users can see this.
-          </FormMessage>
-        </FormField>
-        <FormField>
-          <FormLabel>Description</FormLabel>
-          <FormTextarea
-            rows={1}
-            cols={1}
-            name="description"
-            className="w-full lg:w-1/2 h-52"
-            value={storeData["description"]}
-            onChange={(e) =>
-              setStoreData({
-                ...storeData,
-                [e.target.name]: e.target.value,
-              })
-            }
-          />
-          <FormMessage>
-            Describe your store in simple words. Users can see this.
-          </FormMessage>
-        </FormField>
-        <FormField className="mt-4">
-          <Button
-            className="gap-1 disabled:opacity-75 w-full lg:w-1/2"
-            type="submit"
-            disabled={isLoading}
-          >
-            {isLoading && <IconLoading />}
-            {storeStatus === "new-store" ? "Add New Store" : "Update Store"}
-          </Button>
-        </FormField>
-      </Form>
-    </div>
+    <Form
+      ref={formRef}
+      onSubmit={(event) => onSubmit(event)}
+      className="flex flex-col gap-2 mt-4"
+    >
+      <FormField>
+        <FormLabel htmlFor="store-name">Store Name</FormLabel>
+        <FormInput
+          name="name"
+          className="w-full lg:w-1/2"
+          value={storeData["name"]}
+          onChange={(e) =>
+            setStoreData({
+              ...storeData,
+              [e.target.name]: e.target.value,
+            })
+          }
+          id="store-name"
+        />
+        <FormMessage>
+          Your store unique identifier. Users can see this.
+        </FormMessage>
+      </FormField>
+      <FormField>
+        <FormLabel>Description</FormLabel>
+        <FormTextarea
+          rows={1}
+          cols={1}
+          name="description"
+          className="w-full lg:w-1/2 h-52"
+          value={storeData["description"]}
+          onChange={(e) =>
+            setStoreData({
+              ...storeData,
+              [e.target.name]: e.target.value,
+            })
+          }
+        />
+        <FormMessage>
+          Describe your store in simple words. Users can see this.
+        </FormMessage>
+      </FormField>
+      <FormField className="mt-4">
+        <Button
+          className="gap-1 disabled:opacity-75 w-full lg:w-1/2"
+          type="submit"
+          disabled={isLoading}
+        >
+          {isLoading && <IconLoading />}
+          {storeStatus === "new-store" ? "Add New Store" : "Update Store"}
+        </Button>
+      </FormField>
+    </Form>
   );
 }

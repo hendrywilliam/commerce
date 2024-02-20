@@ -9,9 +9,7 @@ export default function DashboardNewStorePage() {
         <p className="text-gray-500">Create a new store.</p>
       </div>
       <Separator />
-      <div className="w-1/3">
-        <CreateNewStoreForm storeStatus="new-store" />
-      </div>
+      <CreateNewStoreForm storeStatus="new-store" />
     </div>
   );
 }

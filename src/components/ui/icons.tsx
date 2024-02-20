@@ -624,8 +624,8 @@ export function HamburgerMenuIcon(props: SVGProps<SVGSVGElement>) {
       <path
         fill="none"
         stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         d="M5.5 24h37m-37 13h37m-37-26h37"
       ></path>
     </svg>
