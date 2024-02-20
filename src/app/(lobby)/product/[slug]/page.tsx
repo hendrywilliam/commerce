@@ -4,13 +4,14 @@ import { Suspense } from "react";
 import type { UploadData } from "@/types";
 import { notFound } from "next/navigation";
 import { parse_to_json } from "@/lib/utils";
+import { StarIcon } from "@/components/ui/icons";
 import { siteStaticMetadata } from "@/config/site";
 import type { Metadata, ResolvingMetadata } from "next";
 import { Product, Store, products, stores } from "@/db/schema";
 import ProductPanel from "@/components/lobby/product/product-panel";
 import ImageSelector from "@/components/lobby/product/image-selector";
-import MoreStoreProducts from "@/components/lobby/product/more-store-products";
 import ProductCardSkeleton from "@/components/lobby/product-card-skeleton";
+import MoreStoreProducts from "@/components/lobby/product/more-store-products";
 
 interface ProductPageProps {
   params: { slug: string };
@@ -65,6 +66,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
         <div className="flex flex-col w-full gap-2">
           <h1 className="font-bold text-xl">{product.name}</h1>
+          <div className="flex gap-2 items-center">
+            <StarIcon className="fill-yellow-400" />
+            <p>{product.totalRating}</p>
+          </div>
           <p className="text-gray-500">{product.description}</p>
           <ProductPanel product={product} store={store} />
         </div>

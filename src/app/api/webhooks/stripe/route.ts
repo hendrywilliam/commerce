@@ -189,8 +189,6 @@ export async function POST(req: Request) {
             return {
               ...product,
               qty: qty ?? 0,
-              user_has_comment: false,
-              user_comment_id: "",
             };
           });
         });
