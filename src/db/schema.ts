@@ -103,10 +103,10 @@ export type NewAddress = typeof addresses.$inferInsert;
 
 export const orders = mysqlTable("orders", {
   id: serial("id").primaryKey(),
-  userId: varchar("userId", {
+  userId: varchar("user_id", {
     length: 256,
   }),
-  storeId: int("storeId"),
+  storeId: int("store_id"),
   items: json("items"),
   total: decimal("total", { precision: 10, scale: 2 }).default("0"),
   name: text("name").notNull(),
@@ -143,7 +143,7 @@ export const newsletters = mysqlTable("newsletters", {
     length: 256,
   }).notNull(),
   status: mysqlEnum("status", ["subscribed", "unsubscribed"]).notNull(),
-  createdAt: timestamp("createdAt").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export type Newsletter = InferSelectModel<typeof newsletters>;
@@ -153,7 +153,9 @@ export const comments = mysqlTable("comments", {
   id: serial("id").primaryKey(),
   productId: int("product_id").notNull(),
   orderId: int("order_id").notNull(),
-  userId: int("user_id").notNull(),
+  userId: varchar("user_id", {
+    length: 256,
+  }).notNull(),
   comment: text("comment").notNull(),
   rating: tinyint("rating").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow(),

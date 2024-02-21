@@ -193,10 +193,11 @@ export async function POST(req: Request) {
           });
         });
 
-      const { totalAmount: totalOrderAmount } =
-        calculateOrderAmounts(orderedProducts);
+      const totalOrderAmount = orderedProducts.reduce(
+        (total, item) => total + Number(item.price) * item.qty,
+        0,
+      );
 
-      // todo add user id for comment (?)
       await db.insert(orders).values({
         // @ts-expect-error
         name: paymentIntentObject.shipping.name,
@@ -206,7 +207,7 @@ export async function POST(req: Request) {
         stripePaymentIntentStatus: paymentIntentObject.status,
         email: paymentIntentObject.metadata.email,
         addressId,
-        total: totalOrderAmount,
+        total: String(totalOrderAmount),
         items: JSON.stringify(orderedProducts),
       });
 

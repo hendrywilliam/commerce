@@ -1,11 +1,10 @@
 import { db } from "@/db/core";
-import { orders } from "@/db/schema";
-import { eq, and } from "drizzle-orm";
 import { currentUser } from "@clerk/nextjs";
-import { ProductWithQuantity } from "@/types";
+import { eq, and, inArray } from "drizzle-orm";
 import { notFound, redirect } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
-import { beautifyId, parse_to_json } from "@/lib/utils";
+import { Product, comments, orders } from "@/db/schema";
+import { Extends, beautifyId, parse_to_json } from "@/lib/utils";
 import PurchaseItemCommentForm from "@/components/dashboard/purchases/purchase-item-comment-form";
 
 interface PurchaseDetailPageProps {
@@ -31,18 +30,44 @@ export default async function PurchaseDetailPage({
     where: and(eq(orders.id, purchaseId), eq(orders.userId, user.id)),
   });
 
-  if (!purchase || typeof purchase === "undefined") {
+  if (!purchase) {
     notFound();
   }
 
-  let purchaseItems: ProductWithQuantity[];
+  // Refactor this disgusting code when you have time. Please?
+  let purchaseItems: Product[];
   try {
-    purchaseItems = parse_to_json<ProductWithQuantity[]>(
-      purchase.items as string,
-    );
+    purchaseItems = parse_to_json<Product[]>(purchase.items as string);
   } catch (error) {
     purchaseItems = [];
   }
+
+  const allComments =
+    purchaseItems.length > 0 &&
+    (await db
+      .select()
+      .from(comments)
+      .where(
+        and(
+          eq(comments.orderId, purchase.id),
+          inArray(comments.productId, [
+            ...purchaseItems.map((purchaseItem) => purchaseItem.id),
+          ]),
+        ),
+      ));
+
+  let itemsWithComment =
+    purchaseItems.length > 0
+      ? purchaseItems.map((purchaseItem) => ({
+          ...purchaseItem,
+          comment:
+            allComments && allComments.length > 0
+              ? allComments.find(
+                  (comment) => comment.productId === purchaseItem.id,
+                )
+              : undefined,
+        }))
+      : [];
 
   return (
     <div>
@@ -64,18 +89,22 @@ export default async function PurchaseDetailPage({
           </li>
           <li>
             <p className="text-gray-500">Ordered Products</p>
-            {purchaseItems.length > 0 && (
+            {itemsWithComment.length > 0 && (
               <div className="flex flex-col space-y-2">
-                {purchaseItems.map((purchaseItem) => (
-                  <div key={purchaseItem.id}>
-                    <p>{purchaseItem.name}</p>
+                {itemsWithComment.map((item) => (
+                  <div key={item.id}>
+                    <p>{item.name}</p>
+                    {item.comment ? (
+                      <PurchaseItemCommentForm commentStatus="existing-comment" />
+                    ) : (
+                      <PurchaseItemCommentForm commentStatus="new-comment" />
+                    )}
                   </div>
                 ))}
               </div>
             )}
           </li>
         </ul>
-        <PurchaseItemCommentForm />
       </section>
     </div>
   );

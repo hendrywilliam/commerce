@@ -17,6 +17,14 @@ export async function get_account_details_fetcher(storeId: Store["id"]) {
     );
   }
 
+  // No account then throw an error.
   const account = await stripe.accounts.retrieve(payment.stripeAccountId);
+
+  if (!account) {
+    throw new Error(
+      "The store is not accepting any payment. Please contact the store to confirm your order",
+    );
+  }
+
   return account as Stripe.Account;
 }
