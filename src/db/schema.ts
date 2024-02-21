@@ -157,6 +157,9 @@ export const comments = mysqlTable("comments", {
   userId: varchar("user_id", {
     length: 256,
   }).notNull(),
+  fullname: varchar("fullname", {
+    length: 256,
+  }),
   comment: text("comment").notNull(),
   rating: tinyint("rating").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow(),

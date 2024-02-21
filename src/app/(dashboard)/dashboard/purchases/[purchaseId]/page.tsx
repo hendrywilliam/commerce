@@ -101,14 +101,16 @@ export default async function PurchaseDetailPage({
                         comment={item.comment}
                       />
                     ) : (
-                      <>
-                        <PurchaseItemCommentForm
-                          commentStatus="new-comment"
-                          orderId={purchase.id}
-                          productId={item.id}
-                          userId={user.id}
-                        />
-                      </>
+                      <PurchaseItemCommentForm
+                        commentStatus="new-comment"
+                        orderId={purchase.id}
+                        productId={item.id}
+                        userId={user.id}
+                        fullname={`
+                        ${user.firstName ?? "Guest"} 
+                        ${user.lastName ?? ""}
+                        `}
+                      />
                     )}
                   </div>
                 ))}

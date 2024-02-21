@@ -19,13 +19,14 @@ export async function add_new_comment_action(input: NewComment) {
     throw new Error(parsedInput.error.issues[0].message);
   }
 
-  const { comment, orderId, productId, rating, userId } = parsedInput.data;
+  const { comment, orderId, productId, rating, userId, fullname } = parsedInput.data;
   const newComment = await db.insert(comments).values({
     comment,
     orderId,
     productId,
     rating,
     userId,
+    fullname,
   });
 
   if (!newComment) {

@@ -14,6 +14,7 @@ interface CommentFormProps {
   orderId?: number;
   productId?: number;
   userId?: string;
+  fullname?: string;
   comment?: Comment;
 }
 
@@ -23,6 +24,7 @@ export default function PurchaseItemCommentForm({
   orderId,
   productId,
   userId,
+  fullname,
 }: CommentFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [commentData, setCommentData] = useState<NewComment>(
@@ -32,6 +34,7 @@ export default function PurchaseItemCommentForm({
       orderId: orderId as number,
       productId: productId as number,
       userId: userId as string,
+      fullname: fullname,
     },
   );
 
@@ -46,6 +49,7 @@ export default function PurchaseItemCommentForm({
           rating: commentData.rating,
           productId: commentData.productId,
           userId: commentData.userId,
+          fullname: commentData.fullname,
         });
         toast.success(
           "Your comment has been successfully added to the product.",

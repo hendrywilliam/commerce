@@ -11,6 +11,7 @@ import { Product, Store, products, stores } from "@/db/schema";
 import ProductPanel from "@/components/lobby/product/product-panel";
 import ImageSelector from "@/components/lobby/product/image-selector";
 import ProductCardSkeleton from "@/components/lobby/product-card-skeleton";
+import ProductCommentSection from "@/components/lobby/product/comment-section";
 import MoreStoreProducts from "@/components/lobby/product/more-store-products";
 
 interface ProductPageProps {
@@ -67,7 +68,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <div className="flex flex-col w-full gap-2">
           <h1 className="font-bold text-xl">{product.name}</h1>
           <div className="flex gap-2 items-center">
-            <StarIcon className="fill-yellow-400" />
+            <StarIcon />
             <p>{product.totalRating}</p>
           </div>
           <p className="text-gray-500">{product.description}</p>
@@ -86,6 +87,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
           }
         >
           <MoreStoreProducts store={store} />
+        </Suspense>
+      </div>
+      <div className="mt-4">
+        <h1 className="font-bold text-2xl mb-2">Comments</h1>
+        <Suspense fallback={<p>...Loading</p>}>
+          <ProductCommentSection productId={productAndStore.product.id} />
         </Suspense>
       </div>
     </div>

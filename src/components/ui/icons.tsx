@@ -1,4 +1,5 @@
 import { SVGProps } from "react";
+import { cn } from "@/lib/utils";
 
 export function IconCart(props: SVGProps<SVGSVGElement>) {
   return (
@@ -642,6 +643,7 @@ export function StarIcon(props: SVGProps<SVGSVGElement>) {
       width="1em"
       height="1em"
       stroke="currentColor"
+      className={cn(["fill-yellow-400", props.className])}
       {...props}
     >
       <path

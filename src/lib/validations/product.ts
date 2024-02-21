@@ -94,5 +94,6 @@ export const productCommentValidation = z.object({
   comment: z
     .string()
     .min(10, { message: "Comment must be at least 10 characters long." }),
+  fullname: z.string().min(1, { message: "Fullname is required." }),
   rating: z.number().positive(),
 });
