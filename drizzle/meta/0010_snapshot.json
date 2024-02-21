@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "208c305d-81d7-47cc-a629-8c005c497c94",
-  "prevId": "96ed5e1f-20aa-4e12-a6bd-2932ac4ec00d",
+  "id": "c7406fc0-2854-4b35-a7db-4f8ed32eb818",
+  "prevId": "208c305d-81d7-47cc-a629-8c005c497c94",
   "tables": {
     "addresses": {
       "name": "addresses",
@@ -137,14 +137,14 @@
           "name": "product_id",
           "type": "int",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "order_id": {
           "name": "order_id",
           "type": "int",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "user_id": {
@@ -568,10 +568,6 @@
   "_meta": {
     "schemas": {},
     "tables": {},
-    "columns": {
-      "\"newsletters\".\"createdAt\"": "\"newsletters\".\"created_at\"",
-      "\"orders\".\"userId\"": "\"orders\".\"user_id\"",
-      "\"orders\".\"storeId\"": "\"orders\".\"store_id\""
-    }
+    "columns": {}
   }
 }

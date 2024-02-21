@@ -22,7 +22,10 @@ export async function seed_products({
     const productName = faker.commerce.productName();
 
     productsData.push({
-      id: new Date().getTime() + new Date().getMilliseconds() + i,
+      id:
+        Math.floor(new Date().getTime() / 10000) +
+        new Date().getMilliseconds() +
+        i,
       name: productName,
       description: faker.commerce.productDescription(),
       totalRating: String(

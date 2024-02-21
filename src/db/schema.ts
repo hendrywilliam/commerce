@@ -43,11 +43,12 @@ export const products = mysqlTable(
   },
 );
 
-export const productsRelations = relations(products, ({ one }) => ({
+export const productsRelations = relations(products, ({ one, many }) => ({
   store: one(stores, {
     fields: [products.storeId],
     references: [stores.id],
   }),
+  comments: many(comments),
 }));
 
 export type NewProduct = typeof products.$inferInsert;
@@ -151,8 +152,8 @@ export type NewNewsletter = InferInsertModel<typeof newsletters>;
 
 export const comments = mysqlTable("comments", {
   id: serial("id").primaryKey(),
-  productId: int("product_id").notNull(),
-  orderId: int("order_id").notNull(),
+  productId: int("product_id"),
+  orderId: int("order_id"),
   userId: varchar("user_id", {
     length: 256,
   }).notNull(),
@@ -160,6 +161,13 @@ export const comments = mysqlTable("comments", {
   rating: tinyint("rating").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+export const commentsRelations = relations(comments, ({ one }) => ({
+  products: one(products, {
+    fields: [comments.productId],
+    references: [products.id],
+  }),
+}));
 
 export type Comment = InferSelectModel<typeof comments>;
 export type NewComment = InferInsertModel<typeof comments>;

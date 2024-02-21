@@ -4,7 +4,7 @@ import { eq, and, inArray } from "drizzle-orm";
 import { notFound, redirect } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { Product, comments, orders } from "@/db/schema";
-import { Extends, beautifyId, parse_to_json } from "@/lib/utils";
+import { beautifyId, parse_to_json } from "@/lib/utils";
 import PurchaseItemCommentForm from "@/components/dashboard/purchases/purchase-item-comment-form";
 
 interface PurchaseDetailPageProps {
@@ -92,12 +92,23 @@ export default async function PurchaseDetailPage({
             {itemsWithComment.length > 0 && (
               <div className="flex flex-col space-y-2">
                 {itemsWithComment.map((item) => (
-                  <div key={item.id}>
+                  <div key={item.id} className="w-full lg:w-1/2">
                     <p>{item.name}</p>
+                    <Separator />
                     {item.comment ? (
-                      <PurchaseItemCommentForm commentStatus="existing-comment" />
+                      <PurchaseItemCommentForm
+                        commentStatus="existing-comment"
+                        comment={item.comment}
+                      />
                     ) : (
-                      <PurchaseItemCommentForm commentStatus="new-comment" />
+                      <>
+                        <PurchaseItemCommentForm
+                          commentStatus="new-comment"
+                          orderId={purchase.id}
+                          productId={item.id}
+                          userId={user.id}
+                        />
+                      </>
                     )}
                   </div>
                 ))}

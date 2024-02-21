@@ -14,11 +14,7 @@ import { headers } from "next/headers";
 import { eq, inArray } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { clerkClient } from "@clerk/nextjs";
-import {
-  OmitAndExtend,
-  calculateOrderAmounts,
-  parse_to_json,
-} from "@/lib/utils";
+import { OmitAndExtend, parse_to_json } from "@/lib/utils";
 import { type Cart, addresses, carts, orders, products } from "@/db/schema";
 import OrderSuccessEmail from "../../../../../react-email/emails/order-success-email";
 

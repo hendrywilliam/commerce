@@ -96,8 +96,8 @@ export default async function DashboardDynamicStorePage({
           </p>
           {!!pendingBalance && (
             <p>
-              You have <span>{formatCurrency(pendingBalance)}</span> pending
-              balance, make sure to complete the onboarding process.
+              You have <span>{pendingBalance}</span> pending balance, make sure
+              to complete the onboarding process.
             </p>
           )}
         </div>

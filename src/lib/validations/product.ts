@@ -82,3 +82,17 @@ export const updateProductValidation = newProductValidation
       message: "Image is required.",
     }),
   });
+
+export const productCommentValidation = z.object({
+  productId: z.number({ required_error: "Product ID is required." }),
+  orderId: z.number({ required_error: "Order ID is required." }),
+  userId: z
+    .string({
+      required_error: "User ID is required.",
+    })
+    .min(1, { message: "User ID is required." }),
+  comment: z
+    .string()
+    .min(10, { message: "Comment must be at least 10 characters long." }),
+  rating: z.number().positive(),
+});
