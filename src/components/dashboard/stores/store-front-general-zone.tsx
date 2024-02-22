@@ -41,7 +41,7 @@ export default function StorefrontGeneralZone({
             description: store.description,
           }}
         />
-        <SeedButton storeId={store.id} />
+        {/* <SeedButton storeId={store.id} /> */}
       </div>
     </div>
   );

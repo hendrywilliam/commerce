@@ -176,12 +176,13 @@ export const commentsRelations = relations(comments, ({ one }) => ({
 export type Comment = InferSelectModel<typeof comments>;
 export type NewComment = InferInsertModel<typeof comments>;
 
-// Do i need to store each rating in their own column? Im not quite sure :/
 export const ratings = mysqlTable("ratings", {
   id: serial("id").primaryKey(),
   productId: int("product_id"),
-  accumulatedTotalRatings: int("accumulated_total_ratings").default(0),
-  totalRatings: int("total_ratings").default(0),
+  accumulatedTotalRatings: int("accumulated_total_ratings")
+    .notNull()
+    .default(0),
+  totalRatings: int("total_ratings").notNull().default(0),
 });
 
 export const ratingsRelations = relations(ratings, ({ one }) => ({
