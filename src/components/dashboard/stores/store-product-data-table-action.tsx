@@ -1,20 +1,21 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Product } from "@/db/schema";
-import { IconTrashCan } from "@/components/ui/icons";
-import { deleteStoreProductsAction } from "@/actions/products/delete-store-products";
-import { catchError } from "@/lib/utils";
-import { useState } from "react";
 import { toast } from "sonner";
-import { IconLoading } from "@/components/ui/icons";
+import { Product } from "@/db/schema";
+import { catchError } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { IconTrashCan, IconLoading } from "@/components/ui/icons";
+import { type Dispatch, type SetStateAction, useState } from "react";
+import { deleteStoreProductsAction } from "@/actions/products/delete-store-products";
 
 interface DashboardStoreProductDataTableActionProps {
   rawRowDataSelection: Product[];
+  setRawRowDataSelection: Dispatch<SetStateAction<Product[]>>;
 }
 
 export default function DashboardStoreProductDataTableAction({
   rawRowDataSelection,
+  setRawRowDataSelection,
 }: DashboardStoreProductDataTableActionProps) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,6 +29,7 @@ export default function DashboardStoreProductDataTableAction({
         catchError(err);
       } finally {
         setIsLoading((isLoading) => !isLoading);
+        setRawRowDataSelection([]);
       }
     } else {
       toast.error("Please select any product to delete.");

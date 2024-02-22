@@ -9,7 +9,6 @@ type UpdateRatingActionProps =
       action: "new" | "delete";
       productId: Product["id"];
       newRating: Comment["rating"];
-      oldRating?: Comment["rating"];
     }
   | {
       action: "update";

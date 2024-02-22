@@ -98,6 +98,7 @@ export default function DashboardStoreProductShellTable({
     <>
       <DashboardStoreProductDataTableAction
         rawRowDataSelection={rawRowDataSelection}
+        setRawRowDataSelection={setRawRowDataSelection}
       />
       <DashboardStoreProductDataTable
         columns={columns}
