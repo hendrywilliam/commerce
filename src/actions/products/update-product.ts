@@ -31,10 +31,6 @@ export async function update_product_action({
         : String(input.price),
     stock:
       isNaN(Number(input.stock)) || Number(input.stock) < 0 ? 0 : input.stock,
-    totalRating:
-      !!input.totalRating && Number(input.totalRating) > 0
-        ? input.totalRating
-        : "0",
   };
 
   await db

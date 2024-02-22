@@ -24,9 +24,10 @@ export const products = mysqlTable(
     description: text("description"),
     price: decimal("price", { precision: 10, scale: 2 }).notNull().default("0"),
     stock: int("stock").notNull().default(1),
-    totalRating: decimal("total_rating", { precision: 2, scale: 1 })
-      .notNull()
-      .default("0"),
+    averageRatings: decimal("average_ratings", {
+      precision: 2,
+      scale: 1,
+    }).default("0"),
     category: mysqlEnum("category", [
       "clothing",
       "backpack",
@@ -174,3 +175,21 @@ export const commentsRelations = relations(comments, ({ one }) => ({
 
 export type Comment = InferSelectModel<typeof comments>;
 export type NewComment = InferInsertModel<typeof comments>;
+
+// Do i need to store each rating in their own column? Im not quite sure :/
+export const ratings = mysqlTable("ratings", {
+  id: serial("id").primaryKey(),
+  productId: int("product_id"),
+  accumulatedTotalRatings: int("accumulated_total_ratings").default(0),
+  totalRatings: int("total_ratings").default(0),
+});
+
+export const ratingsRelations = relations(ratings, ({ one }) => ({
+  products: one(products, {
+    fields: [ratings.productId],
+    references: [products.id],
+  }),
+}));
+
+export type Rating = InferSelectModel<typeof ratings>;
+export type NewRating = InferInsertModel<typeof ratings>;

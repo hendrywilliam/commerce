@@ -69,7 +69,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <h1 className="font-bold text-xl">{product.name}</h1>
           <div className="flex gap-2 items-center">
             <StarIcon />
-            <p>{product.totalRating}</p>
+            <p>{product.averageRatings}</p>
           </div>
           <p className="text-gray-500">{product.description}</p>
           <ProductPanel product={product} store={store} />

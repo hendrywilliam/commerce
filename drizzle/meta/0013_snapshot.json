@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "c7406fc0-2854-4b35-a7db-4f8ed32eb818",
-  "prevId": "208c305d-81d7-47cc-a629-8c005c497c94",
+  "id": "859aed18-062a-434c-889c-9aa188a7850f",
+  "prevId": "32c41932-9427-4319-897a-ddbbf81a3c9c",
   "tables": {
     "addresses": {
       "name": "addresses",
@@ -152,6 +152,13 @@
           "type": "varchar(256)",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "fullname": {
+          "name": "fullname",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "comment": {
@@ -437,11 +444,11 @@
           "autoincrement": false,
           "default": 1
         },
-        "total_rating": {
-          "name": "total_rating",
+        "average_ratings": {
+          "name": "average_ratings",
           "type": "decimal(2,1)",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false,
           "default": "'0'"
         },
@@ -488,6 +495,52 @@
       "compositePrimaryKeys": {
         "products_id": {
           "name": "products_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "ratings": {
+      "name": "ratings",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "product_id": {
+          "name": "product_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "accumulated_total_ratings": {
+          "name": "accumulated_total_ratings",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 0
+        },
+        "total_ratings": {
+          "name": "total_ratings",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "ratings_id": {
+          "name": "ratings_id",
           "columns": [
             "id"
           ]

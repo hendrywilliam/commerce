@@ -36,7 +36,7 @@ export async function get_products_page_fetcher({
       .limit(1)
       .where(
         and(
-          rating ? gte(products.totalRating, rating) : undefined,
+          rating ? gte(products.averageRatings, rating) : undefined,
           categories ? inArray(products.category, categories) : undefined,
           sellersSlug ? inArray(stores.slug, sellersSlug) : undefined,
           minPrice ? gte(products.price, minPrice) : undefined,

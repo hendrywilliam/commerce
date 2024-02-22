@@ -4,7 +4,7 @@ import { db } from "@/db/core";
 import { eq } from "drizzle-orm";
 import { auth } from "@clerk/nextjs";
 import { slugify } from "@/lib/utils";
-import { NewProduct } from "@/db/schema";
+import { NewProduct, ratings } from "@/db/schema";
 import type { UploadData } from "@/types";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -58,6 +58,11 @@ export async function addNewProductAction(
   if (!productId) {
     await delete_existing_images(input.image);
   }
+
+  // Add new rating record
+  await db.insert(ratings).values({
+    productId: Number(productId),
+  });
 
   revalidatePath("/");
 }

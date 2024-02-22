@@ -1,1 +1,0 @@
-ALTER TABLE `comments` ADD `fullname` varchar(256);

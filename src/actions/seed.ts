@@ -3,7 +3,7 @@
 import { db } from "@/db/core";
 import { slugify } from "@/lib/utils";
 import { faker } from "@faker-js/faker";
-import { Product, products } from "@/db/schema";
+import { Product, Rating, products, ratings } from "@/db/schema";
 
 export async function seed_products({
   storeId,
@@ -14,23 +14,49 @@ export async function seed_products({
 }) {
   const productCount = count ?? 10;
   const productsData: Product[] = [];
+  const ratingsData: Rating[] = [];
 
   for (let i = 0; i < productCount; i++) {
     const shuffleCategory =
       faker.helpers.shuffle(products.category.enumValues)[0] ?? "backpack";
 
     const productName = faker.commerce.productName();
+    const productId =
+      Math.floor(new Date().getTime() / 10000) +
+      new Date().getMilliseconds() +
+      i;
 
-    productsData.push({
+    // All ratings from 1-5 (order matters).
+    const allRatings = [
+      faker.number.int({ min: 1, max: 10 }),
+      faker.number.int({ min: 10, max: 20 }),
+      faker.number.int({ min: 10, max: 30 }),
+      faker.number.int({ min: 10, max: 40 }),
+      faker.number.int({ min: 10, max: 50 }),
+    ];
+
+    const accumulatedTotalRatings = allRatings.reduce(
+        (total, rating, index) => {
+          return total + rating * (index + 1);
+        },
+        0,
+      ),
+      totalRatings = allRatings.reduce((total, rating) => total + rating, 0);
+
+    ratingsData.push({
       id:
-        Math.floor(new Date().getTime() / 10000) +
+        Math.floor(new Date().getTime() / 100000) +
         new Date().getMilliseconds() +
         i,
+      productId,
+      accumulatedTotalRatings,
+      totalRatings,
+    });
+
+    productsData.push({
+      id: productId,
       name: productName,
       description: faker.commerce.productDescription(),
-      totalRating: String(
-        faker.number.float({ min: 1, max: 4, fractionDigits: 1 }),
-      ),
       stock: faker.number.int({ min: 50, max: 75 }),
       price: faker.commerce.price({
         min: 10,
@@ -39,6 +65,7 @@ export async function seed_products({
       slug: slugify(productName),
       category: shuffleCategory,
       createdAt: faker.date.past(),
+      averageRatings: String(accumulatedTotalRatings / totalRatings),
       image: JSON.stringify(
         Array.from({ length: 1 }).map(() => {
           return {
@@ -54,5 +81,6 @@ export async function seed_products({
   }
 
   await db.insert(products).values(productsData);
+  await db.insert(ratings).values(ratingsData);
   return;
 }
