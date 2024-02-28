@@ -8,16 +8,15 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { useUser } from "@clerk/nextjs";
-import { useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useUser, useClerk } from "@clerk/nextjs";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 export default function AccountNavigation() {
-  const { user, isSignedIn } = useUser();
-  const { signOut } = useClerk();
   const router = useRouter();
+  const { signOut } = useClerk();
+  const { user, isSignedIn } = useUser();
 
   return (
     <div className="flex self-center">
