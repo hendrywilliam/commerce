@@ -124,7 +124,7 @@ export default async function DashboardDynamicStorePage({
           </div>
           <div className="flex flex-col border rounded p-4">
             <div>
-              <p className="text-sm text-gray-400">Total Products</p>
+              <p className="text-sm text-gray-400">Total Orders</p>
               <p className="text-4xl font-bold mt-2">{ordersCount[0].count}</p>
             </div>
             <div className="inline-flex justify-between items-center mt-2">
