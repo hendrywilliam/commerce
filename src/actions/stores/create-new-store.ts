@@ -9,9 +9,9 @@ import { TweakedOmit } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { currentUser } from "@clerk/nextjs";
-import { billingPlan } from "@/config/billing";
 import { auth, clerkClient } from "@clerk/nextjs";
 import type { UserObjectCustomized } from "@/types";
+import { subscriptionPlans } from "@/config/billing";
 import { newStoreValidation } from "@/lib/validations/stores";
 import { check_store_availability_action } from "./check-store-availability";
 import { get_current_subscription_fetcher } from "@/fetchers/stripe/get-current-subscription";
@@ -50,7 +50,7 @@ export async function createNewStoreAction(
     currentUserPlanId = process.env.HOBBY_PLAN_ID as string;
   }
 
-  const findCurrentUserPlan = billingPlan.find((plan) => {
+  const findCurrentUserPlan = subscriptionPlans.find((plan) => {
     return plan.id === currentUserPlanId;
   });
 

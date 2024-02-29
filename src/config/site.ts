@@ -46,8 +46,8 @@ export const dashboardNavigation = [
     description: "Manage your own stores, or create a brand new store.",
   },
   {
-    title: "Billing",
-    href: "/dashboard/billing",
+    title: "Subscription",
+    href: "/dashboard/subscription",
     icon: IconPayment,
     description: "Manage your billing plan.",
   },

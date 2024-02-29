@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { User } from "@clerk/nextjs/server";
-import { billingPlan } from "@/config/billing";
+import { subscriptionPlans } from "@/config/billing";
 import { NewProduct, Product } from "@/db/schema";
 import type { Extends, OmitAndExtend } from "@/lib/utils";
 
@@ -41,7 +41,7 @@ export interface UserObjectCustomized
   };
 }
 
-export type BillingPlan = (typeof billingPlan)[0];
+export type BillingPlan = (typeof subscriptionPlans)[0];
 
 export interface FileWithPreview extends File {
   preview: string;

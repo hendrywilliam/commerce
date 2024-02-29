@@ -10,7 +10,7 @@ import DashboardNavigationUserPanel from "@/components/dashboard/dashboard-navig
 export default function DashboardNavigation() {
   const pathname = usePathname();
   return (
-    <div className="flex flex-col p-6 w-[300px] justify-between bg-black text-accent-foreground">
+    <div className="flex flex-col p-6 w-[300px] justify-between border-r">
       <div className="flex flex-col">
         <div>
           <div className="relative w-9 h-9 border rounded">

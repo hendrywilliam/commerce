@@ -1,6 +1,7 @@
 "use server";
 
 import { stripe } from "@/lib/stripe";
+import { unixToDateString } from "@/lib/utils";
 
 export async function get_current_subscription_fetcher(
   stripeSubscriptionId: string,
@@ -16,8 +17,8 @@ export async function get_current_subscription_fetcher(
     !(new Date(subscribedPlanEnd * 1000).getTime() < new Date().getTime());
 
   return {
-    subscribedPlanEnd,
-    subscribedPlanStart,
+    subscribedPlanEnd: unixToDateString(subscribedPlanEnd),
+    subscribedPlanStart: unixToDateString(subscribedPlanStart),
     subscribedPlanId,
     isActive,
   };

@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
-export const billingPlan = [
+export const subscriptionPlans = [
   {
     id: process.env.HOBBY_PLAN_ID,
     title: "Hobby",
