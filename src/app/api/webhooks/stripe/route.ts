@@ -53,7 +53,7 @@ export async function POST(req: Request) {
 
   // Handle various event sent from Stripe
   switch (event.type) {
-    case "checkout.session.completed":
+    case "checkout.session.completed": {
       // Payment is successful and the subscription is created.
       // You should provision the subscription and save the customer ID to your database.
       console.log(`🔔  Webhook received: ${event.type}`);
@@ -78,6 +78,7 @@ export async function POST(req: Request) {
         },
       );
       break;
+    }
     case "invoice.paid": {
       // Continue to provision the subscription as payment continue to be made.
       console.log(`🔔  Webhook received: ${event.type}`);

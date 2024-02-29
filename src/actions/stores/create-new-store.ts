@@ -21,10 +21,9 @@ dotenv.config();
 export async function createNewStoreAction(
   storeData: TweakedOmit<NewStore, "slug" | "createdAt">,
 ) {
-  const { userId } = auth();
   const user = (await currentUser()) as unknown as UserObjectCustomized;
 
-  if (!userId) {
+  if (!user) {
     throw new Error("You must be signed in to create a new store");
   }
 
@@ -36,27 +35,16 @@ export async function createNewStoreAction(
 
   await check_store_availability_action({ storeName: storeData.name });
 
-  const userPrivateMetadata = user?.privateMetadata;
-  let currentUserPlanId: string;
-
-  if (userPrivateMetadata.stripeSubscriptionId) {
-    // Retrieve current user subscribed plan
-    const { subscribedPlanId } = await get_current_subscription_fetcher(
-      userPrivateMetadata.stripeSubscriptionId,
-    );
-    currentUserPlanId = subscribedPlanId;
-  } else {
-    // Set default plan to hobby
-    currentUserPlanId = process.env.HOBBY_PLAN_ID as string;
-  }
+  const userPrivateMetadata = user.privateMetadata;
+  const userSubscribedPlanId = userPrivateMetadata.subscribedPlanId;
 
   const findCurrentUserPlan = subscriptionPlans.find((plan) => {
-    return plan.id === currentUserPlanId;
+    return plan.id === userSubscribedPlanId;
   });
 
   const isAbleToCreateNewStore =
     findCurrentUserPlan &&
-    (user?.privateMetadata.storeId as string[]).length <
+    (user.privateMetadata.storeId as string[]).length <
       findCurrentUserPlan.limit;
 
   if (isAbleToCreateNewStore) {
@@ -66,7 +54,7 @@ export async function createNewStoreAction(
       slug: slugify(storeData.name),
     });
 
-    await clerkClient.users.updateUser(userId, {
+    await clerkClient.users.updateUser(user.id, {
       privateMetadata: {
         ...userPrivateMetadata,
         storeId: [...(userPrivateMetadata?.storeId as string[]), insertId],

@@ -9,7 +9,7 @@ import { manageSubscriptionAction } from "@/actions/stripe/manage-subscription";
 
 interface BillingPlanCardProps extends BillingPlan {}
 
-export default function DashboardBillingPlanCard({
+export default function SubscriptionPlanCard({
   description,
   id,
   price,
