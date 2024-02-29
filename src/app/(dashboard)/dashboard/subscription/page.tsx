@@ -27,14 +27,14 @@ export default async function DashboardBillingPage() {
     );
 
   return (
-    <div className="h-1/2 w-full">
-      <div className="w-full inline-flex pb-4">
+    <div className="flex flex-col space-y-6 w-full">
+      <section className="w-full inline-flex pb-4">
         <div className="w-full">
           <h1 className="font-bold text-2xl">Subscription</h1>
           <p className="text-gray-500">Manage your current subscription plan</p>
         </div>
-      </div>
-      <div className="h-full w-full flex flex-col mt-6 gap-4">
+      </section>
+      <section className="h-full w-full flex flex-col mt-6 gap-4">
         <h1 className="text-xl">Select Plan</h1>
         <div className="w-full lg:w-1/2 space-y-3">
           {subscriptionPlans.map((plan) => {
@@ -51,7 +51,11 @@ export default async function DashboardBillingPage() {
             );
           })}
         </div>
-      </div>
+      </section>
+      <section>
+        <h1 className="text-xl">Active Plan</h1>
+        <div></div>
+      </section>
     </div>
   );
 }

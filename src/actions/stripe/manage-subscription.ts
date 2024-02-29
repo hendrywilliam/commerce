@@ -26,7 +26,7 @@ export async function manageSubscriptionAction({
     throw new Error("You must be signed in to perform this action.");
   }
 
-  const billingUrl = getAbsoluteUrl("/dashboard/billing");
+  const subscriptionUrl = getAbsoluteUrl("/dashboard/subscription");
 
   const { stripeCustomerId, stripeSubscriptionId } = (
     user as UserObjectCustomized
@@ -43,8 +43,8 @@ export async function manageSubscriptionAction({
         },
       ],
       mode: "subscription",
-      success_url: billingUrl,
-      cancel_url: billingUrl,
+      success_url: subscriptionUrl,
+      cancel_url: subscriptionUrl,
       customer: stripeCustomerId,
       metadata: {
         clerkUserId: user.id,
@@ -61,7 +61,7 @@ export async function manageSubscriptionAction({
     // When the user has subscribed any plan, we redirect them to billing portal
     const session = await stripe.billingPortal.sessions.create({
       customer: stripeCustomerId,
-      return_url: billingUrl,
+      return_url: subscriptionUrl,
     });
 
     return session;
@@ -76,8 +76,8 @@ export async function manageSubscriptionAction({
         },
       ],
       mode: "subscription",
-      success_url: billingUrl,
-      cancel_url: billingUrl,
+      success_url: subscriptionUrl,
+      cancel_url: subscriptionUrl,
       customer: stripeCustomerId,
       metadata: {
         clerkUserId: user.id,

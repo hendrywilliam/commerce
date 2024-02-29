@@ -36,6 +36,7 @@ export interface UserObjectCustomized
     plan: "Hobby" | "Pro" | "Enterprise";
     storeId: string[];
     stripeCustomerId: string;
+    subscribedPlanId: string;
     stripeSubscriptionId: string;
     newsletterSubscriptionId?: number;
   };

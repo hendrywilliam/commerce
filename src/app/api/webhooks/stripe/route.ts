@@ -64,10 +64,15 @@ export async function POST(req: Request) {
         CheckoutSessionCompletedMetadata
       >;
 
+      const subscriptionDetail = await stripe.subscriptions.retrieve(
+        checkoutSessionObject.subscription as string,
+      );
+
       await clerkClient.users.updateUserMetadata(
         checkoutSessionObject.metadata.clerkUserId,
         {
           privateMetadata: {
+            subscribedPlanId: subscriptionDetail.items.data[0].plan.id,
             stripeSubscriptionId: checkoutSessionObject.subscription,
           },
         },

@@ -24,6 +24,8 @@ export async function createStripeCustomerAction(rawUserData: CreateUser) {
     lastName: parsedRawData.data.lastname,
     privateMetadata: {
       storeId: [],
+      // Set default plan id to hobby.
+      subscribedPlanId: process.env["HOBBY_PLAN_ID"],
     },
   });
 
@@ -36,6 +38,7 @@ export async function createStripeCustomerAction(rawUserData: CreateUser) {
   // Register user to Stripe.
   const stripeCustomer: Stripe.Customer = await stripe.customers.create({
     email,
+    name: `${userCreated.firstName} ${userCreated.lastName}`,
     metadata: {
       clerkId: userCreated.id,
     },

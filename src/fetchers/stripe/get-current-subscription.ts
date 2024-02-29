@@ -16,10 +16,16 @@ export async function get_current_subscription_fetcher(
     subscriptionPlan.status === "active" &&
     !(new Date(subscribedPlanEnd * 1000).getTime() < new Date().getTime());
 
+  const paymentMethod = await stripe.paymentMethods.retrieve(
+    subscriptionPlan.default_payment_method as string,
+  );
+
   return {
     subscribedPlanEnd: unixToDateString(subscribedPlanEnd),
     subscribedPlanStart: unixToDateString(subscribedPlanStart),
     subscribedPlanId,
     isActive,
+    cardBrand: paymentMethod.card?.brand ?? "Unknown Brand",
+    cardLastFour: paymentMethod.card?.last4,
   };
 }
