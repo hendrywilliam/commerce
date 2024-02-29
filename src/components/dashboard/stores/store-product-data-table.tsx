@@ -56,7 +56,7 @@ export default function DashboardStoreProductDataTable({
   }, [rowSelection]);
 
   return (
-    <Table>
+    <Table className="table-auto">
       <TableHeader>
         {productDataTable.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>

@@ -10,10 +10,10 @@ import DashboardNavigationUserPanel from "@/components/dashboard/dashboard-navig
 export default function DashboardNavigation() {
   const pathname = usePathname();
   return (
-    <div className="flex flex-col p-6 border rounded w-[300px] justify-between">
+    <div className="flex flex-col p-6 w-[300px] justify-between bg-black text-accent-foreground">
       <div className="flex flex-col">
         <div>
-          <div style={{ position: "relative", width: "36px", height: "36px" }}>
+          <div className="relative w-9 h-9 border rounded">
             <Image
               src="/images/image-logo.png"
               alt="Commerce's logo"

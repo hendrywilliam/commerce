@@ -102,11 +102,7 @@ export default function StoreForm({
         </FormMessage>
       </FormField>
       <FormField className="mt-4">
-        <Button
-          className="gap-1 disabled:opacity-75 w-full lg:w-1/2"
-          type="submit"
-          disabled={isLoading}
-        >
+        <Button className="w-max" type="submit" disabled={isLoading}>
           {isLoading && <IconLoading />}
           {storeStatus === "new-store" ? "Add New Store" : "Update Store"}
         </Button>

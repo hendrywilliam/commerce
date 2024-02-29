@@ -10,7 +10,7 @@ import { twMerge } from "tailwind-merge";
 import { UTApi } from "uploadthing/server";
 import { User } from "@clerk/nextjs/server";
 import { type ClassValue, clsx } from "clsx";
-import { isClerkAPIResponseError, useUser } from "@clerk/nextjs";
+import { isClerkAPIResponseError } from "@clerk/nextjs";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -31,14 +31,11 @@ export function catchError(err: unknown) {
 }
 
 export function formatCurrency(amount: number) {
-  const formatAmount = new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     currencyDisplay: "narrowSymbol",
   }).format(amount);
-
-  const dollar = formatAmount.split(".")[0];
-  return dollar;
 }
 
 export function truncate(word: string, maxLength: number = 10) {
@@ -87,6 +84,13 @@ export function calculateOrderAmounts(
     totalAmount: total,
     feeAmount: fee,
   };
+}
+
+export function centsToDollars(amount: string | number) {
+  const CENTS_UNIT_IN_DOLLAR = 100;
+  return typeof amount === "string"
+    ? Number(amount) / CENTS_UNIT_IN_DOLLAR
+    : amount / CENTS_UNIT_IN_DOLLAR;
 }
 
 export function parse_to_json<TParsedData>(data: string): TParsedData {

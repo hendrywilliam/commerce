@@ -92,7 +92,7 @@ export default async function DashboardStoreProductsPage({
       <div className="h-[650px]">
         <DashboardStoreProductShellTable storeProductData={productData} />
       </div>
-      <div className="mt-4 flex items-end">
+      <div className="mt-4 flex">
         <Pagination currentPage={page} totalPage={pageData} />
       </div>
     </div>

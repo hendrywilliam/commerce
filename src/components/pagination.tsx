@@ -70,7 +70,7 @@ export default function Pagination({
   }, [totalPage, currentPage]);
 
   return (
-    <div className="inline-flex w-full justify-center gap-2">
+    <div className="inline-flex w-max justify-center gap-2">
       <Button
         onClick={moveBackwardOnePage}
         disabled={currentPage === 1 || isPending}
