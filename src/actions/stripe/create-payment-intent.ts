@@ -23,6 +23,12 @@ export async function createPaymentIntentAction({
 }) {
   const cartId = cookies().get("cart_id")?.value;
 
+  const user = await currentUser();
+
+  if (!user) {
+    redirect("/sign-in");
+  }
+
   if (isNaN(Number(cartId))) {
     throw new Error("Invalid Cart ID. Please try again later.");
   }
@@ -35,12 +41,6 @@ export async function createPaymentIntentAction({
 
   if (!parsedCartItems.success) {
     throw new Error(parsedCartItems.error.message);
-  }
-
-  const user = await currentUser();
-
-  if (!user) {
-    redirect("/sign-in");
   }
 
   const accountDetails = await get_account_details_fetcher(storeId);
