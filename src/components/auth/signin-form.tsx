@@ -45,7 +45,7 @@ export default function SignInForm() {
   );
 
   return (
-    <div className="w-full h-max">
+    <div className="h-max w-full">
       <Form
         className="flex flex-col gap-4"
         onSubmit={(event) => submitLogin(event)}
