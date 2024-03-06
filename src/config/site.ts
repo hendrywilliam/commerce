@@ -1,4 +1,9 @@
-import { IconStores, IconPayment, IconAnalytics } from "@/components/ui/icons";
+import {
+  IconStores,
+  IconPayment,
+  IconAnalytics,
+  FourDotIcon,
+} from "@/components/ui/icons";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -39,6 +44,12 @@ export const footerNavigation = [
 ];
 
 export const dashboardNavigation = [
+  {
+    title: "Home",
+    href: "/dashboard",
+    icon: FourDotIcon,
+    description: "Overview for your current store.",
+  },
   {
     title: "Stores",
     href: "/dashboard/stores",

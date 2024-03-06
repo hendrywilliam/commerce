@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
 import { UserObjectCustomized } from "@/types";
 import { subscriptionPlans } from "@/config/billing";
-import SubscriptionPlanCard from "@/components/dashboard/billing/subscription-plan-card";
+import SubscriptionPlanCard from "@/components/dashboard/subscription/subscription-plan-card";
 import { get_current_subscription_fetcher } from "@/fetchers/stripe/get-current-subscription";
 
 export default async function DashboardBillingPage() {
@@ -24,25 +24,26 @@ export default async function DashboardBillingPage() {
       : null;
 
   return (
-    <div className="flex flex-col space-y-6 w-full">
-      <section className="w-full inline-flex pb-4">
+    <div className="flex w-full flex-col space-y-6">
+      <section className="inline-flex w-full pb-4">
         <div className="w-full">
-          <h1 className="font-bold text-2xl">Subscription</h1>
+          <h1 className="text-2xl font-bold">Subscription</h1>
           <p className="text-gray-500">Manage your current subscription plan</p>
         </div>
       </section>
       <section className="flex flex-col gap-4">
         <h2>Active Plan</h2>
-        <div className="w-full lg:w-1/2 border rounded">
+        <div className="w-full rounded border lg:w-1/2">
           <div className="flex justify-between p-4">
             <div>
-              <p className="text-gray-500 text-sm">Current plan</p>
+              <p className="text-sm text-gray-500">Current plan</p>
               <p>{currentPlan?.title}</p>
             </div>
             {subscribedPlanDetails && (
               <div>
                 <p className="text-gray-500">
-                  #{beautifyId(subscribedPlanDetails.subscribedPlanId)}
+                  Subscription ID: #
+                  {beautifyId(subscribedPlanDetails.subscribedPlanId)}
                 </p>
               </div>
             )}
@@ -64,9 +65,9 @@ export default async function DashboardBillingPage() {
           )}
         </div>
       </section>
-      <section className="h-full w-full flex flex-col mt-6 gap-4">
+      <section className="mt-6 flex h-full w-full flex-col gap-4">
         <h2>Select Plan</h2>
-        <div className="w-full lg:w-1/2 space-y-3">
+        <div className="w-full space-y-3 lg:w-1/2">
           {subscriptionPlans.map((plan) => {
             return (
               <SubscriptionPlanCard

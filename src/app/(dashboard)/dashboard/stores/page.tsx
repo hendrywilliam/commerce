@@ -5,8 +5,6 @@ import { inArray } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
 import { UserObjectCustomized } from "@/types";
-import { AddStoreIcon } from "@/components/ui/icons";
-import { Separator } from "@/components/ui/separator";
 import { buttonVariants } from "@/components/ui/button";
 import DashboardStoreCard from "@/components/dashboard/stores/store-card";
 
@@ -35,26 +33,20 @@ export default async function DashboardStoresPage() {
 
   return (
     <div className="h-1/2 w-full">
-      <div className="w-full inline-flex">
-        <div className="w-full">
-          <h1 className="font-bold text-2xl">Stores</h1>
-          <p className="text-gray-500">
-            Manage your stores or create a new one.
-          </p>
-        </div>
-        <div className="flex-1">
+      <div className="inline-flex w-full">
+        <div className="flex w-full justify-end">
           <Link
-            className={buttonVariants({ class: "w-max flex gap-2" })}
-            href={"stores/new-store"}
+            className={buttonVariants({
+              variant: "outline",
+            })}
+            href="stores/new-store"
           >
             New Store
-            <AddStoreIcon />
           </Link>
         </div>
       </div>
-      <Separator />
       {userStores.length > 0 ? (
-        <div className="h-full w-full grid grid-cols-3 mt-6 gap-4">
+        <div className="mt-6 grid h-full w-full grid-cols-3 gap-4">
           {userStores.map((store) => {
             return <DashboardStoreCard store={store} key={store.id} />;
           })}

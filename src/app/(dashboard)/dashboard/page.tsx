@@ -1,42 +1,23 @@
 import Link from "next/link";
-import { currentUser } from "@clerk/nextjs";
 import { dashboardNavigation } from "@/config/site";
-import { getRandomPatternStyle } from "@/lib/generate-pattern";
 
 export default async function DashboardPage() {
-  const userDetails = await currentUser();
-
   return (
-    <div className="h-full w-full">
-      <h1 className="font-semibold text-2xl">Dashboard</h1>
-      <p className="font-medium text-muted-foreground">
-        Welcome to dashboard,{" "}
-        <span className="font-semibold">
-          {userDetails?.emailAddresses[0].emailAddress}
-        </span>
-        !
-      </p>
-      <div className="grid grid-cols-3 w-full mt-2 gap-4">
-        {dashboardNavigation.map((item, i) => {
+    <div className="flex h-full w-full items-center justify-center ">
+      <div className="mt-2 grid max-w-3xl grid-cols-1 gap-6 lg:grid-cols-2 lg:grid-rows-2">
+        {dashboardNavigation.slice(1).map((item, i) => {
           return (
             <Link
-              className="flex flex-col border rounded h-52 shadow"
+              className="flex h-52 flex-col justify-between rounded border p-6 hover:shadow-md"
               href={item.href}
               key={i}
             >
-              <div
-                className="relative h-3/4"
-                style={getRandomPatternStyle(String(i))}
-              >
-                <div className="absolute top-2 left-2 rounded-full border p-2 bg-white">
-                  <item.icon />
-                </div>
+              <div className="relative w-max">
+                <item.icon className="h-6 w-6" />
               </div>
-              <div className="flex-1 p-2 border-t">
-                <p className="font-bold">{item.title}</p>
-                <p className="text-muted-foreground truncate">
-                  {item.description}
-                </p>
+              <div>
+                <p>{item.title}</p>
+                <p className="text-muted-foreground">{item.description}</p>
               </div>
             </Link>
           );

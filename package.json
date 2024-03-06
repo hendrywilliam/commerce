@@ -19,7 +19,8 @@
     "format": "prettier . --write",
     "check": "prettier . --check",
     "e2e": "playwright test --ui",
-    "unit": "jest"
+    "unit": "jest",
+    "prettier": "prettier . write"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.8",
