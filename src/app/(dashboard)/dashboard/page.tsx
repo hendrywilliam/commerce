@@ -1,24 +1,20 @@
 import Link from "next/link";
 import { dashboardNavigation } from "@/config/site";
+import { buttonVariants } from "@/components/ui/button";
 
 export default async function DashboardPage() {
   return (
     <div className="flex h-full w-full items-center justify-center ">
-      <div className="mt-2 grid max-w-3xl grid-cols-1 gap-6 lg:grid-cols-2 lg:grid-rows-2">
+      <div className="flex h-full w-full justify-center gap-2">
         {dashboardNavigation.slice(1).map((item, i) => {
           return (
             <Link
-              className="flex h-52 flex-col justify-between rounded border p-6 hover:shadow-md"
+              className={buttonVariants({ class: "inline-flex gap-2" })}
               href={item.href}
               key={i}
             >
-              <div className="relative w-max">
-                <item.icon className="h-6 w-6" />
-              </div>
-              <div>
-                <p>{item.title}</p>
-                <p className="text-muted-foreground">{item.description}</p>
-              </div>
+              <item.icon />
+              <p>{item.title}</p>
             </Link>
           );
         })}

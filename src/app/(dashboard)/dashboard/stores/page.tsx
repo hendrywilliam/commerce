@@ -5,6 +5,7 @@ import { inArray } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
 import { UserObjectCustomized } from "@/types";
+import { AddStoreIcon, PlusIcon } from "@/components/ui/icons";
 import { buttonVariants } from "@/components/ui/button";
 import DashboardStoreCard from "@/components/dashboard/stores/store-card";
 
@@ -38,10 +39,12 @@ export default async function DashboardStoresPage() {
           <Link
             className={buttonVariants({
               variant: "outline",
+              class: "inline-flex gap-2",
             })}
             href="stores/new-store"
           >
             New Store
+            <PlusIcon />
           </Link>
         </div>
       </div>
@@ -52,11 +55,20 @@ export default async function DashboardStoresPage() {
           })}
         </div>
       ) : (
-        <div className="mt-6">
-          <p>
-            You dont have any store to manage,{" "}
-            <span className="font-semibold">try create a new one.</span>
+        <div className="mt-4 flex w-full flex-col items-center justify-center gap-4 rounded border p-6 py-24 text-center shadow-sm">
+          <AddStoreIcon className="h-6 w-6" />
+          <h1 className="text-2xl">Looks like you dont have any store.</h1>
+          <p className="text-gray-500">
+            Create your first store to get started.
           </p>
+          <Link
+            className={buttonVariants({
+              variant: "outline",
+            })}
+            href="stores/new-store"
+          >
+            Get Started
+          </Link>
         </div>
       )}
     </div>
