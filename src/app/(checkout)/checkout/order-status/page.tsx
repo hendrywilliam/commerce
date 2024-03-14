@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import PageLayout from "@/components/layouts/page-layout";
 import type { CartItem, PaymentIntentMetadata } from "@/types";
 import OrderDetails from "@/components/lobby/checkout/order-details";
+import { get_payment_intent_fetcher } from "@/fetchers/purchase/get-payment-intent";
 
 export default async function OrderStatusPage({
   params,
@@ -25,20 +26,10 @@ export default async function OrderStatusPage({
 }) {
   const paymentIntentId = searchParams["payment_intent"];
 
-  if (!paymentIntentId) {
-    notFound();
-  }
-
-  const currentOrder = (await stripe.paymentIntents.retrieve(
-    paymentIntentId,
-  )) as unknown as OmitAndExtend<
-    Stripe.PaymentIntent,
-    "metadata",
-    PaymentIntentMetadata
-  >;
+  const currentOrder = await get_payment_intent_fetcher(paymentIntentId);
 
   const checkoutItems = JSON.parse(
-    currentOrder.metadata.checkoutItem,
+    currentOrder!.metadata.checkoutItem,
   ) as CartItem[];
   const checkoutItemsId = checkoutItems.map((item) => item.id);
 
@@ -61,25 +52,25 @@ export default async function OrderStatusPage({
     <PageLayout>
       <div>
         <p className="text-sm text-gray-500">
-          Order ID: {beautifyId(currentOrder.id)}
+          Order ID: {beautifyId(currentOrder!.id)}
         </p>
-        <h1 className="font-semibold text-2xl">Payment Succeeded</h1>
+        <h1 className="text-2xl font-semibold">Payment Succeeded</h1>
       </div>
       {!!allCheckoutItems.length && (
         <div className="flex w-full rounded">
-          <div className="flex flex-col w-full lg:w-1/2">
-            <p className="font-medium mb-4">Order Information</p>
+          <div className="flex w-full flex-col lg:w-1/2">
+            <p className="mb-4 font-medium">Order Information</p>
             <OrderDetails orderItems={allCheckoutItems} />
           </div>
         </div>
       )}
-      {!!currentOrder.shipping?.address && (
-        <div className="w-full flex">
+      {!!currentOrder!.shipping?.address && (
+        <div className="flex w-full">
           <div className="w-full lg:w-1/2">
             <Separator />
             <p className="font-medium">Shipment Address</p>
-            <p className="flex flex-col mt-4 text-gray-500">
-              {Object.entries(currentOrder?.shipping?.address).map(
+            <p className="mt-4 flex flex-col text-gray-500">
+              {Object.entries(currentOrder!.shipping?.address).map(
                 ([key, value]) => (
                   <span key={key}>{value}</span>
                 ),
