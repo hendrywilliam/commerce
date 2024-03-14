@@ -6,7 +6,7 @@ export default function DashboardLayout({ children }: React.PropsWithChildren) {
       <div className="flex h-full flex-1 flex-col">
         <DashboardNavigation />
         <div className="flex h-full w-full flex-1 flex-col overflow-y-auto">
-          <div className="container py-10">{children}</div>
+          <div className="container h-full py-10">{children}</div>
         </div>
       </div>
     </div>

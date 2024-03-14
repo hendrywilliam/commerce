@@ -41,7 +41,6 @@ interface ProductsProps {
     products: Product;
     stores: Store | null;
   }[];
-  allStores: Store[];
   productsPageCount: number;
   currentPage: number;
   sellers?: string;
@@ -50,7 +49,6 @@ interface ProductsProps {
 
 export default function Products({
   allStoresAndProducts,
-  allStores,
   productsPageCount,
   currentPage,
   sellers,
@@ -74,9 +72,14 @@ export default function Products({
     return storeAndProduct.products;
   });
 
-  const uniqueStores = [
-    ...new Map(allStores.map((store) => [store?.name, store])).values(),
-  ];
+  const allStores = allStoresAndProducts
+    .map((storeAndProduct) => storeAndProduct.stores)
+    .filter((store) => Boolean(store)) as Store[];
+
+  const uniqueStores =
+    allStores.length > 0
+      ? [...new Map(allStores.map((store) => [store.name, store])).values()]
+      : [];
 
   useEffect(() => {
     const bounceUpdate = setTimeout(() => {
@@ -177,11 +180,11 @@ export default function Products({
           </SheetTrigger>
           <SheetContent>
             <div className="flex h-full flex-col justify-between">
-              <div className="w-full h-full">
-                <h1 className="font-semibold text-2xl">Filter</h1>
-                <div className="flex flex-col gap-4 w-full h-full rounded my-2 overflow-y-auto">
+              <div className="h-full w-full">
+                <h1 className="text-2xl font-semibold">Filter</h1>
+                <div className="my-2 flex h-full w-full flex-col gap-4 overflow-y-auto rounded">
                   <div className="my-4">
-                    <h1 className="font-semibold text-base mb-2">
+                    <h1 className="mb-2 text-base font-semibold">
                       Price Range ($)
                     </h1>
                     <ReactSlider
@@ -204,11 +207,11 @@ export default function Products({
                       max={99999}
                       minDistance={1000}
                     />
-                    <div className="w-full inline-flex mt-2 justify-between ">
+                    <div className="mt-2 inline-flex w-full justify-between ">
                       <p>${minPrice}</p>
                       <p>${maxPrice}</p>
                     </div>
-                    <div className="inline-flex gap-2 mt-2">
+                    <div className="mt-2 inline-flex gap-2">
                       <Input
                         value={minPrice}
                         disabled={isPending}
@@ -231,35 +234,36 @@ export default function Products({
                     </div>
                   </div>
                   <div className="flex flex-col gap-2 overflow-y-auto">
-                    <h1 className="font-semibold text-base">Stores</h1>
+                    <h1 className="text-base font-semibold">Stores</h1>
                     <ul className="flex flex-col gap-2">
-                      {uniqueStores.map((store) => (
-                        <li className="inline-flex gap-2" key={store.id}>
-                          <Checkbox
-                            checked={sellersSlug.includes(store.slug)}
-                            disabled={isPending}
-                            aria-disabled={isPending ? "true" : "false"}
-                            onCheckedChange={(checked) => {
-                              setIsNewValue((isNewValue) => true);
-                              return checked
-                                ? setSellersSlug((sellersSlug) => [
-                                    ...sellersSlug,
-                                    store.slug,
-                                  ])
-                                : setSellersSlug((sellersSlug) =>
-                                    sellersSlug.filter((slug) => {
-                                      return slug !== store.slug;
-                                    }),
-                                  );
-                            }}
-                          />
-                          <p>{store?.name}</p>
-                        </li>
-                      ))}
+                      {uniqueStores.length > 0 &&
+                        uniqueStores.map((store) => (
+                          <li className="inline-flex gap-2" key={store.id}>
+                            <Checkbox
+                              checked={sellersSlug.includes(store.slug)}
+                              disabled={isPending}
+                              aria-disabled={isPending ? "true" : "false"}
+                              onCheckedChange={(checked) => {
+                                setIsNewValue((isNewValue) => true);
+                                return checked
+                                  ? setSellersSlug((sellersSlug) => [
+                                      ...sellersSlug,
+                                      store.slug,
+                                    ])
+                                  : setSellersSlug((sellersSlug) =>
+                                      sellersSlug.filter((slug) => {
+                                        return slug !== store.slug;
+                                      }),
+                                    );
+                              }}
+                            />
+                            <p>{store?.name}</p>
+                          </li>
+                        ))}
                     </ul>
                   </div>
                   <div className="flex flex-col gap-2 overflow-y-auto">
-                    <h1 className="font-semibold text-base">Categories</h1>
+                    <h1 className="text-base font-semibold">Categories</h1>
                     <ul className="flex flex-col gap-2">
                       {productCategories.map((category, i) => (
                         <div className="inline-flex gap-2" key={i}>
@@ -294,7 +298,7 @@ export default function Products({
               </div>
               <div className="w-full">
                 <Button
-                  className="flex gap-1 w-full"
+                  className="flex w-full gap-1"
                   variant={"outline"}
                   disabled={isPending}
                   aria-disabled={isPending ? "true" : "false"}
@@ -341,7 +345,7 @@ export default function Products({
                     )}`,
                   )
                 }
-                className="text-xs justify-between"
+                className="justify-between text-xs"
               >
                 {sortingItem.title}
               </DropdownMenuItem>
@@ -351,7 +355,7 @@ export default function Products({
       </div>
       {!!allProducts.length ? (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 min-h-[720px] h-full">
+          <div className="grid h-full min-h-[720px] grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
             {allProducts.map((product) => (
               <ProductCard product={product} key={product.id} />
             ))}
@@ -359,7 +363,7 @@ export default function Products({
           <Pagination totalPage={productsPageCount} currentPage={currentPage} />
         </>
       ) : (
-        <div className="flex items-center justify-center min-h-[450px] text-center">
+        <div className="flex min-h-[450px] items-center justify-center text-center">
           <h1 className="text-xl">
             Unfortunately, there is no product found. Try to change the filter
             or refresh the page.

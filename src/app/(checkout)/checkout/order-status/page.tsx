@@ -1,16 +1,12 @@
 import { db } from "@/db/core";
-import type Stripe from "stripe";
-import { stripe } from "@/lib/stripe";
 import { inArray } from "drizzle-orm";
-import { notFound } from "next/navigation";
-import { OmitAndExtend } from "@/lib/utils";
 import { Extends, beautifyId } from "@/lib/utils";
 import { type Product, products } from "@/db/schema";
 import { Separator } from "@/components/ui/separator";
 import PageLayout from "@/components/layouts/page-layout";
 import type { CartItem, PaymentIntentMetadata } from "@/types";
 import OrderDetails from "@/components/lobby/checkout/order-details";
-import { get_payment_intent_fetcher } from "@/fetchers/purchase/get-payment-intent";
+import { get_payment_intent_fetcher } from "@/fetchers/stripe/get-payment-intent";
 
 export default async function OrderStatusPage({
   params,

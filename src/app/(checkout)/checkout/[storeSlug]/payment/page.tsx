@@ -1,15 +1,13 @@
-import Stripe from "stripe";
 import { db } from "@/db/core";
-import { stripe } from "@/lib/stripe";
 import { eq, inArray } from "drizzle-orm";
-import { notFound, redirect } from "next/navigation";
-import { OmitAndExtend, Extends } from "@/lib/utils";
+import { notFound } from "next/navigation";
+import { Extends } from "@/lib/utils";
 import { Product, products, stores } from "@/db/schema";
 import PageLayout from "@/components/layouts/page-layout";
-import type { CartItem, PaymentIntentMetadata } from "@/types";
+import type { CartItem } from "@/types";
 import { Checkout } from "@/components/lobby/checkout/checkout";
 import OrderDetails from "@/components/lobby/checkout/order-details";
-import { get_payment_intent_fetcher } from "@/fetchers/purchase/get-payment-intent";
+import { get_payment_intent_fetcher } from "@/fetchers/stripe/get-payment-intent";
 import { hasConnectedStripeAccount } from "@/actions/stripe/check-connected-account";
 import { updateStripeAccountStatusAction } from "@/actions/stripe/update-stripe-account-status";
 

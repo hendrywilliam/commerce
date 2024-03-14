@@ -45,7 +45,7 @@ export const footerNavigation = [
 
 export const dashboardNavigation = [
   {
-    title: "Home",
+    title: "Overview",
     href: "/dashboard",
     icon: FourDotIcon,
     description: "Overview for your current store.",

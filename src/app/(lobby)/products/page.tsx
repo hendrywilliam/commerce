@@ -39,37 +39,33 @@ export default async function ProductsPage({
     ? 10
     : Number(searchParams.page_size);
 
-  const [allProductsAndStore, allStores, productsPageCount] = await Promise.all(
-    [
-      await get_all_products_and_store_fetcher({
-        sort,
-        minPrice,
-        maxPrice,
-        sellers,
-        category,
-        pageSize,
-        page: currentPage,
-        rating,
-      }),
-      await db.select().from(stores).orderBy(asc(stores.name)),
-      await get_products_page_fetcher({
-        pageSize,
-        category,
-        sellers,
-        minPrice,
-        maxPrice,
-        rating,
-      }),
-    ],
-  );
+  const [allProductsAndStore, productsPageCount] = await Promise.all([
+    await get_all_products_and_store_fetcher({
+      sort,
+      minPrice,
+      maxPrice,
+      sellers,
+      category,
+      pageSize,
+      page: currentPage,
+      rating,
+    }),
+    await get_products_page_fetcher({
+      pageSize,
+      category,
+      sellers,
+      minPrice,
+      maxPrice,
+      rating,
+    }),
+  ]);
 
   return (
     <PageLayout>
       <section>
-        <h1 className="font-bold text-2xl">Browse All Products</h1>
+        <h1 className="text-2xl font-bold">Browse All Products</h1>
         <Products
           allStoresAndProducts={allProductsAndStore}
-          allStores={allStores}
           productsPageCount={productsPageCount}
           currentPage={currentPage}
           sellers={sellers}
