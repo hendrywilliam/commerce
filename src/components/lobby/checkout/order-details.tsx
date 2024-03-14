@@ -15,42 +15,44 @@ export default function OrderDetails({
   }, 0);
 
   return (
-    <div className="w-full h-max">
-      {orderItems.map((item) => {
-        const parsedImage = parse_to_json<UploadData[]>(item.image as string)[0]
-          .url;
-        return (
-          <div key={item.id} className="inline-flex justify-between w-full">
-            <div className="inline-flex gap-2">
-              <div className="relative w-12 h-12">
-                {parsedImage ? (
-                  <Image
-                    src={parsedImage}
-                    alt={item.name ?? "Product Image"}
-                    className="object-cover rounded"
-                    fill
-                  />
-                ) : (
-                  <ImagePlaceholder />
-                )}
+    <div className="h-max w-full">
+      {orderItems.length > 0 &&
+        orderItems.map((item) => {
+          const parsedImage = parse_to_json<UploadData[]>(
+            item.image as string,
+          )[0].url;
+          return (
+            <div key={item.id} className="inline-flex w-full justify-between">
+              <div className="inline-flex gap-2">
+                <div className="relative h-12 w-12">
+                  {parsedImage ? (
+                    <Image
+                      src={parsedImage}
+                      alt={item.name ?? "Product Image"}
+                      className="rounded object-cover"
+                      fill
+                    />
+                  ) : (
+                    <ImagePlaceholder />
+                  )}
+                </div>
+                <div className="my-auto flex flex-col">
+                  <p className="font-medium">{item.name}</p>
+                  <p className="text-sm text-gray-500">Qty - {item.qty}</p>
+                </div>
               </div>
-              <div className="flex flex-col my-auto">
-                <p className="font-medium">{item.name}</p>
-                <p className="text-sm text-gray-500">Qty - {item.qty}</p>
+              <div className="flex items-center">
+                <p>
+                  <span className="text-xl">
+                    {formatCurrency(item.qty * Number(item.price))}
+                  </span>
+                </p>
               </div>
             </div>
-            <div className="flex items-center">
-              <p>
-                <span className="text-xl">
-                  {formatCurrency(item.qty * Number(item.price))}
-                </span>
-              </p>
-            </div>
-          </div>
-        );
-      })}
+          );
+        })}
       <Separator />
-      <div className="flex flex-col w-full space-y-1">
+      <div className="flex w-full flex-col space-y-1">
         <div className="flex w-full justify-between">
           <p>Price</p>
           <p className="font-medium">{formatCurrency(totalOrderPrice)}</p>
