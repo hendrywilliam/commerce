@@ -4,7 +4,7 @@ import { useTransition, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter, usePathname } from "next/navigation";
 import { useQueryString } from "@/hooks/use-query-string";
-import { IconArrowBackward, IconArrowForward } from "@/components/ui/icons";
+import { IconArrowBackward, ArrowRightIcon } from "@/components/ui/icons";
 
 interface PaginationProps {
   totalPage: number;
@@ -74,8 +74,8 @@ export default function Pagination({
       <Button
         onClick={moveBackwardOnePage}
         disabled={currentPage === 1 || isPending}
-        size={"icon"}
-        variant={"outline"}
+        size="icon"
+        variant="outline"
       >
         <IconArrowBackward />
       </Button>
@@ -103,10 +103,10 @@ export default function Pagination({
       <Button
         onClick={moveForwardOnePage}
         disabled={totalPage === currentPage || isPending}
-        size={"icon"}
-        variant={"outline"}
+        size="icon"
+        variant="outline"
       >
-        <IconArrowForward />
+        <ArrowRightIcon />
       </Button>
     </div>
   );

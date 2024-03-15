@@ -1,6 +1,3 @@
-import { db } from "@/db/core";
-import { asc } from "drizzle-orm";
-import { stores } from "@/db/schema";
 import PageLayout from "@/components/layouts/page-layout";
 import Products from "@/components/lobby/products/products";
 import { get_products_page_fetcher } from "@/fetchers/products/get-products-page";

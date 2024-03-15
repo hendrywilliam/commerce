@@ -1,5 +1,6 @@
 import SiteHeader from "@/components/layouts/site-header";
 import SiteFooter from "@/components/layouts/site-footer";
+import Breadcrumbs from "@/components/breadcrumbs";
 
 export default function LobbyLayout(props: {
   children: React.ReactNode;
@@ -7,8 +8,9 @@ export default function LobbyLayout(props: {
 }) {
   return (
     <div>
-      <div className="flex flex-col min-h-screen w-full">
+      <div className="flex min-h-screen w-full flex-col">
         <SiteHeader />
+        <Breadcrumbs />
         <main className="flex-1">{props.children}</main>
         <SiteFooter />
       </div>

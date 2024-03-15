@@ -13,6 +13,7 @@ import ImageSelector from "@/components/lobby/product/image-selector";
 import ProductCardSkeleton from "@/components/lobby/product-card-skeleton";
 import ProductCommentSection from "@/components/lobby/product/comment-section";
 import MoreStoreProducts from "@/components/lobby/product/more-store-products";
+import Breadcrumbs from "@/components/breadcrumbs";
 
 interface ProductPageProps {
   params: { slug: string };
@@ -60,14 +61,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
   );
 
   return (
-    <div className="flex flex-col container h-full w-full py-8 space-y-4">
-      <div className="flex flex-col lg:flex-row h-[600px] w-full my-2 gap-8">
-        <div className="group relative rounded h-full w-full overflow-hidden">
+    <div className="container flex h-full w-full flex-col space-y-4 pb-8">
+      <div className="my-2 flex h-[600px] w-full flex-col gap-8 lg:flex-row">
+        <div className="group relative h-full w-full overflow-hidden rounded">
           <ImageSelector images={parsedImage} />
         </div>
-        <div className="flex flex-col w-full gap-2">
-          <h1 className="font-bold text-xl">{product.name}</h1>
-          <div className="flex gap-2 items-center">
+        <div className="flex w-full flex-col gap-2">
+          <h1 className="text-xl font-bold">{product.name}</h1>
+          <div className="flex items-center gap-2">
             <StarIcon />
             <p>{product.averageRatings}</p>
           </div>
@@ -76,10 +77,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
       </div>
       <div>
-        <h1 className="font-bold text-2xl">More products from {store.name}</h1>
+        <h1 className="text-2xl font-bold">More products from {store.name}</h1>
         <Suspense
           fallback={
-            <div className="w-full grid sm:grid-cols-4 lg:grid-cols-5 gap-3 mt-4">
+            <div className="mt-4 grid w-full gap-3 sm:grid-cols-4 lg:grid-cols-5">
               {Array.from({ length: 5 }).map((item, index) => (
                 <ProductCardSkeleton key={index} />
               ))}
@@ -90,7 +91,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </Suspense>
       </div>
       <div className="mt-4">
-        <h1 className="font-bold text-2xl mb-2">Comments</h1>
+        <h1 className="mb-2 text-2xl font-bold">Comments</h1>
         <Suspense fallback={<p>...Loading</p>}>
           <ProductCommentSection productId={productAndStore.product.id} />
         </Suspense>

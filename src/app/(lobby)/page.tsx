@@ -5,7 +5,7 @@ import type { Store } from "@/db/schema";
 import { stores, products } from "@/db/schema";
 import StoreCard from "@/components/lobby/store-card";
 import { buttonVariants } from "@/components/ui/button";
-import { IconArrowForward } from "@/components/ui/icons";
+import { ArrowRightIcon } from "@/components/ui/icons";
 import ProductCard from "@/components/lobby/product-card";
 import CategoriesShowcase from "@/components/lobby/categories-showcase";
 
@@ -62,7 +62,7 @@ export default async function IndexPage() {
               })}
             >
               View all products
-              <IconArrowForward />
+              <ArrowRightIcon />
             </Link>
           </div>
         </div>
@@ -90,7 +90,7 @@ export default async function IndexPage() {
               })}
             >
               View all stores
-              <IconArrowForward />
+              <ArrowRightIcon />
             </Link>
           </div>
         </div>
