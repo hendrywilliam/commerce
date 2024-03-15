@@ -22,32 +22,31 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   async function addToCart() {
     setIsLoading((isLoading) => !isLoading);
-    try {
-      await addItemInCartAction({ id: product.id, qty: 1 });
-      toast.success("Item added to your cart.");
-      setIsLoading((isLoading) => !isLoading);
-    } catch (error) {
-      catchError(error);
-    }
+    toast.promise(addItemInCartAction({ id: product.id, qty: 1 }), {
+      loading: `Adding ${product.name} to your cart...`,
+      success: () => `${product.name} has been added to your cart`,
+      error: (error) => catchError(error),
+      finally: () => setIsLoading((isLoading) => !isLoading),
+    });
   }
 
   const parsedImage = parse_to_json<UploadData[]>(product.image as string)[0]
     .url;
 
   return (
-    <div className="group relative h-80 w-full border rounded shadow">
-      <div className="absolute z-[2] top-2 right-2 rounded px-2 py-1 bg-foreground text-background font-semibold">
+    <div className="group relative h-80 w-full rounded border shadow">
+      <div className="absolute right-2 top-2 z-[2] rounded bg-foreground px-2 py-1 font-semibold text-background">
         <p className="text-xs">{formatCurrency(Number(product.price))}</p>
       </div>
-      <Link href={`/product/${product.slug}`}>
-        <div className="relative rounded h-4/6 overflow-hidden">
+      <Link href={`/products/${product.slug}`}>
+        <div className="relative h-4/6 overflow-hidden rounded">
           {parsedImage ? (
             <Image
               src={parsedImage}
               fill
               sizes="100vw"
-              alt={product.name as string}
-              className="w-full h-full object-cover rounded-t transition duration-300 ease-in-out group-hover:scale-105"
+              alt={product.name}
+              className="h-full w-full rounded-t object-cover transition duration-300 ease-in-out group-hover:scale-105"
             />
           ) : (
             <ImagePlaceholder />
@@ -56,8 +55,8 @@ export default function ProductCard({ product }: ProductCardProps) {
       </Link>
       <div className="h-2/6 border-t p-2 ">
         <p className="font-semibold">{product.name}</p>
-        <p className="text-sm text-gray-400 truncate">{product.description}</p>
-        <div className="inline-flex w-full gap-2 justify-between mt-2">
+        <p className="truncate text-sm text-gray-400">{product.description}</p>
+        <div className="mt-2 inline-flex w-full justify-between gap-2">
           <Link
             className={buttonVariants({
               size: "sm",

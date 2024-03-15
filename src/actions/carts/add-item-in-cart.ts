@@ -10,8 +10,6 @@ import { carts, products } from "@/db/schema";
 export async function addItemInCartAction(newCartItem: CartItem) {
   const cartId = cookies().get("cart_id")?.value;
 
-  // Check if the cart is exist
-  // Made up cart will be deleted and replaced by the brand new one generated from db.
   const isCartExist =
     !isNaN(Number(cartId)) &&
     (await db

@@ -10,13 +10,10 @@ import type { Metadata, ResolvingMetadata } from "next";
 import { Product, Store, products, stores } from "@/db/schema";
 import ProductPanel from "@/components/lobby/product/product-panel";
 import ImageSelector from "@/components/lobby/product/image-selector";
-import ProductCardSkeleton from "@/components/lobby/product-card-skeleton";
 import ProductCommentSection from "@/components/lobby/product/comment-section";
-import MoreStoreProducts from "@/components/lobby/product/more-store-products";
-import Breadcrumbs from "@/components/breadcrumbs";
 
 interface ProductPageProps {
-  params: { slug: string };
+  params: { productSlug: string };
 }
 
 export async function generateMetadata(
@@ -24,7 +21,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const productDetails = await db.query.products.findFirst({
-    where: eq(products.slug, params.slug),
+    where: eq(products.slug, params.productSlug),
   });
 
   return {
@@ -43,7 +40,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     await db
       .select({ product: products, store: stores })
       .from(products)
-      .where(eq(products.slug, params.slug))
+      .where(eq(products.slug, params.productSlug))
       .leftJoin(stores, eq(stores.id, products.storeId))
       .limit(1)
   )[0] as {
@@ -62,39 +59,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <div className="container flex h-full w-full flex-col space-y-4 pb-8">
-      <div className="my-2 flex h-[600px] w-full flex-col gap-8 lg:flex-row">
+      <div className="my-2 flex h-max w-full flex-col gap-10 lg:flex-row">
         <div className="group relative h-full w-full overflow-hidden rounded">
           <ImageSelector images={parsedImage} />
         </div>
-        <div className="flex w-full flex-col gap-2">
-          <h1 className="text-xl font-bold">{product.name}</h1>
-          <div className="flex items-center gap-2">
-            <StarIcon />
-            <p>{product.averageRatings}</p>
-          </div>
-          <p className="text-gray-500">{product.description}</p>
+        <div className="flex w-full gap-2">
           <ProductPanel product={product} store={store} />
         </div>
-      </div>
-      <div>
-        <h1 className="text-2xl font-bold">More products from {store.name}</h1>
-        <Suspense
-          fallback={
-            <div className="mt-4 grid w-full gap-3 sm:grid-cols-4 lg:grid-cols-5">
-              {Array.from({ length: 5 }).map((item, index) => (
-                <ProductCardSkeleton key={index} />
-              ))}
-            </div>
-          }
-        >
-          <MoreStoreProducts store={store} />
-        </Suspense>
-      </div>
-      <div className="mt-4">
-        <h1 className="mb-2 text-2xl font-bold">Comments</h1>
-        <Suspense fallback={<p>...Loading</p>}>
-          <ProductCommentSection productId={productAndStore.product.id} />
-        </Suspense>
       </div>
     </div>
   );
