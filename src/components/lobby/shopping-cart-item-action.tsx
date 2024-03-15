@@ -26,14 +26,12 @@ export default function ShoppingCartItemAction({
   async function handleDeleteItemFromCart() {
     setIsDeletingItem((isDeletingItem) => !isDeletingItem);
     startTransition(async () => {
-      try {
-        await deleteCartItemAction(id);
-        toast.success("Item successfully removed from your cart.");
-      } catch (err) {
-        catchError(err);
-      } finally {
-        setIsDeletingItem((isDeletingItem) => !isDeletingItem);
-      }
+      toast.promise(deleteCartItemAction(id), {
+        loading: "Removing your item from the cart...",
+        success: (data) => `${data} has been removed from your cart.`,
+        error: (error) => catchError(error),
+        finally: () => setIsDeletingItem((isDeletingItem) => !isDeletingItem),
+      });
     });
   }
 
@@ -41,15 +39,13 @@ export default function ShoppingCartItemAction({
     if (isNewValue) {
       const bounceUpdate = setTimeout(async () => {
         startTransition(async () => {
-          try {
-            await updateCartItemAction(id, itemQuantity);
-            toast.success("Your cart has been updated.");
-          } catch (error) {
-            catchError(error);
-          }
+          toast.promise(updateCartItemAction(id, itemQuantity), {
+            loading: "Updating your item in cart...",
+            success: "Your cart has been updated.",
+            error: (error) => catchError(error),
+          });
         });
       }, 500);
-
       return () => clearTimeout(bounceUpdate);
     }
     // eslint-disable-next-line
@@ -57,11 +53,11 @@ export default function ShoppingCartItemAction({
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="w-full flex justify-end">
+      <div className="flex w-full justify-end">
         <Button
           onClick={handleDeleteItemFromCart}
-          variant={"outline"}
-          size={"icon"}
+          variant="outline"
+          size="icon"
           className="h-6 w-6"
           disabled={isPending}
           aria-disabled={isPending ? "true" : "false"}
@@ -75,8 +71,8 @@ export default function ShoppingCartItemAction({
             setItemQuantity((itemQuantity) => itemQuantity + 1);
             setIsNewValue(true);
           }}
-          variant={"outline"}
-          size={"icon"}
+          variant="outline"
+          size="icon"
           className="h-6 w-6"
           disabled={isPending}
           aria-disabled={isPending ? "true" : "false"}
@@ -86,7 +82,7 @@ export default function ShoppingCartItemAction({
         <Input
           value={itemQuantity}
           onChange={(e) => void setItemQuantity(e.target.valueAsNumber)}
-          className="w-16 h-6 p-2"
+          className="h-6 w-16 p-2"
           type="number"
           disabled={isPending}
           aria-disabled={isPending ? "true" : "false"}
@@ -96,8 +92,8 @@ export default function ShoppingCartItemAction({
             setItemQuantity((itemQuantity) => itemQuantity - 1);
             setIsNewValue(true);
           }}
-          variant={"outline"}
-          size={"icon"}
+          variant="outline"
+          size="icon"
           className="h-6 w-6"
           disabled={isPending}
           aria-disabled={isPending ? "true" : "false"}

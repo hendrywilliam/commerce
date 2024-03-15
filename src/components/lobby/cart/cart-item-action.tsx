@@ -63,11 +63,11 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
   }, [productQuantity]);
 
   return (
-    <div className="flex justify-between gap-4 h-full w-full py-2">
+    <div className="flex h-full w-full justify-between gap-4 py-2">
       <div>
         <Button
           onClick={() => void push(`/store/${cartItem.storeSlug}`)}
-          className="w-6 h-6"
+          className="h-6 w-6"
           size="icon"
           variant="outline"
         >
@@ -79,7 +79,7 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
           <Button
             disabled={isPending}
             aria-disabled={isPending ? "true" : "false"}
-            className="w-6 h-6"
+            className="h-6 w-6"
             size="icon"
             variant="outline"
             onClick={() => {
@@ -95,7 +95,7 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
             type="number"
             disabled={isPending}
             aria-disabled={isPending ? "true" : "false"}
-            className="w-16 h-6 p-2"
+            className="h-6 w-16 p-2"
             onChange={(e) => {
               setProductQuantity((productQuantity) =>
                 productQuantity > 1 ? e.target.valueAsNumber : 1,
@@ -106,7 +106,7 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
           <Button
             disabled={isPending}
             aria-disabled={isPending ? "true" : "false"}
-            className="w-6 h-6"
+            className="h-6 w-6"
             size="icon"
             variant="outline"
             onClick={() => {
@@ -120,7 +120,7 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
         <div>
           <Button
             onClick={() => void deleteCurrentItemInCart()}
-            className="w-6 h-6"
+            className="h-6 w-6"
             size="icon"
             variant="outline"
             disabled={isDeletingCurrentItem}
