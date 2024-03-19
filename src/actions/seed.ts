@@ -3,7 +3,7 @@
 import { db } from "@/db/core";
 import { slugify } from "@/lib/utils";
 import { faker } from "@faker-js/faker";
-import { Product, Rating, products, ratings } from "@/db/schema";
+import { NewProduct, Rating, products, ratings } from "@/db/schema";
 
 export async function seedProducts({
   storeId,
@@ -13,7 +13,7 @@ export async function seedProducts({
   count?: number;
 }) {
   const productCount = count ?? 10;
-  const productsData: Product[] = [];
+  const productsData: NewProduct[] = [];
   const ratingsData: Rating[] = [];
 
   for (let i = 0; i < productCount; i++) {
@@ -71,23 +71,19 @@ export async function seedProducts({
       category: shuffleCategory,
       createdAt: faker.date.past(),
       averageRatings: String(accumulatedTotalRatings / totalRatings),
-      image: JSON.stringify(
-        Array.from({ length: 1 }).map(() => {
-          return {
-            key: faker.string.alpha(20),
-            url: faker.image.urlLoremFlickr(),
-            name: faker.system.fileName({ extensionCount: 2 }),
-            size: faker.number.int({ max: 20000 }),
-          };
-        }),
-      ),
+      image: Array.from({ length: 3 }).map(() => {
+        return {
+          key: faker.string.alpha(20),
+          url: faker.image.urlPicsumPhotos(),
+          name: faker.system.fileName({ extensionCount: 2 }),
+          size: faker.number.int({ max: 20000 }),
+        };
+      }),
       storeId,
     });
   }
 
-  await db.insert(products).values({
-    ...productsData,
-  });
+  await db.insert(products).values(productsData);
   await db.insert(ratings).values(ratingsData);
   return;
 }

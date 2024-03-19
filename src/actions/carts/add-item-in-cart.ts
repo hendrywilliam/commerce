@@ -73,10 +73,16 @@ export async function addItemInCartAction(newCartItem: CartItem) {
 
     revalidatePath("/");
   } else {
-    const { insertId } = await db.insert(carts).values({
-      items: JSON.stringify([newCartItem]),
-    });
-    cookies().set("cart_id", String(insertId));
+    const { insertedId } = await db
+      .insert(carts)
+      .values({
+        items: JSON.stringify([newCartItem]),
+      })
+      .returning({ insertedId: carts.id })
+      .then((result) => ({
+        insertedId: result[0].insertedId,
+      }));
+    cookies().set("cart_id", String(insertedId));
     revalidatePath("/");
   }
 }

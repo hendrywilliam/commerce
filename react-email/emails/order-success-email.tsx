@@ -36,10 +36,10 @@ export const OrderSuccessEmail = ({
     <Html>
       <Head />
       <Tailwind>
-        <Body className="bg-white my-auto mx-auto font-sans">
-          <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
+        <Body className="mx-auto my-auto bg-white font-sans">
+          <Container className="mx-auto my-[40px] w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
             <Text>Hello, {email}!</Text>
-            <Heading className="text-black text-[24px] font-semibold p-0 my-[10px] mx-0">
+            <Heading className="mx-0 my-[10px] p-0 text-[24px] font-semibold text-black">
               Thank you for your order!
             </Heading>
             <Text>
@@ -52,19 +52,15 @@ export const OrderSuccessEmail = ({
             <Section className="flex flex-col gap-4">
               {orderItems.length > 0 &&
                 orderItems.map((orderItem) => {
-                  const parsedImageUrl = (
-                    JSON.parse(orderItem?.image as string) as UploadData[]
-                  )[0]?.url;
-
                   return (
                     <Row
-                      className="inline-flex justify-between my-2"
+                      className="my-2 inline-flex justify-between"
                       key={orderItem.id}
                     >
                       <Column align="left">
                         <Img
                           className="rounded"
-                          src={parsedImageUrl}
+                          src={orderItem.image[0].url}
                           width="64"
                           height="64"
                         />

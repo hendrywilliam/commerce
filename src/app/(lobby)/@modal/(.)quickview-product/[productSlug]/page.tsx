@@ -2,9 +2,8 @@ import { db } from "@/db/core";
 import Image from "next/image";
 import Modal from "@/components/ui/modal";
 import { redirect } from "next/navigation";
-import type { UploadData } from "@/types";
 import ImagePlaceholder from "@/components/image-placeholder";
-import { parse_to_json, truncate, formatCurrency } from "@/lib/utils";
+import { truncate, formatCurrency } from "@/lib/utils";
 
 export default async function ProductModal({
   params: { productSlug },
@@ -21,36 +20,32 @@ export default async function ProductModal({
     redirect("/");
   }
 
-  const parsedImage = parse_to_json<UploadData[]>(
-    productDetails?.image as string,
-  )[0].url;
-
   return (
     <Modal>
-      <div className="bg-background h-full w-full rounded mx-auto">
+      <div className="mx-auto h-full w-full rounded bg-background">
         <div className="flex h-full w-full">
           <div className="relative h-full w-1/2">
-            {parsedImage ? (
+            {productDetails.image.length > 0 ? (
               <Image
-                src={parsedImage}
+                src={productDetails.image[0].url}
                 fill
                 alt={productDetails.name}
-                className="object-cover rounded-l"
+                className="rounded-l object-cover"
               />
             ) : (
               <ImagePlaceholder />
             )}
           </div>
-          <div className="p-4 w-1/2 justify-between">
+          <div className="w-1/2 justify-between p-4">
             <div className="space-y-2">
-              <h1 className="font-bold text-2xl">
+              <h1 className="text-2xl font-bold">
                 {truncate(productDetails.name, 28)}
               </h1>
               <p className="font-medium">
                 {formatCurrency(Number(productDetails.price))}
               </p>
               <p className="text-gray-500">{productDetails.stock} in stock</p>
-              <p className="text-gray-500 leading-7 text-wrap">
+              <p className="text-wrap leading-7 text-gray-500">
                 {productDetails?.description}
               </p>
             </div>

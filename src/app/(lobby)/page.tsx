@@ -9,19 +9,7 @@ import ProductCard from "@/components/lobby/product-card";
 import CategoriesShowcase from "@/components/lobby/categories-showcase";
 
 export default async function IndexPage() {
-  // const featuredStores = (await db.select().from(stores).limit(4)) as Omit<
-  //   Store,
-  //   "createdAt"
-  // >[];
-
-  const featuredStores = await db.select().from(stores).limit(4);
-
-  const featuredProducts = await db
-    .select()
-    .from(products)
-    .limit(10)
-    .orderBy(desc(products.createdAt));
-  // .where(gte(products.rating, 3))) as Omit<Product, "createdAt">[];
+  const featuredProducts = await db.select().from(products).limit(10);
 
   return (
     <div className="container flex h-full w-full flex-col items-center p-4">
@@ -49,7 +37,7 @@ export default async function IndexPage() {
       <div className="mt-36 flex w-full flex-col items-center gap-2">
         <div className="mb-4 inline-flex w-full justify-between">
           <div>
-            <h1 className="text-4xl font-bold">Featured Products</h1>
+            <h1 className="font-bold">Featured Products</h1>
             <p className="font-medium text-gray-500">
               Top 10 products for this week.
             </p>
@@ -96,10 +84,10 @@ export default async function IndexPage() {
           </div>
         </div>
         <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-4">
-          {featuredStores.length > 0 &&
+          {/* {featuredStores.length > 0 &&
             featuredStores.map((store) => {
               return <StoreCard store={store} key={store.id} />;
-            })}
+            })} */}
         </div>
       </div>
     </div>

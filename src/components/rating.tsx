@@ -41,7 +41,7 @@ export default function Rating({
               <StarIcon key={index} className="fill-gray-300" />
             ),
           )}
-      {totalRating && <p>{totalRating}</p>}
+      {/* {totalRating && <p>{totalRating}</p>} */}
     </div>
   );
 }

@@ -40,10 +40,16 @@ export async function subscribe_newsletter_action({
       })
       .where(eq(newsletters.id, isSubscriptionExist.id));
   } else {
-    const { insertId: subscriptionId } = await db.insert(newsletters).values({
-      email,
-      status: "subscribed",
-    });
+    const { insertedId: subscriptionId } = await db
+      .insert(newsletters)
+      .values({
+        email,
+        status: "subscribed",
+      })
+      .returning({ insertedId: newsletters.id })
+      .then((result) => ({
+        insertedId: result[0].insertedId,
+      }));
     newsletterSubscriptionId = subscriptionId;
 
     if (!subscriptionId) {

@@ -1,10 +1,6 @@
 import { db } from "@/db/core";
 import { eq } from "drizzle-orm";
-import { Suspense } from "react";
-import type { UploadData } from "@/types";
 import { notFound } from "next/navigation";
-import { parse_to_json } from "@/lib/utils";
-import { StarIcon } from "@/components/ui/icons";
 import { siteStaticMetadata } from "@/config/site";
 import type { Metadata, ResolvingMetadata } from "next";
 import { Product, Store, products, stores } from "@/db/schema";
@@ -53,15 +49,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   const { product, store } = productAndStore;
-  const parsedImage = parse_to_json<UploadData[]>(
-    productAndStore.product.image as string,
-  );
 
   return (
     <div className="container flex h-full w-full flex-col space-y-4 pb-8">
       <div className="my-2 flex h-max w-full flex-col gap-10 lg:flex-row">
         <div className="group relative h-full w-full overflow-hidden rounded">
-          <ImageSelector images={parsedImage} />
+          <ImageSelector images={product.image} />
         </div>
         <div className="flex w-full gap-2">
           <ProductPanel product={product} store={store} />

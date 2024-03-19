@@ -14,6 +14,7 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { relations, InferInsertModel, InferSelectModel } from "drizzle-orm";
+import { UploadData } from "@/types";
 
 export const productCategoryEnum = pgEnum("category", [
   "clothing",
@@ -29,14 +30,14 @@ export const products = pgTable(
     name: varchar("name", { length: 256 }).notNull(),
     slug: varchar("slug", { length: 256 }).notNull(),
     description: text("description"),
-    price: decimal("price", { precision: 10, scale: 2 }).notNull().default("0"), // Numeric and decimal are equivalent, both slower than integer, but we need exactness.
+    price: decimal("price", { precision: 10, scale: 2 }).notNull().default("0"),
     stock: integer("stock").notNull().default(1),
     averageRatings: decimal("average_ratings", {
       precision: 2,
       scale: 1,
     }).default("0"),
     category: productCategoryEnum("category"),
-    image: json("image"),
+    image: json("image").$type<UploadData[]>().notNull(),
     createdAt: timestamp("created_at").defaultNow(),
   },
   (table) => {

@@ -93,10 +93,6 @@ export function centsToDollars(amount: string | number) {
     : amount / CENTS_UNIT_IN_DOLLAR;
 }
 
-export function parseToJson<TParsedData>(data: string): TParsedData {
-  return JSON.parse(data);
-}
-
 export async function delete_existing_images(images: UploadData[]) {
   const utapi = new UTApi();
   const imageFileKeys = images.map((image) => image.key);

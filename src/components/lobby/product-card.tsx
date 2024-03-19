@@ -5,13 +5,13 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Product } from "@/db/schema";
-import type { UploadData } from "@/types";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
 import ImagePlaceholder from "@/components/image-placeholder";
 import { addItemInCartAction } from "@/actions/carts/add-item-in-cart";
-import { catchError, formatCurrency, parseToJson } from "@/lib/utils";
+import { catchError, formatCurrency } from "@/lib/utils";
 import { IconCart, IconLoading, IconView } from "@/components/ui/icons";
+import Rating from "@/components/rating";
 
 type ProductCardProps = {
   product: Omit<Product, "createdAt">;
@@ -30,18 +30,16 @@ export default function ProductCard({ product }: ProductCardProps) {
     });
   }
 
-  const parsedImage = parseToJson<UploadData[]>(product.image as string)[0].url;
-
   return (
-    <div className="group relative h-80 w-full rounded border shadow">
+    <div className="group relative h-max w-full rounded border shadow">
       <div className="absolute right-2 top-2 z-[2] rounded bg-foreground px-2 py-1 font-semibold text-background">
         <p className="text-xs">{formatCurrency(Number(product.price))}</p>
       </div>
       <Link href={`/products/${product.slug}`}>
-        <div className="relative h-4/6 overflow-hidden rounded">
-          {parsedImage ? (
+        <div className="relative h-56 overflow-hidden rounded">
+          {product.image[0].url ? (
             <Image
-              src={parsedImage}
+              src={product.image[0].url}
               fill
               sizes="100vw"
               alt={product.name}
@@ -52,9 +50,15 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
       </Link>
-      <div className="h-2/6 border-t p-2 ">
+      <div className=" border-t p-2 ">
         <p className="font-semibold">{product.name}</p>
-        <p className="truncate text-sm text-gray-400">{product.description}</p>
+        <p className="mb-1 truncate text-sm text-gray-400">
+          {product.description}
+        </p>
+        <Rating
+          isInteractable={false}
+          rating={Math.floor(Number(product.averageRatings))}
+        />
         <div className="mt-2 inline-flex w-full justify-between gap-2">
           <Link
             className={buttonVariants({
