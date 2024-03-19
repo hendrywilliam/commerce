@@ -37,18 +37,32 @@ export default function StoreForm({
     setIsLoading(true);
     try {
       if (storeStatus === "new-store") {
-        await createNewStoreAction({
-          name: storeData.name,
-          description: storeData.description,
-        });
-        toast.success("A new store created.");
+        toast.promise(
+          createNewStoreAction({
+            name: storeData.name,
+            description: storeData.description,
+          }),
+          {
+            loading: "Adding a new store...",
+            success: () => "A new store created.",
+            error: (error) => catchError(error),
+            finally: () => setIsLoading(false),
+          },
+        );
       } else {
-        await updateOwnedStoreAction({
-          id: storeData.id as number,
-          name: storeData.name,
-          description: storeData.description,
-        });
-        toast.success("Store updated.");
+        toast.promise(
+          updateOwnedStoreAction({
+            id: storeData.id as number,
+            name: storeData.name,
+            description: storeData.description,
+          }),
+          {
+            loading: "Updating your store...",
+            success: () => "Your store has been updated.",
+            error: (error) => catchError(error),
+            finally: () => setIsLoading(false),
+          },
+        );
       }
     } catch (error) {
       catchError(error);
@@ -62,7 +76,7 @@ export default function StoreForm({
     <Form
       ref={formRef}
       onSubmit={(event) => onSubmit(event)}
-      className="flex flex-col gap-2 mt-4"
+      className="mt-4 flex flex-col gap-2"
     >
       <FormField>
         <FormLabel htmlFor="store-name">Store Name</FormLabel>
@@ -88,7 +102,7 @@ export default function StoreForm({
           rows={1}
           cols={1}
           name="description"
-          className="w-full lg:w-1/2 h-52"
+          className="h-52 w-full lg:w-1/2"
           value={storeData["description"]}
           onChange={(e) =>
             setStoreData({

@@ -67,7 +67,7 @@ export default function ProductPanel({ product, store }: ProductPanelProps) {
             Add To Cart
           </Button>
         ) : (
-          <Button disabled className="inline-flex gap-2">
+          <Button disabled className="inline-flex w-full gap-2">
             Out of Stock
           </Button>
         )}

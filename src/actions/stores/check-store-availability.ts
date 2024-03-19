@@ -4,7 +4,7 @@ import { db } from "@/db/core";
 import { stores, Store } from "@/db/schema";
 import { and, eq, not } from "drizzle-orm";
 
-export async function check_store_availability_action({
+export async function checkStoreAvailabilityAction({
   storeId,
   storeName,
 }: {
@@ -17,9 +17,7 @@ export async function check_store_availability_action({
       : eq(stores.name, storeName),
   });
 
-  if (store) {
-    throw new Error("Store is already exist with that name.");
-  }
+  if (store) throw new Error("Store is already exist with that name.");
 
   return;
 }
