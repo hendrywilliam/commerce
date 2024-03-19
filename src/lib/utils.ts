@@ -93,7 +93,7 @@ export function centsToDollars(amount: string | number) {
     : amount / CENTS_UNIT_IN_DOLLAR;
 }
 
-export function parse_to_json<TParsedData>(data: string): TParsedData {
+export function parseToJson<TParsedData>(data: string): TParsedData {
   return JSON.parse(data);
 }
 

@@ -198,7 +198,7 @@ export const ratings = pgTable("ratings", {
   threeStars: integer("three_stars_rating").default(0),
   fourStars: integer("four_stars_rating").default(0),
   fiveStars: integer("five_stars_rating").default(0),
-  // total 1 star -> 5 stars accumulated.
+  accumulatedTotalRatings: integer("accumulated_total_ratings").default(0),
   totalRatings: integer("total_ratings").notNull().default(0),
 });
 

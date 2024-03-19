@@ -29,12 +29,9 @@ export type ProductWithQuantity = Extends<
 
 export interface UserObjectCustomized
   extends Omit<User, "privateMetadata" | "publicMetadata"> {
-  publicMetadata: {
-    address: number;
-  };
   privateMetadata: {
     plan: "Hobby" | "Pro" | "Enterprise";
-    storeId: string[];
+    storeId: number[];
     stripeCustomerId: string;
     subscribedPlanId: string;
     stripeSubscriptionId: string;

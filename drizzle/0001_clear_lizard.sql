@@ -1,0 +1,1 @@
+ALTER TABLE "ratings" ADD COLUMN "accumulated_total_ratings" integer DEFAULT 0;

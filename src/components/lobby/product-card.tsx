@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
 import ImagePlaceholder from "@/components/image-placeholder";
 import { addItemInCartAction } from "@/actions/carts/add-item-in-cart";
-import { catchError, formatCurrency, parse_to_json } from "@/lib/utils";
+import { catchError, formatCurrency, parseToJson } from "@/lib/utils";
 import { IconCart, IconLoading, IconView } from "@/components/ui/icons";
 
 type ProductCardProps = {
@@ -30,8 +30,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     });
   }
 
-  const parsedImage = parse_to_json<UploadData[]>(product.image as string)[0]
-    .url;
+  const parsedImage = parseToJson<UploadData[]>(product.image as string)[0].url;
 
   return (
     <div className="group relative h-80 w-full rounded border shadow">

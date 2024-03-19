@@ -14,6 +14,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { get_store_balance_fetcher } from "@/fetchers/stores/get-store-balance";
 import ActivateStoreButton from "@/components/dashboard/stores/activate-store-button";
 import StorefrontDangerZone from "@/components/dashboard/stores/store-front-danger-zone";
+import SeedButton from "@/components/seed-button";
 
 export default async function DashboardDynamicStorePage({
   params,
@@ -31,7 +32,7 @@ export default async function DashboardDynamicStorePage({
   }
 
   const storeOwned = user.privateMetadata.storeId.find(
-    (storeId) => storeId === String(store.id),
+    (storeId) => storeId === store.id,
   );
 
   if (!storeOwned) {
@@ -57,7 +58,7 @@ export default async function DashboardDynamicStorePage({
   ]);
 
   return (
-    <div className="mt-4 mb-6">
+    <div className="mb-6 mt-4">
       <div className="w-full">
         {!store.active && (
           <div className="mb-4">
@@ -65,7 +66,7 @@ export default async function DashboardDynamicStorePage({
               variant="default"
               className="border-yellow-400 bg-yellow-400/10"
             >
-              <WarningIcon className="w-4 h-4" />
+              <WarningIcon className="h-4 w-4" />
               <AlertTitle>Heads up!</AlertTitle>
               <AlertDescription>
                 In order to start accepting payments, you have to{" "}
@@ -75,9 +76,9 @@ export default async function DashboardDynamicStorePage({
             </Alert>
           </div>
         )}
-        <div className="w-full inline-flex">
+        <div className="inline-flex w-full">
           <div className="w-full">
-            <h1 className="font-bold text-2xl">General</h1>
+            <h1 className="text-2xl font-bold">General</h1>
             <p className="text-gray-500">
               Public store information. Your users can see this information.
             </p>
@@ -86,29 +87,29 @@ export default async function DashboardDynamicStorePage({
       </div>
       <Separator />
       <div className="mt-6 space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6">
-          <div className="flex flex-col border rounded p-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:gap-6 xl:grid-cols-4">
+          <div className="flex flex-col rounded border p-4">
             <div>
               <p className="text-sm text-gray-400">Store Balance</p>
-              <p className="text-4xl font-bold mt-2">
+              <p className="mt-2 text-4xl font-bold">
                 ${centsToDollars(storeBalance.availableBalance)}
               </p>
             </div>
-            <div className="inline-flex justify-between items-center mt-2">
+            <div className="mt-2 inline-flex items-center justify-between">
               <p className="text-sm text-gray-400">
                 Activate store to accept payment.
               </p>
               <ActivateStoreButton storeId={store.id} isActive={store.active} />
             </div>
           </div>
-          <div className="flex flex-col border rounded p-4">
+          <div className="flex flex-col rounded border p-4">
             <div>
               <p className="text-sm text-gray-400">Total Products</p>
-              <p className="text-4xl font-bold mt-2">
+              <p className="mt-2 text-4xl font-bold">
                 {productsCount[0].count}
               </p>
             </div>
-            <div className="inline-flex justify-between items-center mt-2">
+            <div className="mt-2 inline-flex items-center justify-between">
               <p className="text-sm text-gray-400">Add or edit your product.</p>
               <Link
                 href={`${store.slug}/products`}
@@ -122,12 +123,12 @@ export default async function DashboardDynamicStorePage({
               </Link>
             </div>
           </div>
-          <div className="flex flex-col border rounded p-4">
+          <div className="flex flex-col rounded border p-4">
             <div>
               <p className="text-sm text-gray-400">Total Orders</p>
-              <p className="text-4xl font-bold mt-2">{ordersCount[0].count}</p>
+              <p className="mt-2 text-4xl font-bold">{ordersCount[0].count}</p>
             </div>
-            <div className="inline-flex justify-between items-center mt-2">
+            <div className="mt-2 inline-flex items-center justify-between">
               <p className="text-sm text-gray-400">
                 Show the list of orders made in your store.
               </p>
@@ -153,6 +154,7 @@ export default async function DashboardDynamicStorePage({
           }}
         />
         <StorefrontDangerZone storeId={store.id} />
+        <SeedButton storeId={store.id} />
       </div>
     </div>
   );

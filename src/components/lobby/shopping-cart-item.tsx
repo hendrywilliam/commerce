@@ -1,8 +1,6 @@
 import Image from "next/image";
-import { truncate } from "@/lib/utils";
 import type { UploadData } from "@/types";
-import { parse_to_json } from "@/lib/utils";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, parseToJson, truncate } from "@/lib/utils";
 import type { CartLineDetailedItems } from "@/types";
 import ImagePlaceholder from "@/components/image-placeholder";
 import ShoppingCartItemAction from "@/components/lobby/shopping-cart-item-action";
@@ -17,34 +15,34 @@ export default function ShoppingCartItem({
   const sumPriceForItem =
     Number(cartLineDetailedItem.price) * cartLineDetailedItem.qty;
 
-  const parsedImageUrl = parse_to_json<UploadData[]>(
+  const parsedImageUrl = parseToJson<UploadData[]>(
     cartLineDetailedItem.image,
   )[0].url;
 
   return (
-    <div className="inline-flex w-full h-20 gap-2 py-2 border-b">
-      <div className="relative w-16 h-full border rounded">
+    <div className="inline-flex h-20 w-full gap-2 border-b py-2">
+      <div className="relative h-full w-16 rounded border">
         {parsedImageUrl ? (
           <Image
             src={parsedImageUrl}
             fill
             alt={cartLineDetailedItem.name}
-            className="object-cover rounded"
+            className="rounded object-cover"
           />
         ) : (
           <ImagePlaceholder />
         )}
       </div>
-      <div className="flex flex-col flex-1 justify-center">
+      <div className="flex flex-1 flex-col justify-center">
         <p>{truncate(cartLineDetailedItem.name)}</p>
-        <p className="text-gray-400 text-xs">
+        <p className="text-xs text-gray-400">
           <span>
             {cartLineDetailedItem.qty} x{" "}
             {formatCurrency(Number(cartLineDetailedItem.price))} -
           </span>
           <span> {formatCurrency(sumPriceForItem)}</span>
         </p>
-        <p className="text-gray-400 text-xs">{cartLineDetailedItem.category}</p>
+        <p className="text-xs text-gray-400">{cartLineDetailedItem.category}</p>
       </div>
       <ShoppingCartItemAction
         id={cartLineDetailedItem.id}

@@ -5,12 +5,12 @@ import { slugify } from "@/lib/utils";
 import { faker } from "@faker-js/faker";
 import { Product, Rating, products, ratings } from "@/db/schema";
 
-export async function seed_products({
+export async function seedProducts({
   storeId,
   count,
 }: {
   storeId: number;
-  count: number;
+  count?: number;
 }) {
   const productCount = count ?? 10;
   const productsData: Product[] = [];
@@ -49,6 +49,11 @@ export async function seed_products({
         new Date().getMilliseconds() +
         i,
       productId,
+      oneStar: allRatings[0],
+      twoStars: allRatings[1],
+      threeStars: allRatings[2],
+      fourStars: allRatings[3],
+      fiveStars: allRatings[4],
       accumulatedTotalRatings,
       totalRatings,
     });
@@ -80,7 +85,9 @@ export async function seed_products({
     });
   }
 
-  await db.insert(products).values(productsData);
+  await db.insert(products).values({
+    ...productsData,
+  });
   await db.insert(ratings).values(ratingsData);
   return;
 }

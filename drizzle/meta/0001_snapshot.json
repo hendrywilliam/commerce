@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "c43f6a00-4e0b-4464-bde4-4168a380a834",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "57dd2272-f369-4a47-a82d-5a6e2c3a81ff",
+  "prevId": "c43f6a00-4e0b-4464-bde4-4168a380a834",
   "tables": {
     "addresses": {
       "name": "addresses",
@@ -456,6 +456,13 @@
         },
         "five_stars_rating": {
           "name": "five_stars_rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "accumulated_total_ratings": {
+          "name": "accumulated_total_ratings",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,

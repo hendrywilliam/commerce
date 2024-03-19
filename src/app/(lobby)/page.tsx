@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { db } from "@/db/core";
-import { desc, eq } from "drizzle-orm";
-import type { Store } from "@/db/schema";
+import { desc } from "drizzle-orm";
 import { stores, products } from "@/db/schema";
 import StoreCard from "@/components/lobby/store-card";
 import { buttonVariants } from "@/components/ui/button";

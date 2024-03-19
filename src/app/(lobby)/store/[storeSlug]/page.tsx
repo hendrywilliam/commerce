@@ -74,12 +74,12 @@ export default async function StorePage({
   ]);
 
   return (
-    <div className="flex flex-col container h-full w-full py-8">
-      <div className="flex flex-col h-full w-full my-2 gap-2">
+    <div className="container flex h-full w-full flex-col py-8">
+      <div className="my-2 flex h-full w-full flex-col gap-2">
         <div>
           <div className="flex justify-between">
-            <div className="flex-col my-4 gap-2">
-              <h1 className="font-bold text-xl">{storeData?.name}</h1>
+            <div className="my-4 flex-col gap-2">
+              <h1 className="text-xl font-bold">{storeData?.name}</h1>
               <div>
                 <Button variant={"outline"} className="inline-flex gap-2">
                   <IconStores />
@@ -93,7 +93,7 @@ export default async function StorePage({
           </div>
           {!!storeProducts.length ? (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 min-h-[720px] h-full">
+              <div className="grid h-full min-h-[720px] grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
                 {storeProducts.map((storeProduct) => {
                   const product = storeProduct.products;
                   return <ProductCard product={product} key={product.id} />;
@@ -105,7 +105,7 @@ export default async function StorePage({
               />
             </>
           ) : (
-            <div className="flex items-center justify-center min-h-[450px] text-center">
+            <div className="flex min-h-[450px] items-center justify-center text-center">
               <h1 className="text-xl">
                 No product in this store or try to refresh the page.
               </h1>
