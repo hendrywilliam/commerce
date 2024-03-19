@@ -18,6 +18,12 @@ Key features:
 
 More feature will be added soon.
 
+# Setup
+* Create a new database in any serverless Postgre hosting (For serverfull environment please refer to your hosting documentation).
+* Add `connectionString` to `DATABASE_URL` in env.
+* Run `db:generate` to create a brand new migration.
+* Run `db:push` to push a schema based prototype directly to the server. 
+
 # Demo
 
 To demo checkout experience, checkout with test card, such as `4242 4242 4242 4242` and use any future date for the expiry date e.g. `08/70` and random 3 digits for CVC. You will only able to checkout with products from sellers that have a Stripe account connected to their stores.
