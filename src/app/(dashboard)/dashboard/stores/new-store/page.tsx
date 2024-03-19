@@ -1,4 +1,3 @@
-import { Separator } from "@/components/ui/separator";
 import CreateNewStoreForm from "@/components/dashboard/stores/store-form";
 
 export default function DashboardNewStorePage() {
@@ -8,7 +7,6 @@ export default function DashboardNewStorePage() {
         <h1 className="text-2xl font-bold">New Store</h1>
         <p className="text-gray-500">Create a new store.</p>
       </div>
-      <Separator />
       <CreateNewStoreForm storeStatus="new-store" />
     </div>
   );

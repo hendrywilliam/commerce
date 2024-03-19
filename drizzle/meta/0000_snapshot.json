@@ -1,105 +1,89 @@
 {
   "version": "5",
-  "dialect": "mysql",
-  "id": "859aed18-062a-434c-889c-9aa188a7850f",
-  "prevId": "32c41932-9427-4319-897a-ddbbf81a3c9c",
+  "dialect": "pg",
+  "id": "c43f6a00-4e0b-4464-bde4-4168a380a834",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "addresses": {
       "name": "addresses",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "serial",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
+          "primaryKey": true,
+          "notNull": true
         },
         "line1": {
           "name": "line1",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "line2": {
           "name": "line2",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "city": {
           "name": "city",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "state": {
           "name": "state",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "postal_code": {
           "name": "postal_code",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "country": {
           "name": "country",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
-          "default": "(now())"
+          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "addresses_id": {
-          "name": "addresses_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "carts": {
       "name": "carts",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "serial",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
+          "primaryKey": true,
+          "notNull": true
         },
         "items": {
           "name": "items",
           "type": "json",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "is_closed": {
           "name": "is_closed",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
           "default": false
         },
         "created_at": {
@@ -107,73 +91,59 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
-          "default": "(now())"
+          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "carts_id": {
-          "name": "carts_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "comments": {
       "name": "comments",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "serial",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
+          "primaryKey": true,
+          "notNull": true
         },
         "product_id": {
           "name": "product_id",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "order_id": {
           "name": "order_id",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "user_id": {
           "name": "user_id",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "fullname": {
           "name": "fullname",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
-        "comment": {
-          "name": "comment",
+        "content": {
+          "name": "content",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "rating": {
           "name": "rating",
-          "type": "tinyint",
+          "type": "smallint",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
           "default": 0
         },
         "created_at": {
@@ -181,192 +151,155 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
-          "default": "(now())"
+          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "comments_id": {
-          "name": "comments_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "newsletters": {
       "name": "newsletters",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "serial",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
+          "primaryKey": true,
+          "notNull": true
         },
         "email": {
           "name": "email",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
-        "status": {
-          "name": "status",
-          "type": "enum('subscribed','unsubscribed')",
+        "subscription_status": {
+          "name": "subscription_status",
+          "type": "subscription_status",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": false,
+          "default": "'unsubscribed'"
         },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
-          "default": "(now())"
+          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "newsletters_id": {
-          "name": "newsletters_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "orders": {
       "name": "orders",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "serial",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
+          "primaryKey": true,
+          "notNull": true
         },
         "user_id": {
           "name": "user_id",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "store_id": {
           "name": "store_id",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "items": {
           "name": "items",
           "type": "json",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "total": {
           "name": "total",
-          "type": "decimal(10,2)",
+          "type": "numeric(10, 2)",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
           "default": "'0'"
         },
         "name": {
           "name": "name",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "stripe_payment_intent_id": {
           "name": "stripe_payment_intent_id",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "stripe_payment_intent_status": {
           "name": "stripe_payment_intent_status",
-          "type": "enum('canceled','processing','succeeded')",
+          "type": "stripe_payment_intent_status",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "email": {
           "name": "email",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
-        "address": {
-          "name": "address",
-          "type": "int",
+        "address_id": {
+          "name": "address_id",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
-          "default": "(now())"
+          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "orders_id": {
-          "name": "orders_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "payments": {
       "name": "payments",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "serial",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
+          "primaryKey": true,
+          "notNull": true
         },
         "store_id": {
           "name": "store_id",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "stripe_account_id": {
           "name": "stripe_account_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "details_submitted": {
           "name": "details_submitted",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
           "default": false
         },
         "created_at": {
@@ -374,217 +307,206 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
-          "default": "(now())"
+          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "payments_id": {
-          "name": "payments_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "products": {
       "name": "products",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "serial",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
+          "primaryKey": true,
+          "notNull": true
         },
         "store_id": {
           "name": "store_id",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "name": {
           "name": "name",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "slug": {
           "name": "slug",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "description": {
           "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "price": {
           "name": "price",
-          "type": "decimal(10,2)",
+          "type": "numeric(10, 2)",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
           "default": "'0'"
         },
         "stock": {
           "name": "stock",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
           "default": 1
         },
         "average_ratings": {
           "name": "average_ratings",
-          "type": "decimal(2,1)",
+          "type": "numeric(2, 1)",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
           "default": "'0'"
         },
         "category": {
           "name": "category",
-          "type": "enum('clothing','backpack','shoes')",
+          "type": "category",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": false
         },
         "image": {
           "name": "image",
           "type": "json",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
-          "default": "(now())"
+          "default": "now()"
         }
       },
       "indexes": {
-        "productSlugIndex": {
-          "name": "productSlugIndex",
+        "product_slug_index": {
+          "name": "product_slug_index",
           "columns": [
             "slug"
           ],
-          "isUnique": false
+          "isUnique": true
         },
-        "productNameIndex": {
-          "name": "productNameIndex",
+        "product_name_index": {
+          "name": "product_name_index",
           "columns": [
             "name"
           ],
-          "isUnique": false
+          "isUnique": true
         }
       },
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "products_id": {
-          "name": "products_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "ratings": {
       "name": "ratings",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "serial",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
+          "primaryKey": true,
+          "notNull": true
         },
         "product_id": {
           "name": "product_id",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
-        "accumulated_total_ratings": {
-          "name": "accumulated_total_ratings",
-          "type": "int",
+        "one_star_rating": {
+          "name": "one_star_rating",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
+          "default": 0
+        },
+        "two_stars_rating": {
+          "name": "two_stars_rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "three_stars_rating": {
+          "name": "three_stars_rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "four_stars_rating": {
+          "name": "four_stars_rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "five_stars_rating": {
+          "name": "five_stars_rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
           "default": 0
         },
         "total_ratings": {
           "name": "total_ratings",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
+          "notNull": true,
           "default": 0
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "ratings_id": {
-          "name": "ratings_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "stores": {
       "name": "stores",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "serial",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
+          "primaryKey": true,
+          "notNull": true
         },
         "name": {
           "name": "name",
           "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "slug": {
           "name": "slug",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "description": {
           "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "active": {
           "name": "active",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
           "default": false
         },
         "created_at": {
@@ -592,29 +514,46 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
-          "default": "(now())"
+          "default": "now()"
         }
       },
       "indexes": {
-        "storeSlugIndex": {
-          "name": "storeSlugIndex",
+        "store_slug_index": {
+          "name": "store_slug_index",
           "columns": [
             "slug"
           ],
-          "isUnique": false
+          "isUnique": true
         }
       },
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "stores_id": {
-          "name": "stores_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+    }
+  },
+  "enums": {
+    "subscription_status": {
+      "name": "subscription_status",
+      "values": {
+        "subscribed": "subscribed",
+        "unsubscribed": "unsubscribed"
+      }
+    },
+    "stripe_payment_intent_status": {
+      "name": "stripe_payment_intent_status",
+      "values": {
+        "canceled": "canceled",
+        "processing": "processing",
+        "succeeded": "succeeded"
+      }
+    },
+    "category": {
+      "name": "category",
+      "values": {
+        "clothing": "clothing",
+        "backpack": "backpack",
+        "shoes": "shoes"
+      }
     }
   },
   "schemas": {},

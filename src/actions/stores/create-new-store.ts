@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/core";
-import * as dotenv from "dotenv";
+import "dotenv/config";
 import { stores } from "@/db/schema";
 import { slugify } from "@/lib/utils";
 import { NewStore } from "@/db/schema";
@@ -9,23 +9,18 @@ import { TweakedOmit } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { currentUser } from "@clerk/nextjs";
-import { auth, clerkClient } from "@clerk/nextjs";
+import { clerkClient } from "@clerk/nextjs";
 import type { UserObjectCustomized } from "@/types";
 import { subscriptionPlans } from "@/config/billing";
 import { newStoreValidation } from "@/lib/validations/stores";
-import { check_store_availability_action } from "./check-store-availability";
-import { get_current_subscription_fetcher } from "@/fetchers/stripe/get-current-subscription";
-
-dotenv.config();
+import { checkStoreAvailabilityAction } from "./check-store-availability";
 
 export async function createNewStoreAction(
   storeData: TweakedOmit<NewStore, "slug" | "createdAt">,
 ) {
   const user = (await currentUser()) as unknown as UserObjectCustomized;
 
-  if (!user) {
-    throw new Error("You must be signed in to create a new store");
-  }
+  if (!user) throw new Error("You must be signed in to create a new store");
 
   const validateStoreData = await newStoreValidation.spa(storeData);
 
@@ -33,31 +28,40 @@ export async function createNewStoreAction(
     throw new Error(validateStoreData.error.message);
   }
 
-  await check_store_availability_action({ storeName: storeData.name });
+  await checkStoreAvailabilityAction({ storeName: storeData.name });
 
-  const userPrivateMetadata = user.privateMetadata;
-  const userSubscribedPlanId = userPrivateMetadata.subscribedPlanId;
+  const privateMetadata = user.privateMetadata;
+  const subscribedPlanId = privateMetadata.subscribedPlanId;
 
-  const findCurrentUserPlan = subscriptionPlans.find((plan) => {
-    return plan.id === userSubscribedPlanId;
+  const targetPlan = subscriptionPlans.find((plan) => {
+    return plan.id === subscribedPlanId;
   });
 
   const isAbleToCreateNewStore =
-    findCurrentUserPlan &&
-    (user.privateMetadata.storeId as string[]).length <
-      findCurrentUserPlan.limit;
+    targetPlan &&
+    (user.privateMetadata.storeId as string[]).length < targetPlan.limit;
 
   if (isAbleToCreateNewStore) {
-    const { insertId } = await db.insert(stores).values({
-      name: storeData.name,
-      description: storeData.description,
-      slug: slugify(storeData.name),
-    });
+    const store = await db
+      .insert(stores)
+      .values({
+        name: storeData.name,
+        description: storeData.description,
+        slug: slugify(storeData.name),
+      })
+      .returning({
+        insertedId: stores.id,
+        storeName: stores.name,
+      })
+      .then((result) => ({
+        insertedId: result[0].insertedId,
+        storeName: result[0].storeName,
+      }));
 
     await clerkClient.users.updateUser(user.id, {
       privateMetadata: {
-        ...userPrivateMetadata,
-        storeId: [...(userPrivateMetadata?.storeId as string[]), insertId],
+        ...privateMetadata,
+        storeId: [...privateMetadata.storeId, store.insertedId],
       },
     });
 

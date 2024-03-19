@@ -1,45 +1,49 @@
 import {
-  int,
-  mysqlEnum,
-  mysqlTable,
-  varchar,
+  integer,
+  pgEnum,
+  pgTable,
   serial,
+  varchar,
   text,
   decimal,
+  json,
   timestamp,
   boolean,
-  json,
   index,
-  tinyint,
-} from "drizzle-orm/mysql-core";
+  smallint,
+  uniqueIndex,
+} from "drizzle-orm/pg-core";
 import { relations, InferInsertModel, InferSelectModel } from "drizzle-orm";
 
-export const products = mysqlTable(
+export const productCategoryEnum = pgEnum("category", [
+  "clothing",
+  "backpack",
+  "shoes",
+]);
+
+export const products = pgTable(
   "products",
   {
     id: serial("id").primaryKey(),
-    storeId: int("store_id"),
+    storeId: integer("store_id"),
     name: varchar("name", { length: 256 }).notNull(),
     slug: varchar("slug", { length: 256 }).notNull(),
     description: text("description"),
-    price: decimal("price", { precision: 10, scale: 2 }).notNull().default("0"),
-    stock: int("stock").notNull().default(1),
+    price: decimal("price", { precision: 10, scale: 2 }).notNull().default("0"), // Numeric and decimal are equivalent, both slower than integer, but we need exactness.
+    stock: integer("stock").notNull().default(1),
     averageRatings: decimal("average_ratings", {
       precision: 2,
       scale: 1,
     }).default("0"),
-    category: mysqlEnum("category", [
-      "clothing",
-      "backpack",
-      "shoes",
-    ]).notNull(),
+    category: productCategoryEnum("category"),
     image: json("image"),
     createdAt: timestamp("created_at").defaultNow(),
   },
   (table) => {
     return {
-      productSlugIndex: index("productSlugIndex").on(table.slug),
-      productNameIndex: index("productNameIndex").on(table.name),
+      // Enforces uniqueness to avoid collision.
+      productSlugIndex: uniqueIndex("product_slug_index").on(table.slug),
+      productNameIndex: uniqueIndex("product_name_index").on(table.name),
     };
   },
 );
@@ -55,7 +59,7 @@ export const productsRelations = relations(products, ({ one, many }) => ({
 export type NewProduct = typeof products.$inferInsert;
 export type Product = typeof products.$inferSelect;
 
-export const stores = mysqlTable(
+export const stores = pgTable(
   "stores",
   {
     id: serial("id").primaryKey(),
@@ -67,7 +71,7 @@ export const stores = mysqlTable(
   },
   (table) => {
     return {
-      storeSlugIndex: index("storeSlugIndex").on(table.slug),
+      storeSlugIndex: uniqueIndex("store_slug_index").on(table.slug),
     };
   },
 );
@@ -79,7 +83,7 @@ export const storesRelations = relations(stores, ({ many }) => ({
 export type Store = typeof stores.$inferSelect;
 export type NewStore = typeof stores.$inferInsert;
 
-export const carts = mysqlTable("carts", {
+export const carts = pgTable("carts", {
   id: serial("id").primaryKey(),
   items: json("items"),
   isClosed: boolean("is_closed").default(false),
@@ -89,7 +93,7 @@ export const carts = mysqlTable("carts", {
 export type Cart = typeof carts.$inferSelect;
 export type NewCart = typeof carts.$inferInsert;
 
-export const addresses = mysqlTable("addresses", {
+export const addresses = pgTable("addresses", {
   id: serial("id").primaryKey(),
   line1: text("line1").notNull(),
   line2: text("line2"),
@@ -103,34 +107,38 @@ export const addresses = mysqlTable("addresses", {
 export type Address = typeof addresses.$inferSelect;
 export type NewAddress = typeof addresses.$inferInsert;
 
-export const orders = mysqlTable("orders", {
+export const orderPaymentStatusEnum = pgEnum("stripe_payment_intent_status", [
+  "canceled",
+  "processing",
+  "succeeded",
+]);
+
+export const orders = pgTable("orders", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id", {
     length: 256,
   }),
-  storeId: int("store_id"),
+  storeId: integer("store_id"),
   items: json("items"),
   total: decimal("total", { precision: 10, scale: 2 }).default("0"),
   name: text("name").notNull(),
   stripePaymentIntentId: varchar("stripe_payment_intent_id", {
     length: 256,
   }),
-  stripePaymentIntentStatus: mysqlEnum("stripe_payment_intent_status", [
-    "canceled",
-    "processing",
-    "succeeded",
-  ]),
+  stripePaymentIntentStatus: orderPaymentStatusEnum(
+    "stripe_payment_intent_status",
+  ),
   email: text("email").notNull(),
-  addressId: int("address"),
+  addressId: integer("address_id"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
 export type Order = typeof orders.$inferSelect;
 export type NewOrder = typeof orders.$inferInsert;
 
-export const payments = mysqlTable("payments", {
+export const payments = pgTable("payments", {
   id: serial("id").primaryKey(),
-  storeId: int("store_id").notNull(),
+  storeId: integer("store_id").notNull(),
   stripeAccountId: text("stripe_account_id").notNull(),
   detailsSubmitted: boolean("details_submitted").default(false),
   createdAt: timestamp("created_at").defaultNow(),
@@ -139,30 +147,35 @@ export const payments = mysqlTable("payments", {
 export type Payment = typeof payments.$inferSelect;
 export type NewPayment = typeof payments.$inferInsert;
 
-export const newsletters = mysqlTable("newsletters", {
+export const newslettersEnum = pgEnum("subscription_status", [
+  "subscribed",
+  "unsubscribed",
+]);
+
+export const newsletters = pgTable("newsletters", {
   id: serial("id").primaryKey(),
   email: varchar("email", {
     length: 256,
   }).notNull(),
-  status: mysqlEnum("status", ["subscribed", "unsubscribed"]).notNull(),
+  status: newslettersEnum("subscription_status").default("unsubscribed"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
 export type Newsletter = InferSelectModel<typeof newsletters>;
 export type NewNewsletter = InferInsertModel<typeof newsletters>;
 
-export const comments = mysqlTable("comments", {
+export const comments = pgTable("comments", {
   id: serial("id").primaryKey(),
-  productId: int("product_id"),
-  orderId: int("order_id"),
+  productId: integer("product_id"),
+  orderId: integer("order_id"),
   userId: varchar("user_id", {
     length: 256,
-  }).notNull(),
+  }).notNull(), // Clerk based id, not an integer.
   fullname: varchar("fullname", {
     length: 256,
   }),
-  comment: text("comment").notNull(),
-  rating: tinyint("rating").notNull().default(0),
+  content: text("content").notNull(),
+  rating: smallint("rating").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -176,13 +189,17 @@ export const commentsRelations = relations(comments, ({ one }) => ({
 export type Comment = InferSelectModel<typeof comments>;
 export type NewComment = InferInsertModel<typeof comments>;
 
-export const ratings = mysqlTable("ratings", {
+export const ratings = pgTable("ratings", {
   id: serial("id").primaryKey(),
-  productId: int("product_id"),
-  accumulatedTotalRatings: int("accumulated_total_ratings")
-    .notNull()
-    .default(0),
-  totalRatings: int("total_ratings").notNull().default(0),
+  productId: integer("product_id"),
+  // oneStar to fiveStars indicate total rating for each star.
+  oneStar: integer("one_star_rating").default(0),
+  twoStars: integer("two_stars_rating").default(0),
+  threeStars: integer("three_stars_rating").default(0),
+  fourStars: integer("four_stars_rating").default(0),
+  fiveStars: integer("five_stars_rating").default(0),
+  // total 1 star -> 5 stars accumulated.
+  totalRatings: integer("total_ratings").notNull().default(0),
 });
 
 export const ratingsRelations = relations(ratings, ({ one }) => ({

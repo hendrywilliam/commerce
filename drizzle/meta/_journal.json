@@ -3,17 +3,10 @@
   "dialect": "mysql",
   "entries": [
     {
-      "idx": 13,
+      "idx": 0,
       "version": "5",
-      "when": 1708585157383,
-      "tag": "0013_steady_roxanne_simpson",
-      "breakpoints": true
-    },
-    {
-      "idx": 14,
-      "version": "5",
-      "when": 1708594093574,
-      "tag": "0014_sticky_madripoor",
+      "when": 1710828809184,
+      "tag": "0000_remarkable_senator_kelly",
       "breakpoints": true
     }
   ]
