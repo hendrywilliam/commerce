@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { UploadData } from "@/types";
-import { formatCurrency, parseToJson, truncate } from "@/lib/utils";
+import { formatCurrency, truncate } from "@/lib/utils";
 import type { CartLineDetailedItems } from "@/types";
 import ImagePlaceholder from "@/components/image-placeholder";
 import ShoppingCartItemAction from "@/components/lobby/shopping-cart-item-action";
@@ -15,16 +15,12 @@ export default function ShoppingCartItem({
   const sumPriceForItem =
     Number(cartLineDetailedItem.price) * cartLineDetailedItem.qty;
 
-  const parsedImageUrl = parseToJson<UploadData[]>(
-    cartLineDetailedItem.image,
-  )[0].url;
-
   return (
     <div className="inline-flex h-20 w-full gap-2 border-b py-2">
       <div className="relative h-full w-16 rounded border">
-        {parsedImageUrl ? (
+        {cartLineDetailedItem.image[0].url ? (
           <Image
-            src={parsedImageUrl}
+            src={cartLineDetailedItem.image[0].url}
             fill
             alt={cartLineDetailedItem.name}
             className="rounded object-cover"

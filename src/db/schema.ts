@@ -14,7 +14,7 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { relations, InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { UploadData } from "@/types";
+import { CartItem, UploadData } from "@/types";
 
 export const productCategoryEnum = pgEnum("category", [
   "clothing",
@@ -86,7 +86,7 @@ export type NewStore = typeof stores.$inferInsert;
 
 export const carts = pgTable("carts", {
   id: serial("id").primaryKey(),
-  items: json("items"),
+  items: json("items").$type<CartItem[]>(),
   isClosed: boolean("is_closed").default(false),
   createdAt: timestamp("created_at").defaultNow(),
 });

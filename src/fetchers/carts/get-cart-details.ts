@@ -7,7 +7,7 @@ import { products } from "@/db/schema";
 import { eq, inArray } from "drizzle-orm";
 import { CartLineDetailedItems } from "@/types";
 
-export async function get_cart_details_fetcher(
+export async function getCartDetailsFetcher(
   cartId: number,
   cartItems: CartItem[],
 ) {

@@ -5,12 +5,11 @@ import { eq } from "drizzle-orm";
 import { carts } from "@/db/schema";
 import { cookies } from "next/headers";
 import type { CartItem } from "@/types";
-import { get_cart_details_fetcher } from "@/fetchers/carts/get-cart-details";
+import { getCartDetailsFetcher } from "@/fetchers/carts/get-cart-details";
 
-export async function get_cart_fetcher() {
+export async function getCartFetcher() {
   const cartId = cookies().get("cart_id")?.value;
 
-  // Check if the cart is exist, and not the imaginary / made up one.
   const isCartExist =
     !isNaN(Number(cartId)) &&
     (await db
@@ -25,22 +24,17 @@ export async function get_cart_fetcher() {
           .from(carts)
           .where(eq(carts.id, Number(cartId)))
           .limit(1)
-      )[0]?.items as string)
+      )[0]?.items as CartItem[])
     : [];
 
-  // Get all items from the cart.
-  const parsedCartItems = cartItems?.length
-    ? (JSON.parse(cartItems as string) as CartItem[])
-    : [];
+  // // // Get all items from the cart.
+  const items = cartItems?.length ? (cartItems as CartItem[]) : [];
 
   // Get all item details based on the parsedCartItems above.
-  const cartItemDetails = await get_cart_details_fetcher(
-    Number(cartId),
-    parsedCartItems,
-  );
+  const cartItemDetails = await getCartDetailsFetcher(Number(cartId), items);
 
   return {
-    parsedCartItems,
+    items,
     cartItemDetails,
   };
 }

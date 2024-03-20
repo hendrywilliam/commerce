@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import { CartItem } from "@/types";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { Product, carts, products } from "@/db/schema";
+import { Cart, Product, carts, products } from "@/db/schema";
 
 export async function deleteCartItemAction(
   productId: Product["id"],
@@ -13,24 +13,19 @@ export async function deleteCartItemAction(
   const cartId = cookies().get("cart_id")?.value;
 
   if (isNaN(Number(cartId))) {
-    throw new Error("Invalid cart id.");
+    throw new Error("Invalid cart id. Please try again later.");
   }
 
-  const cartItems = await db
-    .select()
-    .from(carts)
-    .where(eq(carts.id, Number(cartId)));
+  const cart = (await db.query.carts.findFirst({
+    where: eq(carts.id, Number(cartId)),
+  })) as Cart;
 
-  const parsedCartItems = JSON.parse(
-    cartItems[0].items as string,
-  ) as CartItem[];
+  const cartItem = cart.items as CartItem[];
 
-  const targetItem = parsedCartItems.find(
-    (item) => item.id === productId,
-  ) as CartItem;
+  const targetItem = cartItem.find((item) => item.id === productId) as CartItem;
 
   const filteredItems =
-    targetItem && parsedCartItems.filter((item) => item.id !== productId);
+    targetItem && cartItem.filter((item) => item.id !== targetItem.id);
 
   const detailedItem = (await db.query.products.findFirst({
     where: eq(products.id, targetItem.id),
@@ -40,7 +35,7 @@ export async function deleteCartItemAction(
   await db
     .update(carts)
     .set({
-      items: JSON.stringify(filteredItems),
+      items: filteredItems,
     })
     .where(eq(carts.id, Number(cartId)));
 

@@ -14,7 +14,7 @@ export interface CartLineDetailedItems {
   qty: number;
   name: string;
   price: string;
-  image: string;
+  image: UploadData[];
   stock: number;
   storeId: number;
   category: string;

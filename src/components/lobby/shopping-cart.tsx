@@ -2,15 +2,15 @@ import Link from "next/link";
 import { IconCart } from "@/components/ui/icons";
 import type { CartLineDetailedItems } from "@/types";
 import { buttonVariants } from "@/components/ui/button";
-import { get_cart_fetcher } from "@/fetchers/carts/get-cart";
+import { getCartFetcher } from "@/fetchers/carts/get-cart";
 import ShoppingCartItem from "@/components/lobby/shopping-cart-item";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import ShoppingCartSummary from "@/components/lobby/shopping-cart-summary";
 
 export default async function ShoppingCart() {
-  const { parsedCartItems, cartItemDetails } = await get_cart_fetcher();
+  const { items, cartItemDetails } = await getCartFetcher();
 
-  const sumQty = parsedCartItems.reduce((acc, val) => acc + Number(val.qty), 0);
+  const sumQty = items.reduce((acc, val) => acc + Number(val.qty), 0);
 
   // Grouping products by its store.
   const groupProductByItsStore = cartItemDetails.reduce(
@@ -36,19 +36,19 @@ export default async function ShoppingCart() {
         })}
         data-testid="cart-trigger"
       >
-        <div className="absolute px-1.5 -top-1 -right-1 rounded-full border bg-background text-xs">
+        <div className="absolute -right-1 -top-1 rounded-full border bg-background px-1.5 text-xs">
           <p data-testid="cart-items-indicator">{sumQty > 99 ? 99 : sumQty}</p>
         </div>
         <IconCart />
       </SheetTrigger>
       <SheetContent className="p-0">
-        {parsedCartItems.length > 0 ? (
-          <div className="h-full flex flex-col justify-between overflow-y-auto p-4">
+        {items.length > 0 ? (
+          <div className="flex h-full flex-col justify-between overflow-y-auto p-4">
             <div className="h-full">
               <div className="flex flex-col">
                 <h1 className="font-semibold">Cart ({sumQty})</h1>
               </div>
-              <div className="flex flex-col w-full h-full overflow-y-auto gap-2">
+              <div className="flex h-full w-full flex-col gap-2 overflow-y-auto">
                 {Object.entries(groupProductByItsStore).map(
                   ([storeName, products], i) => {
                     return (
@@ -80,7 +80,7 @@ export default async function ShoppingCart() {
             </Link>
           </div>
         ) : (
-          <div className="flex flex-col h-full w-full justify-center items-center">
+          <div className="flex h-full w-full flex-col items-center justify-center">
             <IconCart width={60} height={60} />
             <p className="text-gray-400">You dont have any item in your cart</p>
           </div>

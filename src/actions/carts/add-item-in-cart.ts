@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import type { CartItem } from "@/types";
 import { revalidatePath } from "next/cache";
-import { carts, products } from "@/db/schema";
+import { Cart, carts, products } from "@/db/schema";
 
 export async function addItemInCartAction(newCartItem: CartItem) {
   const cartId = cookies().get("cart_id")?.value;
@@ -23,21 +23,18 @@ export async function addItemInCartAction(newCartItem: CartItem) {
     isCartExist && isCartExist.length && !isCartExist[0]?.isClosed;
 
   if (cartAvailableAndOpen) {
-    const cartItems = await db
-      .select()
-      .from(carts)
-      .where(eq(carts.id, Number(cartId)));
+    const cart = (await db.query.carts.findFirst({
+      where: eq(carts.id, Number(cartId)),
+    })) as Cart;
 
-    const allItemsInCart = JSON.parse(
-      cartItems[0].items as string,
-    ) as CartItem[];
+    const cartItems = cart.items as CartItem[];
 
-    const anyItemsExcludingNewCartItem = allItemsInCart.filter((item) => {
-      return item.id !== newCartItem.id;
+    const excludingNewItem = cartItems.filter((cartItem) => {
+      return cartItem.id !== newCartItem.id;
     }) as CartItem[];
 
-    const newCartItemInCart = allItemsInCart.find(
-      (item) => item.id === newCartItem.id,
+    const targetItemInCart = cartItems.find(
+      (cartItem) => cartItem.id === newCartItem.id,
     );
 
     const newCartItemDetails = await db.query.products.findFirst({
@@ -50,24 +47,27 @@ export async function addItemInCartAction(newCartItem: CartItem) {
       );
     }
 
-    if (newCartItem.qty + newCartItemInCart?.qty! > newCartItemDetails.stock) {
+    if (
+      newCartItem.qty + (targetItemInCart?.qty ?? 0) >
+      newCartItemDetails.stock
+    ) {
       throw new Error("Stock limit exceeds.");
     }
 
     await db
       .update(carts)
       .set({
-        items: allItemsInCart
-          ? JSON.stringify([
-              ...anyItemsExcludingNewCartItem,
+        items: cartItems
+          ? [
+              ...excludingNewItem,
               {
                 ...newCartItem,
-                qty: newCartItemInCart
-                  ? newCartItem.qty + newCartItemInCart.qty
+                qty: targetItemInCart
+                  ? newCartItem.qty + targetItemInCart.qty
                   : newCartItem.qty,
               },
-            ])
-          : JSON.stringify([newCartItem]),
+            ]
+          : [newCartItem],
       })
       .where(eq(carts.id, Number(cartId)));
 
@@ -76,7 +76,7 @@ export async function addItemInCartAction(newCartItem: CartItem) {
     const { insertedId } = await db
       .insert(carts)
       .values({
-        items: JSON.stringify([newCartItem]),
+        items: [newCartItem],
       })
       .returning({ insertedId: carts.id })
       .then((result) => ({
