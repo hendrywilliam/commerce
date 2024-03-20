@@ -14,7 +14,7 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { relations, InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { CartItem, UploadData } from "@/types";
+import { CartItem, ProductWithQuantity, UploadData } from "@/types";
 
 export const productCategoryEnum = pgEnum("category", [
   "clothing",
@@ -120,7 +120,7 @@ export const orders = pgTable("orders", {
     length: 256,
   }),
   storeId: integer("store_id"),
-  items: json("items"),
+  items: json("items").$type<ProductWithQuantity[]>(),
   total: decimal("total", { precision: 10, scale: 2 }).default("0"),
   name: text("name").notNull(),
   stripePaymentIntentId: varchar("stripe_payment_intent_id", {

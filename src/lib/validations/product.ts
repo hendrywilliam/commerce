@@ -91,7 +91,7 @@ export const productCommentValidation = z.object({
       required_error: "User ID is required.",
     })
     .min(1, { message: "User ID is required." }),
-  comment: z
+  content: z
     .string()
     .min(10, { message: "Comment must be at least 10 characters long." }),
   fullname: z.string().min(1, { message: "Fullname is required." }),

@@ -6,15 +6,14 @@ import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Comment, NewComment } from "@/db/schema";
 import { IconLoading } from "@/components/ui/icons";
-import { add_new_comment_action } from "@/actions/products/add-new-comment";
+import { AddNewCommentAction } from "@/actions/products/add-new-comment";
 import { FormTextarea, Form, FormLabel, FormField } from "@/components/ui/form";
+import { useUser } from "@clerk/nextjs";
 
 interface CommentFormProps {
   commentStatus: "existing-comment" | "new-comment";
   orderId?: number;
   productId?: number;
-  userId?: string;
-  fullname?: string;
   comment?: Comment;
 }
 
@@ -23,28 +22,31 @@ export default function PurchaseItemCommentForm({
   comment,
   orderId,
   productId,
-  userId,
-  fullname,
 }: CommentFormProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const { user, isLoaded } = useUser();
   const [commentData, setCommentData] = useState<NewComment>(
     comment ?? {
       rating: 3,
-      comment: "",
+      content: "",
       orderId: orderId as number,
       productId: productId as number,
-      userId: userId as string,
-      fullname: fullname,
+      userId: user?.id ?? "",
+      fullname: `${user?.firstName} ${user?.lastName}`,
     },
   );
+
+  if (!isLoaded) {
+    return null;
+  }
 
   async function submitCommentForm(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsLoading((isLoading) => !isLoading);
     try {
       if (commentStatus === "new-comment") {
-        await add_new_comment_action({
-          comment: commentData.comment,
+        await AddNewCommentAction({
+          content: commentData.content,
           orderId: commentData.orderId,
           rating: commentData.rating,
           productId: commentData.productId,
@@ -55,7 +57,6 @@ export default function PurchaseItemCommentForm({
           "Your comment has been successfully added to the product.",
         );
       }
-
       if (commentStatus === "existing-comment") {
       }
     } catch (error) {
@@ -66,7 +67,7 @@ export default function PurchaseItemCommentForm({
   }
 
   return (
-    <Form onSubmit={submitCommentForm} className="rounded w-full">
+    <Form onSubmit={submitCommentForm} className="w-full rounded">
       <FormField>
         <FormLabel htmlFor="comment-input" className="text-gray-500">
           Feedback
@@ -74,7 +75,7 @@ export default function PurchaseItemCommentForm({
         <FormTextarea
           id="comment-input"
           name="comment"
-          value={commentData.comment}
+          value={commentData.content}
           onChange={(event) =>
             setCommentData((commentData) => ({
               ...commentData,
@@ -83,7 +84,7 @@ export default function PurchaseItemCommentForm({
           }
         />
       </FormField>
-      <div className="flex mt-2 justify-end">
+      <div className="mt-2 flex justify-end">
         <Button
           type="submit"
           disabled={isLoading}

@@ -4,7 +4,7 @@ import { db } from "@/db/core";
 import { and, eq } from "drizzle-orm";
 import { products, Product } from "@/db/schema";
 
-export async function check_product_availability_action({
+export async function checkProductAvailabilityAction({
   productId,
   productName,
 }: {

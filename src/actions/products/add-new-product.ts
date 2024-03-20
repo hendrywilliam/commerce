@@ -11,7 +11,7 @@ import { revalidatePath } from "next/cache";
 import { products, stores } from "@/db/schema";
 import { newProductValidation } from "@/lib/validations/product";
 import { delete_existing_images, type OmitAndExtend } from "@/lib/utils";
-import { check_product_availability_action } from "./check-product-availability";
+import { checkProductAvailabilityAction } from "./check-product-availability";
 
 export async function addNewProductAction(
   input: OmitAndExtend<NewProduct, "slug" | "image", { image: UploadData[] }>,
@@ -20,7 +20,9 @@ export async function addNewProductAction(
   const parsedNewProductInput = await newProductValidation.spa(input);
 
   if (!parsedNewProductInput.success) {
-    !!input.image.length && (await delete_existing_images(input.image));
+    if (input.image.length) {
+      await delete_existing_images(input.image);
+    }
     throw new Error(parsedNewProductInput.error.issues[0].message);
   }
 
@@ -30,7 +32,7 @@ export async function addNewProductAction(
     redirect("/sign-in");
   }
 
-  await check_product_availability_action({
+  await checkProductAvailabilityAction({
     productName: parsedNewProductInput.data.name,
   });
 
@@ -44,16 +46,24 @@ export async function addNewProductAction(
     throw new Error("Store is not exist anymore, try again later.");
   }
 
-  const { insertId: productId } = await db.insert(products).values({
-    name: parsedNewProductInput.data.name,
-    category: parsedNewProductInput.data.category,
-    description: parsedNewProductInput.data.description,
-    price: String(parsedNewProductInput.data.price),
-    stock: Number(parsedNewProductInput.data.stock),
-    slug: slugify(input.name),
-    storeId: store.id,
-    image: JSON.stringify(parsedNewProductInput.data.image),
-  });
+  const { insertedId: productId } = await db
+    .insert(products)
+    .values({
+      name: parsedNewProductInput.data.name,
+      category: parsedNewProductInput.data.category,
+      description: parsedNewProductInput.data.description,
+      price: String(parsedNewProductInput.data.price),
+      stock: Number(parsedNewProductInput.data.stock),
+      slug: slugify(input.name),
+      storeId: store.id,
+      image: parsedNewProductInput.data.image,
+    })
+    .returning({
+      insertedId: products.id,
+    })
+    .then((result) => ({
+      ...result[0],
+    }));
 
   if (!productId) {
     await delete_existing_images(input.image);

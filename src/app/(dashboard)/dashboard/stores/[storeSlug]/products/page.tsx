@@ -43,7 +43,7 @@ export default async function DashboardStoreProductsPage({
   }
 
   const storeOwned = user.privateMetadata.storeId.find(
-    (storeId) => storeId === String(store.id),
+    (storeId) => storeId === store.id,
   );
 
   if (!storeOwned) {
@@ -72,9 +72,9 @@ export default async function DashboardStoreProductsPage({
 
   return (
     <div className="h-full">
-      <div className="w-full flex">
+      <div className="flex w-full">
         <div className="w-full">
-          <h1 className="font-bold text-2xl">Products</h1>
+          <h1 className="text-2xl font-bold">Products</h1>
           <p className="text-gray-500">List of store products.</p>
         </div>
         <div>

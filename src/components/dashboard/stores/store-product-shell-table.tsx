@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { UploadData } from "@/types";
 import { useState, useMemo } from "react";
 import type { Product } from "@/db/schema";
 import { usePathname } from "next/navigation";
@@ -10,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { buttonVariants } from "@/components/ui/button";
 import { ArrowOutwardIcon } from "@/components/ui/icons";
-import { formatCurrency, parse_to_json } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 import ImagePlaceholder from "@/components/image-placeholder";
 import DashboardStoreProductDataTable from "./store-product-data-table";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
@@ -53,15 +52,13 @@ export default function DashboardStoreProductShellTable({
         storeProductColumnHelper.accessor("image", {
           header: () => "Image",
           cell: (info) => {
-            const parsedImage = parse_to_json<UploadData[]>(
-              info.getValue() as string,
-            )[0];
+            const productImage = info.getValue()[0].url;
             return (
-              <div className="relative w-9 h-9 border rounded">
-                {parsedImage ? (
+              <div className="relative h-9 w-9 overflow-hidden rounded-md border">
+                {productImage ? (
                   <Image
-                    src={parsedImage.url}
-                    alt={parsedImage.name}
+                    src={productImage}
+                    alt={productImage}
                     fill
                     style={{
                       objectFit: "cover",
@@ -89,11 +86,11 @@ export default function DashboardStoreProductShellTable({
             return (
               <>
                 {stockAvailable ? (
-                  <Badge className="bg-green-200 border-green-300 text-green-500">
+                  <Badge className="border-green-300 bg-green-200 text-green-500">
                     Available
                   </Badge>
                 ) : (
-                  <Badge className="bg-destructive/20 border-destructive/40 text-destructive/60">
+                  <Badge className="border-destructive/40 bg-destructive/20 text-destructive/60">
                     Out of stock
                   </Badge>
                 )}

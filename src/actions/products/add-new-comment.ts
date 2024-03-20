@@ -8,7 +8,7 @@ import { NewComment, comments, products } from "@/db/schema";
 import { productCommentValidation } from "@/lib/validations/product";
 import { update_product_rating_action } from "@/actions/products/update-product-rating";
 
-export async function add_new_comment_action(input: NewComment) {
+export async function AddNewCommentAction(input: NewComment) {
   const user = await currentUser();
 
   if (!user) {
@@ -21,7 +21,7 @@ export async function add_new_comment_action(input: NewComment) {
     throw new Error(parsedInput.error.issues[0].message);
   }
 
-  const { comment, orderId, productId, rating, userId, fullname } =
+  const { content, orderId, productId, rating, userId, fullname } =
     parsedInput.data;
 
   // Check if somehow the product is deleted.
@@ -36,7 +36,7 @@ export async function add_new_comment_action(input: NewComment) {
   }
 
   const newComment = await db.insert(comments).values({
-    comment,
+    content,
     orderId,
     productId,
     rating,
