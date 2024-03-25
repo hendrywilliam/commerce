@@ -14,13 +14,13 @@ export default function Breadcrumbs() {
           <Link
             href={`/${segments.slice(0, index + 1).join("/")}`}
             key={index}
-            className="capitalize  hover:text-gray-600"
+            className="flex items-center gap-4 capitalize hover:text-gray-600"
           >
             {segment}
+            {index !== segments.length - 1 && (
+              <ArrowRightIcon className="pointer-events-none h-2 w-2" />
+            )}
           </Link>
-          {index !== segments.length - 1 && (
-            <ArrowRightIcon className="pointer-events-none h-2 w-2" />
-          )}
         </>
       ))}
     </div>

@@ -39,7 +39,7 @@ export function formatCurrency(amount: number) {
 }
 
 export function truncate(word: string, maxLength: number = 10) {
-  return word.length >= maxLength ? word.slice(0, maxLength) + "..." : word;
+  return word.length >= maxLength ? word.substring(0, maxLength) + "..." : word;
 }
 
 export function slugify(value: string) {
@@ -93,7 +93,7 @@ export function centsToDollars(amount: string | number) {
     : amount / CENTS_UNIT_IN_DOLLAR;
 }
 
-export async function delete_existing_images(images: UploadData[]) {
+export async function deleteImages(images: UploadData[]) {
   const utapi = new UTApi();
   const imageFileKeys = images.map((image) => image.key);
   return await utapi.deleteFiles(imageFileKeys);

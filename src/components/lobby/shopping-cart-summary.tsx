@@ -1,5 +1,8 @@
 import { CartLineDetailedItems, CartItem } from "@/types";
 import { formatCurrency } from "@/lib/utils";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { IconCart } from "@/components/ui/icons";
 
 interface ShoppingCartSummaryProps {
   cartItemDetails: CartLineDetailedItems[];
@@ -13,7 +16,7 @@ export default function ShoppingCartSummary({
   }, 0);
 
   return (
-    <div className="border-t space-y-2 py-2 h-28">
+    <div className="space-y-2 py-2 text-sm">
       <div className="flex justify-between">
         <p>Shipping</p>
         <p>Free</p>
@@ -26,6 +29,14 @@ export default function ShoppingCartSummary({
         <p>Total</p>
         <p>{formatCurrency(calculateTotalPrice)}</p>
       </div>
+      <Link
+        href="/cart"
+        className={buttonVariants({ class: "flex h-14 w-full gap-2" })}
+        data-testid="view-full-cart-button"
+      >
+        View Full Cart
+        <IconCart />
+      </Link>
     </div>
   );
 }

@@ -16,7 +16,7 @@ export default function ShoppingCartItem({
     Number(cartLineDetailedItem.price) * cartLineDetailedItem.qty;
 
   return (
-    <div className="inline-flex h-20 w-full gap-2 border-b py-2">
+    <div className="flex h-20 w-full gap-2 border-b py-2">
       <div className="relative h-full w-16 rounded border">
         {cartLineDetailedItem.image[0].url ? (
           <Image
@@ -29,16 +29,9 @@ export default function ShoppingCartItem({
           <ImagePlaceholder />
         )}
       </div>
-      <div className="flex flex-1 flex-col justify-center">
-        <p>{truncate(cartLineDetailedItem.name)}</p>
-        <p className="text-xs text-gray-400">
-          <span>
-            {cartLineDetailedItem.qty} x{" "}
-            {formatCurrency(Number(cartLineDetailedItem.price))} -
-          </span>
-          <span> {formatCurrency(sumPriceForItem)}</span>
-        </p>
-        <p className="text-xs text-gray-400">{cartLineDetailedItem.category}</p>
+      <div className="flex flex-1 flex-col text-xs">
+        <p>{truncate(cartLineDetailedItem.name, 15)}</p>
+        <p className="text-gray-400">{formatCurrency(sumPriceForItem)}</p>
       </div>
       <ShoppingCartItemAction
         id={cartLineDetailedItem.id}

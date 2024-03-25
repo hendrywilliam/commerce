@@ -16,10 +16,10 @@ export default function ImageSelector({ images }: ImageSliderProps) {
   return (
     <div className="h-fit w-full">
       <div
-        className="relative h-[500px] w-full overflow-hidden rounded border"
+        className="relative h-[700px] w-full overflow-hidden rounded border"
         id="bigger-preview"
       >
-        {!!images.length ? (
+        {images.length > 0 ? (
           <Image
             src={images[currentImageIndex].url}
             fill
@@ -30,7 +30,7 @@ export default function ImageSelector({ images }: ImageSliderProps) {
           <ImagePlaceholder />
         )}
       </div>
-      {!!images.length && (
+      {images.length > 0 && (
         <div className="my-4 grid h-max w-full grid-cols-5 gap-3">
           {images.map((image, index) => (
             <div key={image.name} className="relative h-24 rounded border">

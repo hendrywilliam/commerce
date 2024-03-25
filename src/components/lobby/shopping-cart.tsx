@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { IconCart } from "@/components/ui/icons";
 import type { CartLineDetailedItems } from "@/types";
 import { buttonVariants } from "@/components/ui/button";
@@ -41,43 +40,34 @@ export default async function ShoppingCart() {
         </div>
         <IconCart />
       </SheetTrigger>
-      <SheetContent className="p-0">
+      <SheetContent className="h-full w-[400px] overflow-y-auto p-4 sm:w-[540px]">
         {items.length > 0 ? (
-          <div className="flex h-full flex-col justify-between overflow-y-auto p-4">
-            <div className="h-full">
-              <div className="flex flex-col">
-                <h1 className="font-semibold">Cart ({sumQty})</h1>
-              </div>
-              <div className="flex h-full w-full flex-col gap-2 overflow-y-auto">
-                {Object.entries(groupProductByItsStore).map(
-                  ([storeName, products], i) => {
-                    return (
-                      <div key={i}>
-                        <h1 className="font-semibold">{storeName}</h1>
-                        <div className="basis-1 overflow-y-auto">
-                          {products.map((product) => {
-                            return (
-                              <ShoppingCartItem
-                                key={product.id}
-                                cartLineDetailedItem={product}
-                              />
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  },
-                )}
-              </div>
+          <div className="h-full flex-col">
+            <div className="mb-2">
+              <h1 className="font-semibold">Cart ({sumQty})</h1>
             </div>
-            <ShoppingCartSummary cartItemDetails={cartItemDetails} />
-            <Link
-              href={"/cart"}
-              className={buttonVariants({ class: "w-full" })}
-              data-testid="view-full-cart-button"
-            >
-              View Full Cart
-            </Link>
+            <div className="flex flex-col">
+              {Object.entries(groupProductByItsStore).map(
+                ([storeName, products], i) => {
+                  return (
+                    <div key={i}>
+                      <h1 className="font-semibold">{storeName}</h1>
+                      {products.map((product) => {
+                        return (
+                          <ShoppingCartItem
+                            key={product.id}
+                            cartLineDetailedItem={product}
+                          />
+                        );
+                      })}
+                    </div>
+                  );
+                },
+              )}
+            </div>
+            <div className="h-auto py-2">
+              <ShoppingCartSummary cartItemDetails={cartItemDetails} />
+            </div>
           </div>
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center">

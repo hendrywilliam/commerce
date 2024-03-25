@@ -4,7 +4,6 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { useEffect } from "react";
 import { useCallback } from "react";
-import { parse_to_json } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Dispatch, SetStateAction } from "react";
 import { IconUpload } from "@/components/ui/icons";
@@ -73,12 +72,12 @@ export default function UploadProductImage({
   return (
     <>
       <div
-        className="border border-dashed w-1/4 rounded h-44 shadow-sm"
+        className="h-44 w-1/4 rounded border border-dashed shadow-sm"
         {...getRootProps()}
       >
         <input {...getInputProps()} />
-        <div className="relative w-full h-full flex flex-col justify-center items-center shadow-sm">
-          <IconUpload className="w-4 h-4" />
+        <div className="relative flex h-full w-full flex-col items-center justify-center shadow-sm">
+          <IconUpload className="h-4 w-4" />
           <p className="text-xs">Product Image</p>
         </div>
       </div>
@@ -88,7 +87,7 @@ export default function UploadProductImage({
           existingImages.map((existingImage) => (
             <div
               key={existingImage.name}
-              className="relative w-full h-44 border rounded shadow-sm"
+              className="relative h-44 w-full rounded border shadow-sm"
             >
               <Button
                 variant="secondary"
@@ -96,18 +95,17 @@ export default function UploadProductImage({
                 disabled={isLoading}
                 aria-disabled={isLoading ? "true" : "false"}
                 type="button"
-                className="absolute top-2 right-2 h-6 w-6 z-[9]"
+                className="absolute right-2 top-2 z-[9] h-6 w-6"
                 onClick={() => {
-                  const productFilteredImages = parse_to_json<UploadData[]>(
-                    formValues!.image as string,
-                  ).filter((image) => image.name !== existingImage.name);
+                  const productFilteredImages = formValues!.image.filter(
+                    (image) => image.name !== existingImage.name,
+                  );
                   setFormValues!((formValues) => ({
                     ...formValues,
-                    image: JSON.stringify(
-                      !!productFilteredImages.length
+                    image:
+                      productFilteredImages.length > 0
                         ? productFilteredImages
                         : [],
-                    ),
                   }));
                   setImagesToDelete!((imagesToDelete) => [
                     ...imagesToDelete,
@@ -121,7 +119,7 @@ export default function UploadProductImage({
                 src={existingImage.url}
                 fill
                 alt={existingImage.name}
-                className="object-cover rounded"
+                className="rounded object-cover"
               />
             </div>
           ))}
@@ -130,7 +128,7 @@ export default function UploadProductImage({
             return (
               <div
                 key={index}
-                className="relative w-full h-44 border rounded shadow-sm"
+                className="relative h-44 w-full rounded border shadow-sm"
               >
                 <Button
                   variant="secondary"
@@ -138,7 +136,7 @@ export default function UploadProductImage({
                   disabled={isLoading}
                   aria-disabled={isLoading ? "true" : "false"}
                   type="button"
-                  className="absolute top-2 right-2 h-6 w-6 z-[9]"
+                  className="absolute right-2 top-2 z-[9] h-6 w-6"
                   onClick={(event) => {
                     event.stopPropagation();
                     URL.revokeObjectURL(item.preview);
@@ -156,7 +154,7 @@ export default function UploadProductImage({
                   src={item.preview}
                   fill
                   alt={item.name}
-                  className="object-cover rounded"
+                  className="rounded object-cover"
                 />
               </div>
             );

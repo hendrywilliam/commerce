@@ -4,7 +4,12 @@ import type { Metadata } from "next";
 import Toast from "@/components/toast";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
-import { GeistSans } from "geist/font/sans";
+import { Inter } from 'next/font/google'
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: "commerce by hendryw",
@@ -19,7 +24,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${GeistSans.className} antialiased`}>
+        <body className={`${inter.className} antialiased`}>
           <Toast />
           {children}
           <Analytics />

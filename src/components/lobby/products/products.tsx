@@ -360,7 +360,12 @@ export default function Products({
               <ProductCard product={product} key={product.id} />
             ))}
           </div>
-          <Pagination totalPage={productsPageCount} currentPage={currentPage} />
+          <div className="mt-4 flex w-full justify-center">
+            <Pagination
+              totalPage={productsPageCount}
+              currentPage={currentPage}
+            />
+          </div>
         </>
       ) : (
         <div className="flex min-h-[450px] items-center justify-center text-center">

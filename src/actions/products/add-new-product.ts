@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { products, stores } from "@/db/schema";
 import { newProductValidation } from "@/lib/validations/product";
-import { delete_existing_images, type OmitAndExtend } from "@/lib/utils";
+import { deleteImages, type OmitAndExtend } from "@/lib/utils";
 import { checkProductAvailabilityAction } from "./check-product-availability";
 
 export async function addNewProductAction(
@@ -21,7 +21,7 @@ export async function addNewProductAction(
 
   if (!parsedNewProductInput.success) {
     if (input.image.length) {
-      await delete_existing_images(input.image);
+      await deleteImages(input.image);
     }
     throw new Error(parsedNewProductInput.error.issues[0].message);
   }
@@ -66,7 +66,7 @@ export async function addNewProductAction(
     }));
 
   if (!productId) {
-    await delete_existing_images(input.image);
+    await deleteImages(input.image);
   }
 
   // Add new rating record

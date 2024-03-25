@@ -24,7 +24,7 @@ export const uploadFileRouter = {
       };
     })
     .onUploadComplete(async (resolver) => {
-      console.log(`File url ${resolver.file}`);
+      console.log(`Upload completed.`);
     }),
 } satisfies FileRouter;
 

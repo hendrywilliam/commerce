@@ -21,10 +21,10 @@ import { Button } from "@/components/ui/button";
 import { useUploadThing } from "@/lib/uploadthing";
 import { IconLoading } from "@/components/ui/icons";
 import type { NewProduct, Product } from "@/db/schema";
-import { useParams, useRouter } from "next/navigation";
-import { catchError, parse_to_json, OmitAndExtend } from "@/lib/utils";
+import { useParams } from "next/navigation";
+import { catchError, OmitAndExtend } from "@/lib/utils";
 import { addNewProductAction } from "@/actions/products/add-new-product";
-import { update_product_action } from "@/actions/products/update-product";
+import { updateProductAction } from "@/actions/products/update-product";
 import type { FileWithPreview, UploadData, ProductFormData } from "@/types";
 import UploadProductImage from "@/components/dashboard/stores/upload-product-image";
 
@@ -104,23 +104,24 @@ export default function ProductForm({
 
       const updatedProductData = {
         ...formValues,
-        image: [
-          ...parse_to_json<UploadData[]>(formValues.image as string),
-          ...(uploadedFiles ? uploadedFiles : []),
-        ],
+        image: [...formValues.image, ...(uploadedFiles ? uploadedFiles : [])],
       } as OmitAndExtend<NewProduct, "image", { image: UploadData[] }>;
-      try {
-        await update_product_action({
-          imagesToDelete: !!imagesToDelete.length ? imagesToDelete : [],
+
+      toast.promise(
+        updateProductAction({
+          imagesToDelete: imagesToDelete.length > 0 ? imagesToDelete : [],
           input: updatedProductData,
-        });
-        toast.success("Product updated successfully.");
-        setSelectedFiles([]);
-      } catch (error) {
-        catchError(error);
-      } finally {
-        setIsLoading((isLoading) => !isLoading);
-      }
+        }),
+        {
+          loading: "Updating your product...",
+          success: () => "Product has been updated.",
+          error: (error) => catchError(error),
+          finally: () => {
+            setIsLoading((isLoading) => !isLoading);
+            setSelectedFiles([]);
+          },
+        },
+      );
     }
   }
 
@@ -137,9 +138,7 @@ export default function ProductForm({
             selectedFiles={selectedFiles}
             isLoading={isLoading}
             setImagesToDelete={setImagesToDelete}
-            existingImages={parse_to_json<UploadData[]>(
-              formValues.image as string,
-            )}
+            existingImages={formValues.image}
             formValues={formValues}
             setFormValues={setFormValues}
           />
@@ -219,7 +218,7 @@ export default function ProductForm({
           cols={1}
           rows={1}
           disabled={isLoading}
-          className="resize-none h-36"
+          className="h-36 resize-none"
           aria-disabled={isLoading ? "true" : "false"}
         />
         <FormMessage>
@@ -267,7 +266,7 @@ export default function ProductForm({
         <FormMessage>Input your product stock, minimal value is 1.</FormMessage>
       </FormField>
       <Button
-        className="inline-flex gap-2 mt-10"
+        className="mt-10 inline-flex gap-2"
         aria-disabled={isLoading}
         disabled={isLoading}
         type="submit"
