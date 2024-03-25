@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { currentUser } from "@clerk/nextjs";
 import { storeValidation } from "@/lib/validations/stores";
-import { check_store_availability_action } from "./check-store-availability";
+import { checkStoreAvailabilityAction } from "./check-store-availability";
 
 export async function updateOwnedStoreAction(
   storeRawInput: TweakedOmit<Store, "createdAt" | "active" | "slug">,
@@ -27,7 +27,7 @@ export async function updateOwnedStoreAction(
     throw new Error(parseStoreRawInput.error.issues[0].message);
   }
 
-  await check_store_availability_action({
+  await checkStoreAvailabilityAction({
     storeName: parseStoreRawInput.data.name,
     storeId: storeRawInput.id,
   });

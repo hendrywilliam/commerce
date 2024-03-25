@@ -12,7 +12,7 @@ import { currentUser } from "@clerk/nextjs";
 import { getPrimaryEmail } from "@/lib/utils";
 import { calculateOrderAmounts } from "@/lib/utils";
 import { cartDetailedItemsValidation } from "@/lib/validations/stores";
-import { get_account_details_fetcher } from "@/fetchers/stripe/get-account-details";
+import { getAccountDetailsFetcher } from "@/fetchers/stripe/get-account-details";
 
 export async function createPaymentIntentAction({
   storeId,
@@ -43,7 +43,7 @@ export async function createPaymentIntentAction({
     throw new Error(parsedCartItems.error.message);
   }
 
-  const accountDetails = await get_account_details_fetcher(storeId);
+  const accountDetails = await getAccountDetailsFetcher(storeId);
 
   const { totalAmount, feeAmount } = calculateOrderAmounts(cartItem);
 

@@ -1,6 +1,5 @@
 import { db } from "@/db/core";
 import { Product, products } from "@/db/schema";
-import { slugify } from "@/lib/utils";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 

@@ -36,7 +36,7 @@ export const products = pgTable(
       precision: 2,
       scale: 1,
     }).default("0"),
-    category: productCategoryEnum("category"),
+    category: productCategoryEnum("category").notNull(),
     image: json("image").$type<UploadData[]>().notNull(),
     createdAt: timestamp("created_at").defaultNow(),
   },
@@ -119,10 +119,10 @@ export const orders = pgTable("orders", {
   userId: varchar("user_id", {
     length: 256,
   }),
-  storeId: integer("store_id"),
-  items: json("items").$type<ProductWithQuantity[]>(),
-  total: decimal("total", { precision: 10, scale: 2 }).default("0"),
   name: text("name").notNull(),
+  storeId: integer("store_id"),
+  items: json("items").$type<ProductWithQuantity[]>().notNull(),
+  total: decimal("total", { precision: 10, scale: 2 }).default("0"),
   stripePaymentIntentId: varchar("stripe_payment_intent_id", {
     length: 256,
   }),
@@ -194,12 +194,14 @@ export const ratings = pgTable("ratings", {
   id: serial("id").primaryKey(),
   productId: integer("product_id"),
   // oneStar to fiveStars indicate total rating for each star.
-  oneStar: integer("one_star_rating").default(0),
-  twoStars: integer("two_stars_rating").default(0),
-  threeStars: integer("three_stars_rating").default(0),
-  fourStars: integer("four_stars_rating").default(0),
-  fiveStars: integer("five_stars_rating").default(0),
-  accumulatedTotalRatings: integer("accumulated_total_ratings").default(0),
+  oneStar: integer("one_star_rating").notNull().default(0),
+  twoStars: integer("two_stars_rating").notNull().default(0),
+  threeStars: integer("three_stars_rating").notNull().default(0),
+  fourStars: integer("four_stars_rating").notNull().default(0),
+  fiveStars: integer("five_stars_rating").notNull().default(0),
+  accumulatedTotalRatings: integer("accumulated_total_ratings")
+    .notNull()
+    .default(0),
   totalRatings: integer("total_ratings").notNull().default(0),
 });
 

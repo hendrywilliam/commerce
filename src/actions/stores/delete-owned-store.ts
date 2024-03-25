@@ -19,7 +19,7 @@ export async function delete_owned_store_action(id: Store["id"]) {
   await db.delete(stores).where(eq(stores.id, id));
 
   const filterDeletedStore = userData.privateMetadata.storeId.filter(
-    (item) => item !== String(id),
+    (item) => item !== id,
   );
 
   const userDataPrivateMetadata = userData.privateMetadata;

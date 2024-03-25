@@ -3,7 +3,7 @@ import { Product } from "@/db/schema";
 import type { UploadData } from "@/types";
 import { Separator } from "@/components/ui/separator";
 import ImagePlaceholder from "@/components/image-placeholder";
-import { formatCurrency, type Extends, parse_to_json } from "@/lib/utils";
+import { formatCurrency, type Extends } from "@/lib/utils";
 
 export default function OrderDetails({
   orderItems,
@@ -18,16 +18,13 @@ export default function OrderDetails({
     <div className="h-max w-full">
       {orderItems.length > 0 &&
         orderItems.map((item) => {
-          const parsedImage = parse_to_json<UploadData[]>(
-            item.image as string,
-          )[0].url;
           return (
             <div key={item.id} className="inline-flex w-full justify-between">
               <div className="inline-flex gap-2">
                 <div className="relative h-12 w-12">
-                  {parsedImage ? (
+                  {item.image[0].url ? (
                     <Image
-                      src={parsedImage}
+                      src={item.image[0].url}
                       alt={item.name ?? "Product Image"}
                       className="rounded object-cover"
                       fill

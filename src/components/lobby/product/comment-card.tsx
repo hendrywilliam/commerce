@@ -8,7 +8,7 @@ export default function CommentCard({ comment }: CommentCardProps) {
   return (
     <div>
       <p className="text-gray-500">{comment.fullname}</p>
-      <p>{comment.comment}</p>
+      <p>{comment.content}</p>
     </div>
   );
 }

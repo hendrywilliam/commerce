@@ -14,7 +14,7 @@ import { headers } from "next/headers";
 import { eq, inArray } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { clerkClient } from "@clerk/nextjs";
-import { OmitAndExtend, parse_to_json } from "@/lib/utils";
+import { OmitAndExtend } from "@/lib/utils";
 import { type Cart, addresses, carts, orders, products } from "@/db/schema";
 import OrderSuccessEmail from "../../../../../react-email/emails/order-success-email";
 
@@ -132,17 +132,14 @@ export async function POST(req: Request) {
         where: eq(carts.id, Number(paymentIntentObject.metadata.cartId)),
       })) as Cart;
 
-      const allItemsInCart = parse_to_json<CartItem[]>(
-        correspondingCart.items as string,
-      );
+      const allItemsInCart = correspondingCart.items ?? [];
 
       // Parse cartItemId from checkout session and extract the id
-      const parsedCheckoutItemsId = parse_to_json<CartItem[]>(
-        paymentIntentObject.metadata.checkoutItem,
-      ).map(({ id, qty }) => id) as number[];
+      const checkoutItemIds =
+        allItemsInCart.length > 0 ? allItemsInCart.map((item) => item.id) : [];
 
-      const anyItemsExcludingCheckoutItems = allItemsInCart.filter((item) => {
-        if (!parsedCheckoutItemsId.includes(item.id)) {
+      const excludingCheckoutItems = allItemsInCart.filter((item) => {
+        if (!checkoutItemIds.includes(item.id)) {
           return item;
         }
       });
@@ -152,10 +149,8 @@ export async function POST(req: Request) {
         .update(carts)
         .set({
           items:
-            anyItemsExcludingCheckoutItems.length > 0
-              ? JSON.stringify(anyItemsExcludingCheckoutItems)
-              : JSON.stringify([]),
-          isClosed: anyItemsExcludingCheckoutItems.length === 0 ? true : false,
+            excludingCheckoutItems.length > 0 ? excludingCheckoutItems : [],
+          isClosed: excludingCheckoutItems.length === 0,
         })
         .where(eq(carts.id, correspondingCart.id));
 
@@ -163,25 +158,34 @@ export async function POST(req: Request) {
       const { city, country, line1, line2, postal_code, state } =
         paymentIntentObject.shipping?.address as Stripe.Address;
 
-      const { insertId: addressId } = await db.insert(addresses).values({
-        // @ts-expect-error
-        city,
-        country,
-        line1,
-        line2,
-        postal_code,
-        state,
-      });
+      const { insertId: addressId } = await db
+        .insert(addresses)
+        .values({
+          // @ts-expect-error
+          city,
+          country,
+          line1,
+          line2,
+          postal_code,
+          state,
+        })
+        .returning({
+          insertedId: addresses.id,
+        })
+        .then((result) => ({
+          insertId: result[0].insertedId,
+        }));
 
       // Parsed checkout item with qty.
-      const parsedCheckoutItems = parse_to_json<CartItem[]>(
+
+      const parsedCheckoutItems = JSON.parse(
         paymentIntentObject.metadata.checkoutItem,
-      );
+      ) as CartItem[];
 
       const orderedProducts = await db
         .select()
         .from(products)
-        .where(inArray(products.id, parsedCheckoutItemsId))
+        .where(inArray(products.id, checkoutItemIds))
         .execute()
         .then((products) => {
           return products.map((product) => {
@@ -201,8 +205,8 @@ export async function POST(req: Request) {
       );
 
       await db.insert(orders).values({
-        // @ts-expect-error
-        name: paymentIntentObject.shipping.name,
+        /** @ts-expect-error: Shipping address is nullable. */
+        name: paymentIntentObject.shipping?.name,
         storeId: paymentIntentObject.metadata.storeId,
         userId: paymentIntentObject.metadata.userId,
         stripePaymentIntentId: paymentIntentObject.id,
@@ -210,7 +214,7 @@ export async function POST(req: Request) {
         email: paymentIntentObject.metadata.email,
         addressId,
         total: String(totalOrderAmount),
-        items: JSON.stringify(orderedProducts),
+        items: orderedProducts,
       });
 
       // Update product's stock.
@@ -233,7 +237,7 @@ export async function POST(req: Request) {
 
       // Send order succeeded email.
       await resend.emails.send({
-        from: `Commerce Team <noreply@${process.env.MARKETING_DOMAIN!}>`,
+        from: `Commerce Team <no-reply@${process.env.MARKETING_DOMAIN!}>`,
         to: customerEmail,
         subject: "Thank you for your order!",
         react: OrderSuccessEmail({

@@ -38,8 +38,7 @@ export async function createNewStoreAction(
   });
 
   const isAbleToCreateNewStore =
-    targetPlan &&
-    (user.privateMetadata.storeId as string[]).length < targetPlan.limit;
+    targetPlan && user.privateMetadata.storeId.length < targetPlan.limit;
 
   if (isAbleToCreateNewStore) {
     const store = await db

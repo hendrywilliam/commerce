@@ -20,7 +20,7 @@ export async function manageSubscriptionAction({
     throw new Error(parsedSubscriptionPriceId.error.message);
   }
 
-  const user = await currentUser();
+  const user = (await currentUser()) as unknown as UserObjectCustomized;
 
   if (!user) {
     throw new Error("You must be signed in to perform this action.");
@@ -28,9 +28,7 @@ export async function manageSubscriptionAction({
 
   const subscriptionUrl = getAbsoluteUrl("/dashboard/subscription");
 
-  const { stripeCustomerId, stripeSubscriptionId } = (
-    user as UserObjectCustomized
-  ).privateMetadata;
+  const { stripeCustomerId, stripeSubscriptionId } = user.privateMetadata;
 
   // When the user has not subscribed any plan (fresh user.) we redirect them to checkout session.
   if (!stripeSubscriptionId) {

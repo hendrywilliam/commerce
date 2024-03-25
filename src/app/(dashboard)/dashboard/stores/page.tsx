@@ -10,13 +10,13 @@ import { buttonVariants } from "@/components/ui/button";
 import DashboardStoreCard from "@/components/dashboard/stores/store-card";
 
 export default async function DashboardStoresPage() {
-  const user = await currentUser();
+  const user = (await currentUser()) as unknown as UserObjectCustomized;
 
   if (!user) {
     redirect("/");
   }
 
-  const userPrivateMetadata = (user as UserObjectCustomized).privateMetadata;
+  const userPrivateMetadata = user.privateMetadata;
   const userStores =
     userPrivateMetadata.storeId.length > 0
       ? await db

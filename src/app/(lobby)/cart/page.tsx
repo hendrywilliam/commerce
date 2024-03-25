@@ -2,10 +2,10 @@ import { CartLineDetailedItems } from "@/types";
 import CartItem from "@/components/lobby/cart/cart-item";
 import PageLayout from "@/components/layouts/page-layout";
 import CartPanel from "@/components/lobby/cart/cart-panel";
-import { get_cart_fetcher } from "@/fetchers/carts/get-cart";
+import { getCartFetcher } from "@/fetchers/carts/get-cart";
 
 export default async function CartPage() {
-  const { cartItemDetails } = await get_cart_fetcher();
+  const { cartItemDetails } = await getCartFetcher();
 
   const groupProductByTheStore = cartItemDetails.reduce(
     (acc, val) => {
@@ -22,8 +22,8 @@ export default async function CartPage() {
 
   return (
     <PageLayout>
-      <h1 className="font-semibold text-2xl">Cart</h1>
-      <div className="flex flex-col lg:flex-row mt-2 gap-4">
+      <h1 className="text-2xl font-semibold">Cart</h1>
+      <div className="mt-2 flex flex-col gap-4 lg:flex-row">
         <div className="w-full">
           {cartItemDetails.length ? (
             <div className="flex flex-col gap-4">

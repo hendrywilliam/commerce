@@ -37,7 +37,7 @@ export default async function DashboardStoreOrdersPage({
     notFound();
   }
 
-  const isStoreOwner = user.privateMetadata.storeId.includes(String(store.id));
+  const isStoreOwner = user.privateMetadata.storeId.includes(store.id);
 
   if (!isStoreOwner) {
     redirect("/dashboard/stores");
@@ -57,9 +57,9 @@ export default async function DashboardStoreOrdersPage({
 
   return (
     <div>
-      <div className="w-full flex">
+      <div className="flex w-full">
         <div className="w-full">
-          <h1 className="font-bold text-2xl">Orders</h1>
+          <h1 className="text-2xl font-bold">Orders</h1>
           <p className="text-gray-500">List of store orders.</p>
         </div>
       </div>
