@@ -16,7 +16,7 @@ export default function ImageSelector({ images }: ImageSliderProps) {
   return (
     <div className="h-fit w-full">
       <div
-        className="relative h-[700px] w-full overflow-hidden rounded border"
+        className="relative h-[500px] w-full overflow-hidden rounded border sm:h-[700px]"
         id="bigger-preview"
       >
         {images.length > 0 ? (
@@ -31,11 +31,15 @@ export default function ImageSelector({ images }: ImageSliderProps) {
         )}
       </div>
       {images.length > 0 && (
-        <div className="my-4 grid h-max w-full grid-cols-5 gap-3">
+        <div className="my-4 grid h-max w-full grid-cols-3 gap-3 sm:grid-cols-5">
           {images.map((image, index) => (
-            <div key={image.name} className="relative h-24 rounded border">
+            <div
+              key={image.name}
+              className="relative h-16 rounded border sm:h-24"
+            >
               <Button
-                className="rounded"
+                className="h-full w-full rounded"
+                variant="ghost"
                 onClick={() => setCurrentImageIndex(index)}
               >
                 <Image

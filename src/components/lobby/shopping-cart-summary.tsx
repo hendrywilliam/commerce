@@ -1,4 +1,4 @@
-import { CartLineDetailedItems, CartItem } from "@/types";
+import { CartLineDetailedItems } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";

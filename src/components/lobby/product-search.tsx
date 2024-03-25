@@ -71,24 +71,24 @@ export default function ProductSearch() {
     <>
       <Button
         variant={"outline"}
-        className="inline-flex w-9 p-2 lg:w-max h-9"
+        className="inline-flex h-9 w-9 p-2 lg:w-max"
         onClick={() => void setIsOpen((val) => !val)}
       >
-        <span className="hidden lg:inline-flex gap-2">
+        <span className="hidden gap-2 lg:inline-flex">
           Search products..
-          <kbd className="w-max text-xs border rounded px-1 bg-muted-foreground/10">
+          <kbd className="w-max rounded border bg-muted-foreground/10 px-1 text-xs">
             Ctrl + K
           </kbd>
         </span>
-        <SearchIcon className="flex lg:hidden w-[1em]" />
+        <SearchIcon className="flex w-[1em] lg:hidden" />
       </Button>
       <Dialog open={isOpen} onOpenChange={(isOpen) => setIsOpen(isOpen)}>
-        <DialogContent className="p-1 gap-1">
-          <div className="inline-flex py-1 px-2">
+        <DialogContent className="gap-1 p-1">
+          <div className="inline-flex px-2 py-1">
             <SearchIcon className="flex self-center" />
             <Input
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="border-0 outline-none focus-visible:ring-0 shadow-none"
+              className="border-0 shadow-none outline-none focus-visible:ring-0"
               placeholder="Type product name... "
             />
           </div>
@@ -97,15 +97,15 @@ export default function ProductSearch() {
               Object.entries(results).map(([category, products], i) => {
                 return (
                   <div key={i}>
-                    <div className="text-xs px-1 text-gray-400">
+                    <div className="px-1 text-xs text-gray-400">
                       <h2>{category}</h2>
                     </div>
                     <div className="px-1 py-2">
                       {products.map((item) => {
                         return (
                           <Button
-                            variant={"ghost"}
-                            className="w-full h-8 justify-start px-1 gap-2"
+                            variant="ghost"
+                            className="h-8 w-full justify-start gap-2 px-1"
                             onClick={() =>
                               void router.push(`/product/${item.slug}`)
                             }
@@ -121,7 +121,7 @@ export default function ProductSearch() {
                 );
               })
             ) : (
-              <div className="flex p-2 w-full justify-center">
+              <div className="flex w-full justify-center p-2">
                 <p>No results found.</p>
               </div>
             )}

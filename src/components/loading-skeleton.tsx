@@ -6,9 +6,9 @@ type SkeletonRef = HTMLDivElement;
 
 const LoadingSkeleton = forwardRef<SkeletonRef, LoadingSkeleton>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className="animate-pulse h-max">
+    <div ref={ref} className="h-full animate-pulse">
       <div
-        className={cn("h-3 bg-border rounded w-2/4", className)}
+        className={cn("w-1/2 rounded bg-border", className)}
         {...props}
       ></div>
     </div>

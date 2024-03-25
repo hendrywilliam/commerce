@@ -6,7 +6,6 @@ import type { Metadata, ResolvingMetadata } from "next";
 import { Product, Store, products, stores } from "@/db/schema";
 import ProductPanel from "@/components/lobby/product/product-panel";
 import ImageSelector from "@/components/lobby/product/image-selector";
-import ProductCommentSection from "@/components/lobby/product/comment-section";
 
 interface ProductPageProps {
   params: { productSlug: string };

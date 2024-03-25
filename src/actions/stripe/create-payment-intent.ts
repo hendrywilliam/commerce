@@ -40,7 +40,7 @@ export async function createPaymentIntentAction({
   const parsedCartItems = await cartDetailedItemsValidation.spa(cartItem);
 
   if (!parsedCartItems.success) {
-    throw new Error(parsedCartItems.error.message);
+    throw new Error(parsedCartItems.error.issues[0].message);
   }
 
   const accountDetails = await getAccountDetailsFetcher(storeId);

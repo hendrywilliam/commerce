@@ -1,5 +1,4 @@
 import Image from "next/image";
-import type { UploadData } from "@/types";
 import { formatCurrency, truncate } from "@/lib/utils";
 import type { CartLineDetailedItems } from "@/types";
 import ImagePlaceholder from "@/components/image-placeholder";

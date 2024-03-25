@@ -35,7 +35,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="absolute right-2 top-2 z-[2] rounded bg-foreground px-2 py-1 font-semibold text-background">
         <p className="text-xs">{formatCurrency(Number(product.price))}</p>
       </div>
-      <Link href={`/products/${product.slug}`}>
+      <Link href={`/product/${product.slug}`}>
         <div className="relative h-56 overflow-hidden rounded">
           {product.image[0].url ? (
             <Image
