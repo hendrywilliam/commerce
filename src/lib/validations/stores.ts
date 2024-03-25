@@ -18,7 +18,7 @@ export const cartDetailedItemsValidation = z
     qty: z.number(),
     name: z.string(),
     price: z.string(),
-    image: z.string(),
+    image: z.any(),
     storeId: z.number(),
     category: z.string(),
     storeName: z.string(),
