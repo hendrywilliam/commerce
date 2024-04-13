@@ -2,7 +2,7 @@
 
 import { Store } from "@/db/schema";
 import { toast } from "sonner";
-import { seedProducts } from "@/actions/seed";
+import { seedProducts } from "../../scripts/seed";
 import { Button } from "@/components/ui/button";
 import { catchError } from "@/lib/utils";
 

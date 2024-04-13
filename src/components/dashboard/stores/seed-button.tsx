@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { catchError } from "@/lib/utils";
-import { seedProducts } from "@/actions/seed";
+import { seedProducts } from "../../../../scripts/seed";
 import { Button } from "@/components/ui/button";
 import { IconLoading } from "@/components/ui/icons";
 import { toast } from "sonner";

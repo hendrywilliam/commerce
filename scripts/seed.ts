@@ -1,5 +1,3 @@
-"use server";
-
 import { db } from "@/db/core";
 import { slugify } from "@/lib/utils";
 import { faker } from "@faker-js/faker";
@@ -85,5 +83,10 @@ export async function seedProducts({
 
   await db.insert(products).values(productsData);
   await db.insert(ratings).values(ratingsData);
+  console.log("Seeding completed.");
   return;
 }
+
+seedProducts({
+  storeId: 1,
+});

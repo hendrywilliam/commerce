@@ -19,6 +19,7 @@
     "format": "prettier . --write",
     "check": "prettier . --check",
     "e2e": "playwright test --ui",
+    "script": "tsx ./scripts/runner.ts",
     "unit": "jest"
   },
   "dependencies": {
@@ -89,6 +90,7 @@
     "tailwindcss": "^3.4.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
+    "tsx": "^4.7.2",
     "typescript": "^5.3.3"
   }
 }
