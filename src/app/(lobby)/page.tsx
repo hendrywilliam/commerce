@@ -1,16 +1,12 @@
 import Link from "next/link";
-import { db } from "@/db/core";
-import { desc } from "drizzle-orm";
-import { stores, products } from "@/db/schema";
-import StoreCard from "@/components/lobby/store-card";
+import { Suspense } from "react";
+import DiscoverProducts from "@/components/lobby/discover-products";
 import { buttonVariants } from "@/components/ui/button";
 import { ArrowRightIcon } from "@/components/ui/icons";
-import ProductCard from "@/components/lobby/product-card";
+import ProductCardSkeleton from "@/components/lobby/product-card-skeleton";
 import CategoriesShowcase from "@/components/lobby/categories-showcase";
 
 export default async function IndexPage() {
-  const featuredProducts = await db.select().from(products).limit(10);
-
   return (
     <div className="container flex h-full w-full flex-col items-center p-4">
       <section className="mt-24 flex h-max w-full flex-col gap-4">
@@ -37,10 +33,7 @@ export default async function IndexPage() {
       <div className="mt-36 flex w-full flex-col items-center gap-2">
         <div className="mb-4 inline-flex w-full justify-between">
           <div>
-            <h1 className="font-bold">Featured Products</h1>
-            <p className="font-medium text-gray-500">
-              Top 10 products for this week.
-            </p>
+            <h1 className="font-bold">Discover Products</h1>
           </div>
           <div>
             <Link
@@ -55,40 +48,13 @@ export default async function IndexPage() {
             </Link>
           </div>
         </div>
-        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
-          {featuredProducts.map((product) => {
-            return <ProductCard product={product} key={product.id} />;
-          })}
-        </div>
-      </div>
-      <div className="mb-12 mt-36 flex w-full flex-col items-center gap-2">
-        <div className="mb-4 inline-flex w-full justify-between">
-          <div>
-            <h1 className="text-4xl font-bold">Featured Stores</h1>
-            <p className="text-center font-medium text-gray-500">
-              Shop hundreds of products from these featured stores for this
-              week.
-            </p>
-          </div>
-          <div>
-            <Link
-              href="/stores"
-              className={buttonVariants({
-                class: "mt-4 inline-flex gap-2",
-                variant: "outline",
-              })}
-            >
-              View all stores
-              <ArrowRightIcon />
-            </Link>
-          </div>
-        </div>
-        <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-4">
-          {/* {featuredStores.length > 0 &&
-            featuredStores.map((store) => {
-              return <StoreCard store={store} key={store.id} />;
-            })} */}
-        </div>
+        <Suspense fallback={<div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <ProductCardSkeleton key={i} />
+          ))}
+        </div>}>
+          <DiscoverProducts />
+        </Suspense>
       </div>
     </div>
   );
