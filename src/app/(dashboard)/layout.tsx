@@ -1,10 +1,34 @@
 import DashboardNavigation from "@/components/dashboard/dashboard-navigation";
+import { db } from "@/db/core";
+import { stores as storesSchema } from "@/db/schema";
+import { UserObjectCustomized } from "@/types";
+import { currentUser } from "@clerk/nextjs";
+import { inArray } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
-export default function DashboardLayout({ children }: React.PropsWithChildren) {
+export default async function DashboardLayout({
+  children,
+}: React.PropsWithChildren) {
+  const user = (await currentUser()) as unknown as UserObjectCustomized;
+  if (!user) {
+    redirect("/");
+  }
+  const stores =
+    user.privateMetadata.storeId.length > 0
+      ? await db
+          .select()
+          .from(storesSchema)
+          .where(inArray(storesSchema, user.privateMetadata.storeId))
+      : [];
+
   return (
-    <div className="h-full min-h-screen w-full">
+    <div className="h-full min-h-screen w-full text-sm">
       <div className="flex h-full flex-col">
-        <DashboardNavigation />
+        <DashboardNavigation
+          firstname={user.firstName}
+          lastname={user.lastName}
+          stores={stores}
+        />
         <div className="flex h-full flex-col overflow-y-auto">
           <div className="container h-full py-10">{children}</div>
         </div>
