@@ -9,7 +9,7 @@ Key features:
 - [x] Nextjs App Router with React Server Component
 - [x] Intercepted routes for quick view.
 - [x] Server Actions for mutation.
-- [x] MySQL Database and Drizzle ORM.
+- [x] PostgreSQL Database (Supabase) and Drizzle ORM.
 - [x] Uploadthing for easy and type safety image uploader.
 - [x] User authentication using Clerk.
 - [x] Payment integration using Stripe.
@@ -19,10 +19,10 @@ Key features:
 More feature will be added soon.
 
 # Setup
-* Create a new database in any serverless Postgre hosting (For serverfull environment please refer to your hosting documentation).
-* Add `connectionString` to `DATABASE_URL` in env.
-* Run `db:generate` to create a brand new migration.
-* Run `db:push` to push a schema based prototype directly to the server. 
+
+- Add `connectionString` to `DATABASE_URL` in env.
+- Run `db:generate` to create a brand new migration.
+- Run `db:push` to push a schema based prototype directly to the server.
 
 # Demo
 
