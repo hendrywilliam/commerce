@@ -3,7 +3,7 @@ import { db } from "@/db/core";
 import { stores as storesSchema } from "@/db/schema";
 import { UserObjectCustomized } from "@/types";
 import { currentUser } from "@clerk/nextjs";
-import { inArray } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
@@ -13,12 +13,13 @@ export default async function DashboardLayout({
   if (!user) {
     redirect("/");
   }
+  const userStores = user.privateMetadata.storeId;
   const stores =
-    user.privateMetadata.storeId.length > 0
+    userStores.length > 0
       ? await db
           .select()
           .from(storesSchema)
-          .where(inArray(storesSchema, user.privateMetadata.storeId))
+          .where(inArray(storesSchema.id, userStores))
       : [];
 
   return (

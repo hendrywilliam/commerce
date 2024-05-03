@@ -1,1 +1,20 @@
-{"version":"5","dialect":"mysql","entries":[{"idx":1,"version":"5","when":1710839361321,"tag":"0001_clear_lizard","breakpoints":true}]}
+{
+  "version": "5",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1710839361321,
+      "tag": "0001_clear_lizard",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1714756555483,
+      "tag": "0002_uneven_titanium_man",
+      "breakpoints": true
+    }
+  ]
+}

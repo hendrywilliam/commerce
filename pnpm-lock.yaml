@@ -14,9 +14,6 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.3.3
         version: 3.3.3(react-hook-form@7.49.2)
-      '@neondatabase/serverless':
-        specifier: ^0.9.0
-        version: 0.9.0
       '@radix-ui/react-accordion':
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.2.18)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
@@ -88,13 +85,16 @@ importers:
         version: 16.4.5
       drizzle-orm:
         specifier: ^0.28.6
-        version: 0.28.6(@neondatabase/serverless@0.9.0)(mysql2@3.6.5)(pg@8.11.3)
+        version: 0.28.6(mysql2@3.6.5)(pg@8.11.3)(postgres@3.4.4)
       mysql2:
         specifier: ^3.6.5
         version: 3.6.5
       next:
         specifier: 14.0.2
         version: 14.0.2(@babel/core@7.23.6)(react-dom@18.2.0)(react@18.2.0)
+      postgres:
+        specifier: ^3.4.4
+        version: 3.4.4
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -1682,12 +1682,6 @@ packages:
       globby: 11.1.0
       jju: 1.4.0
       read-yaml-file: 1.1.0
-    dev: false
-
-  /@neondatabase/serverless@0.9.0:
-    resolution: {integrity: sha512-mmJnUAzlzvxNSZuuhI6kgJjH+JgFdBMYUWxihtq/nj0Tjt+Y5UU3W+SvRFoucnd5NObYkuLYQzk+zV5DGFKGJg==}
-    dependencies:
-      '@types/pg': 8.6.6
     dev: false
 
   /@next/env@14.0.2:
@@ -3450,14 +3444,6 @@ packages:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
     dev: false
 
-  /@types/pg@8.6.6:
-    resolution: {integrity: sha512-O2xNmXebtwVekJDD+02udOncjVcMZQuTEQEMpKJ0ZRf5E7/9JJX3izhKUcUifBkyKpljyUM6BTgy2trmviKlpw==}
-    dependencies:
-      '@types/node': 20.10.5
-      pg-protocol: 1.6.0
-      pg-types: 2.2.0
-    dev: false
-
   /@types/prop-types@15.7.11:
     resolution: {integrity: sha512-ga8y9v9uyeiLdpKddhxYQkxNDrfvuPrlFb0N1qnZZByvcElJaXthF1UhvCh9TLWJBEHeNtdnbysW7Y6Uq8CVng==}
 
@@ -4654,7 +4640,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.28.6(@neondatabase/serverless@0.9.0)(mysql2@3.6.5)(pg@8.11.3):
+  /drizzle-orm@0.28.6(mysql2@3.6.5)(pg@8.11.3)(postgres@3.4.4):
     resolution: {integrity: sha512-yBe+F9htrlYER7uXgDJUQsTHFoIrI5yMm5A0bg0GiZ/kY5jNXTWoEy4KQtg35cE27sw1VbgzoMWHAgCckUUUww==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -4716,9 +4702,9 @@ packages:
       sqlite3:
         optional: true
     dependencies:
-      '@neondatabase/serverless': 0.9.0
       mysql2: 3.6.5
       pg: 8.11.3
+      postgres: 3.4.4
     dev: false
 
   /eastasianwidth@0.2.0:
@@ -7561,6 +7547,11 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       xtend: 4.0.2
+
+  /postgres@3.4.4:
+    resolution: {integrity: sha512-IbyN+9KslkqcXa8AO9fxpk97PA4pzewvpi2B3Dwy9u4zpV32QicaEdgmF3eSQUzdRk7ttDHQejNgAEr4XoeH4A==}
+    engines: {node: '>=12'}
+    dev: false
 
   /prebuild-install@7.1.1:
     resolution: {integrity: sha512-jAXscXWMcCK8GgCoHOfIr0ODh5ai8mj63L2nWrjuAgXE6tDyYGnx4/8o/rCgU+B4JSyZBKbeZqzhtwtC3ovxjw==}

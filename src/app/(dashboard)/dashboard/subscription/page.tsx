@@ -13,7 +13,6 @@ export default async function DashboardBillingPage() {
     redirect("/sign-in");
   }
 
-  // DISGUSTING
   const metadata = user.privateMetadata;
   const currentPlan = subscriptionPlans.find(
     (plan) => plan.id === metadata.subscribedPlanId,

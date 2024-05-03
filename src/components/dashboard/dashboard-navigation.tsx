@@ -26,7 +26,7 @@ export default function DashboardNavigation({
   const pathname = usePathname();
   const storeId = pathname.split("/")[2];
   const selectedStore =
-    stores.find((store) => String(store.id) === storeId)?.name ?? "Projects";
+    stores.find((store) => String(store.id) === storeId)?.name ?? "Stores";
 
   return (
     <div className="flex h-16 w-full border-b px-8">
