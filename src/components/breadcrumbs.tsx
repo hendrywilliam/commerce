@@ -10,18 +10,16 @@ export default function Breadcrumbs() {
   return (
     <div className="container flex items-center gap-4 py-4 text-sm text-gray-500">
       {segments.map((segment, index) => (
-        <>
-          <Link
-            href={`/${segments.slice(0, index + 1).join("/")}`}
-            key={index}
-            className="flex items-center gap-4 capitalize hover:text-gray-600"
-          >
-            {segment}
-            {index !== segments.length - 1 && (
-              <ArrowRightIcon className="pointer-events-none h-2 w-2" />
-            )}
-          </Link>
-        </>
+        <Link
+          href={`/${segments.slice(0, index + 1).join("/")}`}
+          key={index}
+          className="flex items-center gap-4 capitalize hover:text-gray-600"
+        >
+          {segment}
+          {index !== segments.length - 1 && (
+            <ArrowRightIcon className="pointer-events-none h-2 w-2" />
+          )}
+        </Link>
       ))}
     </div>
   );

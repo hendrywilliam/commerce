@@ -1,3 +1,5 @@
+"use server";
+
 import { exec } from "node:child_process";
 
 const command = process.argv[2];

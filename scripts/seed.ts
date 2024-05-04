@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from "@/db/core";
 import { slugify } from "@/lib/utils";
 import { faker } from "@faker-js/faker";
@@ -80,11 +82,15 @@ export async function seedProducts({
       storeId,
     });
   }
-
-  await db.insert(products).values(productsData);
-  await db.insert(ratings).values(ratingsData);
-  console.log("Seeding completed.");
-  return;
+  try {
+    await db.insert(products).values(productsData);
+    await db.insert(ratings).values(ratingsData);
+    console.log("Seeding completed.");
+    process.exit(0);
+  } catch (error) {
+    console.error((error as Error).message ?? "Something went wrong.");
+    process.exit(1);
+  }
 }
 
 seedProducts({

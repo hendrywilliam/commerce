@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from "@/db/core";
 import { stores } from "@/db/schema";
 import { slugify } from "@/lib/utils";
