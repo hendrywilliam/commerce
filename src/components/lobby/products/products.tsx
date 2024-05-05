@@ -35,6 +35,7 @@ import { useQueryString } from "@/hooks/use-query-string";
 import ProductCard from "@/components/lobby/product-card";
 import { IconFilter, IconTrashCan } from "@/components/ui/icons";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import NoResultMessage from "@/components/no-result-message";
 
 interface ProductsProps {
   allStoresAndProducts: {
@@ -368,12 +369,7 @@ export default function Products({
           </div>
         </>
       ) : (
-        <div className="flex min-h-[450px] items-center justify-center text-center">
-          <h1 className="text-xl">
-            Unfortunately, there is no product found. Try to change the filter
-            or refresh the page.
-          </h1>
-        </div>
+        <NoResultMessage message="No data shown. Try to change filter or reload this page." />
       )}
     </div>
   );

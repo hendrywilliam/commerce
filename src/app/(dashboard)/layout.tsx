@@ -31,7 +31,7 @@ export default async function DashboardLayout({
           stores={stores}
         />
         <div className="flex h-full flex-col overflow-y-auto">
-          <div className="container h-full py-10">{children}</div>
+          <div className="container h-full py-6">{children}</div>
         </div>
       </div>
     </div>

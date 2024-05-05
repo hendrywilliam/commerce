@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import { stripe } from "@/lib/stripe";
 import { type Store, payments } from "@/db/schema";
 
-export async function get_store_balance_fetcher(storeId: Store["id"]) {
+export async function getStoreBalanceFetcher(storeId: Store["id"]) {
   // Get payment record
   const storePayment = await db.query.payments.findFirst({
     where: eq(payments.storeId, storeId),

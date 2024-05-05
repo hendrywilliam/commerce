@@ -85,7 +85,7 @@ importers:
         version: 16.4.5
       drizzle-orm:
         specifier: ^0.28.6
-        version: 0.28.6(mysql2@3.6.5)(pg@8.11.3)(postgres@3.4.4)
+        version: 0.28.6(mysql2@3.6.5)(pg@8.11.3)(postgres@3.3.5)
       mysql2:
         specifier: ^3.6.5
         version: 3.6.5
@@ -93,8 +93,8 @@ importers:
         specifier: 14.0.2
         version: 14.0.2(@babel/core@7.23.6)(react-dom@18.2.0)(react@18.2.0)
       postgres:
-        specifier: ^3.4.4
-        version: 3.4.4
+        specifier: '3.3'
+        version: 3.3.5
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -4640,7 +4640,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.28.6(mysql2@3.6.5)(pg@8.11.3)(postgres@3.4.4):
+  /drizzle-orm@0.28.6(mysql2@3.6.5)(pg@8.11.3)(postgres@3.3.5):
     resolution: {integrity: sha512-yBe+F9htrlYER7uXgDJUQsTHFoIrI5yMm5A0bg0GiZ/kY5jNXTWoEy4KQtg35cE27sw1VbgzoMWHAgCckUUUww==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -4704,7 +4704,7 @@ packages:
     dependencies:
       mysql2: 3.6.5
       pg: 8.11.3
-      postgres: 3.4.4
+      postgres: 3.3.5
     dev: false
 
   /eastasianwidth@0.2.0:
@@ -7548,9 +7548,8 @@ packages:
     dependencies:
       xtend: 4.0.2
 
-  /postgres@3.4.4:
-    resolution: {integrity: sha512-IbyN+9KslkqcXa8AO9fxpk97PA4pzewvpi2B3Dwy9u4zpV32QicaEdgmF3eSQUzdRk7ttDHQejNgAEr4XoeH4A==}
-    engines: {node: '>=12'}
+  /postgres@3.3.5:
+    resolution: {integrity: sha512-+JD93VELV9gHkqpV5gdL5/70HdGtEw4/XE1S4BC8f1mcPmdib3K5XsKVbnR1XcAyC41zOnifJ+9YRKxdIsXiUw==}
     dev: false
 
   /prebuild-install@7.1.1:

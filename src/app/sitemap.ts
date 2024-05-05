@@ -2,15 +2,8 @@ import { db } from "@/db/core";
 import { MetadataRoute } from "next";
 import { products, stores } from "@/db/schema";
 import { baseUrl } from "@/config/site";
-import { dashboardNavigation } from "@/config/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const dashboardRoute = dashboardNavigation.map((navigation) => {
-    return {
-      url: `${baseUrl}/${navigation.href}`,
-    };
-  });
-
   const productsRoute = await db
     .select()
     .from(products)
@@ -37,5 +30,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       });
     });
 
-  return [...dashboardRoute, ...productsRoute, ...storesRoute];
+  return [...productsRoute, ...storesRoute];
 }

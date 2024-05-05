@@ -61,7 +61,7 @@ export default function PurchaseHistoryDataTable({
         </TableBody>
       </Table>
       {purchaseTable.getRowModel().rows.length === 0 && (
-        <div className="mt-4 w-full h-36 flex items-center justify-center">
+        <div className="mt-4 flex h-36 w-full items-center justify-center">
           <p>No purchase history.</p>
         </div>
       )}

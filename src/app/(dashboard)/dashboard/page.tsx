@@ -21,7 +21,7 @@ export default async function DashboardPage() {
   return (
     <div className="h-full">
       <div className="mb-4 flex w-full justify-between">
-        <h1>Stores</h1>
+        <h1 className="font-bold">Stores</h1>
         <Link
           className={buttonVariants({ variant: "outline", size: "sm" })}
           href="/dashboard/stores/new-store"

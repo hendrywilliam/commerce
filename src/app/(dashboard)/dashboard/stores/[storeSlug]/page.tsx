@@ -1,61 +1,23 @@
 import Link from "next/link";
-import { db } from "@/db/core";
-import { eq, sql } from "drizzle-orm";
-import { currentUser } from "@clerk/nextjs";
 import { centsToDollars } from "@/lib/utils";
-import type { UserObjectCustomized } from "@/types";
-import { notFound, redirect } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { buttonVariants } from "@/components/ui/button";
-import { orders, products, stores } from "@/db/schema";
 import StoreForm from "@/components/dashboard/stores/store-form";
 import { WarningIcon, ArrowOutwardIcon } from "@/components/ui/icons";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { get_store_balance_fetcher } from "@/fetchers/stores/get-store-balance";
 import ActivateStoreButton from "@/components/dashboard/stores/activate-store-button";
 import StorefrontDangerZone from "@/components/dashboard/stores/store-front-danger-zone";
-import SeedButton from "@/components/seed-button";
+import { getOwnedStoreFetcher } from "@/fetchers/stores/get-owned-store";
 
 export default async function DashboardDynamicStorePage({
   params,
 }: {
   params: { storeSlug: string };
 }) {
-  const user = (await currentUser()) as unknown as UserObjectCustomized;
-
-  const store = await db.query.stores.findFirst({
-    where: eq(stores.slug, params.storeSlug),
-  });
-
-  if (!store) {
-    notFound();
-  }
-
-  const storeOwned = user.privateMetadata.storeId.find(
-    (storeId) => storeId === store.id,
-  );
-
-  if (!storeOwned) {
-    redirect("/dashboard/stores");
-  }
-
-  const [storeBalance, productsCount, ordersCount] = await Promise.all([
-    await get_store_balance_fetcher(store.id),
-    await db
-      .select({
-        count: sql<number>`count(*)`,
-      })
-      .from(products)
-      .where(eq(products.storeId, store.id))
-      .limit(1),
-    await db
-      .select({
-        count: sql<number>`count(*)`,
-      })
-      .from(orders)
-      .where(eq(orders.storeId, store.id))
-      .limit(1),
-  ]);
+  const { ordersCount, productsCount, storeBalance, store } =
+    await getOwnedStoreFetcher({
+      slug: params.storeSlug,
+    });
 
   return (
     <div className="mb-6 mt-4">
@@ -154,7 +116,6 @@ export default async function DashboardDynamicStorePage({
           }}
         />
         <StorefrontDangerZone storeId={store.id} />
-        <SeedButton storeId={store.id} />
       </div>
     </div>
   );

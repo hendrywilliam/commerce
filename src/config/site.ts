@@ -1,9 +1,3 @@
-import {
-  IconStores,
-  IconPayment,
-  IconAnalytics,
-  FourDotIcon,
-} from "@/components/ui/icons";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -40,33 +34,6 @@ export const footerNavigation = [
         href: "https://github.com/hendrywilliam",
       },
     ],
-  },
-];
-
-export const dashboardNavigation = [
-  {
-    title: "Overview",
-    href: "/dashboard",
-    icon: FourDotIcon,
-    description: "Overview for your current store.",
-  },
-  {
-    title: "Stores",
-    href: "/dashboard/stores",
-    icon: IconStores,
-    description: "Manage your own stores, or create a brand new store.",
-  },
-  {
-    title: "Subscription",
-    href: "/dashboard/subscription",
-    icon: IconPayment,
-    description: "Manage your billing plan.",
-  },
-  {
-    title: "Purchase",
-    href: "/dashboard/purchases",
-    icon: IconAnalytics,
-    description: "Gather information based on your purchase data.",
   },
 ];
 

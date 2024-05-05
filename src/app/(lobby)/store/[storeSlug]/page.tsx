@@ -2,11 +2,9 @@ import { db } from "@/db/core";
 import { eq } from "drizzle-orm";
 import { stores } from "@/db/schema";
 import { notFound } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import Pagination from "@/components/pagination";
 import { Metadata, ResolvingMetadata } from "next";
 import { siteStaticMetadata } from "@/config/site";
-import { IconStores } from "@/components/ui/icons";
 import ProductCard from "@/components/lobby/product-card";
 import { get_products_page_fetcher } from "@/fetchers/products/get-products-page";
 import StoreProductFilterPanel from "@/components/lobby/store/store-product-filter-panel";
@@ -80,12 +78,6 @@ export default async function StorePage({
           <div className="flex justify-between">
             <div className="my-4 flex-col gap-2">
               <h1 className="text-xl font-bold">{storeData?.name}</h1>
-              <div>
-                <Button variant={"outline"} className="inline-flex gap-2">
-                  <IconStores />
-                  Chat Store
-                </Button>
-              </div>
             </div>
             <div className="flex items-center">
               <StoreProductFilterPanel />

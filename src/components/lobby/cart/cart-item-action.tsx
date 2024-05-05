@@ -4,7 +4,6 @@ import {
   IconTrashCan,
   IconArrowUp,
   IconArrowDown,
-  IconStores,
   IconLoading,
 } from "@/components/ui/icons";
 import { toast } from "sonner";
@@ -71,7 +70,7 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
           size="icon"
           variant="outline"
         >
-          <IconStores />
+          Store
         </Button>
       </div>
       <div className="inline-flex gap-4">

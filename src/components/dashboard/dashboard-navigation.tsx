@@ -11,6 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useSelectedLayoutSegments } from "next/navigation";
 
 interface Props {
   firstname: User["firstName"];
@@ -23,10 +24,9 @@ export default function DashboardNavigation({
   lastname,
   stores,
 }: Props) {
-  const pathname = usePathname();
-  const storeId = pathname.split("/")[2];
-  const selectedStore =
-    stores.find((store) => String(store.id) === storeId)?.name ?? "Stores";
+  const segments = useSelectedLayoutSegments();
+  const selectedStore = stores.find((store) => store.slug === segments[2])
+    ?.name;
 
   return (
     <div className="flex h-16 w-full border-b px-8">
@@ -35,24 +35,32 @@ export default function DashboardNavigation({
           {firstname} {lastname}
         </p>
         <p>/</p>
-        <p>{selectedStore}</p>
-        {storeId && storeId.match(/[0-9]/) && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <CaretSortIcon />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-64">
-              <div>
-                {stores.map((store) => (
-                  <Link href={`/dashboard/${String(store.id)}`} key={store.id}>
-                    {store.name}
-                  </Link>
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
+        <Link href="/dashboard">Dashboard</Link>
+        {segments[1] === "stores" && segments[2] && selectedStore && (
+          <>
+            <p>/</p>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" className="flex gap-2">
+                  <span>{selectedStore}</span>
+                  <CaretSortIcon />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-56 p-0">
+                <div className="w-full p-2 text-sm">
+                  {stores.map((store) => (
+                    <Link
+                      href={`/dashboard/stores/${String(store.slug)}`}
+                      className="w-full"
+                      key={store.id}
+                    >
+                      {store.name}
+                    </Link>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+          </>
         )}
       </div>
     </div>

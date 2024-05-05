@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import type { Product, Store } from "@/db/schema";
 import { buttonVariants } from "@/components/ui/button";
 import { catchError, formatCurrency } from "@/lib/utils";
-import { IconCart, IconLoading, IconStores } from "@/components/ui/icons";
+import { IconCart, IconLoading } from "@/components/ui/icons";
 import { addItemInCartAction } from "@/actions/carts/add-item-in-cart";
 import Rating from "@/components/rating";
 
@@ -79,7 +79,7 @@ export default function ProductPanel({ product, store }: ProductPanelProps) {
             class: "inline-flex h-full gap-2",
           })}
         >
-          <IconStores />
+          Store
         </Link>
       </div>
     </div>

@@ -10,6 +10,7 @@ import StoreListDataTable from "./store-list-data-table";
 import NoResultMessage from "@/components/no-result-message";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 interface Props {
   stores: Store[];
@@ -46,7 +47,12 @@ export default function StoreListShellTables({ stores }: Props) {
         storesHelper.accessor("name", {
           header: () => "Name",
           cell: (info) => (
-            <span className="font-medium">{info.getValue()}</span>
+            <Link
+              href={`/dashboard/stores/${info.row.original.slug}`}
+              className="font-medium text-blue-400"
+            >
+              {info.getValue()}
+            </Link>
           ),
           footer: (info) => info.column.id,
         }),
