@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { Product } from "@/db/schema";
 import { catchError } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { IconTrashCan, IconLoading } from "@/components/ui/icons";
+import { TrashcanIcon, IconLoading } from "@/components/ui/icons";
 import { type Dispatch, type SetStateAction, useState } from "react";
 import { deleteStoreProductsAction } from "@/actions/products/delete-store-products";
 
@@ -37,14 +37,14 @@ export default function DashboardStoreProductDataTableAction({
   }
 
   return (
-    <div className="flex w-full my-4 h-10 justify-end">
+    <div className="my-4 flex h-10 w-full justify-end">
       <Button
         disabled={isLoading || !!!rawRowDataSelection.length}
         aria-disabled={isLoading || !!!rawRowDataSelection.length}
         onClick={deleteProductsInOwnedStore}
         className="flex gap-2"
       >
-        {isLoading ? <IconLoading /> : <IconTrashCan />}
+        {isLoading ? <IconLoading /> : <TrashcanIcon />}
         Delete
       </Button>
     </div>

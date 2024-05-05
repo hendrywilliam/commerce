@@ -33,7 +33,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { useRouter, usePathname } from "next/navigation";
 import { useQueryString } from "@/hooks/use-query-string";
 import ProductCard from "@/components/lobby/product-card";
-import { IconFilter, IconTrashCan } from "@/components/ui/icons";
+import { IconFilter, TrashcanIcon } from "@/components/ui/icons";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import NoResultMessage from "@/components/no-result-message";
 
@@ -315,7 +315,7 @@ export default function Products({
                   }
                 >
                   Clear filter
-                  <IconTrashCan />
+                  <TrashcanIcon />
                 </Button>
               </div>
             </div>

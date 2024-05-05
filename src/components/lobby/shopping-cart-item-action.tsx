@@ -5,7 +5,7 @@ import { catchError } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useTransition } from "react";
-import { IconTrashCan, IconLoading } from "@/components/ui/icons";
+import { TrashcanIcon, IconLoading } from "@/components/ui/icons";
 import { updateCartItemAction } from "@/actions/carts/update-cart-item";
 import { deleteCartItemAction } from "@/actions/carts/delete-cart-item";
 
@@ -62,7 +62,7 @@ export default function ShoppingCartItemAction({
           disabled={isPending}
           aria-disabled={isPending ? "true" : "false"}
         >
-          {isDeletingItem ? <IconLoading /> : <IconTrashCan />}
+          {isDeletingItem ? <IconLoading /> : <TrashcanIcon />}
         </Button>
       </div>
       <div className="inline-flex gap-1">

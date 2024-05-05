@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  IconTrashCan,
+  TrashcanIcon,
   IconArrowUp,
   IconArrowDown,
   IconLoading,
@@ -125,7 +125,7 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
             disabled={isDeletingCurrentItem}
             aria-disabled={isDeletingCurrentItem ? "true" : "false"}
           >
-            {isDeletingCurrentItem ? <IconLoading /> : <IconTrashCan />}
+            {isDeletingCurrentItem ? <IconLoading /> : <TrashcanIcon />}
           </Button>
         </div>
       </div>

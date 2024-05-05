@@ -56,6 +56,13 @@ export default function StoreListShellTables({ stores }: Props) {
           ),
           footer: (info) => info.column.id,
         }),
+        storesHelper.accessor("slug", {
+          header: () => "Slug",
+          cell: (info) => (
+            <span className="font-medium">{info.getValue()}</span>
+          ),
+          footer: (info) => info.column.id,
+        }),
         storesHelper.accessor("active", {
           header: () => "Status",
           cell: (info) => (
@@ -70,13 +77,6 @@ export default function StoreListShellTables({ stores }: Props) {
                 </Badge>
               )}
             </span>
-          ),
-          footer: (info) => info.column.id,
-        }),
-        storesHelper.accessor("slug", {
-          header: () => "Store Slug",
-          cell: (info) => (
-            <span className="font-medium">{info.getValue()}</span>
           ),
           footer: (info) => info.column.id,
         }),

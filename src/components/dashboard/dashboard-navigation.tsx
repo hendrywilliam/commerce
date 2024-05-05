@@ -2,9 +2,7 @@
 
 import { Store } from "@/db/schema";
 import { User } from "@clerk/nextjs/server";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import {
   Popover,
@@ -12,6 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useSelectedLayoutSegments } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   firstname: User["firstName"];
@@ -49,13 +48,19 @@ export default function DashboardNavigation({
               <PopoverContent className="w-56 p-0">
                 <div className="w-full p-2 text-sm">
                   {stores.map((store) => (
-                    <Link
-                      href={`/dashboard/stores/${String(store.slug)}`}
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="w-full"
                       key={store.id}
                     >
-                      {store.name}
-                    </Link>
+                      <Link
+                        href={`/dashboard/stores/${String(store.slug)}`}
+                        className="w-full"
+                      >
+                        {store.name}
+                      </Link>
+                    </Button>
                   ))}
                 </div>
               </PopoverContent>

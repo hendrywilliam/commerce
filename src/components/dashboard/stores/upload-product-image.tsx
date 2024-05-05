@@ -7,7 +7,7 @@ import { useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Dispatch, SetStateAction } from "react";
 import { IconUpload } from "@/components/ui/icons";
-import { IconTrashCan } from "@/components/ui/icons";
+import { TrashcanIcon } from "@/components/ui/icons";
 import { FileRejection, useDropzone } from "react-dropzone";
 import type { FileWithPreview, UploadData, ProductFormData } from "@/types";
 
@@ -113,7 +113,7 @@ export default function UploadProductImage({
                   ]);
                 }}
               >
-                <IconTrashCan />
+                <TrashcanIcon />
               </Button>
               <Image
                 src={existingImage.url}
@@ -148,7 +148,7 @@ export default function UploadProductImage({
                     setSelectedFiles([...filteredImages]);
                   }}
                 >
-                  <IconTrashCan />
+                  <TrashcanIcon />
                 </Button>
                 <Image
                   src={item.preview}

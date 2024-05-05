@@ -3,7 +3,7 @@ import { UserObjectCustomized } from "@/types";
 import { eq, sql } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { db } from "@/db/core";
-import { Store, stores, products, orders } from "@/db/schema";
+import { Store, stores, products, orders, payments } from "@/db/schema";
 import { getStoreBalanceFetcher } from "./get-store-balance";
 import { redirect } from "next/navigation";
 
@@ -26,28 +26,34 @@ export async function getOwnedStoreFetcher({ slug }: { slug: Store["slug"] }) {
     redirect("/dashboard/stores");
   }
 
-  const [storeBalance, productsCount, ordersCount] = await Promise.all([
-    await getStoreBalanceFetcher(store.id),
-    await db
-      .select({
-        count: sql<number>`count(*)`,
-      })
-      .from(products)
-      .where(eq(products.storeId, store.id))
-      .limit(1),
-    await db
-      .select({
-        count: sql<number>`count(*)`,
-      })
-      .from(orders)
-      .where(eq(orders.storeId, store.id))
-      .limit(1),
-  ]);
+  const [storeBalance, productsCount, ordersCount, payment] = await Promise.all(
+    [
+      await getStoreBalanceFetcher(store.id),
+      await db
+        .select({
+          count: sql<number>`count(*)`,
+        })
+        .from(products)
+        .where(eq(products.storeId, store.id))
+        .limit(1),
+      await db
+        .select({
+          count: sql<number>`count(*)`,
+        })
+        .from(orders)
+        .where(eq(orders.storeId, store.id))
+        .limit(1),
+      await db.query.payments.findFirst({
+        where: eq(payments.storeId, store.id),
+      }),
+    ],
+  );
 
   return {
     storeBalance,
     productsCount,
     ordersCount,
     store,
+    payment,
   };
 }
