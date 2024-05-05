@@ -1,4 +1,5 @@
 import React, { Dispatch, SetStateAction } from "react";
+import { useDataTable } from "@/hooks/use-data-table";
 
 import {
   Table,
@@ -12,8 +13,6 @@ import {
   ColumnDef,
   RowSelectionState,
   flexRender,
-  getCoreRowModel,
-  useReactTable,
 } from "@tanstack/react-table";
 import { Store } from "@/db/schema";
 
@@ -22,51 +21,54 @@ interface Props {
   columns: ColumnDef<Store>[];
   rowSelection: RowSelectionState;
   rawRowDataSelection: Store[];
-  setRowSelection: Dispatch<SetStateAction<Record<string, boolean>>>;
   setRawRowData: Dispatch<SetStateAction<Store[]>>;
+  setRowSelection: Dispatch<SetStateAction<Record<string, boolean>>>;
 }
 
 export default function StoreListDataTable({
   columns,
   data,
   rowSelection,
+  setRawRowData,
   setRowSelection,
 }: Props) {
-  const table = useReactTable({
-    data,
+  const { table } = useDataTable<Store>({
     columns,
-    state: {
-      rowSelection,
-    },
-    getCoreRowModel: getCoreRowModel(),
+    data,
+    setRowSelection,
+    rowSelection,
+    setRawRowDataSelection: setRawRowData,
   });
+
   return (
-    <Table className="table-auto">
-      <TableHeader>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <TableRow key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <TableHead key={header.id}>
-                {flexRender(
-                  header.column.columnDef.header,
-                  header.getContext(),
-                )}
-              </TableHead>
-            ))}
-          </TableRow>
-        ))}
-      </TableHeader>
-      <TableBody>
-        {table.getRowModel().rows.map((row) => (
-          <TableRow key={row.id}>
-            {row.getVisibleCells().map((cell) => (
-              <TableCell key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </TableCell>
-            ))}
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <div className="rounded border">
+      <Table className="table-auto">
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <TableHead key={header.id}>
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext(),
+                  )}
+                </TableHead>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows.map((row) => (
+            <TableRow key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

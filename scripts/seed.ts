@@ -12,6 +12,8 @@ export async function seedProducts({
   storeId: number;
   count?: number;
 }) {
+  const start = Date.now();
+  console.log("⌛ Processing...");
   const productCount = count ?? 10;
   const productsData: NewProduct[] = [];
   const ratingsData: Rating[] = [];
@@ -86,9 +88,11 @@ export async function seedProducts({
     await db.insert(products).values(productsData);
     await db.insert(ratings).values(ratingsData);
     console.log("Seeding completed.");
+    console.log(`Time elapsed: ${Date.now() - start} ms`);
     process.exit(0);
   } catch (error) {
     console.error((error as Error).message ?? "Something went wrong.");
+    console.log(`Time elapsed: ${Date.now() - start} ms`);
     process.exit(1);
   }
 }

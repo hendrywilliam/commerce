@@ -1,25 +1,21 @@
-import StoreListShellTables from "@/components/dashboard/stores/store-list-shell-table";
+import Link from "next/link";
 import { db } from "@/db/core";
-import { stores as storeSchema } from "@/db/schema";
 import { UserObjectCustomized } from "@/types";
 import { currentUser } from "@clerk/nextjs";
 import { inArray } from "drizzle-orm";
-import { redirect } from "next/navigation";
-import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { stores as storeSchema } from "@/db/schema";
+import StoreListShellTables from "@/components/dashboard/stores/store-list-shell-table";
 
 export default async function DashboardPage() {
   const user = (await currentUser()) as unknown as UserObjectCustomized;
-  if (!user) {
-    redirect("/");
-  }
   const userStores = user.privateMetadata.storeId;
   const stores =
     userStores.length > 0
       ? await db
           .select()
           .from(storeSchema)
-          .where(inArray(storeSchema.id, user.privateMetadata.storeId ?? []))
+          .where(inArray(storeSchema.id, userStores))
       : [];
 
   return (

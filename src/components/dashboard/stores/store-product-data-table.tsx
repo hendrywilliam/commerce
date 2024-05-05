@@ -12,11 +12,10 @@ import {
   ColumnDef,
   RowSelectionState,
   flexRender,
-  getCoreRowModel,
-  useReactTable,
 } from "@tanstack/react-table";
 import type { Product } from "@/db/schema";
 import { Dispatch, SetStateAction, useEffect } from "react";
+import { useDataTable } from "@/hooks/use-data-table";
 
 interface DashboardStoreProductDataTableProps {
   data: Product[];
@@ -34,31 +33,18 @@ export default function DashboardStoreProductDataTable({
   setRowSelection,
   setRawRowDataSelection,
 }: DashboardStoreProductDataTableProps) {
-  const productDataTable = useReactTable({
+  const { table } = useDataTable<Product>({
     data,
     columns,
-    state: {
-      rowSelection,
-    },
-    getCoreRowModel: getCoreRowModel(),
-    enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
+    setRowSelection,
+    rowSelection,
+    setRawRowDataSelection,
   });
-
-  // Select original data from the table.
-  const selectedRawRowData = productDataTable
-    .getSelectedRowModel()
-    .flatRows.map((row) => row.original);
-
-  useEffect(() => {
-    setRawRowDataSelection(selectedRawRowData);
-    // eslint-disable-next-line
-  }, [rowSelection]);
 
   return (
     <Table className="table-auto">
       <TableHeader>
-        {productDataTable.getHeaderGroups().map((headerGroup) => (
+        {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
               <TableHead key={header.id}>
@@ -72,7 +58,7 @@ export default function DashboardStoreProductDataTable({
         ))}
       </TableHeader>
       <TableBody>
-        {productDataTable.getRowModel().rows.map((row) => (
+        {table.getRowModel().rows.map((row) => (
           <TableRow key={row.id}>
             {row.getVisibleCells().map((cell) => (
               <TableCell key={cell.id}>

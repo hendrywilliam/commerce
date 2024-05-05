@@ -11,11 +11,6 @@ import DashboardStoreCard from "@/components/dashboard/stores/store-card";
 
 export default async function DashboardStoresPage() {
   const user = (await currentUser()) as unknown as UserObjectCustomized;
-
-  if (!user) {
-    redirect("/");
-  }
-
   const userPrivateMetadata = user.privateMetadata;
   const userStores =
     userPrivateMetadata.storeId.length > 0

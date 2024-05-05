@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { Store } from "@/db/schema";
@@ -7,6 +8,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import StoreListDataTable from "./store-list-data-table";
 import NoResultMessage from "@/components/no-result-message";
+import { formatDate } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 interface Props {
   stores: Store[];
@@ -39,6 +42,46 @@ export default function StoreListShellTables({ stores }: Props) {
               />
             </div>
           ),
+        }),
+        storesHelper.accessor("name", {
+          header: () => "Name",
+          cell: (info) => (
+            <span className="font-medium">{info.getValue()}</span>
+          ),
+          footer: (info) => info.column.id,
+        }),
+        storesHelper.accessor("active", {
+          header: () => "Status",
+          cell: (info) => (
+            <span className="font-medium">
+              {info.getValue() ? (
+                <Badge className="border-green-300 bg-green-200 text-green-500">
+                  Active
+                </Badge>
+              ) : (
+                <Badge className="border-destructive/40 bg-destructive/20 text-destructive/60">
+                  Not Active
+                </Badge>
+              )}
+            </span>
+          ),
+          footer: (info) => info.column.id,
+        }),
+        storesHelper.accessor("slug", {
+          header: () => "Store Slug",
+          cell: (info) => (
+            <span className="font-medium">{info.getValue()}</span>
+          ),
+          footer: (info) => info.column.id,
+        }),
+        storesHelper.accessor("createdAt", {
+          header: () => "Created",
+          cell: (info) => (
+            <span className="font-medium">
+              {formatDate(info.getValue() as Date)}
+            </span>
+          ),
+          footer: (info) => info.column.id,
         }),
       ] as ColumnDef<Store>[],
     [path],

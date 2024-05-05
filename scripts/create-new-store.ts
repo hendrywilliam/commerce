@@ -19,6 +19,8 @@ async function main({
   name: string;
   user_id: string;
 }) {
+  const start = Date.now();
+  console.log("⌛ Processing...");
   try {
     const store = await db
       .insert(stores)
@@ -53,9 +55,11 @@ async function main({
       },
     });
     console.log("Success create a new store.");
+    console.log(`Time elapsed: ${Date.now() - start} ms`);
     process.exit(0);
   } catch (error) {
     console.error((error as Error).message);
+    console.log(`Time elapsed: ${Date.now() - start} ms`);
     process.exit(1);
   }
 }
@@ -63,5 +67,5 @@ async function main({
 main({
   description: "Lofi Girl Store",
   name: "LofiGirlShop",
-  user_id: tails[0],
+  user_id,
 });
