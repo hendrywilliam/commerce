@@ -8,16 +8,18 @@ import { usePathname } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
 import OrdersHistoryDataTable from "@/components/dashboard/stores/orders/orders-history-data-table";
-import OrdersHistoryDataTableToolbar from "@/components/dashboard/stores/orders/orders-history-data-table-toolbar";
+import OrdersHistoryActionPanel from "@/components/dashboard/stores/orders/orders-history-action-panel";
 
 const storeOrdersColumnHelper = createColumnHelper<Order>();
 
 interface OrdersHistoryShellTableProps {
   orders: Order[];
+  showActionPanel?: boolean;
 }
 
 export default function OrdersHistoryShellTable({
   orders,
+  showActionPanel = true,
 }: OrdersHistoryShellTableProps) {
   const pathname = usePathname();
 
@@ -72,7 +74,7 @@ export default function OrdersHistoryShellTable({
 
   return (
     <>
-      <OrdersHistoryDataTableToolbar />
+      {showActionPanel && <OrdersHistoryActionPanel />}
       <OrdersHistoryDataTable columns={columns} data={orders} />
     </>
   );

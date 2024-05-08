@@ -32,38 +32,40 @@ export default function OrdersHistoryDataTable({
     getCoreRowModel: getCoreRowModel(),
   });
   return (
-    <Table>
-      <TableHeader>
-        {ordersTable.getHeaderGroups().map((headerGroup) => (
-          <TableRow key={headerGroup.id} className="w-full">
-            {headerGroup.headers.map((header) => (
-              <TableHead key={header.id}>
-                {flexRender(
-                  header.column.columnDef.header,
-                  header.getContext(),
-                )}
-              </TableHead>
-            ))}
-          </TableRow>
-        ))}
-      </TableHeader>
-      <TableBody>
-        {!!ordersTable.getRowModel().rows.length ? (
-          ordersTable.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
+    <div className="rounded border">
+      <Table>
+        <TableHeader>
+          {ordersTable.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id} className="w-full">
+              {headerGroup.headers.map((header) => (
+                <TableHead key={header.id}>
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext(),
+                  )}
+                </TableHead>
               ))}
             </TableRow>
-          ))
-        ) : (
-          <TableRow>
-            <TableCell>No record found.</TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {!!ordersTable.getRowModel().rows.length ? (
+            ordersTable.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell>No record found.</TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

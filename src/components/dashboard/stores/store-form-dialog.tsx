@@ -61,7 +61,10 @@ export default function StoreFormDialog({
           loading: "Adding a new store...",
           success: () => "A new store created.",
           error: (error) => catchError(error),
-          finally: () => setIsLoading(false),
+          finally: () => {
+            setIsLoading((isLoading) => !isLoading);
+            setOpenDialog((openDialog) => !openDialog);
+          },
         },
       );
     } else {
@@ -75,7 +78,10 @@ export default function StoreFormDialog({
           loading: "Updating your store...",
           success: () => "Your store has been updated.",
           error: (error) => catchError(error),
-          finally: () => setIsLoading(false),
+          finally: () => {
+            setIsLoading((isLoading) => !isLoading);
+            setOpenDialog((openDialog) => !openDialog);
+          },
         },
       );
     }

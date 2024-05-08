@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import Link from "next/link";
@@ -19,10 +20,12 @@ const storeProductColumnHelper = createColumnHelper<Product>();
 
 interface DashboardStoreProductShellTableProps {
   storeProductData: Product[];
+  showActionPanel?: boolean;
 }
 
 export default function DashboardStoreProductShellTable({
   storeProductData,
+  showActionPanel = true,
 }: DashboardStoreProductShellTableProps) {
   const pathname = usePathname();
   const [rowSelection, setRowSelection] = useState({});
@@ -33,19 +36,23 @@ export default function DashboardStoreProductShellTable({
         storeProductColumnHelper.accessor("id", {
           header: ({ table }) => (
             <div className="py-1">
-              <Checkbox
-                checked={table.getIsAllRowsSelected()}
-                onClick={table.getToggleAllRowsSelectedHandler()}
-              />
+              {showActionPanel && (
+                <Checkbox
+                  checked={table.getIsAllRowsSelected()}
+                  onClick={table.getToggleAllRowsSelectedHandler()}
+                />
+              )}
             </div>
           ),
           cell: ({ row }) => (
             <div className="py-1">
-              <Checkbox
-                checked={row.getIsSelected()}
-                onClick={row.getToggleSelectedHandler()}
-                disabled={!row.getCanSelect()}
-              />
+              {showActionPanel && (
+                <Checkbox
+                  checked={row.getIsSelected()}
+                  onClick={row.getToggleSelectedHandler()}
+                  disabled={!row.getCanSelect()}
+                />
+              )}
             </div>
           ),
         }),
@@ -137,10 +144,12 @@ export default function DashboardStoreProductShellTable({
 
   return (
     <>
-      <DashboardStoreProductDataTableAction
-        rawRowDataSelection={rawRowDataSelection}
-        setRawRowDataSelection={setRawRowDataSelection}
-      />
+      {showActionPanel && (
+        <DashboardStoreProductDataTableAction
+          rawRowDataSelection={rawRowDataSelection}
+          setRawRowDataSelection={setRawRowDataSelection}
+        />
+      )}
       <DashboardStoreProductDataTable
         columns={columns}
         data={storeProductData}

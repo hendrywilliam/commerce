@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useQueryString } from "@/hooks/use-query-string";
 import { useEffect, useState, useTransition } from "react";
 
-export default function OrdersHistoryDataTableToolbar() {
+export default function OrdersHistoryActionPanel() {
   const { push } = useRouter();
   const pathname = usePathname();
   const [filter, setFilter] = useState("");
@@ -29,7 +29,7 @@ export default function OrdersHistoryDataTableToolbar() {
   }, [filter]);
 
   return (
-    <div className="w-full my-4">
+    <div className="my-4 w-full">
       <Input
         onChange={(event) => {
           setFilter(event.target.value);

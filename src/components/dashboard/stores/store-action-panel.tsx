@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { TrashcanIcon } from "@/components/ui/icons";
 import { setStoreStatusAction } from "@/actions/stores/set-store-status";
 import { createAccountLinkAction } from "@/actions/stripe/create-account-link";
+import { deleteOwnedStoreAction } from "@/actions/stores/delete-owned-store";
+import { useRouter } from "next/navigation";
 
 interface Props {
   store: Store;
@@ -15,6 +17,7 @@ interface Props {
 
 export default function StoreActionPanel({ store, payment }: Props) {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const setStoreStatus = async () => {
     setIsLoading(true);
@@ -46,19 +49,38 @@ export default function StoreActionPanel({ store, payment }: Props) {
     });
   };
 
+  const deleteStore = async () => {
+    setIsLoading(true);
+    toast.promise(deleteOwnedStoreAction(store.id), {
+      loading: `Deleting ${store.name} store...`,
+      success: () => `${store.name} has been deleted.`,
+    });
+  };
+
   return (
     <div className="flex justify-end gap-2">
       <Button
         onClick={addPaymentToStore}
         variant="outline"
+        size="sm"
         disabled={Boolean(payment) || isLoading}
       >
         Activate Store
       </Button>
-      <Button disabled={isLoading} onClick={setStoreStatus} variant="outline">
+      <Button
+        disabled={isLoading}
+        onClick={setStoreStatus}
+        variant="outline"
+        size="sm"
+      >
         {store.active ? "Close Store" : "Open Store"}
       </Button>
-      <Button disabled={isLoading} variant="outline" size="icon">
+      <Button
+        disabled={isLoading}
+        variant="outline"
+        size="sm"
+        onClick={deleteStore}
+      >
         <TrashcanIcon />
       </Button>
     </div>

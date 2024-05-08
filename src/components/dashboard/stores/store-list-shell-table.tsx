@@ -99,8 +99,6 @@ export default function StoreListShellTables({ stores }: Props) {
               <StoreFormDialog
                 storeStatus="existing-store"
                 initialValue={storeData}
-                openDialog
-                setOpenDialog={setOpenDialog}
               />
             );
           },
