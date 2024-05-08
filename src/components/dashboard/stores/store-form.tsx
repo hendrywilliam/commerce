@@ -35,40 +35,34 @@ export default function StoreForm({
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     setIsLoading(true);
-    try {
-      if (storeStatus === "new-store") {
-        toast.promise(
-          createNewStoreAction({
-            name: storeData.name,
-            description: storeData.description,
-          }),
-          {
-            loading: "Adding a new store...",
-            success: () => "A new store created.",
-            error: (error) => catchError(error),
-            finally: () => setIsLoading(false),
-          },
-        );
-      } else {
-        toast.promise(
-          updateOwnedStoreAction({
-            id: storeData.id as number,
-            name: storeData.name,
-            description: storeData.description,
-          }),
-          {
-            loading: "Updating your store...",
-            success: () => "Your store has been updated.",
-            error: (error) => catchError(error),
-            finally: () => setIsLoading(false),
-          },
-        );
-      }
-    } catch (error) {
-      catchError(error);
-    } finally {
-      setIsLoading((isLoading) => !isLoading);
-      formRef.current?.reset();
+    if (storeStatus === "new-store") {
+      return toast.promise(
+        createNewStoreAction({
+          name: storeData.name,
+          description: storeData.description,
+        }),
+        {
+          loading: "Adding a new store...",
+          success: () => "A new store created.",
+          error: (error) => catchError(error),
+          finally: () => setIsLoading(false),
+        },
+      );
+    } else {
+      console.log("nyampe sini");
+      return toast.promise(
+        updateOwnedStoreAction({
+          id: storeData.id as number,
+          name: storeData.name,
+          description: storeData.description,
+        }),
+        {
+          loading: "Updating your store...",
+          success: () => "Your store has been updated.",
+          error: (error) => catchError(error),
+          finally: () => setIsLoading(false),
+        },
+      );
     }
   }
 
@@ -76,7 +70,7 @@ export default function StoreForm({
     <Form
       ref={formRef}
       onSubmit={(event) => onSubmit(event)}
-      className="mt-4 flex flex-col gap-2"
+      className="mt-4 flex flex-col space-y-4"
     >
       <FormField>
         <FormLabel htmlFor="store-name">Store Name</FormLabel>
@@ -115,10 +109,10 @@ export default function StoreForm({
           Describe your store in simple words. Users can see this.
         </FormMessage>
       </FormField>
-      <FormField className="mt-4">
-        <Button className="w-max" type="submit" disabled={isLoading}>
+      <FormField>
+        <Button className="flex w-max gap-2" type="submit" disabled={isLoading}>
+          Submit
           {isLoading && <IconLoading />}
-          {storeStatus === "new-store" ? "Add New Store" : "Update Store"}
         </Button>
       </FormField>
     </Form>

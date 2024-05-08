@@ -13,9 +13,9 @@ export default async function DashboardPage() {
   const stores =
     userStores.length > 0
       ? await db
-          .select()
-          .from(storeSchema)
-          .where(inArray(storeSchema.id, userStores))
+        .select()
+        .from(storeSchema)
+        .where(inArray(storeSchema.id, userStores))
       : [];
 
   return (

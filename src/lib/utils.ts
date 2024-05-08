@@ -11,6 +11,7 @@ import { UTApi } from "uploadthing/server";
 import { User } from "@clerk/nextjs/server";
 import { type ClassValue, clsx } from "clsx";
 import { isClerkAPIResponseError } from "@clerk/nextjs";
+import { subscriptionPlans } from "@/config/billing";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -101,6 +102,13 @@ export async function deleteImages(images: UploadData[]) {
 
 export function formatDate(date: Date): string {
   return date.toISOString().split("T")[0];
+}
+
+export function getSubscriptionPlan(subscriptionId: string) {
+  return (
+    subscriptionPlans.find((plan) => plan.id === subscriptionId) ??
+    subscriptionPlans[0]
+  );
 }
 
 // Type utils

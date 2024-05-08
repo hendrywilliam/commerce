@@ -3,7 +3,7 @@
 import { db } from "@/db/core";
 import "dotenv/config";
 import { stores } from "@/db/schema";
-import { slugify } from "@/lib/utils";
+import { getSubscriptionPlan, slugify } from "@/lib/utils";
 import { NewStore } from "@/db/schema";
 import { TweakedOmit } from "@/lib/utils";
 import { redirect } from "next/navigation";
@@ -11,7 +11,6 @@ import { revalidatePath } from "next/cache";
 import { currentUser } from "@clerk/nextjs";
 import { clerkClient } from "@clerk/nextjs";
 import type { UserObjectCustomized } from "@/types";
-import { subscriptionPlans } from "@/config/billing";
 import { newStoreValidation } from "@/lib/validations/stores";
 import { checkStoreAvailabilityAction } from "./check-store-availability";
 
@@ -33,12 +32,10 @@ export async function createNewStoreAction(
   const privateMetadata = user.privateMetadata;
   const subscribedPlanId = privateMetadata.subscribedPlanId;
 
-  const targetPlan = subscriptionPlans.find((plan) => {
-    return plan.id === subscribedPlanId;
-  });
+  const plan = getSubscriptionPlan(subscribedPlanId);
 
   const isAbleToCreateNewStore =
-    targetPlan && user.privateMetadata.storeId.length < targetPlan.limit;
+    plan && privateMetadata.storeId.length < plan.limit;
 
   if (isAbleToCreateNewStore) {
     const store = await db
@@ -65,7 +62,7 @@ export async function createNewStoreAction(
     });
 
     revalidatePath("/dashboard");
-    redirect("/dashboard/stores");
+    redirect("/dashboard");
   } else {
     throw new Error(
       "New store creation limit reached. Please update your subscription plan.",

@@ -3,14 +3,15 @@
 import { Store } from "@/db/schema";
 import { User } from "@clerk/nextjs/server";
 import Link from "next/link";
-import { CaretSortIcon } from "@radix-ui/react-icons";
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useSelectedLayoutSegments } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { PlusIcon } from "@/components/ui/icons";
 
 interface Props {
   firstname: User["firstName"];
@@ -30,43 +31,57 @@ export default function DashboardNavigation({
   return (
     <div className="flex h-16 w-full border-b px-8">
       <div className="flex items-center space-x-4">
-        <p>
+        <p className="font-semibold">
           {firstname} {lastname}
         </p>
         <p>/</p>
         <Link href="/dashboard">Dashboard</Link>
-        {segments[1] === "stores" && segments[2] && selectedStore && (
-          <>
-            <p>/</p>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="ghost" className="flex gap-2">
-                  <span>{selectedStore}</span>
-                  <CaretSortIcon />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-56 p-0">
-                <div className="w-full p-2 text-sm">
-                  {stores.map((store) => (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full"
-                      key={store.id}
-                    >
+        {segments[1] === "stores" &&
+          segments[2] !== "new-store" &&
+          selectedStore && (
+            <>
+              <p>/</p>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" className="flex gap-2">
+                    <span>{selectedStore}</span>
+                    <CaretSortIcon />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-56 p-1">
+                  <div className="w-full space-y-1 px-1 py-2 text-sm">
+                    {stores.map((store) => (
                       <Link
-                        href={`/dashboard/stores/${String(store.slug)}`}
-                        className="w-full"
+                        key={store.id}
+                        href={`/dashboard/stores/${store.slug}`}
+                        className={buttonVariants({
+                          variant: "ghost",
+                          size: "sm",
+                          className: "flex w-full justify-between",
+                        })}
                       >
-                        {store.name}
+                        <span className="w-full text-start">{store.name}</span>
+                        {store.name === selectedStore && <CheckIcon />}
                       </Link>
-                    </Button>
-                  ))}
-                </div>
-              </PopoverContent>
-            </Popover>
-          </>
-        )}
+                    ))}
+                    <Link
+                      href="/dashboard/stores/new-store"
+                      className={buttonVariants({
+                        variant: "outline",
+                        size: "sm",
+                        className: "w-full",
+                      })}
+                    >
+                      <span className="w-full text-start">
+                        Create New Store
+                      </span>
+                      <PlusIcon />
+                    </Link>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </>
+          )}
       </div>
     </div>
   );
