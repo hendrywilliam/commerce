@@ -49,7 +49,6 @@ export default function StoreForm({
         },
       );
     } else {
-      console.log("nyampe sini");
       return toast.promise(
         updateOwnedStoreAction({
           id: storeData.id as number,
