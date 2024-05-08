@@ -64,19 +64,6 @@ export default function DashboardNavigation({
                         {store.name === selectedStore && <CheckIcon />}
                       </Link>
                     ))}
-                    <Link
-                      href="/dashboard/stores/new-store"
-                      className={buttonVariants({
-                        variant: "outline",
-                        size: "sm",
-                        className: "w-full",
-                      })}
-                    >
-                      <span className="w-full text-start">
-                        Create New Store
-                      </span>
-                      <PlusIcon />
-                    </Link>
                   </div>
                 </PopoverContent>
               </Popover>

@@ -22,6 +22,7 @@ const storesHelper = createColumnHelper<Store>();
 export default function StoreListShellTables({ stores }: Props) {
   const path = usePathname();
   const [rowSelection, setRowSelection] = useState({});
+  const [openDialog, setOpenDialog] = useState(false);
   const [rawRowDataSelection, setRawRowDataSelection] = useState<Store[]>([]);
   const columns = useMemo(
     () =>
@@ -98,6 +99,8 @@ export default function StoreListShellTables({ stores }: Props) {
               <StoreFormDialog
                 storeStatus="existing-store"
                 initialValue={storeData}
+                openDialog
+                setOpenDialog={setOpenDialog}
               />
             );
           },

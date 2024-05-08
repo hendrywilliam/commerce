@@ -18,9 +18,12 @@ export async function setStoreStatusAction({
     throw new Error("Invalid store. Please try again.");
   }
 
-  await db.update(stores).set({
-    active: !store.active,
-  });
+  await db
+    .update(stores)
+    .set({
+      active: !store.active,
+    })
+    .where(eq(stores.id, store_id));
 
   revalidatePath(`/dashboard/stores/${store.slug}`);
 }
