@@ -11,6 +11,7 @@ import NoResultMessage from "@/components/no-result-message";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import StoreFormDialog from "./store-form-dialog";
 
 interface Props {
   stores: Store[];
@@ -67,7 +68,7 @@ export default function StoreListShellTables({ stores }: Props) {
           header: () => "Status",
           cell: (info) => (
             <span className="font-medium">
-              {info.getValue() ? (
+              {info.row.original.active ? (
                 <Badge className="border-green-300 bg-green-200 text-green-500">
                   Active
                 </Badge>
@@ -88,6 +89,18 @@ export default function StoreListShellTables({ stores }: Props) {
             </span>
           ),
           footer: (info) => info.column.id,
+        }),
+        storesHelper.display({
+          id: "store-action",
+          cell: ({ row }) => {
+            const storeData = row.original;
+            return (
+              <StoreFormDialog
+                storeStatus="existing-store"
+                initialValue={storeData}
+              />
+            );
+          },
         }),
       ] as ColumnDef<Store>[],
     [path],
