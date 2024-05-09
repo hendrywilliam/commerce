@@ -6,6 +6,7 @@ import { clerkClient } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
 import { currentUser } from "@clerk/nextjs";
 import { UserObjectCustomized } from "@/types";
+import "dotenv/config";
 
 export async function cancelCurrentSubscriptionAction() {
   // Get subscription ID
@@ -25,7 +26,8 @@ export async function cancelCurrentSubscriptionAction() {
   await clerkClient.users.updateUser(user.id, {
     privateMetadata: {
       ...privateMetadata,
-      stripeSubscriptionId: "",
+      /** Revert to FREE plan. */
+      stripeSubscriptionId: process.env.HOBBY_PLAN_ID,
     } satisfies Partial<UserObjectCustomized["privateMetadata"]>,
   });
 
