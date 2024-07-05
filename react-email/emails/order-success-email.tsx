@@ -14,7 +14,6 @@ import {
   Text,
 } from "@react-email/components";
 import * as React from "react";
-import type { UploadData } from "../../src/types";
 import { beautifyId } from "../utils/beautify-id";
 import { type Extends } from "../../src/lib/utils";
 import type { Product } from "../../src/db/schema";

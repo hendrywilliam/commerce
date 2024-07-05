@@ -1,22 +1,21 @@
 import { GithubIcon } from "@/components/ui/icons";
 import { buttonVariants } from "@/components/ui/button";
 import { footerNavigation, siteName } from "@/config/site";
-import NewsLetterPanel from "@/components/newsletter-panel";
 
 export default function SiteFooter() {
   return (
-    <footer className="border-t text-sm h-fit">
-      <div className="container h-full w-full py-8 p-4">
-        <div className="w-full grid grid-cols-1 grid-rows-3 lg:grid-cols-3 lg:grid-rows-1 h-full">
+    <footer className="h-fit border-t text-sm">
+      <div className="container h-full w-full p-4 py-8">
+        <div className="grid h-full w-full grid-cols-1 grid-rows-3 lg:grid-cols-3 lg:grid-rows-1">
           <div>
             <h2 className="font-bold">{siteName}</h2>
           </div>
-          <div className="grid grid-cols-2 w-full">
+          <div className="grid w-full grid-cols-2">
             {footerNavigation.map((item, i) => {
               return (
                 <div key={i}>
                   <h2 className="font-semibold">{item.title}</h2>
-                  <ul className="flex flex-col gap-1 mt-2">
+                  <ul className="mt-2 flex flex-col gap-1">
                     {item.items.map((item, i) => {
                       return (
                         <li
@@ -34,9 +33,8 @@ export default function SiteFooter() {
               );
             })}
           </div>
-          <NewsLetterPanel />
         </div>
-        <div className="w-full grid grid-cols-2 mt-4">
+        <div className="mt-4 grid w-full grid-cols-2">
           <div>
             <p>
               Made by <span className="font-bold">hendry</span>
