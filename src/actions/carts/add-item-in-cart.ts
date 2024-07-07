@@ -34,7 +34,7 @@ export async function addItemInCartAction(newCartItem: CartItem) {
     }) as CartItem[];
 
     const targetItemInCart = cartItems.find(
-      (cartItem) => cartItem.id === newCartItem.id,
+      (cartItem) => cartItem.id === newCartItem.id
     );
 
     const newCartItemDetails = await db.query.products.findFirst({
@@ -43,7 +43,7 @@ export async function addItemInCartAction(newCartItem: CartItem) {
 
     if (!newCartItemDetails) {
       throw new Error(
-        "Product does not exist in store. Please try again or contact the store.",
+        "Product does not exist in store. Please try again or contact the store."
       );
     }
 
