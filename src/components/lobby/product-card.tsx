@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
 import ImagePlaceholder from "@/components/image-placeholder";
 import { addItemToCart } from "@/actions/carts/add-item-to-cart";
-import { catchError, formatCurrency } from "@/lib/utils";
+import { catchError, formatCurrency, truncate } from "@/lib/utils";
 import { IconCart, IconLoading, IconView } from "@/components/ui/icons";
 import Rating from "@/components/rating";
 
@@ -39,14 +39,12 @@ export default function ProductCard({ product }: ProductCardProps) {
     }
 
     return (
-        <div className="group relative h-max w-full rounded border shadow">
-            <div className="absolute right-2 top-2 z-[2] rounded bg-foreground px-2 py-1 font-semibold text-background">
-                <p className="text-xs">
-                    {formatCurrency(Number(product.price))}
-                </p>
+        <div className="relative h-max w-full">
+            <div className="absolute right-2 top-2 z-[2] rounded bg-background px-2 py-1 font-semibold border border-primary text-primary">
+                <p className="text-xs">{product.category}</p>
             </div>
             <Link href={`/product/${product.slug}`}>
-                <div className="relative h-56 overflow-hidden rounded">
+                <div className="group relative h-56 overflow-hidden rounded">
                     {product.image[0].url ? (
                         <Image
                             src={product.image[0].url}
@@ -60,14 +58,15 @@ export default function ProductCard({ product }: ProductCardProps) {
                     )}
                 </div>
             </Link>
-            <div className=" border-t p-2 ">
-                <p className="font-semibold">{product.name}</p>
-                <p className="mb-1 truncate text-sm text-gray-400">
-                    {product.description}
-                </p>
+            <div className="mt-2">
+                <div className="flex text-sm justify-between font-semibold">
+                    <p>{truncate(product.name, 22)}</p>
+                    <p>{formatCurrency(parseInt(product.price, 10))}</p>
+                </div>
                 <Rating
                     isInteractable={false}
                     rating={Math.floor(Number(product.averageRatings))}
+                    totalRating={Number(product.averageRatings)}
                 />
                 <div className="mt-2 inline-flex w-full justify-between gap-2">
                     <Link
