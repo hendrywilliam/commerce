@@ -2,14 +2,13 @@
 
 import { db } from "@/db/core";
 import { stores } from "@/db/schema";
-import { parseArgs } from "node:util";
+import { getProcArgv } from "./utils";
 import { slugify } from "@/lib/utils";
 import { clerkClient } from "@clerk/nextjs";
-import { flatArgs } from "@/actions/carts/utils";
 import { UserObjectCustomized } from "@/types";
+import { ParseArgsConfig } from "util";
 
 /** pnpm run script create-new-store --id=100 --name=LofiGirl */
-const args = flatArgs(process.argv);
 const options = {
   id: {
     type: "string",
@@ -20,9 +19,9 @@ const options = {
   name: {
     type: "string",
   },
-};
+} satisfies ParseArgsConfig["options"];
 // @ts-ignore
-const { values } = parseArgs({ args, options });
+const { id, name } = getProcArgv(options);
 
 async function main({
   description,
@@ -84,6 +83,6 @@ async function main({
 
 main({
   description: "Lofi Girl Store",
-  name: values.name as string,
-  user_id: values.id as string,
+  name: name as string,
+  user_id: id as string,
 });
