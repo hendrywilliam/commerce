@@ -10,8 +10,8 @@ import { twMerge } from "tailwind-merge";
 import { UTApi } from "uploadthing/server";
 import { User } from "@clerk/nextjs/server";
 import { type ClassValue, clsx } from "clsx";
-import { isClerkAPIResponseError } from "@clerk/nextjs";
 import { subscriptionPlans } from "@/config/billing";
+import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -23,13 +23,12 @@ export function getErrorMessage(err: unknown) {
 }
 
 export function catchError(err: unknown) {
-    console.log(err);
     const unknownError = "Something went wrong please try again later.";
-    if (isClerkAPIResponseError(err)) {
-        return toast.error(err.errors[0].longMessage ?? unknownError);
-    }
     if (err instanceof z.ZodError) {
         return toast.error(err.issues[0].message);
+    }
+    if (isClerkAPIResponseError(err)) {
+        return toast.error(err.errors[0].message ?? err.errors[0].longMessage);
     }
     if (err instanceof Error) {
         return toast.error(err.message);

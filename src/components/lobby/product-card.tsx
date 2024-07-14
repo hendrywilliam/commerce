@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { toast } from "sonner";
 import { useState } from "react";
-import { Product } from "@/db/schema";
+import { Product, Store } from "@/db/schema";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
 import ImagePlaceholder from "@/components/image-placeholder";
@@ -15,9 +15,10 @@ import Rating from "@/components/rating";
 
 type ProductCardProps = {
     product: Omit<Product, "createdAt">;
+    store?: Store;
 };
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, store }: ProductCardProps) {
     const [isLoading, setIsLoading] = useState(false);
 
     async function addToCart() {
@@ -43,7 +44,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <div className="absolute right-2 top-2 z-[2] rounded bg-background px-2 py-1 font-semibold border border-primary text-primary">
                 <p className="text-xs">{product.category}</p>
             </div>
-            <Link href={`/product/${product.slug}`}>
+            <Link href={`/${store?.slug}/${product.slug}`}>
                 <div className="group relative h-56 overflow-hidden rounded">
                     {product.image[0].url ? (
                         <Image

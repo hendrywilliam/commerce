@@ -1,6 +1,6 @@
 import { db } from "@/db/core";
 import { and, like, eq } from "drizzle-orm";
-import { currentUser } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
 import { orders, stores } from "@/db/schema";
 import { UserObjectCustomized } from "@/types";
 import { notFound, redirect } from "next/navigation";
@@ -8,63 +8,67 @@ import { Separator } from "@/components/ui/separator";
 import OrdersHistoryShellTable from "@/components/dashboard/stores/orders/orders-history-shell-table";
 
 interface DashboardStoreOrdersPageProps {
-  params: {
-    storeSlug: string;
-    [key: string]: string;
-  };
-  searchParams: {
-    name: string;
-    page: string;
-  };
+    params: {
+        storeSlug: string;
+        [key: string]: string;
+    };
+    searchParams: {
+        name: string;
+        page: string;
+    };
 }
 
 export default async function DashboardStoreOrdersPage({
-  params,
-  searchParams,
+    params,
+    searchParams,
 }: DashboardStoreOrdersPageProps) {
-  const customerName = searchParams.name;
-  const slug = params.storeSlug;
-  const page = isNaN(Number(searchParams.page)) ? 1 : Number(searchParams.page);
-  const pageSize = 10;
+    const customerName = searchParams.name;
+    const slug = params.storeSlug;
+    const page = isNaN(Number(searchParams.page))
+        ? 1
+        : Number(searchParams.page);
+    const pageSize = 10;
 
-  const user = (await currentUser()) as unknown as UserObjectCustomized;
+    const user = (await currentUser()) as unknown as UserObjectCustomized;
 
-  const store = await db.query.stores.findFirst({
-    where: eq(stores.slug, slug),
-  });
+    const store = await db.query.stores.findFirst({
+        where: eq(stores.slug, slug),
+    });
 
-  if (!store) {
-    notFound();
-  }
+    if (!store) {
+        notFound();
+    }
 
-  const isStoreOwner = user.privateMetadata.storeId.includes(store.id);
+    const isStoreOwner = user.privateMetadata.storeId.includes(store.id);
 
-  if (!isStoreOwner) {
-    redirect("/dashboard/stores");
-  }
+    if (!isStoreOwner) {
+        redirect("/dashboard/stores");
+    }
 
-  const storeOrders = await db
-    .select()
-    .from(orders)
-    .where(
-      and(
-        customerName ? like(orders.name, `%${customerName}%`) : undefined,
-        eq(orders.storeId, store.id),
-      ),
-    )
-    .limit(pageSize)
-    .offset((page - 1) * pageSize);
+    const storeOrders = await db
+        .select()
+        .from(orders)
+        .where(
+            and(
+                customerName
+                    ? like(orders.name, `%${customerName}%`)
+                    : undefined,
+                eq(orders.storeId, store.id)
+            )
+        )
+        .limit(pageSize)
+        .offset((page - 1) * pageSize);
 
-  return (
-    <div>
-      <div className="flex w-full">
-        <div className="w-full">
-          <h1 className="text-2xl font-bold">Orders</h1>
-          <p className="text-gray-500">List of store orders.</p>
+    return (
+        <div>
+            <div className="flex w-full">
+                <div className="w-full">
+                    <h1 className="text-2xl font-bold">Orders</h1>
+                    <p className="text-gray-500">List of store orders.</p>
+                </div>
+            </div>
+            <Separator />
+            <OrdersHistoryShellTable orders={storeOrders} />
         </div>
-      </div>
-      <Separator />
-      <OrdersHistoryShellTable orders={storeOrders} />
-    </div>
-  );
+    );
 }
