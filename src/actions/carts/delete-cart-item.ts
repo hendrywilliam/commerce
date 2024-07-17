@@ -9,7 +9,7 @@ import { Cart, Product, carts, products } from "@/db/schema";
 
 export async function deleteCartItemAction(
     productId: Product["id"]
-): Promise<string> {
+): Promise<{ data?: string; error?: string }> {
     const cartId = cookies().get("cart_id")?.value;
 
     if (isNaN(Number(cartId))) {
@@ -33,7 +33,6 @@ export async function deleteCartItemAction(
         where: eq(products.id, targetItem.id),
     })) as Product;
 
-    // Update cart
     await db
         .update(carts)
         .set({
@@ -42,5 +41,7 @@ export async function deleteCartItemAction(
         .where(eq(carts.id, Number(cartId)));
 
     revalidatePath("/");
-    return detailedItem.name;
+    return {
+        data: detailedItem.name,
+    };
 }
