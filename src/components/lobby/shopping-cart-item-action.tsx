@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect, useTransition, useRef } from "react";
 import { TrashcanIcon, IconLoading } from "@/components/ui/icons";
 import { updateCartItem } from "@/actions/carts/update-cart-item";
-import { deleteCartItemAction } from "@/actions/carts/delete-cart-item";
+import { deleteCartItem } from "@/actions/carts/delete-cart-item";
 
 interface Props {
     id: number;
@@ -20,19 +20,21 @@ export default function ShoppingCartItemAction({ id, qty }: Props) {
     const [isDeletingItem, setIsDeletingItem] = useState(false);
     const [isNewValue, setIsNewValue] = useState(false);
 
-    const cacheValueRef = useRef<number>(qty);
-
     async function handleDeleteItemFromCart() {
-        setIsDeletingItem((isDeletingItem) => !isDeletingItem);
-        startTransition(async () => {
-            toast.promise(deleteCartItemAction(id), {
-                loading: "Removing your item from the cart...",
-                success: (data) => `${data} has been removed from your cart.`,
-                error: (error) => catchError(error),
-                finally: () =>
-                    setIsDeletingItem((isDeletingItem) => !isDeletingItem),
-            });
-        });
+        try {
+            setIsDeletingItem(true);
+            const toastId = toast.loading("Deleting your item...");
+            const result = await deleteCartItem(id);
+            if (result.error || !result.data) {
+                throw new Error(result.error);
+            }
+            toast.success(`${result.data} has been deleted from cart.`);
+            toast.dismiss(toastId);
+        } catch (error) {
+            catchError(error);
+        } finally {
+            setIsDeletingItem(false);
+        }
     }
 
     useEffect(() => {
@@ -40,12 +42,13 @@ export default function ShoppingCartItemAction({ id, qty }: Props) {
             const bounceUpdate = setTimeout(async () => {
                 startTransition(async () => {
                     try {
-                        toast.loading("Updating your item...");
+                        const toastId = toast.loading("Updating your item...");
                         const result = await updateCartItem(id, itemQuantity);
                         if (result.error || !result.data) {
                             throw new Error(result.error);
                         }
                         toast.success(`${result.data.name} has been updated.`);
+                        toast.dismiss(toastId);
                     } catch (error) {
                         catchError(error);
                     }

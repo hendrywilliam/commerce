@@ -14,7 +14,7 @@ import { CartLineDetailedItems } from "@/types";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState, useTransition } from "react";
 import { updateCartItem } from "@/actions/carts/update-cart-item";
-import { deleteCartItemAction } from "@/actions/carts/delete-cart-item";
+import { deleteCartItem } from "@/actions/carts/delete-cart-item";
 
 interface CartItemActionProps {
     cartItem: CartLineDetailedItems;
@@ -34,7 +34,7 @@ export default function CartItemAction({ cartItem }: CartItemActionProps) {
                 (isDeletingCurrentItem) => !isDeletingCurrentItem
             );
             try {
-                await deleteCartItemAction(cartItem.id);
+                await deleteCartItem(cartItem.id);
                 toast.success("Item successfully removed from your cart.");
             } catch (err) {
                 catchError(err);
