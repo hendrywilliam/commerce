@@ -24,7 +24,7 @@ export default function ProductCard({ product, store }: ProductCardProps) {
     async function addToCart() {
         try {
             setIsLoading((isLoading) => !isLoading);
-            toast.loading(
+            const toastId = toast.loading(
                 `Adding ${product.name} to your cart. Please wait...`
             );
             const result = await addItemToCart({ id: product.id, qty: 1 });
@@ -32,6 +32,7 @@ export default function ProductCard({ product, store }: ProductCardProps) {
                 throw new Error(result.error);
             }
             toast.success(`${result.data.name} has been added to your cart.`);
+            toast.dismiss(toastId);
         } catch (error) {
             catchError(error);
         } finally {
