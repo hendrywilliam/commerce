@@ -1,24 +1,30 @@
 import express from "express";
 import process from "node:process";
 import { log } from "./src/utils/logger";
-import pino from "pino-http";
-import bodyParser from "body-parser";
+// import pino from "pino-http";
 import type { Request, Response } from "express";
 
 const app = express();
-const pinoHttpLogger = pino();
+// const pinoHttpLogger = pino();
 const PORT = 3000;
 
-app.use(pinoHttpLogger);
-app.use(bodyParser.json());
+// app.use(pinoHttpLogger);
+
+app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
 	log.info("hi");
 	res.send("Hello World");
 });
 
-import { addItemToCart } from "./src/controllers/cart";
-app.post("/cart", addItemToCart);
+import {
+	addCartItem,
+	deleteCartItem,
+	updateCartItem,
+} from "./src/controllers/cart";
+app.post("/cart", addCartItem);
+app.delete("/cart", deleteCartItem);
+app.put("/cart", updateCartItem);
 
 const server = app.listen(PORT, () => {
 	console.log(`Listening on ${PORT}`);
