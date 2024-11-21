@@ -1,0 +1,36 @@
+{
+	"name": "commerce-be",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"build": "tsc --build tsconfig.json",
+		"start": "node ./dist/index.js",
+		"dev": "tsx watch ./index.ts",
+		"db:generate": "drizzle-kit generate",
+		"db:push": "drizzle-kit push"
+	},
+	"type": "module",
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@types/body-parser": "^1.19.5",
+		"@types/express": "^5.0.0",
+		"@types/pg": "^8.11.10",
+		"drizzle-kit": "^0.28.1",
+		"express": "^4.21.1",
+		"tsx": "^4.19.2",
+		"typescript": "^5.6.3"
+	},
+	"dependencies": {
+		"body-parser": "^1.20.3",
+		"dotenv": "^16.4.5",
+		"drizzle-orm": "^0.36.3",
+		"pg": "^8.13.1",
+		"pino": "^9.5.0",
+		"pino-http": "^10.3.0",
+		"zod": "^3.23.8"
+	}
+}
