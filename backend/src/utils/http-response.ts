@@ -1,5 +1,4 @@
 import { ZodError } from "zod";
-import { log } from "./logger";
 
 export const HTTPStatusBadRequest = 400;
 export const HTTPStatusCreated = 201;

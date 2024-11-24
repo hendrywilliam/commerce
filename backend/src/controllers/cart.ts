@@ -46,10 +46,7 @@ export async function addCartItem(req: Request, res: Response) {
 						"Product does not exist in store. Please try again or contact the store.",
 					);
 				}
-				if (
-					data.qty + (findItemInCart?.qty ?? 0) >
-					newItemDetails.stock
-				) {
+				if (data.qty + (findItemInCart?.qty ?? 0) > newItemDetails.stock) {
 					throw new Error("Stock limit exceeds.");
 				}
 				await tx
@@ -86,9 +83,7 @@ export async function addCartItem(req: Request, res: Response) {
 					where: eq(products.id, data.product_id),
 				});
 				if (!itemDetails) {
-					throw new Error(
-						"Failed to fetch product. Please try again later.",
-					);
+					throw new Error("Failed to fetch product. Please try again later.");
 				}
 				const { cartId } = await tx
 					.insert(carts)
@@ -143,9 +138,7 @@ export async function deleteCartItem(req: Request, res: Response) {
 				data.product_id,
 			);
 			if (!targetItem) {
-				throw new Error(
-					"Invalid item in cart. Please try again later.",
-				);
+				throw new Error("Invalid item in cart. Please try again later.");
 			}
 			const filteredItems = cartItems.filter(
 				(item) => item.productId !== targetItem.productId,
@@ -193,9 +186,7 @@ export async function updateCartItem(req: Request, res: Response) {
 				data.product_id,
 			);
 			if (!targetItem) {
-				throw new Error(
-					"Item does not exist in cart. Please try again later.",
-				);
+				throw new Error("Item does not exist in cart. Please try again later.");
 			}
 			const targetItemDetails = await tx.query.products.findFirst({
 				where: eq(products.id, targetItem.productId),
@@ -219,8 +210,7 @@ export async function updateCartItem(req: Request, res: Response) {
 								...targetItem,
 								qty:
 									targetItemDetails &&
-									data.qty + targetItem.qty >
-										targetItemDetails.stock
+									data.qty + targetItem.qty > targetItemDetails.stock
 										? targetItemDetails.stock
 										: data.qty,
 							},
