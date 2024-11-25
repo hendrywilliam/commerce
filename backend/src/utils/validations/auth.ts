@@ -2,7 +2,6 @@ import z from "zod";
 
 export const validation_registerUser = z
 	.object({
-		username: z.string({ required_error: "Username is required." }).min(1),
 		email: z
 			.string({
 				required_error: "Email is required.",
@@ -27,3 +26,12 @@ export const validation_registerUser = z
 		message: "Password does not match with confirm password.",
 		path: ["confirmPassword"],
 	});
+
+export const validation_loginUser = z.object({
+	email: z.string({ required_error: "Email is required." }).email({
+		message: "Invalid email. Please provide a proper email",
+	}),
+	password: z.string({
+		required_error: "Password is required.",
+	}),
+});

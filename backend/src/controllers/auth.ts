@@ -1,14 +1,20 @@
 import type { Request, Response } from "express";
-import { validation_registerUser } from "../utils/validations/auth";
-import { hashPassword } from "../utils/hash";
+import {
+	validation_loginUser,
+	validation_registerUser,
+} from "../utils/validations/auth";
+import { hash, verify } from "../utils/hash-password";
 import {
 	getErrorMessage,
 	HTTPStatusBadRequest,
 	HTTPStatusCreated,
+	HTTPStatusOK,
 } from "../utils/http-response";
 import { db } from "../db";
 import { users } from "../db/schema";
 import { emailQueue } from "../utils/background-process/queue";
+import { eq } from "drizzle-orm";
+import { sign } from "../utils/token";
 
 export async function register(req: Request, res: Response) {
 	try {
@@ -18,14 +24,13 @@ export async function register(req: Request, res: Response) {
 		if (!success) {
 			throw new Error(error.issues[0].message);
 		}
-		const hashedPass = await hashPassword(data.password);
+		const hashedPass = await hash(data.password);
 		const user = await db
 			.insert(users)
 			.values({
 				email: data.email,
 				fullName: data.fullName,
 				password: hashedPass,
-				username: data.username,
 			})
 			.returning()
 			.execute()
@@ -36,9 +41,9 @@ export async function register(req: Request, res: Response) {
 			{ delay: 5000 },
 		);
 		res.status(HTTPStatusCreated).json({
-			message: "User created. You may login now.",
+			message: "Please check your email to verify your account.",
 			data: {
-				email: data.email,
+				email: user.email,
 			},
 		});
 	} catch (error) {
@@ -48,4 +53,39 @@ export async function register(req: Request, res: Response) {
 	}
 }
 
-export async function login() {}
+export async function login(req: Request, res: Response) {
+	try {
+		const { data, success, error } = await validation_loginUser.spa(req.body);
+		if (!success) {
+			throw new Error(error.issues[0].message);
+		}
+		const user = await db.query.users.findFirst({
+			where: eq(users.email, data.email),
+		});
+		if (!user) {
+			throw new Error("No such user exist.");
+		}
+		const isValidPassword = await verify(data.password, user.password);
+		if (!isValidPassword) {
+			res.status(HTTPStatusBadRequest).json({
+				message: "Invalid password.",
+			});
+			return;
+		}
+		const accessToken = await sign({
+			id: user.id,
+			email: user.email,
+			publicMetadata: user.publicMetadata,
+		});
+		res.status(HTTPStatusOK).json({
+			message: "Login succeeded.",
+			data: {
+				access_token: accessToken,
+			},
+		});
+	} catch (error) {
+		res.status(HTTPStatusBadRequest).json({
+			error: getErrorMessage(error),
+		});
+	}
+}

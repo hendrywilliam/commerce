@@ -1,7 +1,7 @@
 import express from "express";
 import process from "node:process";
 import { log } from "./src/utils/logger";
-import { register } from "./src/controllers/auth";
+import { login, register } from "./src/controllers/auth";
 import pino from "pino-http";
 import {
 	addCartItem,
@@ -20,12 +20,13 @@ app.use(httpLogMiddleware);
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
-	res.send(".");
+	res.send("hi");
 });
 app.post("/cart", addCartItem);
 app.delete("/cart", deleteCartItem);
 app.put("/cart", updateCartItem);
 app.post("/register", register);
+app.post("/login", login);
 
 const server = app.listen(PORT, async () => {
 	console.log(`Listening on ${PORT}`);

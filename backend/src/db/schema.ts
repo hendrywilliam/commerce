@@ -77,7 +77,6 @@ export type Cart = typeof carts.$inferSelect;
 
 export const users = p.pgTable("users", {
 	id: p.serial("id").primaryKey(),
-	username: p.varchar("username", { length: 255 }).unique().notNull(),
 	password: p.varchar("password", { length: 255 }).notNull(),
 	fullName: p.varchar("full_name", { length: 255 }).notNull(),
 	email: p.varchar("email", { length: 255 }).notNull(),
@@ -106,7 +105,6 @@ export const usersRelations = relations(users, ({ many }) => ({
 
 export const verifyEmails = p.pgTable("verify_emails", {
 	id: p.serial("id").primaryKey(),
-	username: p.varchar("username", { length: 255 }).notNull(),
 	email: p.varchar("email").notNull(),
 	secretCode: p.varchar("secret_code").notNull(),
 	isUsed: p.boolean("is_used").notNull().default(false),

@@ -35,7 +35,6 @@ CREATE TABLE IF NOT EXISTS "stores" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"username" varchar(255) NOT NULL,
 	"password" varchar(255) NOT NULL,
 	"full_name" varchar(255) NOT NULL,
 	"email" varchar(255) NOT NULL,
@@ -43,13 +42,11 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"private_metadata" json DEFAULT '{}'::json NOT NULL,
 	"public_metadata" json DEFAULT '{}'::json NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "users_username_unique" UNIQUE("username")
+	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "verify_emails" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"username" varchar(255) NOT NULL,
 	"email" varchar NOT NULL,
 	"secret_code" varchar NOT NULL,
 	"is_used" boolean DEFAULT false NOT NULL,
