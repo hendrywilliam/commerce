@@ -11,22 +11,27 @@ import {
 import type { Request, Response } from "express";
 import { emailWorker } from "./src/utils/background-process/email-worker";
 import { emailQueue } from "./src/utils/background-process/queue";
+import { authenticationMiddleware } from "./src/middlewares/authentication";
 
 const app = express();
-const httpLogMiddleware = pino();
+// const httpLogMiddleware = pino();
 const PORT = 3000;
 
-app.use(httpLogMiddleware);
+// app.use(httpLogMiddleware);
 app.use(express.json());
 
+// pub routes
 app.get("/", (req: Request, res: Response) => {
 	res.send("hi");
 });
+app.post("/login", login);
+app.post("/register", register);
+
+// private routes
+app.use(authenticationMiddleware);
 app.post("/cart", addCartItem);
 app.delete("/cart", deleteCartItem);
 app.put("/cart", updateCartItem);
-app.post("/register", register);
-app.post("/login", login);
 
 const server = app.listen(PORT, async () => {
 	console.log(`Listening on ${PORT}`);

@@ -1,5 +1,5 @@
 {
-  "id": "c6e88f44-2f93-418f-849e-4b51d3e38d1b",
+  "id": "fac8759e-6a8b-4f51-beb6-6328bce11767",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -239,6 +239,21 @@
           "columns": [
             {
               "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "unique_store_code_index": {
+          "name": "unique_store_code_index",
+          "columns": [
+            {
+              "expression": "unique_store_code",
               "isExpression": false,
               "asc": true,
               "nulls": "last"

@@ -1,6 +1,7 @@
+import "dotenv/config";
 import * as jose from "jose";
 
-const secret = new TextEncoder().encode(process.env.JWT_SECRET_KEY);
+const secret = new TextEncoder().encode(process.env.JWT_SECRET_KEY as string)
 
 export async function sign(claims: Record<string, unknown>): Promise<string> {
 	const signed = await new jose.SignJWT(claims)

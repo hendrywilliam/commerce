@@ -49,11 +49,14 @@ export const stores = p.pgTable(
 		description: p.text("description").notNull(),
 		active: p.boolean("active").notNull().default(false),
 		storeOwnerName: p.varchar("store_owner_name", { length: 255 }),
-		uniqueStoreCode: p.text("unique_store_code"), // store_owner_name:stores.name
+		uniqueStoreCode: p.text("unique_store_code"), // stores.slug:stores.name
 		createdAt: p.timestamp("created_at").defaultNow(),
 		updatedAt: p.timestamp("updated_at").defaultNow(),
 	},
-	(table) => [p.uniqueIndex("store_slug_index").on(table.slug)],
+	(table) => [
+		p.uniqueIndex("store_slug_index").on(table.slug),
+		p.uniqueIndex("unique_store_code_index").on(table.uniqueStoreCode),
+	],
 );
 
 export const storesRelations = relations(stores, ({ many, one }) => ({

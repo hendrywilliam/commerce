@@ -35,11 +35,11 @@ export async function register(req: Request, res: Response) {
 			.returning()
 			.execute()
 			.then((result) => result[0]);
-		await emailQueue.add(
-			"verify_email",
-			{ email: user.email, fullName: user.fullName },
-			{ delay: 5000 },
-		);
+		// await emailQueue.add(
+		// 	"verify_email",
+		// 	{ email: user.email, fullName: user.fullName },
+		// 	{ delay: 5000 },
+		// );
 		res.status(HTTPStatusCreated).json({
 			message: "Please check your email to verify your account.",
 			data: {
@@ -75,7 +75,7 @@ export async function login(req: Request, res: Response) {
 		const accessToken = await sign({
 			id: user.id,
 			email: user.email,
-			publicMetadata: user.publicMetadata,
+			public_metadata: user.publicMetadata,
 		});
 		res.status(HTTPStatusOK).json({
 			message: "Login succeeded.",

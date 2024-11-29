@@ -56,4 +56,5 @@ CREATE TABLE IF NOT EXISTS "verify_emails" (
 --> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "product_slug_index" ON "products" USING btree ("slug");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "product_name_index" ON "products" USING btree ("name");--> statement-breakpoint
-CREATE UNIQUE INDEX IF NOT EXISTS "store_slug_index" ON "stores" USING btree ("slug");
+CREATE UNIQUE INDEX IF NOT EXISTS "store_slug_index" ON "stores" USING btree ("slug");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "unique_store_code_index" ON "stores" USING btree ("unique_store_code");

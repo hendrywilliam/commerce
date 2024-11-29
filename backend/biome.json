@@ -12,7 +12,8 @@
 	"formatter": {
 		"enabled": true,
 		"indentStyle": "tab",
-		"indentWidth": 2
+		"indentWidth": 2,
+		"ignore": ["node_modules"]
 	},
 	"organizeImports": {
 		"enabled": true
