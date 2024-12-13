@@ -5,13 +5,8 @@ import (
 	"errors"
 
 	"github.com/hendrywilliam/commerce/internal/queries"
+	"github.com/hendrywilliam/commerce/internal/utils"
 	"github.com/jackc/pgx/v5"
-)
-
-var (
-	ErrNoStore        = errors.New("no such store exist")
-	ErrDuplicateStore = errors.New("duplicate store detected")
-	ErrInternalError  = errors.New("internal server errors")
 )
 
 type StoreServices interface {
@@ -21,17 +16,17 @@ type StoreServices interface {
 }
 
 type StoreServicesImpl struct {
-	S *queries.Queries
+	Q *queries.Queries
 }
 
 func NewServices(s *queries.Queries) StoreServices {
 	return &StoreServicesImpl{
-		S: s,
+		Q: s,
 	}
 }
 
 func (ss *StoreServicesImpl) CreateStore(ctx context.Context, args CreateStoreRequest) (queries.Store, error) {
-	store, err := ss.S.StoreQueries.CreateStore(ctx, queries.CreateStoreArgs{
+	store, err := ss.Q.StoreQueries.CreateStore(ctx, queries.CreateStoreArgs{
 		Name:        args.Name,
 		Slug:        args.Slug,
 		Description: args.Description,
@@ -39,26 +34,26 @@ func (ss *StoreServicesImpl) CreateStore(ctx context.Context, args CreateStoreRe
 	})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return queries.Store{}, ErrDuplicateStore
+			return queries.Store{}, queries.ErrDuplicateStore
 		}
-		return queries.Store{}, ErrInternalError
+		return queries.Store{}, utils.ErrInternalError
 	}
 	return store, err
 }
 
 func (ss *StoreServicesImpl) DeleteStore(ctx context.Context, args DeleteStoreRequest) (string, error) {
-	storeName, err := ss.S.StoreQueries.DeleteStore(ctx, args.ID)
+	storeName, err := ss.Q.StoreQueries.DeleteStore(ctx, args.ID)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return "", ErrNoStore
+			return "", queries.ErrNoStore
 		}
-		return "", ErrInternalError
+		return "", utils.ErrInternalError
 	}
 	return storeName, err
 }
 
 func (ss *StoreServicesImpl) UpdateStore(ctx context.Context, args UpdateStoreRequest) (string, error) {
-	storeName, err := ss.S.StoreQueries.UpdateStore(ctx, queries.UpdateStoreArgs{
+	storeName, err := ss.Q.StoreQueries.UpdateStore(ctx, queries.UpdateStoreArgs{
 		ID:          args.ID,
 		Name:        args.Name,
 		Slug:        args.Slug,
@@ -67,9 +62,9 @@ func (ss *StoreServicesImpl) UpdateStore(ctx context.Context, args UpdateStoreRe
 	})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return "", ErrNoStore
+			return "", queries.ErrNoStore
 		}
-		return "", ErrInternalError
+		return "", utils.ErrInternalError
 	}
 	return storeName, err
 }

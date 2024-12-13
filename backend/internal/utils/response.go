@@ -1,27 +1,30 @@
 package utils
 
-import "github.com/gofiber/fiber/v3"
+import (
+	"github.com/gofiber/fiber/v3"
+)
 
-type ResponseInfo struct {
+type InfoDetails struct {
 	Message string `json:"message"`
 	Reason  string `json:"reason,omitempty"`
 }
 
-type ErrorDetail struct {
-	Message string `json:"message"`
-	Param   string `json:"param,omitempty"`
+type ResponseDetails struct {
+	Info   InfoDetails `json:"info"`
+	Data   interface{} `json:"data,omitempty"`
+	Errors interface{} `json:"error,omitempty"`
 }
 
-func SuccessResponse(info ResponseInfo, data interface{}) fiber.Map {
+func SuccessResponse(details ResponseDetails) fiber.Map {
 	return fiber.Map{
-		"info": info,
-		"data": data,
+		"info": details.Info,
+		"data": details.Data,
 	}
 }
 
-func FailedResponse(info ResponseInfo, errorDetails []ErrorDetail) fiber.Map {
+func ErrorResponse(details ResponseDetails) fiber.Map {
 	return fiber.Map{
-		"info":   info,
-		"errors": errorDetails,
+		"info":   details.Info,
+		"errors": details.Errors,
 	}
 }

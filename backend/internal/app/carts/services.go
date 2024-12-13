@@ -6,18 +6,13 @@ import (
 	"slices"
 
 	"github.com/hendrywilliam/commerce/internal/queries"
+	"github.com/hendrywilliam/commerce/internal/utils"
 	"github.com/jackc/pgx/v5"
 )
 
-var (
-	ErrNoProduct       = errors.New("no such product exist")
-	ErrStockExceeds    = errors.New("stock limit exceeds")
-	ErrNoProductInCart = errors.New("no product in cart")
-	ErrInternalError   = errors.New("internal server error")
-)
-
 type CartServices interface {
-	AddItemToCart(ctx context.Context, arg AddItemToCartRequest) (string, error)
+	AddToCart(ctx context.Context, args CartRequest) (string, error)
+	DeleteFromCart(ctx context.Context, args DeleteCartRequest) error
 }
 
 type CartServicesImpl struct {
@@ -30,9 +25,9 @@ func NewServices(q *queries.Queries) CartServices {
 	}
 }
 
-func (cs *CartServicesImpl) AddItemToCart(ctx context.Context, args AddItemToCartRequest) (string, error) {
+func (cs *CartServicesImpl) AddToCart(ctx context.Context, args CartRequest) (string, error) {
 	var productName string
-	err := queries.ExecTx(cs.Q.DB, ctx, func(q queries.Queries) error {
+	err := queries.ExecTx(ctx, cs.Q.DB, func(q queries.Queries) error {
 		cart, err := q.CartQueries.GetCart(ctx, args.CartID)
 		if err != nil {
 			// there is no cart exist.
@@ -40,46 +35,46 @@ func (cs *CartServicesImpl) AddItemToCart(ctx context.Context, args AddItemToCar
 				product, err := q.ProductQueries.GetProduct(ctx, args.CartItem.ID)
 				if err != nil {
 					if errors.Is(err, pgx.ErrNoRows) {
-						return ErrNoProduct
+						return queries.ErrNoProduct
 					}
-					return ErrInternalError
+					return utils.ErrInternalError
 				}
 				if args.CartItem.Qty > product.Stock {
-					return ErrStockExceeds
+					return queries.ErrStockExceeds
 				}
 				_, err = q.CartQueries.CreateCart(ctx, queries.CreateCartArgs{
 					IsClosed: false,
 					Items:    []queries.CartItem{args.CartItem},
 				})
 				if err != nil {
-					return ErrInternalError
+					return utils.ErrInternalError
 				}
 				productName = product.Name
 				return nil
 			}
-			return ErrInternalError
+			return utils.ErrInternalError
 		}
 		product, err := q.ProductQueries.GetProduct(ctx, args.CartItem.ID)
 		if err != nil {
 			// no product exist
 			if errors.Is(err, pgx.ErrNoRows) {
-				return ErrNoProduct
+				return queries.ErrNoProduct
 			}
-			return ErrInternalError
+			return utils.ErrInternalError
 		}
 		productName = product.Name
 		if args.CartItem.Qty > product.Stock {
-			return ErrStockExceeds
+			return queries.ErrStockExceeds
 		}
 		productIndex := slices.IndexFunc(cart.Items, func(i queries.CartItem) bool {
 			return i.ID == args.CartItem.ID
 		})
-		productInCart := cart.Items[productIndex]
 		if productIndex == -1 {
-			return ErrNoProductInCart
+			return queries.ErrNoProductInCart
 		}
+		productInCart := cart.Items[productIndex]
 		if productInCart.Qty+args.CartItem.Qty > product.Stock {
-			return ErrStockExceeds
+			return queries.ErrStockExceeds
 		}
 		cart.Items[productIndex].Qty = productInCart.Qty + args.CartItem.Qty
 		err = cs.Q.CartQueries.UpdateCart(ctx, queries.UpdateCartArgs{
@@ -87,9 +82,32 @@ func (cs *CartServicesImpl) AddItemToCart(ctx context.Context, args AddItemToCar
 			Items: cart.Items,
 		})
 		if err != nil {
-			return ErrInternalError
+			return utils.ErrInternalError
 		}
 		return nil
 	})
 	return productName, err
+}
+
+func (cs *CartServicesImpl) DeleteFromCart(ctx context.Context, args DeleteCartRequest) error {
+	return queries.ExecTx(ctx, cs.Q.DB, func(q queries.Queries) error {
+		cart, err := q.CartQueries.GetCart(ctx, args.CartID)
+		if err != nil {
+			if errors.Is(err, pgx.ErrNoRows) {
+				return queries.ErrCartNotFound
+			}
+			return utils.ErrInternalError
+		}
+		modifiedCartItems := slices.DeleteFunc(cart.Items, func(i queries.CartItem) bool {
+			return i.ID == args.ItemID
+		})
+		err = q.CartQueries.UpdateCart(ctx, queries.UpdateCartArgs{
+			ID:    cart.ID,
+			Items: modifiedCartItems,
+		})
+		if err != nil {
+			return utils.ErrInternalError
+		}
+		return nil
+	})
 }

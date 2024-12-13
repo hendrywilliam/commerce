@@ -2,7 +2,14 @@ package queries
 
 import (
 	"context"
+	"errors"
 	"time"
+)
+
+var (
+	ErrDuplicateProduct = errors.New("Duplicate product detected.")
+	ErrNoProduct        = errors.New("Product is not exist.")
+	ErrStockExceeds     = errors.New("Stock limit exceeds.")
 )
 
 type ProductImages struct {
@@ -10,22 +17,22 @@ type ProductImages struct {
 }
 
 type Product struct {
-	ID               uint64    `json:"id"`
-	StoreID          uint64    `json:"store_id"`
-	Name             string    `json:"name"`
-	Slug             string    `json:"slug"`
-	Description      string    `json:"description"`
-	ShortDescription string    `json:"short_description"`
-	Sku              string    `json:"sku"`
-	Weight           uint64    `json:"weight"`
-	Price            float64   `json:"price"`
-	Stock            uint64    `json:"stock"`
-	CategoryID       uint64    `json:"category_id"`
-	Images           []byte    `json:"images"`
-	IsVisible        bool      `json:"is_visible"`
-	AttributeGroupID uint64    `json:"attribute_group_id"`
-	CreatedAt        time.Time `json:"created_at"`
-	UpdatedAt        time.Time `json:"updated_at"`
+	ID               uint64          `json:"id"`
+	StoreID          uint64          `json:"store_id"`
+	Name             string          `json:"name"`
+	Slug             string          `json:"slug"`
+	Description      string          `json:"description"`
+	ShortDescription string          `json:"short_description"`
+	Sku              string          `json:"sku"`
+	Weight           uint64          `json:"weight"`
+	Price            float64         `json:"price"`
+	Stock            uint64          `json:"stock"`
+	CategoryID       uint64          `json:"category_id"`
+	Images           []ProductImages `json:"images"`
+	IsVisible        bool            `json:"is_visible"`
+	AttributeGroupID uint64          `json:"attribute_group_id"`
+	CreatedAt        time.Time       `json:"created_at"`
+	UpdatedAt        time.Time       `json:"updated_at"`
 }
 
 type ProductQueriesImpl struct {

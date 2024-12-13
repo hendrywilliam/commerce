@@ -44,7 +44,7 @@ func NewQueries(db DbTx) Queries {
 	}
 }
 
-func ExecTx(db DbTx, ctx context.Context, fn func(Queries) error) error {
+func ExecTx(ctx context.Context, db DbTx, fn func(Queries) error) error {
 	tx, err := db.Begin(ctx)
 	if err != nil {
 		return err

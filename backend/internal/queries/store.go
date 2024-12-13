@@ -2,7 +2,13 @@ package queries
 
 import (
 	"context"
+	"errors"
 	"time"
+)
+
+var (
+	ErrNoStore        = errors.New("no such store exist")
+	ErrDuplicateStore = errors.New("duplicate store detected")
 )
 
 type StoreQueriesImpl struct {

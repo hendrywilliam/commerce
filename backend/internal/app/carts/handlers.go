@@ -10,9 +10,8 @@ import (
 )
 
 type CartHandlers interface {
-	AddItemToCart(c fiber.Ctx) error
-	// UpdateCartItems(c fiber.Ctx) error
-	// DeleteCartItems(c fiber.Ctx) error
+	AddToCart(c fiber.Ctx) error
+	DeleteCartItems(c fiber.Ctx) error
 }
 
 type CartHandlersImpl struct {
@@ -25,38 +24,76 @@ func NewHandlers(services CartServices) CartHandlers {
 	}
 }
 
-func (ch *CartHandlersImpl) AddItemToCart(c fiber.Ctx) error {
-	var req AddItemToCartRequest
+func (ch *CartHandlersImpl) AddToCart(c fiber.Ctx) error {
+	var req CartRequest
 	if err := c.Bind().Body(&req); err != nil {
 		if e, ok := err.(validator.ValidationErrors); ok {
-			err := utils.DigestErrors(e)
-			return c.Status(http.StatusBadRequest).JSON(utils.FailedResponse(utils.ResponseInfo{
-				Message: "validation failed",
-			}, err))
+			err := utils.DigestValidationErrors(e)
+			return c.Status(http.StatusBadRequest).JSON(utils.ErrorResponse(utils.ResponseDetails{
+				Info: utils.InfoDetails{
+					Message: "Failed to validate.",
+				},
+				Errors: err,
+			}))
 		}
-		return c.Status(http.StatusBadRequest).JSON(utils.FailedResponse(utils.ResponseInfo{
-			Message: "internal server error",
-		}, nil))
+		return c.Status(http.StatusInternalServerError).JSON(utils.ErrorResponse(utils.ResponseDetails{
+			Info: utils.InfoDetails{
+				Message: utils.ErrInternalError.Error(),
+			},
+		}))
 	}
-	productName, err := ch.Services.AddItemToCart(c.Context(), AddItemToCartRequest{
+	productName, err := ch.Services.AddToCart(c.Context(), CartRequest{
 		CartID:   req.CartID,
 		CartItem: req.CartItem,
 	})
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(utils.FailedResponse(utils.ResponseInfo{
-			Message: "failed to add item to cart",
-			Reason:  err.Error(),
-		}, nil))
+		return c.Status(http.StatusInternalServerError).JSON(utils.ErrorResponse(utils.ResponseDetails{
+			Info: utils.InfoDetails{
+				Message: "Failed to add item to cart.",
+				Reason:  err.Error(),
+			},
+		}))
 	}
-	return c.Status(http.StatusOK).JSON(utils.SuccessResponse(utils.ResponseInfo{
-		Message: fmt.Sprintf("%v has been added to cart", productName),
-	}, nil))
+	return c.Status(http.StatusOK).JSON(utils.SuccessResponse(utils.ResponseDetails{
+		Info: utils.InfoDetails{
+			Message: fmt.Sprintf("%v has been added to cart.", productName),
+		},
+	}))
 }
 
-// func (ch *CartHandlersImpl) UpdateCartItems(c fiber.Ctx) error {
-
-// }
-
-// func (ch *CartHandlersImpl) DeleteCartItems(c fiber.Ctx) error {
-
-// }
+func (ch *CartHandlersImpl) DeleteCartItems(c fiber.Ctx) error {
+	var req DeleteCartRequest
+	if err := c.Bind().Body(&req); err != nil {
+		if e, ok := err.(validator.ValidationErrors); ok {
+			err := utils.DigestValidationErrors(e)
+			return c.Status(http.StatusBadRequest).JSON(utils.ErrorResponse(utils.ResponseDetails{
+				Info: utils.InfoDetails{
+					Message: "Failed to validate.",
+				},
+				Errors: err,
+			}))
+		}
+		return c.Status(http.StatusInternalServerError).JSON(utils.ErrorResponse(utils.ResponseDetails{
+			Info: utils.InfoDetails{
+				Message: utils.ErrInternalError.Error(),
+			},
+		}))
+	}
+	err := ch.Services.DeleteFromCart(c.Context(), DeleteCartRequest{
+		CartID: req.CartID,
+		ItemID: req.ItemID,
+	})
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(utils.ErrorResponse(utils.ResponseDetails{
+			Info: utils.InfoDetails{
+				Message: "Failed to delete item from cart.",
+				Reason:  err.Error(),
+			},
+		}))
+	}
+	return c.Status(http.StatusOK).JSON(utils.SuccessResponse(utils.ResponseDetails{
+		Info: utils.InfoDetails{
+			Message: fmt.Sprintf("Product deleted from cart."),
+		},
+	}))
+}

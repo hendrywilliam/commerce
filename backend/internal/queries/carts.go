@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+var (
+	ErrNoProductInCart = errors.New("No such product exist in cart.")
+	ErrCartNotFound    = errors.New("Cart is not exist.")
+)
+
 type CartItem struct {
 	ID  uint64 `json:"id"`
 	Qty uint64 `json:"qty"`

@@ -5,14 +5,9 @@ import (
 	"errors"
 
 	"github.com/hendrywilliam/commerce/internal/queries"
+	"github.com/hendrywilliam/commerce/internal/utils"
 
 	"github.com/jackc/pgx/v5"
-)
-
-var (
-	ErrNoProduct        = errors.New("no such product exist")
-	ErrInternalError    = errors.New("internal server error")
-	ErrDuplicateProduct = errors.New("duplicate product detected")
 )
 
 type ProductServices interface {
@@ -22,17 +17,17 @@ type ProductServices interface {
 }
 
 type ProductServicesImpl struct {
-	S *queries.Queries
+	Q *queries.Queries
 }
 
-func NewServices(s *queries.Queries) ProductServices {
+func NewServices(q *queries.Queries) ProductServices {
 	return &ProductServicesImpl{
-		S: s,
+		Q: q,
 	}
 }
 
 func (ps *ProductServicesImpl) CreateProduct(ctx context.Context, args CreateProductRequest) (queries.Product, error) {
-	product, err := ps.S.ProductQueries.CreateProduct(ctx, queries.CreateProductArgs{
+	product, err := ps.Q.ProductQueries.CreateProduct(ctx, queries.CreateProductArgs{
 		StoreID:          args.StoreID,
 		Name:             args.Name,
 		Slug:             args.Slug,
@@ -48,7 +43,7 @@ func (ps *ProductServicesImpl) CreateProduct(ctx context.Context, args CreatePro
 	})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return queries.Product{}, ErrDuplicateProduct
+			return queries.Product{}, queries.ErrDuplicateProduct
 		}
 		return queries.Product{}, err
 	}
@@ -56,18 +51,18 @@ func (ps *ProductServicesImpl) CreateProduct(ctx context.Context, args CreatePro
 }
 
 func (ps *ProductServicesImpl) DeleteProduct(ctx context.Context, args DeleteProductRequest) (string, error) {
-	pname, err := ps.S.ProductQueries.DeleteProduct(ctx, args.ID)
+	pname, err := ps.Q.ProductQueries.DeleteProduct(ctx, args.ID)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return "", ErrNoProduct
+			return "", queries.ErrNoProduct
 		}
-		return "", ErrInternalError
+		return "", utils.ErrInternalError
 	}
 	return pname, err
 }
 
 func (ps *ProductServicesImpl) UpdateProduct(ctx context.Context, args UpdateProductRequest) (queries.Product, error) {
-	product, err := ps.S.ProductQueries.UpdateProduct(ctx, queries.UpdateProductArgs{
+	product, err := ps.Q.ProductQueries.UpdateProduct(ctx, queries.UpdateProductArgs{
 		ID:               args.ID,
 		Name:             args.Name,
 		Slug:             args.Slug,
@@ -84,9 +79,9 @@ func (ps *ProductServicesImpl) UpdateProduct(ctx context.Context, args UpdatePro
 	})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return queries.Product{}, ErrNoProduct
+			return queries.Product{}, queries.ErrNoProduct
 		}
-		return queries.Product{}, ErrInternalError
+		return queries.Product{}, utils.ErrInternalError
 	}
 	return product, err
 }
