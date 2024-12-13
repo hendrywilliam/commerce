@@ -22,15 +22,19 @@ CREATE TABLE "attributes" (
   "name" varchar(255),
   "is_required" bool NOT NULL DEFAULT true,
   "is_visible" bool NOT NULL DEFAULT true,
-  "group_id" int,
-  "options" json DEFAULT '[]'
+  "group_id" int NOT NULL,
+  "options" json DEFAULT '[]',
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
+  "updated_at" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "attribute_groups" (
   "id" serial PRIMARY KEY,
   "name" varchar(255) UNIQUE NOT NULL,
   "description" text,
-  "created_at" timestamptz NOT NULL DEFAULT (now())
+  "store_id" int NOT NULL,
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
+  "updated_at" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "categories" (
@@ -58,3 +62,5 @@ ALTER TABLE "products" ADD FOREIGN KEY ("store_id") REFERENCES "stores" ("id");
 ALTER TABLE "products" ADD FOREIGN KEY ("category_id") REFERENCES "categories" ("id");
 
 ALTER TABLE "attributes" ADD FOREIGN KEY ("group_id") REFERENCES "attribute_groups" ("id");
+
+ALTER TABLE "attribute_groups" ADD FOREIGN KEY ("store_id") REFERENCES "stores" ("id");

@@ -16,7 +16,7 @@ create_db:
 	docker exec -it postgres createdb --username=root --owner=root commerce
 
 create_migrate:
-	migrate create -ext sql -dir src/db/migrations -seq $(name)
+	migrate create -ext sql -dir internal/db/migrations -seq $(name)
 
 migrate_up:
 	migrate -path internal/db/migrations -database "$(DB_URL)" -verbose up
