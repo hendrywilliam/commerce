@@ -41,7 +41,8 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool) error {
 	rg.Patch("/products", productsHandlers.UpdateProduct)
 
 	rg.Post("/carts", cartsHandlers.AddToCart)
-	rg.Delete("/carts", cartsHandlers.DeleteCartItems)
+	rg.Delete("/carts", cartsHandlers.DeleteCartItem)
+	rg.Patch("/carts", cartsHandlers.UpdateCartItem)
 
 	return app.Listen(":8080", fiber.ListenConfig{
 		GracefulContext: ctx,

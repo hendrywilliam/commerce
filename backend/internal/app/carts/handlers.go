@@ -11,7 +11,8 @@ import (
 
 type CartHandlers interface {
 	AddToCart(c fiber.Ctx) error
-	DeleteCartItems(c fiber.Ctx) error
+	DeleteCartItem(c fiber.Ctx) error
+	UpdateCartItem(c fiber.Ctx) error
 }
 
 type CartHandlersImpl struct {
@@ -61,7 +62,7 @@ func (ch *CartHandlersImpl) AddToCart(c fiber.Ctx) error {
 	}))
 }
 
-func (ch *CartHandlersImpl) DeleteCartItems(c fiber.Ctx) error {
+func (ch *CartHandlersImpl) DeleteCartItem(c fiber.Ctx) error {
 	var req DeleteCartRequest
 	if err := c.Bind().Body(&req); err != nil {
 		if e, ok := err.(validator.ValidationErrors); ok {
@@ -94,6 +95,40 @@ func (ch *CartHandlersImpl) DeleteCartItems(c fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(utils.SuccessResponse(utils.ResponseDetails{
 		Info: utils.InfoDetails{
 			Message: fmt.Sprintf("Product deleted from cart."),
+		},
+	}))
+}
+
+func (ch *CartHandlersImpl) UpdateCartItem(c fiber.Ctx) error {
+	var req CartRequest
+	if err := c.Bind().Body(&req); err != nil {
+		if e, ok := err.(validator.ValidationErrors); ok {
+			err := utils.DigestValidationErrors(e)
+			return c.Status(http.StatusBadRequest).JSON(utils.ErrorResponse(utils.ResponseDetails{
+				Info: utils.InfoDetails{
+					Message: "Failed to validate.",
+				},
+				Errors: err,
+			}))
+		}
+		return c.Status(http.StatusInternalServerError).JSON(utils.ErrorResponse(utils.ResponseDetails{
+			Info: utils.InfoDetails{
+				Message: utils.ErrInternalError.Error(),
+			},
+		}))
+	}
+	err := ch.Services.UpdateCartItem(c.Context(), req)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(utils.ErrorResponse(utils.ResponseDetails{
+			Info: utils.InfoDetails{
+				Message: "Failed to update item from cart.",
+				Reason:  err.Error(),
+			},
+		}))
+	}
+	return c.Status(http.StatusOK).JSON(utils.SuccessResponse(utils.ResponseDetails{
+		Info: utils.InfoDetails{
+			Message: "Cart has been updated",
 		},
 	}))
 }
