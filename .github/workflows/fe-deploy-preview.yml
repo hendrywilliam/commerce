@@ -1,11 +1,18 @@
-name: Preview Deployment
+name: Frontend Preview Deployment
 on:
+    push:
+        branches:
+            - dev
+        paths:
+            - frontend
     pull_request:
         types: [opened]
         branches:
             - main
+        paths:
+            - frontend
 jobs:
-    deploy-preview:
+    deploy-fe-preview:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
