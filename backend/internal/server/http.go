@@ -36,9 +36,11 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool) error {
 	rg.Delete("/stores", storesHandlers.DeleteStore)
 	rg.Patch("/stores", storesHandlers.UpdateStore)
 
+	rg.Get("/products", productsHandlers.GetProductBySlug)
 	rg.Post("/products", productsHandlers.CreateProduct)
 	rg.Delete("/products", productsHandlers.DeleteProduct)
 	rg.Patch("/products", productsHandlers.UpdateProduct)
+	rg.Get("/search_products", productsHandlers.SearchProduct)
 
 	rg.Post("/carts", cartsHandlers.AddToCart)
 	rg.Delete("/carts", cartsHandlers.DeleteCartItem)

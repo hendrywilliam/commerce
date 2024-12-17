@@ -15,14 +15,16 @@ type StoreQueriesImpl struct {
 	DB DbTx
 }
 
+type StoreID = uint64
+
 type Store struct {
-	ID          uint64    `json:"id"`
-	Name        string    `json:"name"`
-	Slug        string    `json:"slug"`
-	Description string    `json:"description"`
-	Active      bool      `json:"active"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID          uint64     `json:"id,omitempty"`
+	Name        string     `json:"name,omitempty"`
+	Slug        string     `json:"slug,omitempty"`
+	Description string     `json:"description,omitempty"`
+	Active      bool       `json:"active,omitempty"`
+	CreatedAt   *time.Time `json:"created_at,omitempty"`
+	UpdatedAt   *time.Time `json:"updated_at,omitempty"`
 }
 
 type CreateStoreArgs struct {
@@ -52,7 +54,7 @@ func (sq *StoreQueriesImpl) CreateStore(ctx context.Context, args CreateStoreArg
 	return s, err
 }
 
-func (sq *StoreQueriesImpl) DeleteStore(ctx context.Context, ID uint64) (string, error) {
+func (sq *StoreQueriesImpl) DeleteStore(ctx context.Context, ID StoreID) (string, error) {
 	row := sq.DB.QueryRow(ctx, `
 		DELETE FROM stores
 		WHERE id = $1

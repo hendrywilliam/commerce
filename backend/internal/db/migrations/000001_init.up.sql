@@ -2,6 +2,7 @@ CREATE TABLE "products" (
   "id" serial PRIMARY KEY,
   "store_id" integer,
   "name" varchar(255) UNIQUE NOT NULL,
+  "name_search" TSVECTOR GENERATED ALWAYS AS (to_tsvector('english',name)) STORED,
   "slug" varchar(255) UNIQUE NOT NULL,
   "description" text NOT NULL,
   "short_description" text,
@@ -53,9 +54,11 @@ CREATE TABLE "stores" (
   "updated_at" timestamptz NOT NULL DEFAULT (now())
 );
 
-CREATE UNIQUE INDEX ON "products" ("slug", "name");
+CREATE UNIQUE INDEX ON "products" ("slug");
 
 CREATE UNIQUE INDEX ON "stores" ("slug");
+
+CREATE INDEX name_fts ON "products" USING GIN (name_search);
 
 ALTER TABLE "products" ADD FOREIGN KEY ("store_id") REFERENCES "stores" ("id");
 

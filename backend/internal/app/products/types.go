@@ -22,6 +22,10 @@ type CreateProductRequest struct {
 	AttributeGroupID uint64                  `json:"attribute_group_id" validate:"gte=1,required"`
 }
 
+type GetProductRequest struct {
+	Slug string `json:"slug" validate:"required"`
+}
+
 type CreateProductResponse struct {
 	Name string `json:"name"`
 }
@@ -69,4 +73,8 @@ type UpdateProductArgs struct {
 	Images           []queries.ProductImages `json:"images"`
 	IsVisible        bool                    `json:"is_visible"`
 	AttributeGroupID uint64                  `json:"attribute_group_id"`
+}
+
+type SearchProductsRequest struct {
+	SearchTerm string `json:"search_term" validate:"required"`
 }

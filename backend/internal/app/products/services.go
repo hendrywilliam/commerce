@@ -3,6 +3,7 @@ package products
 import (
 	"context"
 	"errors"
+	"strings"
 
 	"github.com/hendrywilliam/commerce/internal/queries"
 	"github.com/hendrywilliam/commerce/internal/utils"
@@ -14,6 +15,8 @@ type ProductServices interface {
 	CreateProduct(ctx context.Context, cpr CreateProductRequest) (queries.Product, error)
 	DeleteProduct(ctx context.Context, dpr DeleteProductRequest) (string, error)
 	UpdateProduct(ctx context.Context, upr UpdateProductRequest) (queries.Product, error)
+	SearchProducts(ctx context.Context, searchTerm string) ([]queries.Product, error)
+	GetProductBySlug(ctx context.Context, slug string) (queries.Product, error)
 }
 
 type ProductServicesImpl struct {
@@ -24,6 +27,27 @@ func NewServices(q *queries.Queries) ProductServices {
 	return &ProductServicesImpl{
 		Q: q,
 	}
+}
+
+func (ps *ProductServicesImpl) GetProductBySlug(ctx context.Context, slug string) (queries.Product, error) {
+	product, err := ps.Q.ProductQueries.GetProductBySlug(ctx, slug)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return queries.Product{}, queries.ErrNoProduct
+		}
+		return queries.Product{}, utils.ErrInternalError
+	}
+	return product, nil
+}
+
+func (ps *ProductServicesImpl) SearchProducts(ctx context.Context, searchTerm string) ([]queries.Product, error) {
+	splittedTerms := strings.Split(searchTerm, " ")
+	normalizedTerms := strings.Join(splittedTerms, " | ")
+	products, err := ps.Q.ProductQueries.SearchProducts(ctx, normalizedTerms)
+	if err != nil {
+		return []queries.Product{}, utils.ErrInternalError
+	}
+	return products, nil
 }
 
 func (ps *ProductServicesImpl) CreateProduct(ctx context.Context, args CreateProductRequest) (queries.Product, error) {
@@ -45,9 +69,9 @@ func (ps *ProductServicesImpl) CreateProduct(ctx context.Context, args CreatePro
 		if errors.Is(err, pgx.ErrNoRows) {
 			return queries.Product{}, queries.ErrDuplicateProduct
 		}
-		return queries.Product{}, err
+		return queries.Product{}, utils.ErrInternalError
 	}
-	return product, err
+	return product, nil
 }
 
 func (ps *ProductServicesImpl) DeleteProduct(ctx context.Context, args DeleteProductRequest) (string, error) {
@@ -58,7 +82,7 @@ func (ps *ProductServicesImpl) DeleteProduct(ctx context.Context, args DeletePro
 		}
 		return "", utils.ErrInternalError
 	}
-	return pname, err
+	return pname, nil
 }
 
 func (ps *ProductServicesImpl) UpdateProduct(ctx context.Context, args UpdateProductRequest) (queries.Product, error) {
@@ -83,5 +107,5 @@ func (ps *ProductServicesImpl) UpdateProduct(ctx context.Context, args UpdatePro
 		}
 		return queries.Product{}, utils.ErrInternalError
 	}
-	return product, err
+	return product, nil
 }

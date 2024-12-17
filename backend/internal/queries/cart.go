@@ -17,11 +17,11 @@ type CartItem struct {
 }
 
 type Cart struct {
-	ID        uint64     `json:"id"`
-	Items     []CartItem `json:"items"`
-	IsClosed  bool       `json:"is_closed"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
+	ID        uint64     `json:"id,omitempty"`
+	Items     []CartItem `json:"items,omitempty"`
+	IsClosed  bool       `json:"is_closed,omitempty"`
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
 type CartQueriesImpl struct {

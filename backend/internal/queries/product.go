@@ -17,26 +17,54 @@ type ProductImages struct {
 }
 
 type Product struct {
-	ID               uint64          `json:"id"`
-	StoreID          uint64          `json:"store_id"`
-	Name             string          `json:"name"`
-	Slug             string          `json:"slug"`
-	Description      string          `json:"description"`
-	ShortDescription string          `json:"short_description"`
-	Sku              string          `json:"sku"`
-	Weight           uint64          `json:"weight"`
-	Price            float64         `json:"price"`
-	Stock            uint64          `json:"stock"`
-	CategoryID       uint64          `json:"category_id"`
-	Images           []ProductImages `json:"images"`
-	IsVisible        bool            `json:"is_visible"`
-	AttributeGroupID uint64          `json:"attribute_group_id"`
-	CreatedAt        time.Time       `json:"created_at"`
-	UpdatedAt        time.Time       `json:"updated_at"`
+	ID               uint64          `json:"id,omitempty"`
+	StoreID          uint64          `json:"store_id,omitempty"`
+	Name             string          `json:"name,omitempty"`
+	NameSearch       string          `json:"name_search,omitempty"`
+	Slug             string          `json:"slug,omitempty"`
+	Description      string          `json:"description,omitempty"`
+	ShortDescription string          `json:"short_description,omitempty"`
+	Sku              string          `json:"sku,omitempty"`
+	Weight           uint64          `json:"weight,omitempty"`
+	Price            float64         `json:"price,omitempty"`
+	Stock            uint64          `json:"stock,omitempty"`
+	CategoryID       uint64          `json:"category_id,omitempty"`
+	Images           []ProductImages `json:"images,omitempty"`
+	IsVisible        bool            `json:"is_visible,omitempty"`
+	AttributeGroupID uint64          `json:"attribute_group_id,omitempty"`
+	CreatedAt        *time.Time      `json:"created_at,omitempty"`
+	UpdatedAt        *time.Time      `json:"updated_at,omitempty"`
 }
 
 type ProductQueriesImpl struct {
 	DB DbTx
+}
+
+func (pq *ProductQueriesImpl) SearchProducts(ctx context.Context, searchTerm string) ([]Product, error) {
+	rows, err := pq.DB.Query(ctx, `
+		SELECT
+			name,
+			slug,
+			description,
+			stock
+		FROM 
+			products
+		WHERE 
+			name_search @@ to_tsquery($1);
+	`, searchTerm)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	products := []Product{}
+	for rows.Next() {
+		var product Product
+		if err = rows.Scan(&product.Name, &product.Slug, &product.Description, &product.Stock); err != nil {
+			return nil, err
+		}
+		products = append(products, product)
+	}
+	return products, err
 }
 
 func (pq *ProductQueriesImpl) GetProduct(ctx context.Context, ID uint64) (Product, error) {
@@ -45,9 +73,31 @@ func (pq *ProductQueriesImpl) GetProduct(ctx context.Context, ID uint64) (Produc
 			id,
 			stock,
 			name
-		FROM products
-		WHERE id = $1;
+		FROM 
+			products
+		WHERE 
+			id = $1;
 	`, ID)
+	var p Product
+	err := row.Scan(
+		&p.ID,
+		&p.Stock,
+		&p.Name,
+	)
+	return p, err
+}
+
+func (pq *ProductQueriesImpl) GetProductBySlug(ctx context.Context, slug string) (Product, error) {
+	row := pq.DB.QueryRow(ctx, `
+		SELECT
+			id,
+			stock,
+			name
+		FROM 
+			products
+		WHERE
+			slug = $1
+	`, slug)
 	var p Product
 	err := row.Scan(
 		&p.ID,
@@ -90,7 +140,7 @@ func (pq *ProductQueriesImpl) CreateProduct(ctx context.Context, args CreateProd
 		) VALUES (
 			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
 		) ON CONFLICT (sku) DO NOTHING
-		RETURNING *;
+		RETURNING id, name;
 	`,
 		args.StoreID,
 		args.Name,
@@ -108,21 +158,7 @@ func (pq *ProductQueriesImpl) CreateProduct(ctx context.Context, args CreateProd
 	var product Product
 	err := row.Scan(
 		&product.ID,
-		&product.StoreID,
 		&product.Name,
-		&product.Slug,
-		&product.Description,
-		&product.ShortDescription,
-		&product.Sku,
-		&product.Weight,
-		&product.Price,
-		&product.Stock,
-		&product.CategoryID,
-		&product.Images,
-		&product.IsVisible,
-		&product.AttributeGroupID,
-		&product.CreatedAt,
-		&product.UpdatedAt,
 	)
 	return product, err
 }
@@ -139,7 +175,7 @@ func (pq *ProductQueriesImpl) DeleteProduct(ctx context.Context, ID uint64) (str
 }
 
 type UpdateProductArgs struct {
-	ID               uint64          `json:"id" validate:"required"`
+	ID               uint64          `json:"id"`
 	Name             string          `json:"name"`
 	Slug             string          `json:"slug"`
 	Description      string          `json:"description"`
@@ -156,7 +192,8 @@ type UpdateProductArgs struct {
 
 func (pq *ProductQueriesImpl) UpdateProduct(ctx context.Context, args UpdateProductArgs) (Product, error) {
 	row := pq.DB.QueryRow(ctx, `
-		UPDATE products
+		UPDATE 
+			products
 		SET 
 			name = $2,
 			slug = $3,
@@ -171,8 +208,9 @@ func (pq *ProductQueriesImpl) UpdateProduct(ctx context.Context, args UpdateProd
 			is_visible = $12,
 			attribute_group_id = $13,
 			updated_at = now()
-		WHERE id = $1
-		RETURNING *;
+		WHERE 
+			id = $1
+		RETURNING name;
 	`,
 		args.ID,
 		args.Name,
@@ -190,22 +228,7 @@ func (pq *ProductQueriesImpl) UpdateProduct(ctx context.Context, args UpdateProd
 	)
 	var p Product
 	err := row.Scan(
-		&p.ID,
-		&p.StoreID,
 		&p.Name,
-		&p.Slug,
-		&p.Description,
-		&p.ShortDescription,
-		&p.Sku,
-		&p.Weight,
-		&p.Price,
-		&p.Stock,
-		&p.CategoryID,
-		&p.Images,
-		&p.IsVisible,
-		&p.AttributeGroupID,
-		&p.CreatedAt,
-		&p.UpdatedAt,
 	)
 	return p, err
 }

@@ -27,6 +27,8 @@ type Queries struct {
 		DeleteProduct(ctx context.Context, ID uint64) (string, error)
 		UpdateProduct(ctx context.Context, args UpdateProductArgs) (Product, error)
 		GetProduct(ctx context.Context, ID uint64) (Product, error)
+		GetProductBySlug(ctx context.Context, slug string) (Product, error)
+		SearchProducts(ctx context.Context, searchTerm string) ([]Product, error)
 	}
 	StoreQueries interface {
 		CreateStore(ctx context.Context, args CreateStoreArgs) (Store, error)
