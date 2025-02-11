@@ -42,7 +42,9 @@ next-env.d.ts
 /playwright/.cache/
 /playwright
 
-/*/build
+# ignore frontend build.
+/frontend/build
+
 /backend/tmp/
 backend/tmp/
 **/tmp/

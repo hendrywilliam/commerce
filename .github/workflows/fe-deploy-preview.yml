@@ -4,13 +4,13 @@ on:
         branches:
             - dev
         paths:
-            - frontend/**
+            - "frontend/**"
     pull_request:
         types: [opened]
         branches:
             - main
         paths:
-            - frontend/**
+            - "frontend/**"
 jobs:
     deploy-fe-preview:
         runs-on: ubuntu-latest
