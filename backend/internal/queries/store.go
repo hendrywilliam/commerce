@@ -73,7 +73,7 @@ type UpdateStoreArgs struct {
 	Active      bool
 }
 
-func (sq *StoreQueriesImpl) UpdateStore(ctx context.Context, args UpdateStoreArgs) (string, error) {
+func (sq *StoreQueriesImpl) UpdateStore(ctx context.Context, args UpdateStoreArgs) (Store, error) {
 	row := sq.DB.QueryRow(ctx, `
 		UPDATE stores
 		SET
@@ -82,9 +82,14 @@ func (sq *StoreQueriesImpl) UpdateStore(ctx context.Context, args UpdateStoreArg
 			description = $4,
 			active = $5
 		WHERE id = $1
-		RETURNING name;
+		RETURNING name, slug, description, active;
 	`, args.ID, args.Name, args.Slug, args.Description, args.Active)
-	var n string
-	err := row.Scan(&n)
-	return n, err
+	var s Store
+	err := row.Scan(
+		&s.Name,
+		&s.Slug,
+		&s.Description,
+		&s.Active,
+	)
+	return s, err
 }

@@ -33,7 +33,12 @@ type Queries struct {
 	StoreQueries interface {
 		CreateStore(ctx context.Context, args CreateStoreArgs) (Store, error)
 		DeleteStore(ctx context.Context, ID uint64) (string, error)
-		UpdateStore(ctx context.Context, args UpdateStoreArgs) (string, error)
+		UpdateStore(ctx context.Context, args UpdateStoreArgs) (Store, error)
+	}
+	UserQueries interface {
+		GetUser(ctx context.Context, email string) (User, error)
+		CreateUser(ctx context.Context, args CreateUserArgs) (User, error)
+		UpdateUser(ctx context.Context, args UserUpdateArgs) (User, error)
 	}
 }
 
@@ -43,6 +48,7 @@ func NewQueries(db DbTx) Queries {
 		CartQueries:    &CartQueriesImpl{db},
 		ProductQueries: &ProductQueriesImpl{db},
 		StoreQueries:   &StoreQueriesImpl{db},
+		UserQueries:    &UserQueriesImpl{db},
 	}
 }
 

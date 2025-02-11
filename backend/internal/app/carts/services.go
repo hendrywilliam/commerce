@@ -2,12 +2,12 @@ package carts
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"slices"
 
 	"github.com/hendrywilliam/commerce/internal/queries"
 	"github.com/hendrywilliam/commerce/internal/utils"
-	"github.com/jackc/pgx/v5"
 )
 
 type ProductName = string
@@ -33,11 +33,11 @@ func (cs *CartServicesImpl) AddToCart(ctx context.Context, args CartRequest) (Pr
 	err := queries.ExecTx(ctx, cs.Q.DB, func(q queries.Queries) error {
 		cart, err := q.CartQueries.GetCart(ctx, args.CartID)
 		if err != nil {
-			// there is no cart exist.
-			if errors.Is(err, pgx.ErrNoRows) {
+			// No cart exist.
+			if errors.Is(err, sql.ErrNoRows) {
 				product, err := q.ProductQueries.GetProduct(ctx, args.CartItem.ID)
 				if err != nil {
-					if errors.Is(err, pgx.ErrNoRows) {
+					if errors.Is(err, sql.ErrNoRows) {
 						return queries.ErrNoProduct
 					}
 					return utils.ErrInternalError
@@ -59,7 +59,7 @@ func (cs *CartServicesImpl) AddToCart(ctx context.Context, args CartRequest) (Pr
 		}
 		product, err := q.ProductQueries.GetProduct(ctx, args.CartItem.ID)
 		if err != nil {
-			if errors.Is(err, pgx.ErrNoRows) {
+			if errors.Is(err, sql.ErrNoRows) {
 				return queries.ErrNoProduct
 			}
 			return utils.ErrInternalError
@@ -106,7 +106,7 @@ func (cs *CartServicesImpl) DeleteFromCart(ctx context.Context, args DeleteCartR
 	return queries.ExecTx(ctx, cs.Q.DB, func(q queries.Queries) error {
 		cart, err := q.CartQueries.GetCart(ctx, args.CartID)
 		if err != nil {
-			if errors.Is(err, pgx.ErrNoRows) {
+			if errors.Is(err, sql.ErrNoRows) {
 				return queries.ErrCartNotFound
 			}
 			return utils.ErrInternalError
@@ -129,14 +129,14 @@ func (cs *CartServicesImpl) UpdateCartItem(ctx context.Context, args CartRequest
 	return queries.ExecTx(ctx, cs.Q.DB, func(q queries.Queries) error {
 		cart, err := q.CartQueries.GetCart(ctx, args.CartID)
 		if err != nil {
-			if errors.Is(err, pgx.ErrNoRows) {
+			if errors.Is(err, sql.ErrNoRows) {
 				return queries.ErrCartNotFound
 			}
 			return utils.ErrInternalError
 		}
 		product, err := q.ProductQueries.GetProduct(ctx, args.CartItem.ID)
 		if err != nil {
-			if errors.Is(err, pgx.ErrNoRows) {
+			if errors.Is(err, sql.ErrNoRows) {
 				return queries.ErrNoProduct
 			}
 			return utils.ErrInternalError

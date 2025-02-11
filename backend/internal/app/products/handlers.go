@@ -31,183 +31,132 @@ func (ph *ProductHandlersImpl) GetProductBySlug(c fiber.Ctx) error {
 	var req GetProductRequest
 	if err := c.Bind().Body(&req); err != nil {
 		if e, ok := err.(validator.ValidationErrors); ok {
-			err := utils.DigestValidationErrors(e)
-			return c.Status(http.StatusBadRequest).JSON(utils.ErrorResponse(utils.ResponseDetails{
-				Info: utils.InfoDetails{
-					Message: "Failed to validate.",
-					Reason:  "Please provide slug product",
-				},
-				Errors: err,
-			}))
+			err := utils.DigestValErrors(e)
+			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+				"message": "failed to validate",
+				"errors":  err,
+			})
 		}
-		return c.Status(http.StatusInternalServerError).JSON(utils.ErrorResponse(utils.ResponseDetails{
-			Info: utils.InfoDetails{
-				Message: utils.ErrInternalError.Error(),
-			},
-		}))
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"message": utils.ErrInternalError.Error(),
+		})
 	}
 	product, err := ph.Services.GetProductBySlug(c.Context(), req.Slug)
 	if err != nil {
-		return c.Status(http.StatusNotFound).JSON(utils.ErrorResponse(utils.ResponseDetails{
-			Info: utils.InfoDetails{
-				Message: "No product found.",
-				Reason:  err.Error(),
-			},
-		}))
+		return c.Status(http.StatusNotFound).JSON(fiber.Map{
+			"message": utils.ErrInternalError.Error(),
+		})
 	}
-	return c.Status(http.StatusOK).JSON(utils.SuccessResponse(utils.ResponseDetails{
-		Info: utils.InfoDetails{
-			Message: "Product found.",
-		},
-		Data: product,
-	}))
+	return c.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "product found",
+		"data":    product,
+	})
 }
 
 func (ph *ProductHandlersImpl) SearchProduct(c fiber.Ctx) error {
 	var req SearchProductsRequest
 	if err := c.Bind().Body(&req); err != nil {
 		if e, ok := err.(validator.ValidationErrors); ok {
-			err := utils.DigestValidationErrors(e)
-			return c.Status(http.StatusBadRequest).JSON(utils.ErrorResponse(utils.ResponseDetails{
-				Info: utils.InfoDetails{
-					Message: "Failed to validate.",
-					Reason:  "Please provide search term.",
-				},
-				Errors: err,
-			}))
+			err := utils.DigestValErrors(e)
+			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+				"message": "failed to validate",
+				"errors":  err,
+			})
 		}
-		return c.Status(http.StatusInternalServerError).JSON(utils.ErrorResponse(utils.ResponseDetails{
-			Info: utils.InfoDetails{
-				Message: utils.ErrInternalError.Error(),
-			},
-		}))
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"message": utils.ErrInternalError.Error(),
+		})
 	}
 	products, err := ph.Services.SearchProducts(c.Context(), req.SearchTerm)
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(utils.ErrorResponse(utils.ResponseDetails{
-			Info: utils.InfoDetails{
-				Message: "Failed to get products",
-				Reason:  err.Error(),
-			},
-		}))
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"message": "failed to get product(s)",
+		})
 	}
 	if len(products) == 0 {
-		return c.Status(http.StatusNotFound).JSON(utils.ErrorResponse(utils.ResponseDetails{
-			Info: utils.InfoDetails{
-				Message: "No products found.",
-				Reason:  "The search returned no results.",
-			},
-		}))
+		return c.Status(http.StatusNotFound).JSON(fiber.Map{
+			"message": "no product found",
+		})
 	}
-	return c.Status(http.StatusOK).JSON(utils.SuccessResponse(utils.ResponseDetails{
-		Info: utils.InfoDetails{
-			Message: "Products found.",
-		},
-		Data: products,
-	}))
+	return c.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "product found",
+		"data":    products,
+	})
 }
 
 func (ph *ProductHandlersImpl) CreateProduct(c fiber.Ctx) error {
 	var req CreateProductRequest
 	if err := c.Bind().Body(&req); err != nil {
 		if e, ok := err.(validator.ValidationErrors); ok {
-			err := utils.DigestValidationErrors(e)
-			return c.Status(http.StatusBadRequest).JSON(utils.ErrorResponse(utils.ResponseDetails{
-				Info: utils.InfoDetails{
-					Message: "Failed to validate.",
-				},
-				Errors: err,
-			}))
+			err := utils.DigestValErrors(e)
+			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+				"message": "failed to validate",
+				"errors":  err,
+			})
 		}
-		return c.Status(http.StatusInternalServerError).JSON(utils.ErrorResponse(utils.ResponseDetails{
-			Info: utils.InfoDetails{
-				Message: utils.ErrInternalError.Error(),
-			},
-		}))
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"message": utils.ErrInternalError.Error(),
+		})
 	}
 	product, err := ph.Services.CreateProduct(c.Context(), req)
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(utils.ErrorResponse(utils.ResponseDetails{
-			Info: utils.InfoDetails{
-				Message: "Failed to create a new product.",
-				Reason:  err.Error(),
-			},
-		}))
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"message": utils.ErrInternalError.Error(),
+		})
 	}
-	return c.Status(http.StatusCreated).JSON(utils.SuccessResponse(utils.ResponseDetails{
-		Info: utils.InfoDetails{
-			Message: "Product created.",
-		},
-		Data: CreateProductResponse{
-			Name: product.Name,
-		},
-	}))
+	return c.Status(http.StatusCreated).JSON(fiber.Map{
+		"message": "product created",
+		"data":    product,
+	})
 }
 
 func (ph *ProductHandlersImpl) DeleteProduct(c fiber.Ctx) error {
 	var req DeleteProductRequest
 	if err := c.Bind().Query(&req); err != nil {
 		if e, ok := err.(validator.ValidationErrors); ok {
-			err := utils.DigestValidationErrors(e)
-			return c.Status(http.StatusBadRequest).JSON(utils.ErrorResponse(utils.ResponseDetails{
-				Info: utils.InfoDetails{
-					Message: "Failed to validate.",
-				},
-				Errors: err,
-			}))
+			err := utils.DigestValErrors(e)
+			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+				"message": "failed to validate",
+				"errors":  err,
+			})
 		}
-		return c.Status(http.StatusInternalServerError).JSON(utils.ErrorResponse(utils.ResponseDetails{
-			Info: utils.InfoDetails{
-				Message: utils.ErrInternalError.Error(),
-			},
-		}))
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"message": utils.ErrInternalError.Error(),
+		})
 	}
 	productName, err := ph.Services.DeleteProduct(c.Context(), req)
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(utils.ErrorResponse(utils.ResponseDetails{
-			Info: utils.InfoDetails{
-				Message: "Failed to delete a product.",
-				Reason:  err.Error(),
-			},
-		}))
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"message": utils.ErrInternalError.Error(),
+		})
 	}
-	return c.Status(http.StatusOK).JSON(utils.SuccessResponse(utils.ResponseDetails{
-		Info: utils.InfoDetails{
-			Message: fmt.Sprintf("Product %v has been deleted.", productName),
-		},
-	}))
+	return c.Status(http.StatusOK).JSON(fiber.Map{
+		"message": fmt.Sprintf("product %v has been deleted", productName),
+	})
 }
 
 func (ph *ProductHandlersImpl) UpdateProduct(c fiber.Ctx) error {
 	var req UpdateProductRequest
 	if err := c.Bind().Body(&req); err != nil {
 		if e, ok := err.(validator.ValidationErrors); ok {
-			err := utils.DigestValidationErrors(e)
-			return c.Status(http.StatusBadRequest).JSON(utils.ErrorResponse(utils.ResponseDetails{
-				Info: utils.InfoDetails{
-					Message: "Failed to validate.",
-				},
-				Errors: err,
-			}))
+			err := utils.DigestValErrors(e)
+			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+				"message": "failed to validate",
+				"errors":  err,
+			})
 		}
-		return c.Status(http.StatusInternalServerError).JSON(utils.ErrorResponse(utils.ResponseDetails{
-			Info: utils.InfoDetails{
-				Message: utils.ErrInternalError.Error(),
-			},
-		}))
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"message": utils.ErrInternalError.Error(),
+		})
 	}
 	product, err := ph.Services.UpdateProduct(c.Context(), req)
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(utils.ErrorResponse(utils.ResponseDetails{
-			Info: utils.InfoDetails{
-				Message: "Failed to update product",
-				Reason:  err.Error(),
-			},
-		}))
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"message": utils.ErrInternalError.Error(),
+		})
 	}
-	return c.Status(http.StatusOK).JSON(utils.SuccessResponse(utils.ResponseDetails{
-		Info: utils.InfoDetails{
-			Message: fmt.Sprintf("%v has been updated", product.Name),
-		},
-	}))
+	return c.Status(http.StatusOK).JSON(fiber.Map{
+		"message": fmt.Sprintf("product %v has been updated", product.Name),
+		"data":    product,
+	})
 }

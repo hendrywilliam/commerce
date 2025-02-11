@@ -3,6 +3,7 @@ module github.com/hendrywilliam/commerce
 go 1.23.4
 
 require (
+	github.com/alexedwards/argon2id v1.0.0
 	github.com/go-playground/validator/v10 v10.23.0
 	github.com/gofiber/fiber/v3 v3.0.0-beta.3
 	github.com/jackc/pgx/v5 v5.7.1

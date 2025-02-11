@@ -2,13 +2,12 @@ package products
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"strings"
 
 	"github.com/hendrywilliam/commerce/internal/queries"
 	"github.com/hendrywilliam/commerce/internal/utils"
-
-	"github.com/jackc/pgx/v5"
 )
 
 type ProductServices interface {
@@ -32,7 +31,7 @@ func NewServices(q *queries.Queries) ProductServices {
 func (ps *ProductServicesImpl) GetProductBySlug(ctx context.Context, slug string) (queries.Product, error) {
 	product, err := ps.Q.ProductQueries.GetProductBySlug(ctx, slug)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
+		if errors.Is(err, sql.ErrNoRows) {
 			return queries.Product{}, queries.ErrNoProduct
 		}
 		return queries.Product{}, utils.ErrInternalError
@@ -41,9 +40,8 @@ func (ps *ProductServicesImpl) GetProductBySlug(ctx context.Context, slug string
 }
 
 func (ps *ProductServicesImpl) SearchProducts(ctx context.Context, searchTerm string) ([]queries.Product, error) {
-	splittedTerms := strings.Split(searchTerm, " ")
-	normalizedTerms := strings.Join(splittedTerms, " | ")
-	products, err := ps.Q.ProductQueries.SearchProducts(ctx, normalizedTerms)
+	normalized := strings.ReplaceAll(searchTerm, " ", " | ")
+	products, err := ps.Q.ProductQueries.SearchProducts(ctx, normalized)
 	if err != nil {
 		return []queries.Product{}, utils.ErrInternalError
 	}
@@ -66,7 +64,7 @@ func (ps *ProductServicesImpl) CreateProduct(ctx context.Context, args CreatePro
 		AttributeGroupID: args.AttributeGroupID,
 	})
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
+		if errors.Is(err, sql.ErrNoRows) {
 			return queries.Product{}, queries.ErrDuplicateProduct
 		}
 		return queries.Product{}, utils.ErrInternalError
@@ -77,7 +75,7 @@ func (ps *ProductServicesImpl) CreateProduct(ctx context.Context, args CreatePro
 func (ps *ProductServicesImpl) DeleteProduct(ctx context.Context, args DeleteProductRequest) (string, error) {
 	pname, err := ps.Q.ProductQueries.DeleteProduct(ctx, args.ID)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
+		if errors.Is(err, sql.ErrNoRows) {
 			return "", queries.ErrNoProduct
 		}
 		return "", utils.ErrInternalError
@@ -102,7 +100,7 @@ func (ps *ProductServicesImpl) UpdateProduct(ctx context.Context, args UpdatePro
 		AttributeGroupID: args.AttributeGroupID,
 	})
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
+		if errors.Is(err, sql.ErrNoRows) {
 			return queries.Product{}, queries.ErrNoProduct
 		}
 		return queries.Product{}, utils.ErrInternalError

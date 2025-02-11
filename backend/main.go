@@ -9,28 +9,25 @@ import (
 	"syscall"
 
 	"github.com/hendrywilliam/commerce/internal/db"
-	"github.com/hendrywilliam/commerce/internal/server"
-	"github.com/joho/godotenv"
+	"github.com/hendrywilliam/commerce/internal/servers"
+	"github.com/hendrywilliam/commerce/internal/utils"
 	"golang.org/x/sync/errgroup"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("error loading .env file")
-	}
+	config := utils.LoadConfiguration()
 	rootCtx, stop := signal.NotifyContext(context.Background(), []os.Signal{os.Interrupt, syscall.SIGTERM, syscall.SIGINT}...)
 	defer stop()
 	g, ctx := errgroup.WithContext(rootCtx)
-	conn, err := db.OpenPostgres(ctx)
+	pgConn, err := db.OpenPostgres(ctx, config.DatabaseURL)
 	if err != nil {
 		log.Fatal(err)
 	}
 	g.Go(func() error {
-		return server.ServeHTTP(ctx, conn)
+		return servers.ServeHTTP(ctx, pgConn, config)
 	})
 	if err := g.Wait(); err == nil {
-		conn.Close()
+		pgConn.Close()
 		slog.Info("database closed.")
 		slog.Info("shutdown")
 	}

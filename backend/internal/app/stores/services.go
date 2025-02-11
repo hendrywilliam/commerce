@@ -2,17 +2,17 @@ package stores
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 
 	"github.com/hendrywilliam/commerce/internal/queries"
 	"github.com/hendrywilliam/commerce/internal/utils"
-	"github.com/jackc/pgx/v5"
 )
 
 type StoreServices interface {
 	CreateStore(ctx context.Context, args CreateStoreRequest) (queries.Store, error)
 	DeleteStore(ctx context.Context, args DeleteStoreRequest) (string, error)
-	UpdateStore(ctx context.Context, args UpdateStoreRequest) (string, error)
+	UpdateStore(ctx context.Context, args UpdateStoreRequest) (queries.Store, error)
 }
 
 type StoreServicesImpl struct {
@@ -33,7 +33,7 @@ func (ss *StoreServicesImpl) CreateStore(ctx context.Context, args CreateStoreRe
 		Active:      args.Active,
 	})
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
+		if errors.Is(err, sql.ErrNoRows) {
 			return queries.Store{}, queries.ErrDuplicateStore
 		}
 		return queries.Store{}, utils.ErrInternalError
@@ -44,7 +44,7 @@ func (ss *StoreServicesImpl) CreateStore(ctx context.Context, args CreateStoreRe
 func (ss *StoreServicesImpl) DeleteStore(ctx context.Context, args DeleteStoreRequest) (string, error) {
 	storeName, err := ss.Q.StoreQueries.DeleteStore(ctx, args.ID)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
+		if errors.Is(err, sql.ErrNoRows) {
 			return "", queries.ErrNoStore
 		}
 		return "", utils.ErrInternalError
@@ -52,8 +52,8 @@ func (ss *StoreServicesImpl) DeleteStore(ctx context.Context, args DeleteStoreRe
 	return storeName, err
 }
 
-func (ss *StoreServicesImpl) UpdateStore(ctx context.Context, args UpdateStoreRequest) (string, error) {
-	storeName, err := ss.Q.StoreQueries.UpdateStore(ctx, queries.UpdateStoreArgs{
+func (ss *StoreServicesImpl) UpdateStore(ctx context.Context, args UpdateStoreRequest) (queries.Store, error) {
+	store, err := ss.Q.StoreQueries.UpdateStore(ctx, queries.UpdateStoreArgs{
 		ID:          args.ID,
 		Name:        args.Name,
 		Slug:        args.Slug,
@@ -61,10 +61,10 @@ func (ss *StoreServicesImpl) UpdateStore(ctx context.Context, args UpdateStoreRe
 		Active:      args.Active,
 	})
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return "", queries.ErrNoStore
+		if errors.Is(err, sql.ErrNoRows) {
+			return queries.Store{}, queries.ErrNoStore
 		}
-		return "", utils.ErrInternalError
+		return queries.Store{}, utils.ErrInternalError
 	}
-	return storeName, err
+	return store, err
 }

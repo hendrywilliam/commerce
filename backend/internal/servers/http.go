@@ -1,4 +1,4 @@
-package server
+package servers
 
 import (
 	"context"
@@ -9,28 +9,29 @@ import (
 	"github.com/hendrywilliam/commerce/internal/app/carts"
 	"github.com/hendrywilliam/commerce/internal/app/products"
 	"github.com/hendrywilliam/commerce/internal/app/stores"
+	"github.com/hendrywilliam/commerce/internal/app/users"
 	"github.com/hendrywilliam/commerce/internal/queries"
 	"github.com/hendrywilliam/commerce/internal/utils"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func ServeHTTP(ctx context.Context, db *pgxpool.Pool) error {
+func ServeHTTP(ctx context.Context, db *pgxpool.Pool, config *utils.AppConfig) error {
 	app := fiber.New(fiber.Config{
-		StructValidator: &utils.StructValidator{Validator: validator.New()},
+		StructValidator: &utils.StructValidator{Validator: validator.New(validator.WithRequiredStructEnabled())},
 	})
 	rg := app.Group("/v1")
-
-	// thou shall remain modular
 	allqs := queries.NewQueries(db)
 
 	productsServices := products.NewServices(&allqs)
 	storesServices := stores.NewServices(&allqs)
 	cartsServices := carts.NewServices(&allqs)
+	usersServices := users.NewServices(&allqs)
 
 	productsHandlers := products.NewHandlers(productsServices)
 	storesHandlers := stores.NewHandlers(storesServices)
 	cartsHandlers := carts.NewHandlers(cartsServices)
+	usersHandlers := users.NewHandlers(usersServices)
 
 	rg.Post("/stores", storesHandlers.CreateStore)
 	rg.Delete("/stores", storesHandlers.DeleteStore)
@@ -45,6 +46,10 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool) error {
 	rg.Post("/carts", cartsHandlers.AddToCart)
 	rg.Delete("/carts", cartsHandlers.DeleteCartItem)
 	rg.Patch("/carts", cartsHandlers.UpdateCartItem)
+
+	rg.Post("/users", usersHandlers.CreateUser)
+	rg.Get("/users", usersHandlers.GetUser)
+	rg.Patch("/users", usersHandlers.UpdateUser)
 
 	return app.Listen(":8080", fiber.ListenConfig{
 		GracefulContext: ctx,
