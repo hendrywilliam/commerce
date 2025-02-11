@@ -1,8 +1,11 @@
 package queries
 
 import (
+	"bytes"
 	"context"
 	"errors"
+	"fmt"
+	"strings"
 	"time"
 )
 
@@ -176,56 +179,94 @@ func (pq *ProductQueriesImpl) DeleteProduct(ctx context.Context, ID uint64) (str
 
 type UpdateProductArgs struct {
 	ID               uint64          `json:"id"`
-	Name             string          `json:"name"`
-	Slug             string          `json:"slug"`
-	Description      string          `json:"description"`
-	ShortDescription string          `json:"short_description"`
-	Sku              string          `json:"sku"`
-	Weight           uint64          `json:"weight"`
-	Price            float64         `json:"price"`
-	Stock            uint64          `json:"stock"`
-	CategoryID       uint64          `json:"category_id"`
+	Name             *string         `json:"name"`
+	Slug             *string         `json:"slug"`
+	Description      *string         `json:"description"`
+	ShortDescription *string         `json:"short_description"`
+	Sku              *string         `json:"sku"`
+	Weight           *uint64         `json:"weight"`
+	Price            *float64        `json:"price"`
+	Stock            *uint64         `json:"stock"`
+	CategoryID       *uint64         `json:"category_id"`
 	Images           []ProductImages `json:"images"`
-	IsVisible        bool            `json:"is_visible"`
-	AttributeGroupID uint64          `json:"attribute_group_id"`
+	IsVisible        *bool           `json:"is_visible"`
+	AttributeGroupID *uint64         `json:"attribute_group_id"`
 }
 
 func (pq *ProductQueriesImpl) UpdateProduct(ctx context.Context, args UpdateProductArgs) (Product, error) {
-	row := pq.DB.QueryRow(ctx, `
-		UPDATE 
-			products
-		SET 
-			name = $2,
-			slug = $3,
-			description = $4,
-			short_description = $5,
-			sku = $6,
-			weight = $7,
-			price = $8,
-			stock = $9,
-			category_id = $10,
-			images = $11,
-			is_visible = $12,
-			attribute_group_id = $13,
-			updated_at = now()
-		WHERE 
-			id = $1
-		RETURNING name;
-	`,
-		args.ID,
-		args.Name,
-		args.Slug,
-		args.Description,
-		args.ShortDescription,
-		args.Sku,
-		args.Weight,
-		args.Price,
-		args.Stock,
-		args.CategoryID,
-		args.Images,
-		args.IsVisible,
-		args.AttributeGroupID,
-	)
+	baseSql := &bytes.Buffer{}
+	baseSql.WriteString("UPDATE products SET ")
+	var params []interface{}
+	var setClauses []string
+	paramIndex := 1
+	if args.Name != nil {
+		params = append(params, args.Name)
+		setClauses = append(setClauses, fmt.Sprintf("name = $%d", paramIndex))
+		paramIndex++
+	}
+	if args.Slug != nil {
+		params = append(params, args.Slug)
+		setClauses = append(setClauses, fmt.Sprintf("slug = $%d", paramIndex))
+		paramIndex++
+	}
+	if args.Description != nil {
+		params = append(params, args.Description)
+		setClauses = append(setClauses, fmt.Sprintf("description = $%d", paramIndex))
+		paramIndex++
+	}
+	if args.ShortDescription != nil {
+		params = append(params, args.ShortDescription)
+		setClauses = append(setClauses, fmt.Sprintf("short_description = $%d", paramIndex))
+		paramIndex++
+	}
+	if args.Sku != nil {
+		params = append(params, args.Sku)
+		setClauses = append(setClauses, fmt.Sprintf("sku = $%d", paramIndex))
+		paramIndex++
+	}
+	if args.Weight != nil {
+		params = append(params, args.Weight)
+		setClauses = append(setClauses, fmt.Sprintf("weight = $%d", paramIndex))
+		paramIndex++
+	}
+	if args.Price != nil {
+		params = append(params, args.Price)
+		setClauses = append(setClauses, fmt.Sprintf("price = $%d", paramIndex))
+		paramIndex++
+	}
+	if args.Stock != nil {
+		params = append(params, args.Stock)
+		setClauses = append(setClauses, fmt.Sprintf("stock = $%d", paramIndex))
+		paramIndex++
+	}
+	if args.CategoryID != nil {
+		params = append(params, args.CategoryID)
+		setClauses = append(setClauses, fmt.Sprintf("stock = $%d", paramIndex))
+		paramIndex++
+	}
+	if args.Images != nil {
+		params = append(params, args.Images)
+		setClauses = append(setClauses, fmt.Sprintf("images = $%d", paramIndex))
+		paramIndex++
+	}
+	if args.IsVisible != nil {
+		params = append(params, args.IsVisible)
+		setClauses = append(setClauses, fmt.Sprintf("is_visible = $%d", paramIndex))
+		paramIndex++
+	}
+	if args.AttributeGroupID != nil {
+		params = append(params, args.AttributeGroupID)
+		setClauses = append(setClauses, fmt.Sprintf("attribute_group_id = $%d", paramIndex))
+		paramIndex++
+	}
+	if len(setClauses) == 0 {
+		return Product{}, errors.New("no fields were updated")
+	}
+	setClauses = append(setClauses, fmt.Sprintf("updated_at = now()"))
+	baseSql.WriteString(strings.Join(setClauses, ", "))
+	baseSql.WriteString(fmt.Sprintf(" WHERE id = $%d RETURNING name;", paramIndex))
+	params = append(params, args.ID)
+	row := pq.DB.QueryRow(ctx, baseSql.String(), params...)
 	var p Product
 	err := row.Scan(
 		&p.Name,

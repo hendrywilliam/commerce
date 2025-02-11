@@ -89,17 +89,17 @@ func (uq *UserQueriesImpl) UpdateUser(ctx context.Context, args UserUpdateArgs) 
 	var setClauses []string
 	paramIndex := 1
 	if args.Email != nil && *args.Email != "" {
-		setClauses = append(setClauses, fmt.Sprintf("email = $%v", paramIndex))
+		setClauses = append(setClauses, fmt.Sprintf("email = $%d", paramIndex))
 		params = append(params, *args.Email)
 		paramIndex++
 	}
 	if args.Password != nil && *args.Password != "" {
-		setClauses = append(setClauses, fmt.Sprintf("hashed_password = $%v", paramIndex))
+		setClauses = append(setClauses, fmt.Sprintf("hashed_password = $%d", paramIndex))
 		params = append(params, *args.Password)
 		paramIndex++
 	}
 	if args.PrivateMetadata != nil {
-		setClauses = append(setClauses, fmt.Sprintf("private_metadata = $%v", paramIndex))
+		setClauses = append(setClauses, fmt.Sprintf("private_metadata = $%d", paramIndex))
 		params = append(params, args.PrivateMetadata)
 		paramIndex++
 	}

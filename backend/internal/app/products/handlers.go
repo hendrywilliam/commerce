@@ -2,6 +2,7 @@ package products
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -30,6 +31,7 @@ func NewHandlers(services ProductServices) ProductHandlers {
 func (ph *ProductHandlersImpl) GetProductBySlug(c fiber.Ctx) error {
 	var req GetProductRequest
 	if err := c.Bind().Body(&req); err != nil {
+		slog.Error(err.Error())
 		if e, ok := err.(validator.ValidationErrors); ok {
 			err := utils.DigestValErrors(e)
 			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
@@ -56,6 +58,7 @@ func (ph *ProductHandlersImpl) GetProductBySlug(c fiber.Ctx) error {
 func (ph *ProductHandlersImpl) SearchProduct(c fiber.Ctx) error {
 	var req SearchProductsRequest
 	if err := c.Bind().Body(&req); err != nil {
+		slog.Error(err.Error())
 		if e, ok := err.(validator.ValidationErrors); ok {
 			err := utils.DigestValErrors(e)
 			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
@@ -87,6 +90,7 @@ func (ph *ProductHandlersImpl) SearchProduct(c fiber.Ctx) error {
 func (ph *ProductHandlersImpl) CreateProduct(c fiber.Ctx) error {
 	var req CreateProductRequest
 	if err := c.Bind().Body(&req); err != nil {
+		slog.Error(err.Error())
 		if e, ok := err.(validator.ValidationErrors); ok {
 			err := utils.DigestValErrors(e)
 			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
@@ -113,6 +117,7 @@ func (ph *ProductHandlersImpl) CreateProduct(c fiber.Ctx) error {
 func (ph *ProductHandlersImpl) DeleteProduct(c fiber.Ctx) error {
 	var req DeleteProductRequest
 	if err := c.Bind().Query(&req); err != nil {
+		slog.Error(err.Error())
 		if e, ok := err.(validator.ValidationErrors); ok {
 			err := utils.DigestValErrors(e)
 			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
@@ -138,6 +143,7 @@ func (ph *ProductHandlersImpl) DeleteProduct(c fiber.Ctx) error {
 func (ph *ProductHandlersImpl) UpdateProduct(c fiber.Ctx) error {
 	var req UpdateProductRequest
 	if err := c.Bind().Body(&req); err != nil {
+		slog.Error(err.Error())
 		if e, ok := err.(validator.ValidationErrors); ok {
 			err := utils.DigestValErrors(e)
 			return c.Status(http.StatusBadRequest).JSON(fiber.Map{

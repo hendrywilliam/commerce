@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 	"strings"
 
 	"github.com/hendrywilliam/commerce/internal/queries"
@@ -31,6 +32,7 @@ func NewServices(q *queries.Queries) ProductServices {
 func (ps *ProductServicesImpl) GetProductBySlug(ctx context.Context, slug string) (queries.Product, error) {
 	product, err := ps.Q.ProductQueries.GetProductBySlug(ctx, slug)
 	if err != nil {
+		slog.Error(err.Error())
 		if errors.Is(err, sql.ErrNoRows) {
 			return queries.Product{}, queries.ErrNoProduct
 		}
@@ -52,7 +54,7 @@ func (ps *ProductServicesImpl) CreateProduct(ctx context.Context, args CreatePro
 	product, err := ps.Q.ProductQueries.CreateProduct(ctx, queries.CreateProductArgs{
 		StoreID:          args.StoreID,
 		Name:             args.Name,
-		Slug:             args.Slug,
+		Slug:             utils.Slugify(args.Name),
 		Description:      args.Description,
 		ShortDescription: args.ShortDescription,
 		Sku:              args.Sku,
@@ -64,6 +66,7 @@ func (ps *ProductServicesImpl) CreateProduct(ctx context.Context, args CreatePro
 		AttributeGroupID: args.AttributeGroupID,
 	})
 	if err != nil {
+		slog.Error(err.Error())
 		if errors.Is(err, sql.ErrNoRows) {
 			return queries.Product{}, queries.ErrDuplicateProduct
 		}
@@ -75,6 +78,7 @@ func (ps *ProductServicesImpl) CreateProduct(ctx context.Context, args CreatePro
 func (ps *ProductServicesImpl) DeleteProduct(ctx context.Context, args DeleteProductRequest) (string, error) {
 	pname, err := ps.Q.ProductQueries.DeleteProduct(ctx, args.ID)
 	if err != nil {
+		slog.Error(err.Error())
 		if errors.Is(err, sql.ErrNoRows) {
 			return "", queries.ErrNoProduct
 		}
@@ -84,10 +88,8 @@ func (ps *ProductServicesImpl) DeleteProduct(ctx context.Context, args DeletePro
 }
 
 func (ps *ProductServicesImpl) UpdateProduct(ctx context.Context, args UpdateProductRequest) (queries.Product, error) {
-	product, err := ps.Q.ProductQueries.UpdateProduct(ctx, queries.UpdateProductArgs{
+	productData := queries.UpdateProductArgs{
 		ID:               args.ID,
-		Name:             args.Name,
-		Slug:             args.Slug,
 		Description:      args.Description,
 		ShortDescription: args.ShortDescription,
 		Sku:              args.Sku,
@@ -98,8 +100,15 @@ func (ps *ProductServicesImpl) UpdateProduct(ctx context.Context, args UpdatePro
 		Images:           args.Images,
 		IsVisible:        args.IsVisible,
 		AttributeGroupID: args.AttributeGroupID,
-	})
+	}
+	if args.Name != nil {
+		productData.Name = args.Name
+		productSlug := utils.Slugify(*args.Name)
+		productData.Slug = &productSlug
+	}
+	product, err := ps.Q.ProductQueries.UpdateProduct(ctx, productData)
 	if err != nil {
+		slog.Error(err.Error())
 		if errors.Is(err, sql.ErrNoRows) {
 			return queries.Product{}, queries.ErrNoProduct
 		}
