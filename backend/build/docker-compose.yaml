@@ -1,8 +1,7 @@
 services:
   commerce_api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: registry.digitalocean.com/sleepykoala/commerce
+    init: true
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.commerce_api.rule=Host(`commerce.bahanbakarnasi.cloud`)"
