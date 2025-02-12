@@ -1,18 +1,23 @@
 services:
-  commerce_api:
-    image: registry.digitalocean.com/sleepykoala/commerce
-    init: true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.commerce_api.rule=Host(`commerce.bahanbakarnasi.cloud`)"
-      - "traefik.http.routers.commerce_api.entrypoints=websecure"
-      - "traefik.http.routers.chatbot_api.tls.certresolver=myresolver"
-      - "traefik.http.services.chatbot_api.loadbalancer.server.port=8080"
-    networks:
-      - traefik_default
-      - commerce_network
+    commerce_api:
+        image: registry.digitalocean.com/sleepykoala/commerce
+        # build:
+        #     context: .
+        #     dockerfile: Dockerfile
+        init: true
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.commerce_api.rule=Host(`commerce.bahanbakarnasi.cloud`)"
+            - "traefik.http.routers.commerce_api.entrypoints=websecure"
+            - "traefik.http.routers.chatbot_api.tls.certresolver=myresolver"
+            - "traefik.http.services.chatbot_api.loadbalancer.server.port=8080"
+        entrypoint: "/app/start.sh"
+        command: ["/app/main"]
+        networks:
+            - traefik_default
+            - commerce_network
 networks:
-  traefik_default:
-    external: true
-  commerce_network:
-    external: true
+    traefik_default:
+        external: true
+    commerce_network:
+        external: true
