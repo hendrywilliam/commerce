@@ -21,9 +21,9 @@ jobs:
             - name: authenticate gcp
               uses: "google-github-actions/auth@v2"
               with:
-                  service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-            - name: add secret managers
-              uses: "google-github-actions/get-secretmanager-secrets@v2"
+                  credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
+            - name: setup cloud sdk
+              uses: "google-github-actions/setup-gcloud@v2"
             - name: retrieve secrets from secret manager.
               run: |
                   chmod +x ./scripts/fetch-secrets.sh
