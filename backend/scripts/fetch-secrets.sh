@@ -5,7 +5,7 @@ OUTPUT_FILE="../.env"
 
 # check file
 if [ ! -e $OUTPUT_FILE ]; then  
-    echo ".env file doesnt exist, createing a new one."
+    echo ".env file doesnt exist, creating a new one."
     touch $OUTPUT_FILE
 fi 
 
