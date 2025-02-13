@@ -1,7 +1,7 @@
 #!/bin/sh
 
 PROJECT_ID="commerce-450807"
-OUTPUT_FILE="./../.env"
+OUTPUT_FILE="./.env"
 
 # check file
 if [ ! -e $OUTPUT_FILE ]; then  
