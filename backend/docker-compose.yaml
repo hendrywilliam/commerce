@@ -9,9 +9,9 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.commerce_api.rule=Host(`commerce.bahanbakarnasi.cloud`)"
             - "traefik.http.routers.commerce_api.entrypoints=websecure"
-            - "traefik.http.routers.chatbot_api.tls.certresolver=myresolver"
-            - "traefik.http.services.chatbot_api.loadbalancer.server.port=8080"
-        entrypoint: "/app/start.sh"
+            - "traefik.http.routers.commerce_api.tls.certresolver=myresolver"
+            - "traefik.http.services.commerce_api.loadbalancer.server.port=8080"
+        entrypoint: "/app/scripts/docker-entrypoint.sh"
         command: ["/app/main"]
         networks:
             - traefik_default
