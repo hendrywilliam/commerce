@@ -22,8 +22,9 @@ jobs:
               uses: "google-github-actions/auth@v2"
               with:
                   service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-            - name: retrieve secrets from secret managers
+            - name: add secret managers
               uses: "google-github-actions/get-secretmanager-secrets@v2"
+            - name: retrieve secrets from secret manager.
               run: |
                   chmod +x ./scripts/fetch-secrets.sh
                   bash ./scripts/fetch-secrets.sh
