@@ -29,11 +29,9 @@ jobs:
                   chmod +x ./scripts/fetch-secrets.sh
                   bash ./scripts/fetch-secrets.sh
             - name: build container image.
-              run: docker build -t commerce:$(echo $GITHUB_SHA | head -c7) .
+              run: docker build -t ${{ secrets.REGISTRY_NAME }}/commerce:$(echo $GITHUB_SHA | head -c7) .
             - name: login to digitalocean container registry.
               run: doctl registry login
-            - name: tag docker image
-              run: docker tag commerce:$(echo $GITHUB_SHA | head -c7) ${{ secrets.REGISTRY_NAME }}/commerce:$(echo $GITHUB_SHA | head -c7)
             - name: push image to registry.
               run: docker push ${{ secrets.REGISTRY_NAME }}/commerce:$(echo $GITHUB_SHA | head -c7)
             - name: exec remote ssh.
