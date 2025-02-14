@@ -14,27 +14,29 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - name: install doctl
+            - name: install doctl.
               uses: digitalocean/action-doctl@v2
               with:
                   token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-            - name: authenticate gcp
+            - name: authenticate gcp.
               uses: "google-github-actions/auth@v2"
               with:
                   credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
-            - name: setup cloud sdk
+            - name: setup cloud sdk.
               uses: "google-github-actions/setup-gcloud@v2"
             - name: retrieve secrets from secret manager.
               run: |
                   chmod +x ./scripts/fetch-secrets.sh
                   bash ./scripts/fetch-secrets.sh
-            - name: build container image
+            - name: build container image.
               run: docker build -t commerce:$(echo $GITHUB_SHA | head -c7) .
-            - name: login to digital ocean container registry
-              run: doctl registry login --expire-seconds 2400
-            - name: push image to registry
+            - name: login to digitalocean container registry.
+              run: doctl registry login
+            - name: tag docker image
+              run: docker tag commerce:$(echo $GITHUB_SHA | head -c7) ${{ secrets.REGISTRY_NAME }}/commerce:$(echo $GITHUB_SHA | head -c7)
+            - name: push image to registry.
               run: docker push ${{ secrets.REGISTRY_NAME }}/commerce:$(echo $GITHUB_SHA | head -c7)
-            - name: exec remote ssh
+            - name: exec remote ssh.
               uses: appleboy/ssh-action@v1.2.0
               with:
                   host: ${{ secrets.HOST }}
@@ -46,4 +48,4 @@ jobs:
                       cd commerce/backend/
                       docker compose down
                       git pull origin main
-                      docker compose up --build --detach commerce_api
+                      docker compose up --build --detach commerce-api
