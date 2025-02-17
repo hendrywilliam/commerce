@@ -51,11 +51,11 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool, redis *redis.Client, confi
 	rg.Delete("/carts", cartsHandlers.DeleteCartItem)
 	rg.Patch("/carts", cartsHandlers.UpdateCartItem)
 
-	rg.Post("/users", usersHandlers.CreateUser)
 	rg.Get("/users", usersHandlers.GetUser)
 	rg.Patch("/users", usersHandlers.UpdateUser)
 
 	rg.Post("/login", authHandlers.Login)
+	rg.Post("/register", authHandlers.Register)
 
 	return app.Listen(":8080", fiber.ListenConfig{
 		GracefulContext: ctx,

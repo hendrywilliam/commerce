@@ -1,7 +1,6 @@
 package users
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -10,7 +9,6 @@ import (
 )
 
 type UsersHandlers interface {
-	CreateUser(c fiber.Ctx) error
 	GetUser(c fiber.Ctx) error
 	UpdateUser(c fiber.Ctx) error
 }
@@ -46,30 +44,6 @@ func (uh *UsersHandlersImpl) GetUser(c fiber.Ctx) error {
 	}
 	return c.Status(http.StatusOK).JSON(fiber.Map{
 		"data": user,
-	})
-}
-
-func (uh *UsersHandlersImpl) CreateUser(c fiber.Ctx) error {
-	var req CreateUserRequest
-	if err := c.Bind().Body(&req); err != nil {
-		if e, ok := err.(validator.ValidationErrors); ok {
-			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-				"errors": utils.DigestValErrors(e),
-			})
-		}
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"message": utils.ErrInternalError.Error(),
-		})
-	}
-	user, err := uh.Services.CreateUser(c.Context(), req)
-	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"info":    "failed to create a new user.",
-			"message": err.Error(),
-		})
-	}
-	return c.Status(http.StatusCreated).JSON(fiber.Map{
-		"message": fmt.Sprintf("user %v created.", user.Email),
 	})
 }
 

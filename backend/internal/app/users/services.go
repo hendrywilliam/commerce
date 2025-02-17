@@ -10,7 +10,6 @@ import (
 )
 
 type UserServices interface {
-	CreateUser(ctx context.Context, args CreateUserRequest) (queries.User, error)
 	UpdateUser(ctx context.Context, args UpdateUserRequest) (queries.User, error)
 	GetUser(ctx context.Context, args GetUserRequest) (queries.User, error)
 }
@@ -31,21 +30,6 @@ func (us *UserServicesImpl) GetUser(ctx context.Context, args GetUserRequest) (q
 		if errors.Is(err, sql.ErrNoRows) {
 			return queries.User{}, queries.ErrUserNotFound
 		}
-		return queries.User{}, err
-	}
-	return user, nil
-}
-
-func (us *UserServicesImpl) CreateUser(ctx context.Context, args CreateUserRequest) (queries.User, error) {
-	hashedPassword, err := utils.HashPassword(args.Password)
-	if err != nil {
-		return queries.User{}, err
-	}
-	user, err := us.Q.UserQueries.CreateUser(ctx, queries.CreateUserArgs{
-		Email:    args.Email,
-		Password: hashedPassword,
-	})
-	if err != nil {
 		return queries.User{}, err
 	}
 	return user, nil

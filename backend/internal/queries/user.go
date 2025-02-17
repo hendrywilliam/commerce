@@ -11,7 +11,7 @@ import (
 
 var (
 	ErrUserNotFound     = errors.New("user not found.")
-	ErrUserAlreadyExist = errors.New("user is exist with the same email.")
+	ErrUserAlreadyExist = errors.New("user is already exist.")
 )
 
 type User struct {

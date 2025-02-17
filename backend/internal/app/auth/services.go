@@ -50,7 +50,7 @@ func GetAuthenticator(method string) Authenticator {
 
 type AuthServices interface {
 	Login(ctx context.Context, args LoginRequest, cfg *utils.AppConfig) (LoginResponse, error)
-	// Register(ctx context.Context, args )
+	Register(ctx context.Context, args RegisterRequest) (string, error)
 }
 
 type AuthServicesImpl struct {
@@ -87,4 +87,21 @@ func (as *AuthServicesImpl) Login(ctx context.Context, args LoginRequest, cfg *u
 	default:
 		return LoginResponse{}, errors.New("login method is not allowed.")
 	}
+}
+func (as *AuthServicesImpl) Register(ctx context.Context, args RegisterRequest) (string, error) {
+	hashedPassword, err := utils.HashPassword(args.Password)
+	if err != nil {
+		return "", utils.ErrInternalError
+	}
+	user, err := as.Q.UserQueries.CreateUser(ctx, queries.CreateUserArgs{
+		Email:    args.Email,
+		Password: hashedPassword,
+	})
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return "", queries.ErrUserAlreadyExist
+		}
+		return "", utils.ErrInternalError
+	}
+	return user.Email, nil
 }
