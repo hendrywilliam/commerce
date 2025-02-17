@@ -16,11 +16,11 @@ func OpenPostgres(ctx context.Context, url string) (*pgxpool.Pool, error) {
 	if err != nil {
 		return nil, err
 	}
-	slog.Info("db connection established")
+	slog.Info("db connection established.")
 	_, err = conn.Exec(ctx, "SET TIMEZONE TO 'Asia/Jakarta';")
 	if err != nil {
 		return nil, err
 	}
-	slog.Info("db timezone set to Asia/Jakarta")
+	slog.Info("db timezone set to Asia/Jakarta.")
 	return conn, nil
 }

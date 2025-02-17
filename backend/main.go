@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -21,14 +20,22 @@ func main() {
 	g, ctx := errgroup.WithContext(rootCtx)
 	pgConn, err := db.OpenPostgres(ctx, config.DatabaseURL)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error(err.Error())
+		os.Exit(1)
+	}
+	redisClient, err := db.OpenRedis(ctx, config.RedisURL, "")
+	if err != nil {
+		slog.Error(err.Error())
+		os.Exit(1)
 	}
 	g.Go(func() error {
-		return servers.ServeHTTP(ctx, pgConn, config)
+		return servers.ServeHTTP(ctx, pgConn, redisClient, config)
 	})
 	if err := g.Wait(); err == nil {
 		pgConn.Close()
-		slog.Info("database closed.")
+		slog.Info("database connection closed.")
+		redisClient.Close()
+		slog.Info("redis connection closed.")
 		slog.Info("shutdown")
 	}
 }
