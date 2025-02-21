@@ -17,7 +17,7 @@ var (
 type User struct {
 	ID              uint64      `json:"id,omitempty"`
 	Email           string      `json:"email,omitempty"`
-	HashPassword    string      `json:"hash_password,omitempty"`
+	Password        string      `json:"password,omitempty"`
 	PrivateMetadata interface{} `json:"private_metadata,omitempty"`
 	PublicMetadata  interface{} `json:"public_metadata,omitempty"`
 	CreatedAt       *time.Time  `json:"created_at,omitempty"`
@@ -55,7 +55,7 @@ func (uq *UserQueriesImpl) CreateUser(ctx context.Context, args CreateUserArgs) 
 	row := uq.DB.QueryRow(ctx, `
 		INSERT INTO users (
 			email,
-			hashed_password
+			password
 		) VALUES (
 			$1,
 			$2
@@ -94,7 +94,7 @@ func (uq *UserQueriesImpl) UpdateUser(ctx context.Context, args UserUpdateArgs) 
 		paramIndex++
 	}
 	if args.Password != nil && *args.Password != "" {
-		setClauses = append(setClauses, fmt.Sprintf("hashed_password = $%d", paramIndex))
+		setClauses = append(setClauses, fmt.Sprintf("password = $%d", paramIndex))
 		params = append(params, *args.Password)
 		paramIndex++
 	}

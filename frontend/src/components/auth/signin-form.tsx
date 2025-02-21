@@ -10,88 +10,87 @@ import { useCallback, useState, FormEvent } from "react";
 import { Form, FormField, FormInput, FormLabel } from "@/components/ui/form";
 
 export default function SignInForm() {
-  const [identifier, setIdentifer] = useState({
-    email: "",
-    password: "",
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const { isLoaded, signIn, setActive } = useSignIn();
-  const router = useRouter();
+    const [identifier, setIdentifer] = useState({
+        email: "",
+        password: "",
+    });
+    const [isLoading, setIsLoading] = useState(false);
+    const { isLoaded, signIn, setActive } = useSignIn();
+    const router = useRouter();
 
-  const submitLogin = useCallback(
-    async (event: FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      if (!isLoaded) return;
-      setIsLoading(true);
-      try {
-        const createSession = await signIn.create({
-          identifier: identifier.email,
-          password: identifier.password,
-        });
+    const submitLogin = useCallback(
+        async (event: FormEvent<HTMLFormElement>) => {
+            event.preventDefault();
+            if (!isLoaded) return;
+            setIsLoading(true);
+            try {
+                const createSession = await signIn.create({
+                    identifier: identifier.email,
+                    password: identifier.password,
+                });
 
-        if (createSession.status === "complete") {
-          setActive({ session: createSession.createdSessionId });
-          toast.success("Login succeeded. Redirecting to lobby.");
-          router.push("/");
-        }
-      } catch (error) {
-        catchError(error);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    // eslint-disable-next-line
-    [identifier],
-  );
-
-  return (
-    <div className="h-max w-full">
-      <Form
-        className="flex flex-col gap-4"
-        onSubmit={(event) => submitLogin(event)}
-        aria-description="Login Form"
-      >
-        <FormField>
-          <FormLabel>Email</FormLabel>
-          <FormInput
-            onChange={(event) =>
-              setIdentifer({
-                ...identifier,
-                [event.target.name]: event.target.value,
-              })
+                if (createSession.status === "complete") {
+                    setActive({ session: createSession.createdSessionId });
+                    toast.success("Login succeeded. Redirecting to lobby.");
+                    router.push("/");
+                }
+            } catch (error) {
+                catchError(error);
+            } finally {
+                setIsLoading(false);
             }
-            placeholder="miki_matsubara@gmail.com"
-            aria-description="Email input"
-            name="email"
-            data-testid="email"
-          />
-        </FormField>
-        <FormField>
-          <FormLabel>Password</FormLabel>
-          <FormInput
-            onChange={(event) =>
-              setIdentifer({
-                ...identifier,
-                [event.target.name]: event.target.value,
-              })
-            }
-            aria-description="Password input"
-            type="password"
-            name="password"
-            data-testid="password"
-          />
-        </FormField>
-        <Button
-          aria-disabled={isLoading}
-          disabled={isLoading}
-          className="flex gap-1"
-          type="submit"
-          data-testid="submit"
-        >
-          {isLoading && <IconLoading />}
-          Sign in
-        </Button>
-      </Form>
-    </div>
-  );
+        },
+        // eslint-disable-next-line
+        [identifier]
+    );
+
+    return (
+        <div className="h-max w-full">
+            <Form
+                className="flex flex-col gap-4"
+                onSubmit={(event) => submitLogin(event)}
+                aria-description="Login Form"
+            >
+                <FormField>
+                    <FormLabel>Email</FormLabel>
+                    <FormInput
+                        onChange={(event) =>
+                            setIdentifer({
+                                ...identifier,
+                                [event.target.name]: event.target.value,
+                            })
+                        }
+                        placeholder="miki_matsubara@gmail.com"
+                        aria-description="Email input"
+                        name="email"
+                        data-testid="email"
+                    />
+                </FormField>
+                <FormField>
+                    <FormLabel>Password</FormLabel>
+                    <FormInput
+                        onChange={(event) =>
+                            setIdentifer({
+                                ...identifier,
+                                [event.target.name]: event.target.value,
+                            })
+                        }
+                        aria-description="Password input"
+                        type="password"
+                        name="password"
+                        data-testid="password"
+                    />
+                </FormField>
+                <Button
+                    aria-disabled={isLoading}
+                    disabled={isLoading}
+                    className="flex gap-1"
+                    type="submit"
+                >
+                    {isLoading && <IconLoading />}
+                    Sign in
+                </Button>
+            </Form>
+        </div>
+    );
 }

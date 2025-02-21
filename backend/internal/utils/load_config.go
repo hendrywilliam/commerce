@@ -9,11 +9,16 @@ import (
 )
 
 type AppConfig struct {
-	DatabaseURL      string
-	RedisURL         string
-	PepperKey        string
-	MaxLoginAttempts int
-	SymmetricKey     string
+	DatabaseURL             string
+	RedisURL                string
+	PepperKey               string
+	MaxLoginAttempts        int
+	SymmetricKey            string
+	FrontendUrl             string
+	GoogleOauthClientID     string
+	GoogleOauthClientSecret string
+	GoogleOauthRedirectUri  string
+	GoogleOauthState        string
 }
 
 func LoadConfiguration() *AppConfig {
@@ -28,10 +33,15 @@ func LoadConfiguration() *AppConfig {
 		os.Exit(1)
 	}
 	return &AppConfig{
-		DatabaseURL:      os.Getenv("DATABASE_URL"),
-		RedisURL:         os.Getenv("REDIS_URL"),
-		PepperKey:        os.Getenv("PEPPER_KEY"),
-		MaxLoginAttempts: maxLogin,
-		SymmetricKey:     os.Getenv("SYMMETRIC_KEY"),
+		DatabaseURL:             os.Getenv("DATABASE_URL"),
+		RedisURL:                os.Getenv("REDIS_URL"),
+		PepperKey:               os.Getenv("PEPPER_KEY"),
+		MaxLoginAttempts:        maxLogin,
+		SymmetricKey:            os.Getenv("SYMMETRIC_KEY"),
+		FrontendUrl:             os.Getenv("FRONTEND_URL"),
+		GoogleOauthClientID:     os.Getenv("GOOGLE_OAUTH_CLIENT_ID"),
+		GoogleOauthClientSecret: os.Getenv("GOOGLE_OAUTH_CLIENT_SECRET"),
+		GoogleOauthRedirectUri:  os.Getenv("GOOGLE_OAUTH_REDIRECT_URI"),
+		GoogleOauthState:        os.Getenv("GOOGLE_OAUTH_STATE"),
 	}
 }

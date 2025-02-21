@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/hendrywilliam/commerce/internal/app/auth"
 	"github.com/hendrywilliam/commerce/internal/app/carts"
 	"github.com/hendrywilliam/commerce/internal/app/products"
@@ -22,6 +23,7 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool, redis *redis.Client, confi
 	app := fiber.New(fiber.Config{
 		StructValidator: &utils.StructValidator{Validator: validator.New(validator.WithRequiredStructEnabled())},
 	})
+	app.Use(cors.New())
 	rg := app.Group("/v1")
 	allqs := queries.NewQueries(db)
 
@@ -29,7 +31,7 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool, redis *redis.Client, confi
 	storesServices := stores.NewServices(&allqs)
 	cartsServices := carts.NewServices(&allqs)
 	usersServices := users.NewServices(&allqs)
-	authServices := auth.NewServices(&allqs)
+	authServices := auth.NewServices(&allqs, config)
 
 	productsHandlers := products.NewHandlers(productsServices)
 	storesHandlers := stores.NewHandlers(storesServices)
@@ -45,7 +47,7 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool, redis *redis.Client, confi
 	rg.Post("/products", productsHandlers.CreateProduct)
 	rg.Delete("/products", productsHandlers.DeleteProduct)
 	rg.Patch("/products", productsHandlers.UpdateProduct)
-	rg.Get("/search_products", productsHandlers.SearchProduct)
+	rg.Get("/search-products", productsHandlers.SearchProduct)
 
 	rg.Post("/carts", cartsHandlers.AddToCart)
 	rg.Delete("/carts", cartsHandlers.DeleteCartItem)
@@ -55,6 +57,8 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool, redis *redis.Client, confi
 	rg.Patch("/users", usersHandlers.UpdateUser)
 
 	rg.Post("/login", authHandlers.Login)
+	rg.Get("/oauth-login", authHandlers.OAuthLogin)
+	rg.Get("/oauth-callback", authHandlers.OAuthCallback)
 	rg.Post("/register", authHandlers.Register)
 
 	return app.Listen(":8080", fiber.ListenConfig{

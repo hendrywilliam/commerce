@@ -13,6 +13,8 @@ import (
 type AuthHandlers interface {
 	Login(c fiber.Ctx) error
 	Register(c fiber.Ctx) error
+	OAuthLogin(c fiber.Ctx) error
+	OAuthCallback(c fiber.Ctx) error
 }
 
 type AuthHandlersImpl struct {
@@ -27,6 +29,34 @@ func NewHandlers(redis *redis.Client, cfg *utils.AppConfig, service AuthServices
 		Config:   cfg,
 		Services: service,
 	}
+}
+
+func (ah *AuthHandlersImpl) OAuthLogin(c fiber.Ctx) error {
+	url := ah.Services.OAuthLogin(c.Context())
+	return c.Redirect().To(url)
+}
+
+func (ah *AuthHandlersImpl) OAuthCallback(c fiber.Ctx) error {
+	var (
+		state      = c.Query("state")
+		errorState = c.Query("error")
+		code       = c.Query("code")
+	)
+	if state != ah.Config.GoogleOauthState || errorState != "" || code == "" {
+		return c.Send([]byte("error occured. please try again later."))
+	}
+	token, err := ah.Services.OAuthCallback(c.Context(), code)
+	if err != nil {
+		return c.Send([]byte("error occured. please try again later."))
+	}
+	cookie := &fiber.Cookie{
+		Name: "jwt_token",
+	}
+	if jwt, ok := token.Extra("id_token").(string); ok {
+		cookie.Value = jwt
+	}
+	c.Cookie(cookie)
+	return c.Redirect().To(ah.Config.FrontendUrl + "/sign-in")
 }
 
 func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
@@ -67,7 +97,7 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 			},
 		})
 	}
-	token, err := ah.Services.Login(c.Context(), LoginRequest{Method: req.Method, Credentials: req.Credentials}, ah.Config)
+	token, err := ah.Services.Login(c.Context(), LoginRequest{Method: req.Method, Credentials: req.Credentials})
 	if err != nil {
 		ah.Redis.Set(c.Context(), "rate:"+c.IP(), limit, 0)
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{

@@ -4,6 +4,10 @@ import { subscriptionPlans } from "@/config/billing";
 import { NewProduct, Product } from "@/db/schema";
 import type { Extends, OmitAndExtend } from "@/lib/utils";
 
+export type BackendResponse<T> = {
+    data: T;
+};
+
 export interface CartItem {
     id: number;
     qty: number;
