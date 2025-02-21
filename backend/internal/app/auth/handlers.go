@@ -113,6 +113,7 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 	cookie := &fiber.Cookie{
 		Name:  "token",
 		Value: data.Token,
+		HTTPOnly: true,
 	}
 	c.Cookie(cookie)
 	return c.Status(http.StatusOK).JSON(fiber.Map{

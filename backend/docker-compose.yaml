@@ -1,6 +1,6 @@
 services:
     commerce-api:
-        image: registry.digitalocean.com/sleepykoala/commerce
+        image: registry.digitalocean.com/sleepykoala/commerce:${GIT_COMMIT_HASH}
         init: true
         labels:
             - "traefik.enable=true"
@@ -13,6 +13,8 @@ services:
         networks:
             - traefik_default
             - commerce-network
+        env_file:
+            - .env
 networks:
     traefik_default:
         external: true
