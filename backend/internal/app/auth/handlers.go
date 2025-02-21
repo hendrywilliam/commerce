@@ -50,7 +50,9 @@ func (ah *AuthHandlersImpl) OAuthCallback(c fiber.Ctx) error {
 		return c.Send([]byte("error occured. please try again later."))
 	}
 	cookie := &fiber.Cookie{
-		Name: "jwt_token",
+		Name: "token",
+		HTTPOnly: true,
+		Secure: false,
 	}
 	if jwt, ok := token.Extra("id_token").(string); ok {
 		cookie.Value = jwt
@@ -60,7 +62,6 @@ func (ah *AuthHandlersImpl) OAuthCallback(c fiber.Ctx) error {
 }
 
 func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
-	var req LoginRequest
 	limit, err := ah.Redis.Get(c.Context(), "rate:"+c.IP()).Int()
 	if errors.Is(err, redis.Nil) {
 		limit = 1
@@ -71,10 +72,11 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 		return c.Status(http.StatusTooManyRequests).JSON(fiber.Map{
 			"error": fiber.Map{
 				"code":    http.StatusTooManyRequests,
-				"message": "too many request. please try again later.",
+				"message": utils.ErrTooManyRequest.Error(),
 			},
 		})
 	}
+	var req LoginRequest
 	if err := c.Bind().Body(&req); err != nil {
 		if e, ok := err.(validator.ValidationErrors); ok {
 			err := utils.DigestValErrors(e)
@@ -82,7 +84,7 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
 				"error": fiber.Map{
 					"code":    http.StatusBadRequest,
-					"message": "failed to validate",
+					"message": utils.ErrValidationFailed.Error(),
 					"details": err,
 					"attempt": limit,
 				},
@@ -92,12 +94,12 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
 			"error": fiber.Map{
 				"code":    http.StatusInternalServerError,
-				"message": utils.ErrInternalError.Error(),
+				"message": err.Error(),
 				"attempt": limit,
 			},
 		})
 	}
-	token, err := ah.Services.Login(c.Context(), LoginRequest{Method: req.Method, Credentials: req.Credentials})
+	data, err := ah.Services.Login(c.Context(), req)
 	if err != nil {
 		ah.Redis.Set(c.Context(), "rate:"+c.IP(), limit, 0)
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
@@ -108,15 +110,19 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 			},
 		})
 	}
+	cookie := &fiber.Cookie{
+		Name:  "token",
+		Value: data.Token,
+	}
+	c.Cookie(cookie)
 	return c.Status(http.StatusOK).JSON(fiber.Map{
 		"data": fiber.Map{
-			"token": token.Token,
+			"message": "Login succeeded.",
 		},
 	})
 }
 
 func (ah *AuthHandlersImpl) Register(c fiber.Ctx) error {
-	var req RegisterRequest
 	limit, err := ah.Redis.Get(c.Context(), "rate:"+c.IP()).Int()
 	if errors.Is(err, redis.Nil) {
 		limit = 1
@@ -127,10 +133,11 @@ func (ah *AuthHandlersImpl) Register(c fiber.Ctx) error {
 		return c.Status(http.StatusTooManyRequests).JSON(fiber.Map{
 			"error": fiber.Map{
 				"code":    http.StatusTooManyRequests,
-				"message": "too many request. please try again later.",
+				"message": utils.ErrTooManyRequest.Error(),
 			},
 		})
 	}
+	var req RegisterRequest
 	if err := c.Bind().Body(&req); err != nil {
 		if e, ok := err.(validator.ValidationErrors); ok {
 			err := utils.DigestValErrors(e)
@@ -138,7 +145,7 @@ func (ah *AuthHandlersImpl) Register(c fiber.Ctx) error {
 			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
 				"error": fiber.Map{
 					"code":    http.StatusBadRequest,
-					"message": "failed to validate",
+					"message": utils.ErrValidationFailed.Error(),
 					"details": err,
 					"attempt": limit,
 				},
@@ -167,7 +174,7 @@ func (ah *AuthHandlersImpl) Register(c fiber.Ctx) error {
 	return c.Status(http.StatusCreated).JSON(fiber.Map{
 		"data": fiber.Map{
 			"email":   email,
-			"message": "user created, you may log in now.",
+			"message": "User created. You may login now.",
 		},
 	})
 }

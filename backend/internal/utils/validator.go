@@ -20,13 +20,13 @@ func DigestValErrors(err validator.ValidationErrors) []string {
 		var message string
 		switch err.Tag() {
 		case "required":
-			message = fmt.Sprintf("Field '%s' cannot be blank", err.Field())
+			message = fmt.Sprintf("Field '%s' cannot be blank.", err.Field())
 		case "email":
-			message = fmt.Sprintf("Field '%s' must be a valid email address", err.Field())
+			message = fmt.Sprintf("Field '%s' must be a valid email address.", err.Field())
 		case "len":
-			message = fmt.Sprintf("Field '%s' must be exactly %v characters long", err.Field(), err.Param())
+			message = fmt.Sprintf("Field '%s' must be exactly %v characters long.", err.Field(), err.Param())
 		default:
-			message = fmt.Sprintf("Field '%s': '%v' must satisfy '%s' '%v' criteria", err.Field(), err.Value(), err.Tag(), err.Param())
+			message = fmt.Sprintf("Field '%s': '%v' must satisfy '%s' '%v' criteria.", err.Field(), err.Value(), err.Tag(), err.Param())
 		}
 		messages = append(messages, message)
 	}

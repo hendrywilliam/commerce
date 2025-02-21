@@ -4,8 +4,21 @@ import { subscriptionPlans } from "@/config/billing";
 import { NewProduct, Product } from "@/db/schema";
 import type { Extends, OmitAndExtend } from "@/lib/utils";
 
-export type BackendResponse<T> = {
-    data: T;
+export type BackendResponse = {
+    data: {
+        message: string;
+        [key: string]: any;
+    };
+};
+
+export type FailedBackendResponse = {
+    error: {
+        code: number;
+        message: string;
+        attempt?: number;
+        details?: string[];
+        [key: string]: any;
+    };
 };
 
 export interface CartItem {

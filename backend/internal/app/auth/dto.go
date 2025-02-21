@@ -1,8 +1,8 @@
 package auth
 
 type LoginRequest struct {
-	Method      string            `json:"method" validate:"required"`
-	Credentials map[string]string `json:"credentials" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
 }
 
 type LoginResponse struct {

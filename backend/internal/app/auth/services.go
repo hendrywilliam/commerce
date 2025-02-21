@@ -59,8 +59,8 @@ func (as *AuthServicesImpl) OAuthLogin(ctx context.Context) string {
 	return url
 }
 
-func (as *AuthServicesImpl) Login(ctx context.Context, args LoginRequest) (LoginResponse, error) {
-	user, err := as.Q.UserQueries.GetUser(ctx, args.Credentials["email"])
+func (as *AuthServicesImpl) Login(ctx context.Context,  args LoginRequest) (LoginResponse, error) {
+	user, err := as.Q.UserQueries.GetUser(ctx, args.Email)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return LoginResponse{}, queries.ErrUserNotFound

@@ -23,7 +23,10 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool, redis *redis.Client, confi
 	app := fiber.New(fiber.Config{
 		StructValidator: &utils.StructValidator{Validator: validator.New(validator.WithRequiredStructEnabled())},
 	})
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"http://localhost:3000"},
+		AllowCredentials: true,
+	}))
 	rg := app.Group("/v1")
 	allqs := queries.NewQueries(db)
 
