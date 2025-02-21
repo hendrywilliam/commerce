@@ -37,7 +37,7 @@ jobs:
             - name: push image to registry.
               run: docker push ${{ secrets.REGISTRY_NAME }}/commerce:$(echo $GITHUB_SHA | head -c7)
             - name: exec remote ssh.
-              uses: appleboy/ssh-action@v1.2.0
+              uses: appleboy/ssh-action@master
               with:
                   host: ${{ secrets.HOST }}
                   username: ${{ secrets.USERNAME }}
