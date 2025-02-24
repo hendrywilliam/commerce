@@ -6,6 +6,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/golang-jwt/jwt"
 	"github.com/hendrywilliam/commerce/internal/queries"
 	"github.com/hendrywilliam/commerce/internal/utils"
@@ -16,7 +17,7 @@ import (
 type AuthServices interface {
 	Login(ctx context.Context, args LoginRequest) (LoginResponse, error)
 	OAuthLogin(ctx context.Context, state string) string
-	OAuthCallback(ctx context.Context, authorizationCode string) (*oauth2.Token, error)
+	OAuthCallback(ctx context.Context, authCode string, oauthClientID string) (LoginResponse, error)
 	Register(ctx context.Context, args RegisterRequest) (string, error)
 }
 
@@ -39,18 +40,54 @@ func configGoogle(cfg *utils.AppConfig) *oauth2.Config {
 		RedirectURL:  cfg.GoogleOauthRedirectUri,
 		Endpoint:     google.Endpoint,
 		Scopes: []string{
-			"https://www.googleapis.com/auth/userinfo.profile",
+			"openid",
+			"email",
+			"profile",
 		},
 	}
 }
 
-func (as *AuthServicesImpl) OAuthCallback(ctx context.Context, code string) (*oauth2.Token, error) {
-	oauth := configGoogle(as.Config)
-	token, err := oauth.Exchange(ctx, code)
+func googleOidcProvider(ctx context.Context) (*oidc.Provider, error) {
+	provider, err := oidc.NewProvider(ctx, "https://accounts.google.com")
 	if err != nil {
 		return nil, err
 	}
-	return token, nil
+	return provider, err
+}
+
+func (as *AuthServicesImpl) OAuthCallback(ctx context.Context, authCode string, oauthClientID string) (LoginResponse, error) {
+	oauth := configGoogle(as.Config)
+	token, err := oauth.Exchange(ctx, authCode)
+	if err != nil {
+		return LoginResponse{}, err
+	}
+	provider, err := googleOidcProvider(ctx)
+	if err != nil {
+		return LoginResponse{}, err
+	}
+	verifier := provider.Verifier(&oidc.Config{ClientID: oauthClientID})
+	var (
+		rawIdToken string
+		ok         bool
+		idToken    *oidc.IDToken
+	)
+	if rawIdToken, ok = token.Extra("id_token").(string); ok {
+		idToken, err = verifier.Verify(ctx, rawIdToken)
+	}
+	var claims OpenIDClaims
+	if err := idToken.Claims(&claims); err != nil {
+		return LoginResponse{}, err
+	}
+	// Store user with sub claims from id_token as it is unique to a user.
+	_, err = as.Q.UserQueries.CreateUser(ctx, queries.CreateUserArgs{
+		Email:    claims.Email,
+		Sub:      claims.Subject,
+		ImageURL: claims.Picture,
+	})
+	if err != nil {
+		return LoginResponse{}, err
+	}
+	return LoginResponse{}, nil
 }
 
 func (as *AuthServicesImpl) OAuthLogin(ctx context.Context, state string) string {
@@ -59,7 +96,7 @@ func (as *AuthServicesImpl) OAuthLogin(ctx context.Context, state string) string
 	return url
 }
 
-func (as *AuthServicesImpl) Login(ctx context.Context,  args LoginRequest) (LoginResponse, error) {
+func (as *AuthServicesImpl) Login(ctx context.Context, args LoginRequest) (LoginResponse, error) {
 	user, err := as.Q.UserQueries.GetUser(ctx, args.Email)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {

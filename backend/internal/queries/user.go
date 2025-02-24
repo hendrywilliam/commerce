@@ -18,8 +18,9 @@ type User struct {
 	ID              uint64      `json:"id,omitempty"`
 	Email           string      `json:"email,omitempty"`
 	Password        string      `json:"password,omitempty"`
+	Sub             string      `json:"sub,omitempty"`
+	ImageURL        string      `json:"image_url,omitempty"`
 	PrivateMetadata interface{} `json:"private_metadata,omitempty"`
-	PublicMetadata  interface{} `json:"public_metadata,omitempty"`
 	CreatedAt       *time.Time  `json:"created_at,omitempty"`
 	UpdatedAt       *time.Time  `json:"updated_at,omitempty"`
 }
@@ -48,22 +49,55 @@ func (uq *UserQueriesImpl) GetUser(ctx context.Context, email string) (User, err
 
 type CreateUserArgs struct {
 	Email    string
+	Sub      string
+	ImageURL string
 	Password string
 }
 
 func (uq *UserQueriesImpl) CreateUser(ctx context.Context, args CreateUserArgs) (User, error) {
-	row := uq.DB.QueryRow(ctx, `
-		INSERT INTO users (
-			email,
-			password
-		) VALUES (
-			$1,
-			$2
-		) ON CONFLICT (email) DO NOTHING
-		RETURNING id, email;
-	`,
-		args.Email,
-		args.Password,
+	baseSql := &bytes.Buffer{}
+	var params []string
+	var insertFields []string
+	var arguments []interface{}
+	baseSql.WriteString("INSERT INTO users ")
+	paramIndex := 1
+	if args.Email != "" {
+		insertFields = append(insertFields, fmt.Sprintf("email"))
+		params = append(params, fmt.Sprintf("$%v", paramIndex))
+		arguments = append(arguments, args.Email)
+		paramIndex++
+	}
+	if args.Password != "" {
+		insertFields = append(insertFields, fmt.Sprintf("password"))
+		params = append(params, fmt.Sprintf("$%v", paramIndex))
+		arguments = append(arguments, args.Password)
+		paramIndex++
+	}
+	if args.Sub != "" {
+		insertFields = append(insertFields, fmt.Sprintf("sub"))
+		params = append(params, fmt.Sprintf("$%v", paramIndex))
+		arguments = append(arguments, args.Sub)
+		paramIndex++
+	}
+	if args.ImageURL != "" {
+		insertFields = append(insertFields, fmt.Sprintf("image_url"))
+		params = append(params, fmt.Sprintf("$%v", paramIndex))
+		arguments = append(arguments, args.ImageURL)
+		paramIndex++
+	}
+	baseSql.WriteString("(")
+	joinedFields := strings.Join(insertFields, ", ")
+	baseSql.WriteString(joinedFields)
+	baseSql.WriteString(")")
+	baseSql.WriteString(" VALUES ")
+	baseSql.WriteString("(")
+	joinedSqlParams := strings.Join(params, ", ")
+	baseSql.WriteString(joinedSqlParams)
+	baseSql.WriteString(")")
+	baseSql.WriteString(" ON CONFLICT (email) DO NOTHING RETURNING id, email;")
+	row := uq.DB.QueryRow(ctx,
+		baseSql.String(),
+		arguments...,
 	)
 	var u User
 	err := row.Scan(

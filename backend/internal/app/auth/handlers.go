@@ -36,7 +36,7 @@ func (ah *AuthHandlersImpl) OAuthLogin(c fiber.Ctx) error {
 	persistedState, err := ah.Redis.Get(c.Context(), "state_token").Result()
 	if errors.Is(err, redis.Nil) {
 		persistedState = utils.GenerateAntiForgeryToken()
-		ah.Redis.Set(c.Context(), "state_token", persistedState, time.Duration(time.Hour * 24))
+		ah.Redis.Set(c.Context(), "state_token", persistedState, time.Duration(time.Hour*24))
 	}
 	url := ah.Services.OAuthLogin(c.Context(), persistedState)
 	return c.Redirect().To(url)
@@ -55,17 +55,13 @@ func (ah *AuthHandlersImpl) OAuthCallback(c fiber.Ctx) error {
 	if state != persistedState || errorState != "" || code == "" {
 		return c.Send([]byte("error occured. please try again later."))
 	}
-	token, err := ah.Services.OAuthCallback(c.Context(), code)
+	_, err = ah.Services.OAuthCallback(c.Context(), code, ah.Config.GoogleOauthClientID)
 	if err != nil {
 		return c.Send([]byte("error occured. please try again later."))
 	}
 	cookie := &fiber.Cookie{
-		Name: "token",
+		Name:     "token",
 		HTTPOnly: true,
-		Secure: false,
-	}
-	if jwt, ok := token.Extra("id_token").(string); ok {
-		cookie.Value = jwt
 	}
 	c.Cookie(cookie)
 	return c.Redirect().To(ah.Config.FrontendUrl + "/sign-in")
@@ -121,8 +117,8 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 		})
 	}
 	cookie := &fiber.Cookie{
-		Name:  "token",
-		Value: data.Token,
+		Name:     "token",
+		Value:    data.Token,
 		HTTPOnly: true,
 	}
 	c.Cookie(cookie)
