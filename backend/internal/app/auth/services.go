@@ -15,7 +15,7 @@ import (
 
 type AuthServices interface {
 	Login(ctx context.Context, args LoginRequest) (LoginResponse, error)
-	OAuthLogin(ctx context.Context) string
+	OAuthLogin(ctx context.Context, state string) string
 	OAuthCallback(ctx context.Context, authorizationCode string) (*oauth2.Token, error)
 	Register(ctx context.Context, args RegisterRequest) (string, error)
 }
@@ -53,9 +53,9 @@ func (as *AuthServicesImpl) OAuthCallback(ctx context.Context, code string) (*oa
 	return token, nil
 }
 
-func (as *AuthServicesImpl) OAuthLogin(ctx context.Context) string {
+func (as *AuthServicesImpl) OAuthLogin(ctx context.Context, state string) string {
 	oauth := configGoogle(as.Config)
-	url := oauth.AuthCodeURL(as.Config.GoogleOauthState)
+	url := oauth.AuthCodeURL(state)
 	return url
 }
 

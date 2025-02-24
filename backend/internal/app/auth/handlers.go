@@ -3,6 +3,7 @@ package auth
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
@@ -32,7 +33,12 @@ func NewHandlers(redis *redis.Client, cfg *utils.AppConfig, service AuthServices
 }
 
 func (ah *AuthHandlersImpl) OAuthLogin(c fiber.Ctx) error {
-	url := ah.Services.OAuthLogin(c.Context())
+	persistedState, err := ah.Redis.Get(c.Context(), "state_token").Result()
+	if errors.Is(err, redis.Nil) {
+		persistedState = utils.GenerateAntiForgeryToken()
+		ah.Redis.Set(c.Context(), "state_token", persistedState, time.Duration(time.Hour * 24))
+	}
+	url := ah.Services.OAuthLogin(c.Context(), persistedState)
 	return c.Redirect().To(url)
 }
 
@@ -42,7 +48,11 @@ func (ah *AuthHandlersImpl) OAuthCallback(c fiber.Ctx) error {
 		errorState = c.Query("error")
 		code       = c.Query("code")
 	)
-	if state != ah.Config.GoogleOauthState || errorState != "" || code == "" {
+	persistedState, err := ah.Redis.Get(c.Context(), "state_token").Result()
+	if errors.Is(err, redis.Nil) {
+		return c.Send([]byte("error occured. please try again later."))
+	}
+	if state != persistedState || errorState != "" || code == "" {
 		return c.Send([]byte("error occured. please try again later."))
 	}
 	token, err := ah.Services.OAuthCallback(c.Context(), code)
