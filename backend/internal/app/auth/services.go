@@ -59,11 +59,11 @@ func (as *AuthServicesImpl) OAuthCallback(ctx context.Context, authCode string, 
 	oauth := configGoogle(as.Config)
 	token, err := oauth.Exchange(ctx, authCode)
 	if err != nil {
-		return LoginResponse{}, err
+		return LoginResponse{}, utils.ErrInternalError
 	}
 	provider, err := googleOidcProvider(ctx)
 	if err != nil {
-		return LoginResponse{}, err
+		return LoginResponse{}, utils.ErrInternalError
 	}
 	verifier := provider.Verifier(&oidc.Config{ClientID: oauthClientID})
 	var (
@@ -76,18 +76,28 @@ func (as *AuthServicesImpl) OAuthCallback(ctx context.Context, authCode string, 
 	}
 	var claims OpenIDClaims
 	if err := idToken.Claims(&claims); err != nil {
-		return LoginResponse{}, err
+		return LoginResponse{}, utils.ErrInternalError
 	}
 	// Store user with sub claims from id_token as it is unique to a user.
-	_, err = as.Q.UserQueries.CreateUser(ctx, queries.CreateUserArgs{
+	user, err := as.Q.UserQueries.CreateUser(ctx, queries.CreateUserArgs{
 		Email:    claims.Email,
 		Sub:      claims.Subject,
 		ImageURL: claims.Picture,
 	})
 	if err != nil {
-		return LoginResponse{}, err
+		return LoginResponse{}, utils.ErrInternalError
 	}
-	return LoginResponse{}, nil
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"sub":   user.ID,
+		"exp":   time.Now().Unix() + 60*60,
+		"iat":   time.Now(),
+		"email": user.Email,
+	})
+	signedToken, err := jwtToken.SignedString([]byte(as.Config.SymmetricKey))
+	if err != nil {
+		return LoginResponse{}, utils.ErrInternalError
+	}
+	return LoginResponse{Token: signedToken}, nil
 }
 
 func (as *AuthServicesImpl) OAuthLogin(ctx context.Context, state string) string {
@@ -106,8 +116,9 @@ func (as *AuthServicesImpl) Login(ctx context.Context, args LoginRequest) (Login
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"exp":   time.Now().Unix() + 60*60,
+		"iat":   time.Now().Unix(),
 		"email": user.Email,
-		"id":    user.ID,
+		"sub":   user.ID,
 	})
 	signedToken, err := token.SignedString([]byte(as.Config.SymmetricKey))
 	return LoginResponse{Token: signedToken}, nil

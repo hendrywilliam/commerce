@@ -55,13 +55,14 @@ func (ah *AuthHandlersImpl) OAuthCallback(c fiber.Ctx) error {
 	if state != persistedState || errorState != "" || code == "" {
 		return c.Send([]byte("error occured. please try again later."))
 	}
-	_, err = ah.Services.OAuthCallback(c.Context(), code, ah.Config.GoogleOauthClientID)
+	token, err := ah.Services.OAuthCallback(c.Context(), code, ah.Config.GoogleOauthClientID)
 	if err != nil {
 		return c.Send([]byte("error occured. please try again later."))
 	}
 	cookie := &fiber.Cookie{
 		Name:     "token",
 		HTTPOnly: true,
+		Value:    token.Token,
 	}
 	c.Cookie(cookie)
 	return c.Redirect().To(ah.Config.FrontendUrl + "/sign-in")
