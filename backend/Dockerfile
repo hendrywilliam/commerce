@@ -13,5 +13,4 @@ RUN chmod +x /app/docker-entrypoint.sh
 COPY --from=builder /app/.env .
 COPY --from=builder /app/migrate.linux-amd64 ./migrate
 COPY --from=builder /app/internal/db/migrations ./migrations
-EXPOSE 8080
 CMD ["/app/main"]
