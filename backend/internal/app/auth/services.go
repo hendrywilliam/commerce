@@ -90,7 +90,7 @@ func (as *AuthServicesImpl) OAuthCallback(ctx context.Context, authCode string, 
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub":   user.ID,
 		"exp":   time.Now().Unix() + 60*60,
-		"iat":   time.Now(),
+		"iat":   time.Now().Unix(),
 		"email": user.Email,
 	})
 	signedToken, err := jwtToken.SignedString([]byte(as.Config.SymmetricKey))
