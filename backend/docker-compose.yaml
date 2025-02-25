@@ -2,12 +2,16 @@ services:
     commerce-api:
         image: registry.digitalocean.com/sleepykoala/commerce:${GIT_COMMIT_HASH}
         init: true
+        container_name: commerce-api
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.commerce-api.rule=Host(`commerce.bahanbakarnasi.cloud`)"
             - "traefik.http.routers.commerce-api.entrypoints=websecure"
             - "traefik.http.routers.commerce-api.tls.certresolver=myresolver"
             - "traefik.http.services.commerce-api.loadbalancer.server.port=8080"
+            # Need to set this to override traefik default behaviour.
+            # Traefik will randomly pick one network depending on how Docker is returning them.
+            - "traefik.docker.network=traefik_default"
         entrypoint: "/app/docker-entrypoint.sh"
         command: ["/app/main"]
         networks:
