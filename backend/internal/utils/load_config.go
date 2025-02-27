@@ -18,6 +18,7 @@ type AppConfig struct {
 	GoogleOauthClientID     string
 	GoogleOauthClientSecret string
 	GoogleOauthRedirectUri  string
+	AppEnv                  string
 }
 
 func LoadConfiguration() *AppConfig {
@@ -41,5 +42,6 @@ func LoadConfiguration() *AppConfig {
 		GoogleOauthClientID:     os.Getenv("GOOGLE_OAUTH_CLIENT_ID"),
 		GoogleOauthClientSecret: os.Getenv("GOOGLE_OAUTH_CLIENT_SECRET"),
 		GoogleOauthRedirectUri:  os.Getenv("GOOGLE_OAUTH_REDIRECT_URI"),
+		AppEnv:                  os.Getenv("APP_ENV"),
 	}
 }

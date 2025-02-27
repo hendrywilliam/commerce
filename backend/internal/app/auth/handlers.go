@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -22,13 +23,15 @@ type AuthHandlersImpl struct {
 	Redis    *redis.Client
 	Config   *utils.AppConfig
 	Services AuthServices
+	Log      *slog.Logger
 }
 
-func NewHandlers(redis *redis.Client, cfg *utils.AppConfig, service AuthServices) AuthHandlers {
+func NewHandlers(redis *redis.Client, cfg *utils.AppConfig, service AuthServices, log *slog.Logger) AuthHandlers {
 	return &AuthHandlersImpl{
 		Redis:    redis,
 		Config:   cfg,
 		Services: service,
+		Log:      log,
 	}
 }
 
@@ -65,7 +68,7 @@ func (ah *AuthHandlersImpl) OAuthCallback(c fiber.Ctx) error {
 		Value:    token.Token,
 	}
 	c.Cookie(cookie)
-	return c.Redirect().To(ah.Config.FrontendUrl + "/sign-in")
+	return c.Redirect().To(ah.Config.FrontendUrl)
 }
 
 func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {

@@ -1,6 +1,7 @@
 package users
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -15,11 +16,13 @@ type UsersHandlers interface {
 
 type UsersHandlersImpl struct {
 	Services UserServices
+	Log      *slog.Logger
 }
 
-func NewHandlers(services UserServices) UsersHandlers {
+func NewHandlers(services UserServices, log *slog.Logger) UsersHandlers {
 	return &UsersHandlersImpl{
 		Services: services,
+		Log:      log,
 	}
 }
 

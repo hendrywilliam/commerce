@@ -3,6 +3,7 @@ package queries
 import (
 	"context"
 	"errors"
+	"log/slog"
 	"time"
 )
 
@@ -20,8 +21,17 @@ type Cart struct {
 	ID        uint64     `json:"id,omitempty"`
 	Items     []CartItem `json:"items,omitempty"`
 	IsClosed  bool       `json:"is_closed,omitempty"`
-	CreatedAt *time.Time `json:"created_at,omitempty"`
-	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	CreatedAt time.Time  `json:"created_at,omitempty"`
+	UpdatedAt time.Time  `json:"updated_at,omitempty"`
+}
+
+func (c Cart) LogValue() slog.Value {
+	return slog.GroupValue(
+		slog.Uint64("id", c.ID),
+		slog.Bool("is_closed", c.IsClosed),
+		slog.Time("created_at", c.CreatedAt),
+		slog.Time("updated_at", c.UpdatedAt),
+	)
 }
 
 type CartQueriesImpl struct {

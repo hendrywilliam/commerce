@@ -15,6 +15,21 @@ import (
 
 func main() {
 	config := utils.LoadConfiguration()
+	var (
+		handler    slog.Handler
+		loggerOpts = &slog.HandlerOptions{
+			AddSource: true,
+			Level:     slog.LevelDebug,
+		}
+	)
+	if config.AppEnv != "production" {
+		// Human readable logger during development mode.
+		handler = slog.NewTextHandler(os.Stdout, loggerOpts)
+	} else {
+		handler = slog.NewJSONHandler(os.Stdout, loggerOpts)
+	}
+	var logger *slog.Logger = slog.New(handler)
+	slog.SetDefault(logger)
 	rootCtx, stop := signal.NotifyContext(context.Background(), []os.Signal{os.Interrupt, syscall.SIGTERM, syscall.SIGINT}...)
 	defer stop()
 	g, ctx := errgroup.WithContext(rootCtx)
@@ -29,7 +44,7 @@ func main() {
 		os.Exit(1)
 	}
 	g.Go(func() error {
-		return servers.ServeHTTP(ctx, pgConn, redisClient, config)
+		return servers.ServeHTTP(ctx, pgConn, logger, redisClient, config)
 	})
 	if err := g.Wait(); err == nil {
 		pgConn.Close()

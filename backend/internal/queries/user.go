@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"strings"
 	"time"
 )
@@ -21,8 +22,18 @@ type User struct {
 	Sub             string      `json:"sub,omitempty"`
 	ImageURL        string      `json:"image_url,omitempty"`
 	PrivateMetadata interface{} `json:"private_metadata,omitempty"`
-	CreatedAt       *time.Time  `json:"created_at,omitempty"`
-	UpdatedAt       *time.Time  `json:"updated_at,omitempty"`
+	CreatedAt       time.Time   `json:"created_at,omitempty"`
+	UpdatedAt       time.Time   `json:"updated_at,omitempty"`
+}
+
+// Do not expose sensitive details to logger.
+func (u User) LogValue() slog.Value {
+	return slog.GroupValue(
+		slog.Uint64("id", u.ID),
+		slog.String("sub", u.Sub),
+		slog.Time("created_at", u.CreatedAt),
+		slog.Time("updated_at", u.UpdatedAt),
+	)
 }
 
 type UserQueriesImpl struct {

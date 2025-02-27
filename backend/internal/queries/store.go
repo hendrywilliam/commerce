@@ -3,12 +3,13 @@ package queries
 import (
 	"context"
 	"errors"
+	"log/slog"
 	"time"
 )
 
 var (
-	ErrNoStore        = errors.New("no such store exist")
-	ErrDuplicateStore = errors.New("duplicate store detected")
+	ErrNoStore        = errors.New("Store is not exist.")
+	ErrDuplicateStore = errors.New("Duplicate store detected.")
 )
 
 type StoreQueriesImpl struct {
@@ -25,6 +26,14 @@ type Store struct {
 	Active      bool       `json:"active,omitempty"`
 	CreatedAt   *time.Time `json:"created_at,omitempty"`
 	UpdatedAt   *time.Time `json:"updated_at,omitempty"`
+}
+
+func (s Store) LogValue() slog.Value {
+	return slog.GroupValue(
+		slog.Uint64("id", s.ID),
+		slog.String("name", s.Name),
+		slog.String("slug", s.Slug),
+	)
 }
 
 type CreateStoreArgs struct {

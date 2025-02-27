@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"strings"
 	"time"
 )
@@ -37,6 +38,18 @@ type Product struct {
 	AttributeGroupID uint64          `json:"attribute_group_id,omitempty"`
 	CreatedAt        *time.Time      `json:"created_at,omitempty"`
 	UpdatedAt        *time.Time      `json:"updated_at,omitempty"`
+}
+
+func (p Product) LogValue() slog.Value {
+	return slog.GroupValue(
+		slog.Uint64("id", p.ID),
+		slog.Uint64("store_id", p.ID),
+		slog.String("name", p.Name),
+		slog.String("name_search", p.Name),
+		slog.String("slug", p.Slug),
+		slog.Float64("price", p.Price),
+		slog.Bool("is_visible", p.IsVisible),
+	)
 }
 
 type ProductQueriesImpl struct {

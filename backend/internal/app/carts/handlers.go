@@ -2,6 +2,7 @@ package carts
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -17,11 +18,13 @@ type CartHandlers interface {
 
 type CartHandlersImpl struct {
 	Services CartServices
+	Log      *slog.Logger
 }
 
-func NewHandlers(services CartServices) CartHandlers {
+func NewHandlers(services CartServices, log *slog.Logger) CartHandlers {
 	return &CartHandlersImpl{
 		Services: services,
+		Log:      log,
 	}
 }
 

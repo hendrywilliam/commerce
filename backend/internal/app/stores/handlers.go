@@ -2,6 +2,7 @@ package stores
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -17,11 +18,13 @@ type StoreHandlers interface {
 
 type StoreHandlersImpl struct {
 	Services StoreServices
+	Log      *slog.Logger
 }
 
-func NewHandlers(services StoreServices) StoreHandlers {
+func NewHandlers(services StoreServices, log *slog.Logger) StoreHandlers {
 	return &StoreHandlersImpl{
 		Services: services,
+		Log:      log,
 	}
 }
 

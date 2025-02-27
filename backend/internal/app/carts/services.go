@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 	"slices"
 
 	"github.com/hendrywilliam/commerce/internal/queries"
@@ -19,12 +20,14 @@ type CartServices interface {
 }
 
 type CartServicesImpl struct {
-	Q *queries.Queries
+	Q   *queries.Queries
+	Log *slog.Logger
 }
 
-func NewServices(q *queries.Queries) CartServices {
+func NewServices(q *queries.Queries, log *slog.Logger) CartServices {
 	return &CartServicesImpl{
-		Q: q,
+		Q:   q,
+		Log: log,
 	}
 }
 

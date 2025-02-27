@@ -20,11 +20,13 @@ type ProductHandlers interface {
 
 type ProductHandlersImpl struct {
 	Services ProductServices
+	Log      *slog.Logger
 }
 
-func NewHandlers(services ProductServices) ProductHandlers {
+func NewHandlers(services ProductServices, log *slog.Logger) ProductHandlers {
 	return &ProductHandlersImpl{
 		Services: services,
+		Log:      log,
 	}
 }
 

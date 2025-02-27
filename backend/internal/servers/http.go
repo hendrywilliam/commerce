@@ -19,7 +19,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func ServeHTTP(ctx context.Context, db *pgxpool.Pool, redis *redis.Client, config *utils.AppConfig) error {
+func ServeHTTP(ctx context.Context, db *pgxpool.Pool, log *slog.Logger, redis *redis.Client, config *utils.AppConfig) error {
 	app := fiber.New(fiber.Config{
 		StructValidator: &utils.StructValidator{Validator: validator.New(validator.WithRequiredStructEnabled())},
 	})
@@ -27,17 +27,17 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool, redis *redis.Client, confi
 	rg := app.Group("/v1")
 	allqs := queries.NewQueries(db)
 
-	productsServices := products.NewServices(&allqs)
-	storesServices := stores.NewServices(&allqs)
-	cartsServices := carts.NewServices(&allqs)
-	usersServices := users.NewServices(&allqs)
+	productsServices := products.NewServices(&allqs, log)
+	storesServices := stores.NewServices(&allqs, log)
+	cartsServices := carts.NewServices(&allqs, log)
+	usersServices := users.NewServices(&allqs, log)
 	authServices := auth.NewServices(&allqs, config)
 
-	productsHandlers := products.NewHandlers(productsServices)
-	storesHandlers := stores.NewHandlers(storesServices)
-	cartsHandlers := carts.NewHandlers(cartsServices)
-	usersHandlers := users.NewHandlers(usersServices)
-	authHandlers := auth.NewHandlers(redis, config, authServices)
+	productsHandlers := products.NewHandlers(productsServices, log)
+	storesHandlers := stores.NewHandlers(storesServices, log)
+	cartsHandlers := carts.NewHandlers(cartsServices, log)
+	usersHandlers := users.NewHandlers(usersServices, log)
+	authHandlers := auth.NewHandlers(redis, config, authServices, log)
 
 	rg.Post("/stores", storesHandlers.CreateStore)
 	rg.Delete("/stores", storesHandlers.DeleteStore)

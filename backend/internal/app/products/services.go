@@ -20,12 +20,14 @@ type ProductServices interface {
 }
 
 type ProductServicesImpl struct {
-	Q *queries.Queries
+	Q   *queries.Queries
+	Log *slog.Logger
 }
 
-func NewServices(q *queries.Queries) ProductServices {
+func NewServices(q *queries.Queries, log *slog.Logger) ProductServices {
 	return &ProductServicesImpl{
-		Q: q,
+		Q:   q,
+		Log: log,
 	}
 }
 
