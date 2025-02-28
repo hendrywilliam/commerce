@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	ErrUserNotFound     = errors.New("User is not registered.")
-	ErrUserAlreadyExist = errors.New("User is already exist.")
+	ErrUserNotFound     = errors.New("user is not registered")
+	ErrUserAlreadyExist = errors.New("user is already exist")
 )
 
 type User struct {
@@ -65,49 +65,84 @@ type CreateUserArgs struct {
 	Password string
 }
 
+// Full query:
+//
+// INSERT INTO users (columnSub, columnEmail)
+// 	SELECT newSub, newEmail
+//  -- 0 row -> true
+// 	WHERE NOT EXISTS (
+//		-- subquery for returning a row if there is a row exist with sub = newSub.
+// 		SELECT 1 FROM users WHERE sub = newSub
+// 	)
+// RETURNING *
+//
+// Source: https://www.postgresql.org/message-id/3bf1920f$0$201$e4fe514c@newszilla.xs4all.nl
+
 func (uq *UserQueriesImpl) CreateUser(ctx context.Context, args CreateUserArgs) (User, error) {
-	baseSql := &bytes.Buffer{}
-	var params []string
-	var insertFields []string
+	var paramsPlaceholder []string
+	var insertColumns []string
 	var arguments []interface{}
-	baseSql.WriteString("INSERT INTO users ")
 	paramIndex := 1
 	if args.Email != "" {
-		insertFields = append(insertFields, fmt.Sprintf("email"))
-		params = append(params, fmt.Sprintf("$%v", paramIndex))
+		insertColumns = append(insertColumns, "email")
+		paramsPlaceholder = append(paramsPlaceholder, fmt.Sprintf("$%v", paramIndex))
 		arguments = append(arguments, args.Email)
 		paramIndex++
 	}
 	if args.Password != "" {
-		insertFields = append(insertFields, fmt.Sprintf("password"))
-		params = append(params, fmt.Sprintf("$%v", paramIndex))
+		insertColumns = append(insertColumns, "password")
+		paramsPlaceholder = append(paramsPlaceholder, fmt.Sprintf("$%v", paramIndex))
 		arguments = append(arguments, args.Password)
 		paramIndex++
 	}
 	if args.Sub != "" {
-		insertFields = append(insertFields, fmt.Sprintf("sub"))
-		params = append(params, fmt.Sprintf("$%v", paramIndex))
+		insertColumns = append(insertColumns, "sub")
+		paramsPlaceholder = append(paramsPlaceholder, fmt.Sprintf("$%v", paramIndex))
 		arguments = append(arguments, args.Sub)
 		paramIndex++
 	}
 	if args.ImageURL != "" {
-		insertFields = append(insertFields, fmt.Sprintf("image_url"))
-		params = append(params, fmt.Sprintf("$%v", paramIndex))
+		insertColumns = append(insertColumns, "image_url")
+		paramsPlaceholder = append(paramsPlaceholder, fmt.Sprintf("$%v", paramIndex))
 		arguments = append(arguments, args.ImageURL)
 		paramIndex++
 	}
-	baseSql.WriteString("(")
-	joinedFields := strings.Join(insertFields, ", ")
-	baseSql.WriteString(joinedFields)
-	baseSql.WriteString(")")
-	baseSql.WriteString(" VALUES ")
-	baseSql.WriteString("(")
-	joinedSqlParams := strings.Join(params, ", ")
-	baseSql.WriteString(joinedSqlParams)
-	baseSql.WriteString(")")
-	baseSql.WriteString(" ON CONFLICT (email) DO NOTHING RETURNING id, email;")
+	if len(insertColumns) == 0 {
+		return User{}, fmt.Errorf("no data to insert")
+	}
+	var whereConditions []string
+	if args.Sub != "" {
+		whereConditions = append(whereConditions, fmt.Sprintf("sub = $%d", paramIndex))
+		arguments = append(arguments, args.Sub)
+		paramIndex++
+	}
+	if args.Email != "" {
+		whereConditions = append(whereConditions, fmt.Sprintf("email = $%d", paramIndex))
+		arguments = append(arguments, args.Email)
+		paramIndex++
+	}
+	whereClause := ""
+	if len(whereConditions) > 0 {
+		whereClause = "WHERE NOT EXISTS (SELECT 1 FROM users WHERE " + strings.Join(whereConditions, " OR ") + ")"
+	}
+	combinedColumns := strings.Join(insertColumns, ", ")
+	combinedPlaceholders := strings.Join(paramsPlaceholder, ", ")
+	cteTable := fmt.Sprintf(`
+		INSERT INTO users (%s)
+		SELECT %s
+		%s
+		RETURNING id, email`, combinedColumns, combinedPlaceholders, whereClause)
+	finalQuery := fmt.Sprintf(`
+		WITH new_user AS (
+			%v
+		)
+		SELECT * FROM new_user
+		UNION ALL
+		SELECT id, email FROM users WHERE %s
+		LIMIT 1;
+	`, cteTable, strings.Join(whereConditions, " OR "))
 	row := uq.DB.QueryRow(ctx,
-		baseSql.String(),
+		finalQuery,
 		arguments...,
 	)
 	var u User
@@ -149,7 +184,7 @@ func (uq *UserQueriesImpl) UpdateUser(ctx context.Context, args UserUpdateArgs) 
 		paramIndex++
 	}
 	if len(setClauses) == 0 {
-		return User{}, errors.New("no fields were updated.")
+		return User{}, errors.New("no fields were updated")
 	}
 	baseSql.WriteString(strings.Join(setClauses, ", "))
 	baseSql.WriteString(fmt.Sprintf(" WHERE id = $%d RETURNING email;", paramIndex))

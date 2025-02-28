@@ -4,10 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 	"time"
 
 	"github.com/coreos/go-oidc/v3/oidc"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/hendrywilliam/commerce/internal/queries"
 	"github.com/hendrywilliam/commerce/internal/utils"
 	"golang.org/x/oauth2"
@@ -24,12 +25,14 @@ type AuthServices interface {
 type AuthServicesImpl struct {
 	Q      *queries.Queries
 	Config *utils.AppConfig
+	Log    *slog.Logger
 }
 
-func NewServices(q *queries.Queries, cfg *utils.AppConfig) AuthServices {
+func NewServices(q *queries.Queries, cfg *utils.AppConfig, log *slog.Logger) AuthServices {
 	return &AuthServicesImpl{
 		Q:      q,
 		Config: cfg,
+		Log:    log,
 	}
 }
 
@@ -59,10 +62,12 @@ func (as *AuthServicesImpl) OAuthCallback(ctx context.Context, authCode string, 
 	oauth := configGoogle(as.Config)
 	token, err := oauth.Exchange(ctx, authCode)
 	if err != nil {
+		as.Log.Error(err.Error())
 		return LoginResponse{}, utils.ErrInternalError
 	}
 	provider, err := googleOidcProvider(ctx)
 	if err != nil {
+		as.Log.Error(err.Error())
 		return LoginResponse{}, utils.ErrInternalError
 	}
 	verifier := provider.Verifier(&oidc.Config{ClientID: oauthClientID})
@@ -73,9 +78,14 @@ func (as *AuthServicesImpl) OAuthCallback(ctx context.Context, authCode string, 
 	)
 	if rawIdToken, ok = token.Extra("id_token").(string); ok {
 		idToken, err = verifier.Verify(ctx, rawIdToken)
+		if err != nil {
+			as.Log.Error(err.Error())
+			return LoginResponse{}, err
+		}
 	}
 	var claims OpenIDClaims
 	if err := idToken.Claims(&claims); err != nil {
+		as.Log.Error(err.Error())
 		return LoginResponse{}, utils.ErrInternalError
 	}
 	// Store user with sub claims from id_token as it is unique to a user.
@@ -85,6 +95,7 @@ func (as *AuthServicesImpl) OAuthCallback(ctx context.Context, authCode string, 
 		ImageURL: claims.Picture,
 	})
 	if err != nil {
+		as.Log.Error(err.Error())
 		return LoginResponse{}, utils.ErrInternalError
 	}
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -95,6 +106,7 @@ func (as *AuthServicesImpl) OAuthCallback(ctx context.Context, authCode string, 
 	})
 	signedToken, err := jwtToken.SignedString([]byte(as.Config.SymmetricKey))
 	if err != nil {
+		as.Log.Error(err.Error())
 		return LoginResponse{}, utils.ErrInternalError
 	}
 	return LoginResponse{Token: signedToken}, nil
@@ -112,6 +124,7 @@ func (as *AuthServicesImpl) Login(ctx context.Context, args LoginRequest) (Login
 		if errors.Is(err, sql.ErrNoRows) {
 			return LoginResponse{}, queries.ErrUserNotFound
 		}
+		as.Log.Error(err.Error())
 		return LoginResponse{}, err
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -121,12 +134,17 @@ func (as *AuthServicesImpl) Login(ctx context.Context, args LoginRequest) (Login
 		"sub":   user.ID,
 	})
 	signedToken, err := token.SignedString([]byte(as.Config.SymmetricKey))
+	if err != nil {
+		as.Log.Error(err.Error())
+		return LoginResponse{}, nil
+	}
 	return LoginResponse{Token: signedToken}, nil
 }
 
 func (as *AuthServicesImpl) Register(ctx context.Context, args RegisterRequest) (string, error) {
 	hashedPassword, err := utils.HashPassword(args.Password)
 	if err != nil {
+		as.Log.Error(err.Error())
 		return "", utils.ErrInternalError
 	}
 	user, err := as.Q.UserQueries.CreateUser(ctx, queries.CreateUserArgs{
@@ -137,6 +155,7 @@ func (as *AuthServicesImpl) Register(ctx context.Context, args RegisterRequest) 
 		if errors.Is(err, sql.ErrNoRows) {
 			return "", queries.ErrUserAlreadyExist
 		}
+		as.Log.Error(err.Error())
 		return "", utils.ErrInternalError
 	}
 	return user.Email, nil

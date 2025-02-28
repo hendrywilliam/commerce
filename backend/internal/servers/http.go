@@ -12,6 +12,7 @@ import (
 	"github.com/hendrywilliam/commerce/internal/app/products"
 	"github.com/hendrywilliam/commerce/internal/app/stores"
 	"github.com/hendrywilliam/commerce/internal/app/users"
+	"github.com/hendrywilliam/commerce/internal/middlewares"
 	"github.com/hendrywilliam/commerce/internal/queries"
 	"github.com/hendrywilliam/commerce/internal/utils"
 	"github.com/redis/go-redis/v9"
@@ -31,7 +32,7 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool, log *slog.Logger, redis *r
 	storesServices := stores.NewServices(&allqs, log)
 	cartsServices := carts.NewServices(&allqs, log)
 	usersServices := users.NewServices(&allqs, log)
-	authServices := auth.NewServices(&allqs, config)
+	authServices := auth.NewServices(&allqs, config, log)
 
 	productsHandlers := products.NewHandlers(productsServices, log)
 	storesHandlers := stores.NewHandlers(storesServices, log)
@@ -53,13 +54,14 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool, log *slog.Logger, redis *r
 	rg.Delete("/carts", cartsHandlers.DeleteCartItem)
 	rg.Patch("/carts", cartsHandlers.UpdateCartItem)
 
-	rg.Get("/users", usersHandlers.GetUser)
-	rg.Patch("/users", usersHandlers.UpdateUser)
-
 	rg.Post("/login", authHandlers.Login)
 	rg.Get("/oauth-login", authHandlers.OAuthLogin)
 	rg.Get("/oauth-callback", authHandlers.OAuthCallback)
 	rg.Post("/register", authHandlers.Register)
+
+	rg.Use(middlewares.NewVerifyTokenMiddleware(config))
+	rg.Get("/users", usersHandlers.GetUser)
+	rg.Patch("/users", usersHandlers.UpdateUser)
 
 	return app.Listen(":8080", fiber.ListenConfig{
 		GracefulContext: ctx,
