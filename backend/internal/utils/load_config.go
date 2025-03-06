@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/joho/godotenv"
 )
@@ -21,6 +22,7 @@ type AppConfig struct {
 	GoogleOauthRedirectUri     string
 	AppEnv                     string
 	AllowedAuthenticationTypes []string
+	LoginRateLimitTTLInMinute  time.Duration
 }
 
 func LoadConfiguration() *AppConfig {
@@ -35,6 +37,12 @@ func LoadConfiguration() *AppConfig {
 		os.Exit(1)
 	}
 	allowedAuthTypes := strings.Split(os.Getenv("ALLOWED_AUTHENTICATION_TYPES"), ",")
+	rateLimitInt, err := strconv.Atoi(os.Getenv("LOGIN_RATE_LIMIT_TTL_IN_MINUTE"))
+	if err != nil {
+		slog.Error(err.Error())
+		os.Exit(1)
+	}
+	loginRateLimit := time.Duration(rateLimitInt) * time.Minute
 	return &AppConfig{
 		DatabaseURL:                os.Getenv("DATABASE_URL"),
 		RedisURL:                   os.Getenv("REDIS_URL"),
@@ -47,5 +55,6 @@ func LoadConfiguration() *AppConfig {
 		GoogleOauthRedirectUri:     os.Getenv("GOOGLE_OAUTH_REDIRECT_URI"),
 		AppEnv:                     os.Getenv("APP_ENV"),
 		AllowedAuthenticationTypes: allowedAuthTypes,
+		LoginRateLimitTTLInMinute:  loginRateLimit,
 	}
 }

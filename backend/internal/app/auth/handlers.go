@@ -80,7 +80,7 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 	if err := c.Bind().Body(&req); err != nil {
 		if e, ok := err.(validator.ValidationErrors); ok {
 			err := utils.DigestValErrors(e)
-			ah.Redis.Set(c.Context(), "rate:"+c.IP(), rateLimit, 0)
+			ah.Redis.Set(c.Context(), "rate:"+req.Email, rateLimit, ah.Config.LoginRateLimitTTLInMinute)
 			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
 				"error": fiber.Map{
 					"code":    http.StatusBadRequest,
@@ -90,7 +90,7 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 				},
 			})
 		}
-		ah.Redis.Set(c.Context(), "rate:"+c.IP(), rateLimit, 0)
+		ah.Redis.Set(c.Context(), "rate:"+req.Email, rateLimit, ah.Config.LoginRateLimitTTLInMinute)
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
 			"error": fiber.Map{
 				"code":    http.StatusInternalServerError,
@@ -101,7 +101,7 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 	}
 	data, err := ah.Services.Login(c.Context(), req)
 	if err != nil {
-		ah.Redis.Set(c.Context(), "rate:"+c.IP(), rateLimit, 0)
+		ah.Redis.Set(c.Context(), "rate:"+req.Email, rateLimit, ah.Config.LoginRateLimitTTLInMinute)
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
 			"error": fiber.Map{
 				"code":    http.StatusInternalServerError,
@@ -116,6 +116,7 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 		HTTPOnly: true,
 	}
 	c.Cookie(cookie)
+	ah.Redis.Del(c.Context(), "rate:"+req.Email)
 	return c.Status(http.StatusOK).JSON(fiber.Map{
 		"data": fiber.Map{
 			"message": "Login succeeded.",

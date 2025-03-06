@@ -30,7 +30,7 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool, log *slog.Logger, redis *r
 
 	// middlewares
 	verifyToken := middlewares.NewVerifyTokenMiddleware(config)
-	rateLimit := middlewares.NewRateLimitMiddleware(config, redis)
+	rateLimit := middlewares.NewRateLimitMiddleware(config, redis, log)
 
 	productsServices := products.NewServices(&allqs, log)
 	storesServices := stores.NewServices(&allqs, log)
@@ -61,7 +61,7 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool, log *slog.Logger, redis *r
 	rg.Post("/login", authHandlers.Login, rateLimit)
 	rg.Get("/oauth-login", authHandlers.OAuthLogin)
 	rg.Get("/oauth-callback", authHandlers.OAuthCallback)
-	rg.Post("/register", rateLimit, authHandlers.Register)
+	rg.Post("/register", authHandlers.Register)
 
 	rg.Use(verifyToken)
 	rg.Get("/users", usersHandlers.GetUser)
