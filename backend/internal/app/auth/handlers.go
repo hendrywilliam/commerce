@@ -72,51 +72,41 @@ func (ah *AuthHandlersImpl) OAuthCallback(c fiber.Ctx) error {
 }
 
 func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
-	limit, err := ah.Redis.Get(c.Context(), "rate:"+c.IP()).Int()
-	if errors.Is(err, redis.Nil) {
-		limit = 1
-	} else {
-		limit++
-	}
-	if limit > ah.Config.MaxLoginAttempts {
-		return c.Status(http.StatusTooManyRequests).JSON(fiber.Map{
-			"error": fiber.Map{
-				"code":    http.StatusTooManyRequests,
-				"message": utils.ErrTooManyRequest.Error(),
-			},
-		})
-	}
 	var req LoginRequest
+	rateLimit, ok := c.Locals("rate_limit").(int)
+	if !ok {
+		rateLimit = 1
+	}
 	if err := c.Bind().Body(&req); err != nil {
 		if e, ok := err.(validator.ValidationErrors); ok {
 			err := utils.DigestValErrors(e)
-			ah.Redis.Set(c.Context(), "rate:"+c.IP(), limit, 0)
+			ah.Redis.Set(c.Context(), "rate:"+c.IP(), rateLimit, 0)
 			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
 				"error": fiber.Map{
 					"code":    http.StatusBadRequest,
 					"message": utils.ErrValidationFailed.Error(),
 					"details": err,
-					"attempt": limit,
+					"limit":   rateLimit,
 				},
 			})
 		}
-		ah.Redis.Set(c.Context(), "rate:"+c.IP(), limit, 0)
+		ah.Redis.Set(c.Context(), "rate:"+c.IP(), rateLimit, 0)
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
 			"error": fiber.Map{
 				"code":    http.StatusInternalServerError,
 				"message": err.Error(),
-				"attempt": limit,
+				"limit":   rateLimit,
 			},
 		})
 	}
 	data, err := ah.Services.Login(c.Context(), req)
 	if err != nil {
-		ah.Redis.Set(c.Context(), "rate:"+c.IP(), limit, 0)
+		ah.Redis.Set(c.Context(), "rate:"+c.IP(), rateLimit, 0)
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
 			"error": fiber.Map{
 				"code":    http.StatusInternalServerError,
 				"message": err.Error(),
-				"attempt": limit,
+				"limit":   rateLimit,
 			},
 		})
 	}
@@ -129,56 +119,47 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(fiber.Map{
 		"data": fiber.Map{
 			"message": "Login succeeded.",
+			"data":    data.User,
 		},
 	})
 }
 
 func (ah *AuthHandlersImpl) Register(c fiber.Ctx) error {
-	limit, err := ah.Redis.Get(c.Context(), "rate:"+c.IP()).Int()
-	if errors.Is(err, redis.Nil) {
-		limit = 1
-	} else {
-		limit++
-	}
-	if limit > ah.Config.MaxLoginAttempts {
-		return c.Status(http.StatusTooManyRequests).JSON(fiber.Map{
-			"error": fiber.Map{
-				"code":    http.StatusTooManyRequests,
-				"message": utils.ErrTooManyRequest.Error(),
-			},
-		})
-	}
 	var req RegisterRequest
+	rateLimit, ok := c.Locals("rate_limit").(int)
+	if !ok {
+		rateLimit = 1
+	}
 	if err := c.Bind().Body(&req); err != nil {
 		if e, ok := err.(validator.ValidationErrors); ok {
 			err := utils.DigestValErrors(e)
-			ah.Redis.Set(c.Context(), "rate:"+c.IP(), limit, 0)
+			ah.Redis.Set(c.Context(), "rate:"+c.IP(), rateLimit, 0)
 			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
 				"error": fiber.Map{
 					"code":    http.StatusBadRequest,
 					"message": utils.ErrValidationFailed.Error(),
 					"details": err,
-					"attempt": limit,
+					"limit":   rateLimit,
 				},
 			})
 		}
-		ah.Redis.Set(c.Context(), "rate:"+c.IP(), limit, 0)
+		ah.Redis.Set(c.Context(), "rate:"+c.IP(), rateLimit, 0)
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
 			"error": fiber.Map{
 				"code":    http.StatusInternalServerError,
 				"message": utils.ErrInternalError.Error(),
-				"attempt": limit,
+				"limit":   rateLimit,
 			},
 		})
 	}
 	email, err := ah.Services.Register(c.Context(), req)
 	if err != nil {
-		ah.Redis.Set(c.Context(), "rate:"+c.IP(), limit, 0)
+		ah.Redis.Set(c.Context(), "rate:"+c.IP(), rateLimit, 0)
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
 			"error": fiber.Map{
 				"code":    http.StatusInternalServerError,
 				"message": err.Error(),
-				"attempt": limit,
+				"limit":   rateLimit,
 			},
 		})
 	}

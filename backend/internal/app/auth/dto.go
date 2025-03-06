@@ -1,19 +1,24 @@
 package auth
 
+import "github.com/hendrywilliam/commerce/internal/queries"
+
 type LoginRequest struct {
-	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required"`
+	AuthenticationType string `json:"authentication_type" validate:"required"`
+	Email              string `json:"email" validate:"required,email"`
+	Password           string `json:"password" validate:"required"`
 }
 
 type LoginResponse struct {
-	Token string                 `json:"token"`
-	Data  map[string]interface{} `json:"data,omitempty"`
+	Token string       `json:"token"`
+	User  queries.User `json:"user,omitempty"`
 }
 
 type RegisterRequest struct {
-	Email           string `json:"email" validate:"required,email"`
-	Password        string `json:"password" validate:"required"`
-	ConfirmPassword string `json:"confirm_password" validate:"required,eqcsfield=Password"`
+	AuthenticationType string `json:"authentication_type" validate:"required"`
+	Email              string `json:"email" validate:"required,email"`
+	Password           string `json:"password" validate:"required"`
+	ConfirmPassword    string `json:"confirm_password" validate:"required,eqcsfield=Password"`
+	FullName           string `json:"fullname" validate:"required"`
 }
 
 type RegisterResponse struct {

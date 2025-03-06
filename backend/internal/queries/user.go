@@ -16,14 +16,16 @@ var (
 )
 
 type User struct {
-	ID              uint64      `json:"id,omitempty"`
-	Email           string      `json:"email,omitempty"`
-	Password        string      `json:"password,omitempty"`
-	Sub             string      `json:"sub,omitempty"`
-	ImageURL        string      `json:"image_url,omitempty"`
-	PrivateMetadata interface{} `json:"private_metadata,omitempty"`
-	CreatedAt       time.Time   `json:"created_at,omitempty"`
-	UpdatedAt       time.Time   `json:"updated_at,omitempty"`
+	ID                 uint64      `json:"id,omitempty"`
+	Email              string      `json:"email,omitempty"`
+	Password           string      `json:"password,omitempty"`
+	Sub                string      `json:"sub,omitempty"`
+	ImageURL           string      `json:"image_url,omitempty"`
+	FullName           string      `json:"fullname,omitempty"`
+	AuthenticationType string      `json:"authentication_type,omitempty"`
+	PrivateMetadata    interface{} `json:"private_metadata,omitempty"`
+	CreatedAt          time.Time   `json:"created_at,omitempty"`
+	UpdatedAt          time.Time   `json:"updated_at,omitempty"`
 }
 
 // Do not expose sensitive details to logger.
@@ -44,7 +46,12 @@ func (uq *UserQueriesImpl) GetUser(ctx context.Context, email string) (User, err
 	row := uq.DB.QueryRow(ctx, `
 		SELECT
 			id,
-			email
+			email,
+			fullname,
+			image_url,
+			authentication_type,
+			private_metadata,
+			created_at
 		FROM
 			users
 		WHERE
@@ -54,15 +61,21 @@ func (uq *UserQueriesImpl) GetUser(ctx context.Context, email string) (User, err
 	err := row.Scan(
 		&u.ID,
 		&u.Email,
+		&u.FullName,
+		&u.ImageURL,
+		&u.PrivateMetadata,
+		&u.CreatedAt,
 	)
 	return u, err
 }
 
 type CreateUserArgs struct {
-	Email    string
-	Sub      string
-	ImageURL string
-	Password string
+	Email              string
+	Sub                string
+	ImageURL           string
+	Password           string
+	Name               string
+	AuthenticationType string
 }
 
 // Full query:
@@ -107,6 +120,18 @@ func (uq *UserQueriesImpl) CreateUser(ctx context.Context, args CreateUserArgs) 
 		arguments = append(arguments, args.ImageURL)
 		paramIndex++
 	}
+	if args.Name != "" {
+		insertColumns = append(insertColumns, "fullname")
+		paramsPlaceholder = append(paramsPlaceholder, fmt.Sprintf("$%v", paramIndex))
+		arguments = append(arguments, args.Name)
+		paramIndex++
+	}
+	if args.AuthenticationType != "" {
+		insertColumns = append(insertColumns, "authentication_type")
+		paramsPlaceholder = append(paramsPlaceholder, fmt.Sprintf("$%v", paramIndex))
+		arguments = append(arguments, args.AuthenticationType)
+		paramIndex++
+	}
 	if len(insertColumns) == 0 {
 		return User{}, fmt.Errorf("no data to insert")
 	}
@@ -141,6 +166,7 @@ func (uq *UserQueriesImpl) CreateUser(ctx context.Context, args CreateUserArgs) 
 		SELECT id, email FROM users WHERE %s
 		LIMIT 1;
 	`, cteTable, strings.Join(whereConditions, " OR "))
+	slog.Info(finalQuery)
 	row := uq.DB.QueryRow(ctx,
 		finalQuery,
 		arguments...,

@@ -28,6 +28,10 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool, log *slog.Logger, redis *r
 	rg := app.Group("/v1")
 	allqs := queries.NewQueries(db)
 
+	// middlewares
+	verifyToken := middlewares.NewVerifyTokenMiddleware(config)
+	rateLimit := middlewares.NewRateLimitMiddleware(config, redis)
+
 	productsServices := products.NewServices(&allqs, log)
 	storesServices := stores.NewServices(&allqs, log)
 	cartsServices := carts.NewServices(&allqs, log)
@@ -54,12 +58,12 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool, log *slog.Logger, redis *r
 	rg.Delete("/carts", cartsHandlers.DeleteCartItem)
 	rg.Patch("/carts", cartsHandlers.UpdateCartItem)
 
-	rg.Post("/login", authHandlers.Login)
+	rg.Post("/login", authHandlers.Login, rateLimit)
 	rg.Get("/oauth-login", authHandlers.OAuthLogin)
 	rg.Get("/oauth-callback", authHandlers.OAuthCallback)
-	rg.Post("/register", authHandlers.Register)
+	rg.Post("/register", rateLimit, authHandlers.Register)
 
-	rg.Use(middlewares.NewVerifyTokenMiddleware(config))
+	rg.Use(verifyToken)
 	rg.Get("/users", usersHandlers.GetUser)
 	rg.Patch("/users", usersHandlers.UpdateUser)
 

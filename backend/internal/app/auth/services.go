@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"log/slog"
+	"slices"
 	"time"
 
 	"github.com/coreos/go-oidc/v3/oidc"
@@ -90,9 +91,11 @@ func (as *AuthServicesImpl) OAuthCallback(ctx context.Context, authCode string, 
 	}
 	// Store user with sub claims from id_token as it is unique to a user.
 	user, err := as.Q.UserQueries.CreateUser(ctx, queries.CreateUserArgs{
-		Email:    claims.Email,
-		Sub:      claims.Subject,
-		ImageURL: claims.Picture,
+		Email:              claims.Email,
+		Sub:                claims.Subject,
+		ImageURL:           claims.Picture,
+		Name:               claims.Name,
+		AuthenticationType: "GOOGLE",
 	})
 	if err != nil {
 		as.Log.Error(err.Error())
@@ -119,6 +122,9 @@ func (as *AuthServicesImpl) OAuthLogin(ctx context.Context, state string) string
 }
 
 func (as *AuthServicesImpl) Login(ctx context.Context, args LoginRequest) (LoginResponse, error) {
+	if !slices.Contains(as.Config.AllowedAuthenticationTypes, args.AuthenticationType) {
+		return LoginResponse{}, errors.New("invalid login credentials")
+	}
 	user, err := as.Q.UserQueries.GetUser(ctx, args.Email)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -138,18 +144,23 @@ func (as *AuthServicesImpl) Login(ctx context.Context, args LoginRequest) (Login
 		as.Log.Error(err.Error())
 		return LoginResponse{}, nil
 	}
-	return LoginResponse{Token: signedToken}, nil
+	return LoginResponse{Token: signedToken, User: user}, nil
 }
 
 func (as *AuthServicesImpl) Register(ctx context.Context, args RegisterRequest) (string, error) {
+	if !slices.Contains(as.Config.AllowedAuthenticationTypes, args.AuthenticationType) {
+		return "", errors.New("invalid login credentials")
+	}
 	hashedPassword, err := utils.HashPassword(args.Password)
 	if err != nil {
 		as.Log.Error(err.Error())
 		return "", utils.ErrInternalError
 	}
 	user, err := as.Q.UserQueries.CreateUser(ctx, queries.CreateUserArgs{
-		Email:    args.Email,
-		Password: hashedPassword,
+		Email:              args.Email,
+		Password:           hashedPassword,
+		Name:               args.FullName,
+		AuthenticationType: "REGISTRATION",
 	})
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
