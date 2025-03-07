@@ -17,16 +17,18 @@ func main() {
 	config := utils.LoadConfiguration()
 	var (
 		handler    slog.Handler
-		loggerOpts = &slog.HandlerOptions{
+		loggerOpts = slog.HandlerOptions{
 			AddSource: true,
 			Level:     slog.LevelDebug,
 		}
 	)
 	if config.AppEnv != "production" {
 		// Human readable logger during development mode.
-		handler = slog.NewTextHandler(os.Stdout, loggerOpts)
+		handler = utils.NewCustomHandler(os.Stdout, utils.CustomHandlerOptions{
+			SlogOpts: loggerOpts,
+		})
 	} else {
-		handler = slog.NewJSONHandler(os.Stdout, loggerOpts)
+		handler = slog.NewJSONHandler(os.Stdout, &loggerOpts)
 	}
 	var logger *slog.Logger = slog.New(handler)
 	slog.SetDefault(logger)

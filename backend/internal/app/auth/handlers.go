@@ -114,14 +114,15 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 		Name:     "token",
 		Value:    data.Token,
 		HTTPOnly: true,
+		SameSite: "None",
+		Secure: true,
 	}
 	c.Cookie(cookie)
 	ah.Redis.Del(c.Context(), "rate:"+req.Email)
 	return c.Status(http.StatusOK).JSON(fiber.Map{
-		"data": fiber.Map{
-			"message": "Login succeeded.",
-			"data":    data.User,
-		},
+		"code": http.StatusOK,
+		"message": "Login succeeded.",
+		"data": data.User,
 	})
 }
 
@@ -165,9 +166,9 @@ func (ah *AuthHandlersImpl) Register(c fiber.Ctx) error {
 		})
 	}
 	return c.Status(http.StatusCreated).JSON(fiber.Map{
+		"message": "User created. You may login now.",
 		"data": fiber.Map{
 			"email":   email,
-			"message": "User created. You may login now.",
 		},
 	})
 }

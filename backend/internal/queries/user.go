@@ -16,14 +16,14 @@ var (
 )
 
 type User struct {
-	ID                 uint64      `json:"id,omitempty"`
-	Email              string      `json:"email,omitempty"`
+	ID                 uint64      `json:"id"`
+	Email              string      `json:"email"`
 	Password           string      `json:"password,omitempty"`
-	Sub                string      `json:"sub,omitempty"`
-	ImageURL           string      `json:"image_url,omitempty"`
-	FullName           string      `json:"fullname,omitempty"`
+	Sub                string      `json:"sub"`
+	ImageURL           string      `json:"image_url"`
+	FullName           string      `json:"fullname"`
 	AuthenticationType string      `json:"authentication_type,omitempty"`
-	PrivateMetadata    interface{} `json:"private_metadata,omitempty"`
+	PrivateMetadata    interface{} `json:"private_metadata"`
 	CreatedAt          time.Time   `json:"created_at,omitempty"`
 	UpdatedAt          time.Time   `json:"updated_at,omitempty"`
 }
@@ -32,7 +32,7 @@ type User struct {
 func (u User) LogValue() slog.Value {
 	return slog.GroupValue(
 		slog.Uint64("id", u.ID),
-		slog.String("sub", u.Sub),
+		slog.Any("sub", u.Sub),
 		slog.Time("created_at", u.CreatedAt),
 		slog.Time("updated_at", u.UpdatedAt),
 	)
@@ -49,7 +49,6 @@ func (uq *UserQueriesImpl) GetUser(ctx context.Context, email string) (User, err
 			email,
 			fullname,
 			image_url,
-			authentication_type,
 			private_metadata,
 			created_at
 		FROM

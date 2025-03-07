@@ -163,10 +163,10 @@ func (as *AuthServicesImpl) Register(ctx context.Context, args RegisterRequest) 
 		AuthenticationType: "REGISTRATION",
 	})
 	if err != nil {
+		as.Log.Error(err.Error())
 		if errors.Is(err, sql.ErrNoRows) {
 			return "", queries.ErrUserAlreadyExist
 		}
-		as.Log.Error(err.Error())
 		return "", utils.ErrInternalError
 	}
 	return user.Email, nil

@@ -23,6 +23,7 @@ type AppConfig struct {
 	AppEnv                     string
 	AllowedAuthenticationTypes []string
 	LoginRateLimitTTLInMinute  time.Duration
+	AllowedOriginCORS          []string
 }
 
 func LoadConfiguration() *AppConfig {
@@ -42,6 +43,7 @@ func LoadConfiguration() *AppConfig {
 		slog.Error(err.Error())
 		os.Exit(1)
 	}
+	allowedOriginCors := strings.Split(os.Getenv("ALLOWED_ORIGIN_CORS"), ",")
 	loginRateLimit := time.Duration(rateLimitInt) * time.Minute
 	return &AppConfig{
 		DatabaseURL:                os.Getenv("DATABASE_URL"),
@@ -56,5 +58,6 @@ func LoadConfiguration() *AppConfig {
 		AppEnv:                     os.Getenv("APP_ENV"),
 		AllowedAuthenticationTypes: allowedAuthTypes,
 		LoginRateLimitTTLInMinute:  loginRateLimit,
+		AllowedOriginCORS:          allowedOriginCors,
 	}
 }
