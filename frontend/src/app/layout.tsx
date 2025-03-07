@@ -2,7 +2,7 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import Toast from "@/components/toast";
-// import { ClerkProvider } from "@clerk/nextjs";
+import AuthProvider from "@/contexts/auth-context";
 import { Analytics } from "@vercel/analytics/react";
 import { Inter } from "next/font/google";
 
@@ -12,8 +12,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-    title: "commerce by hendryw",
-    description: "A fictional marketplace by hendryw",
+    title: "Commerce",
+    description: "A fictional marketplace where you can buy and sell goods.",
 };
 
 export default function RootLayout({
@@ -22,14 +22,14 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        // <ClerkProvider>
-        <html lang="en">
-            <body className={`${inter.className} antialiased`}>
-                <Toast />
-                {children}
-                <Analytics />
-            </body>
-        </html>
-        // </ClerkProvider>
+        <AuthProvider>
+            <html lang="en">
+                <body className={`${inter.className} antialiased`}>
+                    <Toast />
+                    {children}
+                    <Analytics />
+                </body>
+            </html>
+        </AuthProvider>
     );
 }

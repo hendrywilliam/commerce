@@ -7,51 +7,28 @@ import { Button } from "@/components/ui/button";
 import { IconLoading } from "@/components/ui/icons";
 import { useCallback, useState, FormEvent } from "react";
 import { Form, FormField, FormInput, FormLabel } from "@/components/ui/form";
-import { BackendResponse, FailedBackendResponse } from "@/types";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function SignInForm() {
-    const [identifier, setIdentifer] = useState({
+    const [credentials, setCredentials] = useState({
         email: "",
         password: "",
     });
-    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+    const { isLoaded, loginWithEmail, isLoading } = useAuth();
 
     const submitLogin = useCallback(
         async (event: FormEvent<HTMLFormElement>) => {
             event.preventDefault();
-            setIsLoading(true);
+            if (!isLoaded) return;
             try {
-                const response = await fetch(
-                    (process.env.NEXT_PUBLIC_BACKEND_SERVER_URL as string) +
-                        "/v1/login",
-                    {
-                        method: "POST",
-                        body: JSON.stringify({
-                            email: identifier.email,
-                            password: identifier.password,
-                        }),
-                        headers: {
-                            "content-type": "application/json",
-                            credentials: "include",
-                        },
-                    }
-                );
-                const data = await response.json();
-                if (!response.ok) {
-                    throw new Error(
-                        `${(data as FailedBackendResponse).error.message} ${data.error?.details?.[0] || ""}`
-                    );
-                }
-                toast.success((data as BackendResponse).data.message);
-                // router.replace("/");
+                await loginWithEmail(credentials);
+                // router.push("/");
             } catch (error) {
                 catchError(error);
-            } finally {
-                setIsLoading(false);
             }
         },
-        [identifier]
+        [credentials]
     );
 
     return (
@@ -65,8 +42,8 @@ export default function SignInForm() {
                     <FormLabel>Email</FormLabel>
                     <FormInput
                         onChange={(event) =>
-                            setIdentifer({
-                                ...identifier,
+                            setCredentials({
+                                ...credentials,
                                 [event.target.name]: event.target.value,
                             })
                         }
@@ -80,8 +57,8 @@ export default function SignInForm() {
                     <FormLabel>Password</FormLabel>
                     <FormInput
                         onChange={(event) =>
-                            setIdentifer({
-                                ...identifier,
+                            setCredentials({
+                                ...credentials,
                                 [event.target.name]: event.target.value,
                             })
                         }
