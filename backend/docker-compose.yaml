@@ -12,7 +12,7 @@ services:
             # Need to set this to override traefik default behaviour.
             # Traefik will randomly pick one network depending on how Docker is returning them.
             - "traefik.docker.network=traefik_default"
-        entrypoint: "/app/docker-entrypoint.sh"
+        entrypoint: ["/app/docker-entrypoint.sh"]
         command: ["/app/main"]
         networks:
             - traefik_default
