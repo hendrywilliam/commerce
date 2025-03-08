@@ -22,11 +22,13 @@ type AuthContextType = {
     ) => Promise<HTTPServerResponse<Pick<User, "email">>>;
     setUser: Dispatch<SetStateAction<User | null>>;
     isLoaded: boolean;
+    isSignedIn: boolean;
 };
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [isSignedIn, setIsSignedIn] = useState(false);
 
     const loginWithOAuth = function () {
         if (!window) return;
@@ -56,6 +58,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
             if (!response.ok) {
                 throw new Error((data as HTTPServerResponse<null>).message);
             }
+            setIsSignedIn(true);
             return data as HTTPServerResponse<User>;
         } catch (error) {
             throw error;
@@ -86,8 +89,25 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         return data as HTTPServerResponse<User>;
     };
 
+    const getUserProfile = async function () {
+        const response = await fetch(
+            (process.env.NEXT_PUBLIC_BACKEND_SERVER_URL as string) + "/v1/user",
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
+        const data = await response.json();
+        if (!response.ok) {
+            return;
+        }
+        setUser((data as HTTPServerResponse<User>).data);
+        setIsSignedIn(true);
+    };
+
     useEffect(() => {
         setIsLoaded(true);
+        getUserProfile();
         return () => {};
     }, []);
 
@@ -100,6 +120,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
                 registerWithEmail,
                 setUser,
                 isLoaded,
+                isSignedIn,
             }}
         >
             {children}

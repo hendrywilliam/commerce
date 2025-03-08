@@ -23,14 +23,13 @@ type UseAuthReturn = {
 
 export function useAuth(): UseAuthReturn {
     const [isLoading, setIsLoading] = useState(false);
-    const [isSignedIn, setIsSignedIn] = useState(false);
     const authCtx = useContext(AuthContext);
     if (!authCtx) {
         throw new Error(
             "The useAuth hook can only be used within AuthContext."
         );
     }
-    const { user, isLoaded } = authCtx;
+    const { user, isLoaded, isSignedIn } = authCtx;
     const register = async function (
         creds: Omit<EmailRegistrationCredentials, "authentication_type">
     ) {
@@ -49,11 +48,8 @@ export function useAuth(): UseAuthReturn {
         try {
             setIsLoading(true);
             const data = await authCtx.loginWithEmail(creds);
-            if (data.data) {
-                authCtx.setUser(data.data);
-                setIsSignedIn(() => true);
-                toast.success(data.message);
-            }
+            authCtx.setUser(data.data);
+            toast.success(data.message);
         } catch (error) {
             catchError(error);
         } finally {

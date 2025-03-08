@@ -36,7 +36,8 @@ type Queries struct {
 		UpdateStore(ctx context.Context, args UpdateStoreArgs) (Store, error)
 	}
 	UserQueries interface {
-		GetUser(ctx context.Context, email string) (User, error)
+		GetUserWithEmail(ctx context.Context, email string) (User, error)
+		GetUserWithID(ctx context.Context, ID UserID) (User, error)
 		CreateUser(ctx context.Context, args CreateUserArgs) (User, error)
 		UpdateUser(ctx context.Context, args UserUpdateArgs) (User, error)
 	}

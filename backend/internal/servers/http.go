@@ -32,7 +32,7 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool, log *slog.Logger, redis *r
 	allqs := queries.NewQueries(db)
 
 	// middlewares
-	verifyToken := middlewares.NewVerifyTokenMiddleware(config)
+	verifyToken := middlewares.NewVerifyCookieMiddleware(config, log)
 	rateLimit := middlewares.NewRateLimitMiddleware(config, redis, log)
 
 	productsServices := products.NewServices(&allqs, log)
@@ -44,7 +44,7 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool, log *slog.Logger, redis *r
 	productsHandlers := products.NewHandlers(productsServices, log)
 	storesHandlers := stores.NewHandlers(storesServices, log)
 	cartsHandlers := carts.NewHandlers(cartsServices, log)
-	usersHandlers := users.NewHandlers(usersServices, log)
+	usersHandlers := users.NewHandlers(usersServices, redis, log)
 	authHandlers := auth.NewHandlers(redis, config, authServices, log)
 
 	rg.Post("/stores", storesHandlers.CreateStore)
@@ -66,9 +66,8 @@ func ServeHTTP(ctx context.Context, db *pgxpool.Pool, log *slog.Logger, redis *r
 	rg.Get("/oauth-callback", authHandlers.OAuthCallback)
 	rg.Post("/register", authHandlers.Register)
 
-	rg.Use(verifyToken)
-	rg.Get("/users", usersHandlers.GetUser)
-	rg.Patch("/users", usersHandlers.UpdateUser)
+	rg.Get("/user", usersHandlers.GetUserProfile, verifyToken)
+	rg.Patch("/user", usersHandlers.UpdateUser, verifyToken)
 
 	return app.Listen(":8080", fiber.ListenConfig{
 		GracefulContext: ctx,

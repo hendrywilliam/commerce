@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-    title: "Commerce",
+    title: "e-commerce",
     description: "A fictional marketplace where you can buy and sell goods.",
 };
 

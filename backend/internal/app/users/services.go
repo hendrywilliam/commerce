@@ -12,7 +12,7 @@ import (
 
 type UserServices interface {
 	UpdateUser(ctx context.Context, args UpdateUserRequest) (queries.User, error)
-	GetUser(ctx context.Context, args GetUserRequest) (queries.User, error)
+	GetUserProfile(ctx context.Context, ID queries.UserID) (queries.User, error)
 }
 
 type UserServicesImpl struct {
@@ -27,8 +27,8 @@ func NewServices(q *queries.Queries, log *slog.Logger) UserServices {
 	}
 }
 
-func (us *UserServicesImpl) GetUser(ctx context.Context, args GetUserRequest) (queries.User, error) {
-	user, err := us.Q.UserQueries.GetUser(ctx, args.Email)
+func (us *UserServicesImpl) GetUserProfile(ctx context.Context, ID int) (queries.User, error) {
+	user, err := us.Q.UserQueries.GetUserWithID(ctx, ID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return queries.User{}, queries.ErrUserNotFound

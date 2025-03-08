@@ -1,7 +1,9 @@
 package auth
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"time"
@@ -115,14 +117,23 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 		Value:    data.Token,
 		HTTPOnly: true,
 		SameSite: "None",
-		Secure: true,
+		Secure:   true,
 	}
 	c.Cookie(cookie)
 	ah.Redis.Del(c.Context(), "rate:"+req.Email)
+	// Store user data in cache for faster profile load.
+	b, err := json.Marshal(data.User)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"code":    http.StatusInternalServerError,
+			"message": utils.ErrInternalError.Error(),
+		})
+	}
+	ah.Redis.Set(c.Context(), fmt.Sprintf("user:%v", data.User.ID), b, 0)
 	return c.Status(http.StatusOK).JSON(fiber.Map{
-		"code": http.StatusOK,
+		"code":    http.StatusOK,
 		"message": "Login succeeded.",
-		"data": data.User,
+		"data":    data.User,
 	})
 }
 
@@ -168,7 +179,7 @@ func (ah *AuthHandlersImpl) Register(c fiber.Ctx) error {
 	return c.Status(http.StatusCreated).JSON(fiber.Map{
 		"message": "User created. You may login now.",
 		"data": fiber.Map{
-			"email":   email,
+			"email": email,
 		},
 	})
 }

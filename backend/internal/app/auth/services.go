@@ -6,6 +6,7 @@ import (
 	"errors"
 	"log/slog"
 	"slices"
+	"strconv"
 	"time"
 
 	"github.com/coreos/go-oidc/v3/oidc"
@@ -125,7 +126,7 @@ func (as *AuthServicesImpl) Login(ctx context.Context, args LoginRequest) (Login
 	if !slices.Contains(as.Config.AllowedAuthenticationTypes, args.AuthenticationType) {
 		return LoginResponse{}, errors.New("invalid login credentials")
 	}
-	user, err := as.Q.UserQueries.GetUser(ctx, args.Email)
+	user, err := as.Q.UserQueries.GetUserWithEmail(ctx, args.Email)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return LoginResponse{}, queries.ErrUserNotFound
@@ -137,7 +138,7 @@ func (as *AuthServicesImpl) Login(ctx context.Context, args LoginRequest) (Login
 		"exp":   time.Now().Add(time.Hour * 24).Unix(),
 		"iat":   time.Now().Unix(),
 		"email": user.Email,
-		"sub":   user.ID,
+		"sub":   strconv.Itoa(user.ID),
 	})
 	signedToken, err := token.SignedString([]byte(as.Config.SymmetricKey))
 	if err != nil {

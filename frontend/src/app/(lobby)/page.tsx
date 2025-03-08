@@ -10,10 +10,10 @@ export default async function IndexPage() {
     return (
         <div className="container flex h-full w-full flex-col items-center p-4">
             <section className="mt-24 flex h-max w-full flex-col gap-4">
-                <h1 className="w-full flex-wrap text-center text-4xl font-semibold lg:text-6xl">
+                {/* <h1 className="w-full flex-wrap text-center text-4xl font-semibold lg:text-6xl">
                     A fictional marketplace to sell and buy, built with
                     everything new in Next.js.
-                </h1>
+                </h1> */}
                 <p className="text-center text-lg font-medium text-gray-500">
                     Explore any items from independent brands around the world
                     with ease.

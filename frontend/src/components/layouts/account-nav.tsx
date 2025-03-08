@@ -21,7 +21,6 @@ export default function AccountNavigation() {
         <div className="flex self-center">
             {!isSignedIn ? (
                 <>
-                    <p>{user?.fullname}</p>
                     <p>{isSignedIn}</p>
                     <Button
                         data-testid="signin-button"
@@ -34,7 +33,7 @@ export default function AccountNavigation() {
                 <DropdownMenu data-testid="account-menu">
                     <DropdownMenuTrigger className="focus:outline-none">
                         <Avatar>
-                            {user ? (
+                            {user && user.image_url.length > 0 ? (
                                 <AvatarImage src={user?.image_url} />
                             ) : (
                                 <AvatarImage src="https://avatars.githubusercontent.com/u/76040435?v=4" />

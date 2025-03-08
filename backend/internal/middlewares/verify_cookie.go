@@ -2,36 +2,26 @@ package middlewares
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
-	"strings"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/hendrywilliam/commerce/internal/utils"
 )
 
-func NewVerifyTokenMiddleware(cfg *utils.AppConfig) fiber.Handler {
+func NewVerifyCookieMiddleware(cfg *utils.AppConfig, log *slog.Logger) fiber.Handler {
 	// Retains outer scope data (cfg).
 	return func(c fiber.Ctx) error {
-		authHeader := c.Get("Authorization")
-		if authHeader == "" {
-			return c.Status(http.StatusUnauthorized).JSON(fiber.Map{
-				"messsage": "Authorization header is missing.",
-			})
-		}
-		spl := strings.Split(authHeader, " ")
-		if spl[0] != "Bearer" {
-			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-				"message": "Unrecognized authentication scheme.",
-			})
-		}
-		token, err := jwt.Parse(spl[1], func(t *jwt.Token) (interface{}, error) {
+		cookie := c.Cookies("token")
+		token, err := jwt.Parse(cookie, func(t *jwt.Token) (interface{}, error) {
 			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
 			}
 			return []byte(cfg.SymmetricKey), nil
 		})
 		if err != nil {
+			log.Error(err.Error())
 			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
 				"message": err.Error(),
 			})
@@ -45,7 +35,7 @@ func NewVerifyTokenMiddleware(cfg *utils.AppConfig) fiber.Handler {
 				"message": "Failed to verify user.",
 			})
 		}
-		// Idk why claims.GetSubject is fail.
+		// Idk why claims.GetSubject is failing.
 		subject := claims["sub"]
 		c.Locals("user_id", subject)
 		email := claims["email"]

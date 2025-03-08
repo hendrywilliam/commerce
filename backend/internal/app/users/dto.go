@@ -1,9 +1,5 @@
 package users
 
-type GetUserRequest struct {
-	Email string `json:"email" validate:"required,email"`
-}
-
 type CreateUserRequest struct {
 	Email           string `json:"email" validate:"required,email"`
 	Password        string `json:"password" validate:"required"`

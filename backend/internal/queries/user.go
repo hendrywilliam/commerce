@@ -15,8 +15,10 @@ var (
 	ErrUserAlreadyExist = errors.New("user is already exist")
 )
 
+type UserID = int
+
 type User struct {
-	ID                 uint64      `json:"id"`
+	ID                 UserID      `json:"id"`
 	Email              string      `json:"email"`
 	Password           string      `json:"password,omitempty"`
 	Sub                string      `json:"sub"`
@@ -31,7 +33,7 @@ type User struct {
 // Do not expose sensitive details to logger.
 func (u User) LogValue() slog.Value {
 	return slog.GroupValue(
-		slog.Uint64("id", u.ID),
+		slog.Int("id", u.ID),
 		slog.Any("sub", u.Sub),
 		slog.Time("created_at", u.CreatedAt),
 		slog.Time("updated_at", u.UpdatedAt),
@@ -42,7 +44,33 @@ type UserQueriesImpl struct {
 	DB DbTx
 }
 
-func (uq *UserQueriesImpl) GetUser(ctx context.Context, email string) (User, error) {
+func (uq *UserQueriesImpl) GetUserWithEmail(ctx context.Context, email string) (User, error) {
+	row := uq.DB.QueryRow(ctx, `
+		SELECT
+			id,
+			email,
+			fullname,
+			image_url,
+			private_metadata,
+			created_at
+		FROM
+			users
+		WHERE 
+			email = $1
+	`, email)
+	var u User
+	err := row.Scan(
+		&u.ID,
+		&u.Email,
+		&u.FullName,
+		&u.ImageURL,
+		&u.PrivateMetadata,
+		&u.CreatedAt,
+	)
+	return u, err
+}
+
+func (uq *UserQueriesImpl) GetUserWithID(ctx context.Context, ID UserID) (User, error) {
 	row := uq.DB.QueryRow(ctx, `
 		SELECT
 			id,
@@ -54,8 +82,8 @@ func (uq *UserQueriesImpl) GetUser(ctx context.Context, email string) (User, err
 		FROM
 			users
 		WHERE
-			email = $1;
-	`, email)
+			id = $1;
+	`, ID)
 	var u User
 	err := row.Scan(
 		&u.ID,
