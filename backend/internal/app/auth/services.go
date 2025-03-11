@@ -103,7 +103,7 @@ func (as *AuthServicesImpl) OAuthCallback(ctx context.Context, authCode string, 
 		return LoginResponse{}, utils.ErrInternalError
 	}
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub":   user.ID,
+		"sub":   strconv.Itoa(user.ID),
 		"exp":   time.Now().Add(time.Hour * 24).Unix(),
 		"iat":   time.Now().Unix(),
 		"email": user.Email,

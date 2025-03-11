@@ -2,11 +2,10 @@ package auth
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
-	"time"
+	"net/url"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
@@ -38,32 +37,41 @@ func NewHandlers(redis *redis.Client, cfg *utils.AppConfig, service AuthServices
 }
 
 func (ah *AuthHandlersImpl) OAuthLogin(c fiber.Ctx) error {
-	persistedState, err := ah.Redis.Get(c.Context(), "state_token").Result()
-	if errors.Is(err, redis.Nil) {
-		persistedState = utils.GenerateAntiForgeryToken()
-		ah.Redis.Set(c.Context(), "state_token", persistedState, time.Duration(time.Hour*24))
-	}
-	url := ah.Services.OAuthLogin(c.Context(), persistedState)
+	state := utils.GenerateAntiForgeryToken()
+	url := ah.Services.OAuthLogin(c.Context(), state)
+	c.Cookie(&fiber.Cookie{
+		Name:     "state",
+		HTTPOnly: true,
+		Secure:   false,
+		Value:    state,
+		MaxAge:   60 * 10, // 10 minutes.
+	})
 	return c.Redirect().To(url)
 }
 
 func (ah *AuthHandlersImpl) OAuthCallback(c fiber.Ctx) error {
 	var (
-		state      = c.Query("state")
-		errorState = c.Query("error")
-		code       = c.Query("code")
+		stateRequest = c.Query("state")
+		errorState   = c.Query("error")
+		code         = c.Query("code")
+		state        = c.Cookies("state")
+		// baseUrl      = url.URL{Host: fmt.Sprintf("%s/", ah.Config.FrontendUrl)}
+		loginURL = url.URL{Host: fmt.Sprintf("%s/sign-in", ah.Config.FrontendUrl)}
 	)
-	persistedState, err := ah.Redis.Get(c.Context(), "state_token").Result()
-	if errors.Is(err, redis.Nil) {
-		return c.Send([]byte("error occured. please try again later."))
+	if state == "" {
+		loginURL.Query().Add("error", "invalid_state")
+		return c.Redirect().To(loginURL.String())
 	}
-	if state != persistedState || errorState != "" || code == "" {
-		return c.Send([]byte("error occured. please try again later."))
+	if state != stateRequest || errorState != "" {
+		loginURL.Query().Add("error", "access_denied")
+		return c.Redirect().To(loginURL.String())
 	}
 	token, err := ah.Services.OAuthCallback(c.Context(), code, ah.Config.GoogleOauthClientID)
 	if err != nil {
 		return c.Send([]byte("error occured. please try again later."))
 	}
+	// Clear "state" cookie after verification.
+	utils.ClearCookies(c, "state")
 	cookie := &fiber.Cookie{
 		Name:     "token",
 		HTTPOnly: true,
@@ -82,17 +90,15 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 	if err := c.Bind().Body(&req); err != nil {
 		if e, ok := err.(validator.ValidationErrors); ok {
 			err := utils.DigestValErrors(e)
-			ah.Redis.Set(c.Context(), "rate:"+req.Email, rateLimit, ah.Config.LoginRateLimitTTLInMinute)
+			ah.Redis.Set(c.Context(), fmt.Sprintf("rate:%s", req.Email), rateLimit, ah.Config.LoginRateLimitTTLInMinute)
 			return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-				"error": fiber.Map{
-					"code":    http.StatusBadRequest,
-					"message": utils.ErrValidationFailed.Error(),
-					"details": err,
-					"limit":   rateLimit,
-				},
+				"code":    http.StatusBadRequest,
+				"message": utils.ErrValidationFailed.Error(),
+				"error":   err,
+				"limit":   rateLimit,
 			})
 		}
-		ah.Redis.Set(c.Context(), "rate:"+req.Email, rateLimit, ah.Config.LoginRateLimitTTLInMinute)
+		ah.Redis.Set(c.Context(), fmt.Sprintf("rate:%s", req.Email), rateLimit, ah.Config.LoginRateLimitTTLInMinute)
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
 			"error": fiber.Map{
 				"code":    http.StatusInternalServerError,
@@ -103,13 +109,11 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 	}
 	data, err := ah.Services.Login(c.Context(), req)
 	if err != nil {
-		ah.Redis.Set(c.Context(), "rate:"+req.Email, rateLimit, ah.Config.LoginRateLimitTTLInMinute)
+		ah.Redis.Set(c.Context(), fmt.Sprintf("rate:%s", req.Email), rateLimit, ah.Config.LoginRateLimitTTLInMinute)
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"error": fiber.Map{
-				"code":    http.StatusInternalServerError,
-				"message": err.Error(),
-				"limit":   rateLimit,
-			},
+			"code":    http.StatusInternalServerError,
+			"message": err.Error(),
+			"limit":   rateLimit,
 		})
 	}
 	cookie := &fiber.Cookie{
@@ -120,7 +124,7 @@ func (ah *AuthHandlersImpl) Login(c fiber.Ctx) error {
 		Secure:   true,
 	}
 	c.Cookie(cookie)
-	ah.Redis.Del(c.Context(), "rate:"+req.Email)
+	ah.Redis.Del(c.Context(), fmt.Sprintf("rate:%s", req.Email))
 	// Store user data in cache for faster profile load.
 	b, err := json.Marshal(data.User)
 	if err != nil {
